@@ -33,23 +33,6 @@ trait ApprovalTrait {
 
 	// Protected --------------
 
-	protected $approvalNotificationMap = [
-		IApproval::STATUS_ACCEPTED => CoreGlobal::TPL_NOTIFY_STATUS_ACCEPT,
-		IApproval::STATUS_SUBMITTED => CoreGlobal::TPL_NOTIFY_STATUS_SUBMIT,
-		IApproval::STATUS_REJECTED => CoreGlobal::TPL_NOTIFY_STATUS_REJECT,
-		IApproval::STATUS_RE_SUBMIT => CoreGlobal::TPL_NOTIFY_STATUS_RESUBMIT,
-		IApproval::STATUS_CONFIRMED => CoreGlobal::TPL_NOTIFY_STATUS_CONFIRM,
-		IApproval::STATUS_APPROVED => CoreGlobal::TPL_NOTIFY_STATUS_APPROVE,
-		IApproval::STATUS_CHANGED => CoreGlobal::TPL_NOTIFY_STATUS_CHANGE,
-		IApproval::STATUS_ACTIVE => CoreGlobal::TPL_NOTIFY_STATUS_ACTIVE,
-		IApproval::STATUS_FROJEN => CoreGlobal::TPL_NOTIFY_STATUS_FREEZE,
-		IApproval::STATUS_UPLIFT_FREEZE => CoreGlobal::TPL_NOTIFY_STATUS_UP_FREEZE,
-		IApproval::STATUS_BLOCKED => CoreGlobal::TPL_NOTIFY_STATUS_BLOCK,
-		IApproval::STATUS_UPLIFT_BLOCK => CoreGlobal::TPL_NOTIFY_STATUS_UP_BLOCK,
-		IApproval::STATUS_TERMINATED => CoreGlobal::TPL_NOTIFY_STATUS_TERMINATE,
-		IApproval::STATUS_DELETED => CoreGlobal::TPL_NOTIFY_STATUS_DELETE
-	];
-
 	// Private ----------------
 
 	// Instance methods --------------------------------------------
@@ -154,6 +137,26 @@ trait ApprovalTrait {
 	// Read - Maps -----
 
 	// Read - Others ---
+
+	public function getApprovalNotificationMap() {
+
+		return [
+			IApproval::STATUS_ACCEPTED => CoreGlobal::TPL_NOTIFY_STATUS_ACCEPT,
+			IApproval::STATUS_SUBMITTED => CoreGlobal::TPL_NOTIFY_STATUS_SUBMIT,
+			IApproval::STATUS_REJECTED => CoreGlobal::TPL_NOTIFY_STATUS_REJECT,
+			IApproval::STATUS_RE_SUBMIT => CoreGlobal::TPL_NOTIFY_STATUS_RESUBMIT,
+			IApproval::STATUS_CONFIRMED => CoreGlobal::TPL_NOTIFY_STATUS_CONFIRM,
+			IApproval::STATUS_APPROVED => CoreGlobal::TPL_NOTIFY_STATUS_APPROVE,
+			IApproval::STATUS_CHANGED => CoreGlobal::TPL_NOTIFY_STATUS_CHANGE,
+			IApproval::STATUS_ACTIVE => CoreGlobal::TPL_NOTIFY_STATUS_ACTIVE,
+			IApproval::STATUS_FROJEN => CoreGlobal::TPL_NOTIFY_STATUS_FREEZE,
+			IApproval::STATUS_UPLIFT_FREEZE => CoreGlobal::TPL_NOTIFY_STATUS_UP_FREEZE,
+			IApproval::STATUS_BLOCKED => CoreGlobal::TPL_NOTIFY_STATUS_BLOCK,
+			IApproval::STATUS_UPLIFT_BLOCK => CoreGlobal::TPL_NOTIFY_STATUS_UP_BLOCK,
+			IApproval::STATUS_TERMINATED => CoreGlobal::TPL_NOTIFY_STATUS_TERMINATE,
+			IApproval::STATUS_DELETED => CoreGlobal::TPL_NOTIFY_STATUS_DELETE
+		];
+	}
 
 	public function getCountsByOwnerId( $ownerId, $config = [] ) {
 
@@ -269,7 +272,9 @@ trait ApprovalTrait {
 
 			if( $model && $notify ) {
 
-				$config[ 'template' ] = $this->approvalNotificationMap[ IApproval::STATUS_ACCEPTED ];
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_ACCEPTED ];
 
 				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
 
@@ -295,7 +300,9 @@ trait ApprovalTrait {
 
 			if( $model && $notify ) {
 
-				$config[ 'template' ] = $this->approvalNotificationMap[ IApproval::STATUS_SUBMITTED ];
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_SUBMITTED ];
 
 				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
 
@@ -321,7 +328,9 @@ trait ApprovalTrait {
 
 			if( $model && $notify ) {
 
-				$config[ 'template' ] = $this->approvalNotificationMap[ IApproval::STATUS_REJECTED ];
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_REJECTED ];
 
 				$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
 				$config[ 'data' ][ 'message' ]		= $model->getRejectMessage();
@@ -348,7 +357,9 @@ trait ApprovalTrait {
 
 			if( $model && $notify ) {
 
-				$config[ 'template' ] = $this->approvalNotificationMap[ IApproval::STATUS_RE_SUBMIT ];
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_RE_SUBMIT ];
 
 				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
 
@@ -374,7 +385,9 @@ trait ApprovalTrait {
 
 			if( $model && $notify ) {
 
-				$config[ 'template' ] = $this->approvalNotificationMap[ IApproval::STATUS_CONFIRMED ];
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_CONFIRMED ];
 
 				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
 
@@ -400,7 +413,9 @@ trait ApprovalTrait {
 
 			if( $model && $notify ) {
 
-				$config[ 'template' ] = $this->approvalNotificationMap[ IApproval::STATUS_APPROVED ];
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_APPROVED ];
 
 				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
 
@@ -430,7 +445,9 @@ trait ApprovalTrait {
 
 			if( $model && $notify ) {
 
-				$config[ 'template' ] = $this->approvalNotificationMap[ IApproval::STATUS_ACTIVE ];
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_ACTIVE ];
 
 				$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
 				$config[ 'data' ][ 'oldStatus' ]	= $oldStatus;
@@ -458,7 +475,9 @@ trait ApprovalTrait {
 
 			if( $model && $notify ) {
 
-				$config[ 'template' ] = $this->approvalNotificationMap[ IApproval::STATUS_FROJEN ];
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_FROJEN ];
 
 				$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
 				$config[ 'data' ][ 'message' ]		= $model->getRejectMessage();
@@ -485,7 +504,9 @@ trait ApprovalTrait {
 
 			if( $model && $notify ) {
 
-				$config[ 'template' ] = $this->approvalNotificationMap[ IApproval::STATUS_UPLIFT_FREEZE ];
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_UPLIFT_FREEZE ];
 
 				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
 
@@ -511,7 +532,9 @@ trait ApprovalTrait {
 
 			if( $model && $notify ) {
 
-				$config[ 'template' ] = $this->approvalNotificationMap[ IApproval::STATUS_BLOCKED ];
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_BLOCKED ];
 
 				$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
 				$config[ 'data' ][ 'message' ]		= $model->getRejectMessage();
@@ -538,7 +561,9 @@ trait ApprovalTrait {
 
 			if( $model && $notify ) {
 
-				$config[ 'template' ] = $this->approvalNotificationMap[ IApproval::STATUS_UPLIFT_BLOCK ];
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_UPLIFT_BLOCK ];
 
 				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
 
@@ -564,7 +589,9 @@ trait ApprovalTrait {
 
 			if( $model && $notify ) {
 
-				$config[ 'template' ] = $this->approvalNotificationMap[ IApproval::STATUS_TERMINATED ];
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_TERMINATED ];
 
 				$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
 				$config[ 'data' ][ 'message' ]		= $model->getTerminateMessage();
@@ -587,7 +614,9 @@ trait ApprovalTrait {
 			$oldStatus	= $modelClass::$statusMap[ $oldStatus ];
 			$newStatus	= $modelClass::$statusMap[ $model->status ];
 
-			$config[ 'template' ] = $this->approvalNotificationMap[ CoreGlobal::TPL_NOTIFY_STATUS_CHANGE ];
+			$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+			$config[ 'template' ] = $approvalNotificationMap[ CoreGlobal::TPL_NOTIFY_STATUS_CHANGE ];
 
 			$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
 			$config[ 'data' ][ 'oldStatus' ]	= $oldStatus;
@@ -615,7 +644,9 @@ trait ApprovalTrait {
 
 			if( $model && $notify ) {
 
-				$config[ 'template' ] = $this->approvalNotificationMap[ IApproval::STATUS_DELETED ];
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_DELETED ];
 
 				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
 
@@ -649,7 +680,9 @@ trait ApprovalTrait {
 
 		if( $notify ) {
 
-			$config[ 'template' ] = $this->approvalNotificationMap[ CoreGlobal::TPL_NOTIFY_STATUS_CHANGE ];
+			$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+			$config[ 'template' ] = $approvalNotificationMap[ CoreGlobal::TPL_NOTIFY_STATUS_CHANGE ];
 
 			$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
 			$config[ 'data' ][ 'oldStatus' ]	= $oldStatus;
@@ -683,7 +716,9 @@ trait ApprovalTrait {
 
 		if( $notify ) {
 
-			$config[ 'template' ] = $this->approvalNotificationMap[ CoreGlobal::TPL_NOTIFY_STATUS_CHANGE ];
+			$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+			$config[ 'template' ] = $approvalNotificationMap[ CoreGlobal::TPL_NOTIFY_STATUS_CHANGE ];
 
 			$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
 			$config[ 'data' ][ 'oldStatus' ]	= $oldStatus;

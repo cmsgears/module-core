@@ -782,7 +782,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$conditions		= $config[ 'conditions' ] ?? null;
 		$filters		= $config[ 'filters' ] ?? null;
 		$random			= $config[ 'random' ] ?? false; // Be careful in using random at database level for tables having high row count
-		$softDelete		= $config[ 'softDelete' ] ?? false;
+		$softDelete		= $config[ 'softDelete' ] ?? Yii::$app->core->isSoftDelete();
 
 		// search and sort
 		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
@@ -817,7 +817,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		$interfaces = class_implements( static::class );
 
-		if( $softDelete || isset( $interfaces[ 'cmsgears\core\common\services\interfaces\base\IApproval' ] ) ) {
+		if( $softDelete && isset( $interfaces[ 'cmsgears\core\common\services\interfaces\base\IApproval' ] ) ) {
 
 			$softDelete = IApproval::STATUS_DELETED;
 

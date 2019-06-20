@@ -361,31 +361,37 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 
 				switch( $action ) {
 
-					case 'confirmed': {
+					case 'confirm': {
 
 						$this->confirm( $model );
 
 						break;
 					}
-					case 'rejected': {
-
-						$this->reject( $model );
-
-						break;
-					}
-					case 'active': {
+					case 'approve': {
 
 						$this->approve( $model );
 
 						break;
 					}
-					case 'frozen': {
+					case 'reject': {
+
+						$this->reject( $model );
+
+						break;
+					}
+					case 'activate': {
+
+						$this->activate( $model );
+
+						break;
+					}
+					case 'freeze': {
 
 						$this->freeze( $model );
 
 						break;
 					}
-					case 'blocked': {
+					case 'block': {
 
 						$this->block( $model );
 

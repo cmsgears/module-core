@@ -8,15 +8,12 @@
  */
 namespace cmsgears\core\common\components;
 
-// CMG Imports
-use cmsgears\core\common\base\Component;
-
 /**
  * The SMS Manager component provides methods to trigger message and OTP.
  *
  * @since 1.0.0
  */
-class SmsManager extends Component {
+class SmsManager extends \cmsgears\core\common\base\Component {
 
 	// Variables ---------------------------------------------------
 
@@ -42,6 +39,35 @@ class SmsManager extends Component {
 
 	// SmsManager ----------------------------
 
+	public function isActive() {
+
+		// Adapter method
+
+		return false;
+	}
+
+	// OTP --------------
+
+	public function isOTP() {
+
+		return $this->isActive() && $this->getOtpBalance() > 10;
+	}
+
+	public function getOtpBalance() {
+
+		// Adapter method
+	}
+
+	public function sendOtp( $number, $message, $otp, $expiry = 10 ) {
+
+		// Adapter method
+	}
+
+	public function reSendOtp( $number, $message, $otp ) {
+
+		// Adapter method
+	}
+
 	public function generateOtp( $digits = null ) {
 
 		$otp = 0;
@@ -55,29 +81,19 @@ class SmsManager extends Component {
 		return $otp;
 	}
 
-	public function isActive() {
+	// SMS --------------
 
-		// Adapter method
+	public function isSms() {
 
-		return false;
+		return $this->isActive() && $this->getSmsBalance() > 10;
 	}
 
-	public function getOtpBalance() {
-
-		// Adapter method
-	}
-
-	public function isOTP() {
-
-		return $this->isActive() && $this->getOtpBalance() > 10;
-	}
-
-	public function sendOtp( $number, $message, $otp ) {
+	public function getSmsBalance() {
 
 		// Adapter method
 	}
 
-	public function reSendOtp( $number, $message, $otp ) {
+	public function sendSms( $number, $message ) {
 
 		// Adapter method
 	}

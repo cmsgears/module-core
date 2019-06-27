@@ -17,14 +17,12 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
  * AddressController provides actions specific to model attributes having own meta table.
  *
  * @since 1.0.0
  */
-abstract class AddressController extends Controller {
+abstract class AddressController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -175,10 +173,11 @@ abstract class AddressController extends Controller {
 
 	public function actionUpdate( $id, $pid ) {
 
-		$model	= $this->modelService->getById( $id );
-		$parent = $this->parentService->getById( $pid );
+		$model		= $this->modelService->getById( $id );
+		$parent		= $this->parentService->getById( $pid );
+		$parentType	= $this->parentService->getParentType();
 
-		if( isset( $model ) && isset( $parent ) ) {
+		if( isset( $model ) && isset( $parent ) && $model->isParentValid( $parent->id, $parentType ) ) {
 
 			$addressClass = $this->addressService->getModelClass();
 
@@ -217,10 +216,11 @@ abstract class AddressController extends Controller {
 
 	public function actionDelete( $id, $pid ) {
 
-		$model	= $this->modelService->getById( $id );
-		$parent = $this->parentService->getById( $pid );
+		$model		= $this->modelService->getById( $id );
+		$parent		= $this->parentService->getById( $pid );
+		$parentType	= $this->parentService->getParentType();
 
-		if( isset( $model ) && isset( $parent ) ) {
+		if( isset( $model ) && isset( $parent ) && $model->isParentValid( $parent->id, $parentType ) ) {
 
 			$modelClass = $this->modelService->getModelClass();
 

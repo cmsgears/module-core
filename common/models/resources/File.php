@@ -171,6 +171,7 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 		$rules = [
 			// Required, Safe
 			[ [ 'siteId', 'name', 'extension', 'directory' ], 'required' ],
+			[ 'changed', 'required', 'on' => 'upload', 'message' => 'Please provide a valid file.' ],
 			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Text Limit
 			[ [ 'extension', 'type', 'storage', 'srcset' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
@@ -763,6 +764,11 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 		}
 
 		$file->load( Yii::$app->request->post(), $name );
+
+		if( empty( $file->siteId ) ) {
+
+			$file->siteId = Yii::$app->core->siteId;
+		}
 
 		return $file;
 	}

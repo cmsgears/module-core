@@ -89,10 +89,11 @@ abstract class AddressController extends \cmsgears\core\admin\controllers\base\C
 
 	public function actionDelete( $id, $pid ) {
 
-		$model	= $this->modelService->getById( $id );
-		$parent = $this->parentService->getById( $pid );
+		$model		= $this->modelService->getById( $id );
+		$parent		= $this->parentService->getById( $pid );
+		$parentType	= $this->parentService->getParentType();
 
-		if( isset( $model ) && isset( $parent ) ) {
+		if( isset( $model ) && isset( $parent ) && $model->isParentValid( $parent->id, $parentType ) ) {
 
 			$address = $this->addressService->getById( $model->modelId );
 

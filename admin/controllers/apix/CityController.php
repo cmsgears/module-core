@@ -16,14 +16,12 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
  * CityController provide actions specific to city model.
  *
  * @since 1.0.0
  */
-class CityController extends Controller {
+class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

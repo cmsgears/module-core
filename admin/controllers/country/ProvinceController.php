@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
  * ProvinceController provides actions specific to province model.
  *
  * @since 1.0.0
  */
-class ProvinceController extends Controller {
+class ProvinceController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

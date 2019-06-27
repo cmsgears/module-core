@@ -16,9 +16,7 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\frontend\controllers\base\Controller;
-
-class RegionController extends Controller {
+class RegionController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -37,7 +35,7 @@ class RegionController extends Controller {
 		parent::init();
 
 		// Permission
-		$this->crudPermission = CoreGlobal::PERM_USER;
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'regionService' );

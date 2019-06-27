@@ -12,6 +12,8 @@ namespace cmsgears\core\admin\controllers\apix;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\admin\config\AdminProperties;
+
 /**
  * AdminController provides actions specific to user model.
  *
@@ -28,6 +30,8 @@ class AdminController extends \cmsgears\core\common\controllers\apix\UserControl
 	// Protected --------------
 
 	// Private ----------------
+
+	private $siteProperties;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -52,6 +56,22 @@ class AdminController extends \cmsgears\core\common\controllers\apix\UserControl
 
 	// CMG parent classes --------------------
 
-	// AdminController ------------------------
+	// AdminController -----------------------
+
+	public function getAdminProperties() {
+
+		if( !isset( $this->adminProperties ) ) {
+
+			$this->adminProperties = AdminProperties::getInstance();
+		}
+
+		return $this->adminProperties;
+	}
+
+	// Compatibility Call
+	public function getSiteProperties() {
+
+		return $this->getAdminProperties();
+	}
 
 }

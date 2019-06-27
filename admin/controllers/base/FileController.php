@@ -156,10 +156,11 @@ abstract class FileController extends \cmsgears\core\admin\controllers\base\Cont
 
 	public function actionUpdate( $id, $pid ) {
 
-		$model	= $this->modelService->getById( $id );
-		$parent = $this->parentService->getById( $pid );
+		$model		= $this->modelService->getById( $id );
+		$parent		= $this->parentService->getById( $pid );
+		$parentType	= $this->parentService->getParentType();
 
-		if( isset( $model ) && isset( $parent ) ) {
+		if( isset( $model ) && isset( $parent ) && $model->isParentValid( $parent->id, $parentType ) ) {
 
 			$file = $this->fileService->getById( $model->modelId );
 
@@ -186,10 +187,11 @@ abstract class FileController extends \cmsgears\core\admin\controllers\base\Cont
 
 	public function actionDelete( $id, $pid ) {
 
-		$model	= $this->modelService->getById( $id );
-		$parent = $this->parentService->getById( $pid );
+		$model		= $this->modelService->getById( $id );
+		$parent		= $this->parentService->getById( $pid );
+		$parentType	= $this->parentService->getParentType();
 
-		if( isset( $model ) && isset( $parent ) ) {
+		if( isset( $model ) && isset( $parent ) && $model->isParentValid( $parent->id, $parentType ) ) {
 
 			$file = $this->fileService->getById( $model->modelId );
 

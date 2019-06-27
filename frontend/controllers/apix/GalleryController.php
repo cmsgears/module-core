@@ -16,14 +16,12 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\frontend\controllers\base\Controller;
-
 /**
  * GalleryController handles the ajax requests specific to Gallery Model.
  *
  * @since 1.0.0
  */
-class GalleryController extends Controller {
+class GalleryController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

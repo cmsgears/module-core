@@ -9,15 +9,12 @@
 
 namespace cmsgears\core\common\models\resources;
 
-// CMG Imports
-use cmsgears\core\common\models\base\Meta as BaseMeta;
-
 /**
  * Abstract implementation to load form data.
  *
  * @since 1.0.0
  */
-class Meta extends BaseMeta {
+class Meta extends \cmsgears\core\common\models\base\Meta {
 
 	// Variables ---------------------------------------------------
 

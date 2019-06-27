@@ -836,4 +836,30 @@ class CodeGenUtil {
 		return $result;
 	}
 
+	public static function pluralize( $singular, $plural = null ) {
+
+		if( !empty( $plural ) ) {
+
+			return $plural;
+		}
+
+		$char = strtolower( $singular[ strlen( $singular ) - 1 ] );
+
+		switch( $char ) {
+
+			case 'y': {
+
+				return substr( $singular, 0, -1 ) . 'ies';
+			}
+			case 's': {
+
+				return $singular . 'es';
+			}
+			default: {
+
+				return $singular.'s';
+			}
+		}
+	}
+
 }

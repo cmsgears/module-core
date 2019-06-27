@@ -16,14 +16,12 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
  * AttributeController provides actions specific to model attributes.
  *
  * @since 1.0.0
  */
-abstract class AttributeController extends Controller {
+abstract class AttributeController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

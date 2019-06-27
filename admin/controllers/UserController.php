@@ -75,7 +75,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 		$this->superRoleId = isset( $superRole ) ?$superRole->id : null;
 
 		// Sidebar
-		$this->sidebar = [ 'parent' => 'sidebar-identity', 'child' => 'user' ];
+		$this->sidebar = [ 'parent' => 'sidebar-rbac', 'child' => 'user' ];
 
 		// Return Url
 		$this->returnUrl = Url::previous( 'users' );

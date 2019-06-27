@@ -198,7 +198,7 @@ class ProvinceService extends \cmsgears\core\common\services\base\EntityService 
 
 		$config[ 'order' ] = 'name ASC';
 
-		return self::findIdNameMap( $config );
+		return parent::findIdNameMap( $config );
 	}
 
 	public function getIsoNameMapByCountryId( $countryId ) {

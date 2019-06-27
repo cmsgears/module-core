@@ -11,13 +11,13 @@ $siteId	= Yii::$app->core->siteId;
 ?>
 
 <?php if( $core->hasModule( 'core' ) && $user->isPermitted( CoreGlobal::PERM_IDENTITY ) ) { ?>
-	<div id="sidebar-identity" class="collapsible-tab has-children <?= $parent === 'sidebar-identity' ? 'active' : null ?>">
+	<div id="sidebar-rbac" class="collapsible-tab has-children <?= $parent === 'sidebar-rbac' ? 'active' : null ?>">
 		<span class="marker"></span>
 		<div class="tab-header">
 			<div class="tab-icon"><span class="cmti cmti-user"></span></div>
-			<div class="tab-title">Identity</div>
+			<div class="tab-title">RBAC</div>
 		</div>
-		<div class="tab-content clear <?= $parent === 'sidebar-identity' ? 'expanded visible' : null ?>">
+		<div class="tab-content clear <?= $parent === 'sidebar-rbac' ? 'expanded visible' : null ?>">
 			<ul>
 				<?php if( $user->isPermitted( CoreGlobal::PERM_RBAC ) ) { ?>
 					<li class='role <?= $child === 'role' ? 'active' : null ?>'><?= Html::a( "Roles", ['/core/role/all'] ) ?></li>

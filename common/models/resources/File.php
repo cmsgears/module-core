@@ -398,6 +398,11 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 		return "";
 	}
 
+	public function getTempPath() {
+
+		return Yii::$app->fileManager->uploadDir . '/' . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "." . $this->extension;
+	}
+
 	/**
 	 * Return physical storage location of the file.
 	 *

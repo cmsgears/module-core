@@ -66,6 +66,16 @@ class DateUtil {
 		self::WEEK_DAY_SUN => 'Sunday'
 	];
 
+	public static $weekDaysMinMap = [
+		self::WEEK_DAY_MON => 'Mon',
+		self::WEEK_DAY_TUE => 'Tue',
+		self::WEEK_DAY_WED => 'Wed',
+		self::WEEK_DAY_THU => 'Thu',
+		self::WEEK_DAY_FRI => 'Fri',
+		self::WEEK_DAY_SAT => 'Sat',
+		self::WEEK_DAY_SUN => 'Sun'
+	];
+
 	public static $weekDaysWithAllMap = [
 		self::WEEK_DAY_ALL => 'All Days',
 		self::WEEK_DAY_MON => 'Monday',
@@ -167,10 +177,23 @@ class DateUtil {
 		return date( $format );
 	}
 
+	public static function getDateTimeUtc( $format = null, $timezone = 'UTC', $date = "now" ) {
+
+		$UTC		= new \DateTimeZone( $timezone );
+		$dateUTC	= new \DateTime( $date, $UTC );
+
+		if( !isset( $format ) ) {
+
+			$format	= 'Y-m-d H:i:s';
+		}
+
+		return $dateUTC->format( $format );
+	}
+
 	/**
 	 * @return time - current time having specified format in UTC
 	 */
-	public static function getTimeUtc( $format = null, $timezone = 'UTC', $date = "now"  ) {
+	public static function getTimeUtc( $format = null, $timezone = 'UTC', $date = "now" ) {
 
 		$UTC		= new \DateTimeZone( $timezone );
 		$dateUTC	= new \DateTime( $date, $UTC );
@@ -186,7 +209,7 @@ class DateUtil {
 	/**
 	 * @return time - current time having specified format in UTC
 	 */
-	public static function getDateUtc( $format = null, $timezone = 'UTC', $date = "now"  ) {
+	public static function getDateUtc( $format = null, $timezone = 'UTC', $date = "now" ) {
 
 		$UTC		= new \DateTimeZone( $timezone );
 		$dateUTC	= new \DateTime( $date, $UTC );
@@ -244,7 +267,7 @@ class DateUtil {
 			$format	= 'H:i:s';
 		}
 
-		$date 	= is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
+		$date = is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
 
 		return date( "N", $date );
 	}

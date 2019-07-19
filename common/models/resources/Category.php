@@ -344,16 +344,17 @@ class Category extends NestedSetModel implements IAuthor, IData, IFeatured, IMul
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : [ 'name' => SORT_ASC  ];
 		$limit 		= $config['limit'] ?? null;
+		$offset 	= $config['offset'] ?? null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'type=:type AND siteId=:siteId AND featured=1', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( $order )->limit($limit)->all();
+			return static::find()->where( 'type=:type AND siteId=:siteId AND featured=1', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( $order )->limit($limit)->offset( $offset )->all();
 		}
 		else {
 
-			return static::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( $order )->limit( $limit )->all();
+			return static::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( $order )->limit( $limit )->offset( $offset )->all();
 		}
 	}
 

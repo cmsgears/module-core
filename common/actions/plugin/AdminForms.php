@@ -123,7 +123,7 @@ class AdminForms extends \cmsgears\core\common\actions\base\ModelAction {
 				}
 				case 'plugins': {
 
-					if( isset( $pluginObj->dataModelClass ) ) {
+					if( isset( $pluginObj->pluginModelClass ) ) {
 
 						$formClass = $pluginObj->pluginModelClass;
 					}

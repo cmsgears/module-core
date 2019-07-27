@@ -95,6 +95,13 @@ abstract class Plugin extends Component {
 	public $dataModelClass;
 
 	/**
+	 * The plugin model class to save plugin specific settings.
+	 *
+	 * @var string
+	 */
+	public $pluginModelClass;
+
+	/**
 	 * The apix base path to update settings, config, attributes, data and to perform
 	 * other AJAX based actions.
 	 *
@@ -152,6 +159,12 @@ abstract class Plugin extends Component {
 			if( isset( $this->dataModelClass ) ) {
 
 				$formsHtml .= Yii::$app->controller->renderFile( "$adminViewsPath/data.php", [ 'plugin' => $this ] );
+			}
+
+			// Render Plugin
+			if( isset( $this->pluginModelClass ) ) {
+
+				$formsHtml .= Yii::$app->controller->renderFile( "$adminViewsPath/plugin.php", [ 'plugin' => $this ] );
 			}
 		}
 

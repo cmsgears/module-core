@@ -124,6 +124,19 @@ trait DataTrait {
 		return null;
 	}
 
+	public function getDataPluginMeta( $name, $assoc = false ) {
+
+		$object	= $this->generateDataObjectFromJson( $assoc );
+		$config	= 'plugins';
+
+		if( isset( $object->$config ) && isset( $object->$config->$name ) ) {
+
+			return $object->$config->$name;
+		}
+
+		return null;
+	}
+
 	public function getDataCustomMeta( $type, $name, $assoc = false ) {
 
 		$object	= $this->generateDataObjectFromJson( $assoc );

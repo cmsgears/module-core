@@ -16,12 +16,10 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Action;
-
 /**
  * The Form action save model attributes using Attributes Data Form to the data column.
  */
-class Form extends Action {
+class Form extends \cmsgears\core\common\base\Action {
 
 	// Variables ---------------------------------------------------
 

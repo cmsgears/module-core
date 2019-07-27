@@ -17,8 +17,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\forms\Meta;
 
-use cmsgears\core\common\actions\base\ModelAction;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -26,7 +24,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class AdminForms extends ModelAction {
+class AdminForms extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -123,6 +121,15 @@ class AdminForms extends ModelAction {
 
 					break;
 				}
+				case 'plugins': {
+
+					if( isset( $pluginObj->dataModelClass ) ) {
+
+						$formClass = $pluginObj->pluginModelClass;
+					}
+
+					break;
+				}
 			}
 
 			if( isset( $formClass ) ) {
@@ -159,6 +166,12 @@ class AdminForms extends ModelAction {
 						case 'data': {
 
 							$modelService->updateDataKeyObj( $model, $meta );
+
+							break;
+						}
+						case 'plugins': {
+
+							$modelService->updateDataPluginObj( $model, $meta );
 
 							break;
 						}

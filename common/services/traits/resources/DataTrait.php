@@ -163,6 +163,31 @@ trait DataTrait {
 	}
 
 	/**
+	 * Returns the Meta object using given key from data object using plugins key.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param string $key
+	 * @param boolean $assoc
+	 * @return boolean|\cmsgears\core\common\models\forms\Meta
+	 */
+	public function getDataPluginMeta( $model, $key, $assoc = false ) {
+
+		$object	= $model->generateDataObjectFromJson( $assoc );
+		$config	= 'plugins';
+		$meta	= new Meta();
+
+		if( isset( $object->$config ) && isset( $object->$config->$key ) ) {
+
+			$meta->key		= $key;
+			$meta->value	= $object->$config->$key;
+
+			return $meta;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Returns the Meta object using given type and key from data object.
 	 *
 	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
@@ -339,6 +364,28 @@ trait DataTrait {
 	}
 
 	/**
+	 * Update the data object using plugins key and given meta object.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param \cmsgears\core\common\models\forms\Meta $meta
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
+	public function updateDataPluginObj( $model, $meta ) {
+
+		$settings	= $model->getDataMeta( 'plugins' );
+		$key		= $meta->key;
+		$settings	= !empty( $settings ) ? $settings : new \StdClass();
+
+		$settings->$key = $meta->value;
+
+		$model->updateDataMeta( 'plugins', $settings );
+
+		$model->refresh();
+
+		return $model;
+	}
+
+	/**
 	 * Update the data object using custom key and given meta object.
 	 *
 	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
@@ -473,6 +520,27 @@ trait DataTrait {
 		unset( $config->$rkey );
 
 		$model->updateDataMeta( 'settings', $config );
+
+		$model->refresh();
+
+		return $model;
+	}
+
+	/**
+	 * Update the data object by removing the given key from plugins.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param \cmsgears\core\common\models\forms\Meta $meta
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
+	public function removeDataPluginObj( $model, $meta ) {
+
+		$config = $model->getDataMeta( 'plugins' );
+		$rkey	= $meta->key;
+
+		unset( $config->$rkey );
+
+		$model->updateDataMeta( 'plugins', $config );
 
 		$model->refresh();
 

@@ -39,7 +39,7 @@ class ContentUtil {
 		if( isset( $model ) ) {
 
 			$coreProperties = CoreProperties::getInstance();
-			$seoData		= $model->getDataMeta( CoreGlobal::DATA_SEO );
+			$seoData		= $model->getDataPluginMeta( CoreGlobal::DATA_SEO );
 
 			// Model
 			$view->params[ 'model' ]	= $model;

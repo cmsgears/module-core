@@ -17,8 +17,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\forms\Meta;
 
-use cmsgears\core\common\actions\base\ModelAction;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -26,7 +24,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class Remove extends ModelAction {
+class Remove extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 

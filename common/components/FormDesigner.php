@@ -858,7 +858,7 @@ class FormDesigner extends \yii\base\Component {
 		return $field;
 	}
 
-	public function getIconCheckbox( $form, $model, $field, $options, $icon, $config = [] ) {
+	public function getIconCheckbox( $form, $model, $field, $options = [], $config = [] ) {
 
 		$classPath	= get_class( $model );
 		$className	= join( '', array_slice( explode( '\\', $classPath ), -1 ) );
@@ -868,12 +868,16 @@ class FormDesigner extends \yii\base\Component {
 
 		$fieldOptions = isset( $config[ 'fieldOptions' ] ) ? $config[ 'fieldOptions' ] : [ 'class' => 'form-group clearfix' ];
 
-		$options[ 'class' ]	= isset( $options[ 'class' ] ) ? $options[ 'class' ] : 'cmt-checkbox cmt-choice';
-
+		$options	= isset( $options ) ? $options : [];
 		$optionsStr	= '';
 		$value		= !empty( $model->$field ) ? $model->$field : 0;
 		$checked	= $value ? 'checked' : null;
 		$disabled	= isset( $options[ 'disabled' ] ) ? 'disabled' : null;
+
+		if( empty( $options[ 'class' ] ) ) {
+
+			$options[ 'class' ] = 'cmt-choice cmt-checkbox';
+		}
 
 		foreach( $options as $key => $option ) {
 
@@ -882,15 +886,14 @@ class FormDesigner extends \yii\base\Component {
 
 		$label = HtmlPurifier::process( $label );
 
-		$template	= "<div $optionsStr>
-			      			<label>
-			            		<input type=\"hidden\" value=\"$value\" name=\"$fieldName\">
-								<input type=\"checkbox\" value=\"$value\" name=\"$field\" $checked $disabled>
-			            		<span class=\"label $icon\"></span>
-			            		<span>$label</span>
-			      			</label>
-			      			{hint}\n{error}
-						</div>";
+		$template = "<div $optionsStr>
+						<label>
+							<input type=\"checkbox\" $checked $disabled>
+							<span class=\"label\"> $label</span>
+							<input type=\"hidden\" name=\"$fieldName\" value=\"$value\" />
+						</label>
+						{hint}\n{error}
+					</div>";
 
 		$field = $form->field( $model, $field, [ 'template' => $template, 'options' => $fieldOptions ] )->checkbox();
 

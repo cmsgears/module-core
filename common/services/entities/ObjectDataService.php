@@ -17,11 +17,14 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\mappers\ModelObject;
+
 use cmsgears\core\common\services\interfaces\entities\IObjectService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\core\common\services\interfaces\mappers\IModelFileService;
 
 use cmsgears\core\common\services\traits\base\ApprovalTrait;
+use cmsgears\core\common\services\traits\base\FeaturedTrait;
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
@@ -66,6 +69,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	use ApprovalTrait;
 	use DataTrait;
+	use FeaturedTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
@@ -304,6 +308,25 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		return $this->getPage( $config );
 	}
 
+	public function getPageByTypeParent( $type, $parentId, $parentType, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$modelObjectTable = ModelObject::tableName();
+
+		$query = $modelClass::queryWithHasOne( [ 'ignoreSite' => true ] );
+
+		$query->leftJoin( $modelObjectTable, "$modelObjectTable.modelId=$modelTable.id" );
+		$query->where( "$modelObjectTable.parentId=$parentId AND $modelObjectTable.parentType='$parentType' AND $modelObjectTable.type='$type'" );
+
+		$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+
+		$config[ 'query' ] = $query;
+
+		return $this->getPage( $config );
+	}
+
 	// Read ---------------
 
 	// Read - Models ---
@@ -318,7 +341,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		return $this->getFirstByNameType( $name, static::$parentType );
 	}
 
-	public function getFeatured() {
+	public function getFeatured( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 
@@ -385,21 +408,86 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		return parent::create( $model, $config );
 	}
 
+	public function add( $model, $config = [] ) {
+
+		$this->register( $model, $config );
+	}
+
+	public function register( $model, $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+		$addGallery	= isset( $config[ 'addGallery' ] ) ? $config[ 'addGallery' ] : false;
+
+		$galleryService = Yii::$app->factory->get( 'galleryService' );
+
+		$galleryClass = $galleryService->getModelClass();
+
+		$transaction = Yii::$app->db->beginTransaction();
+
+		try {
+
+			// Create Model
+			$model = $this->create( $model, $config );
+
+			// Refresh Model
+			$model->Refresh();
+
+			// Create Gallery
+			if( isset( $gallery ) ) {
+
+				$gallery->type		= static::$parentType;
+				$gallery->status	= $galleryClass::STATUS_ACTIVE;
+				$gallery->siteId	= Yii::$app->core->siteId;
+
+				$gallery = $galleryService->create( $gallery );
+			}
+			else if( $addGallery ) {
+
+				$gallery = $galleryService->createByParams([
+					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
+					'name' => $model->name, 'title' => $model->title,
+					'siteId' => Yii::$app->core->siteId
+				]);
+			}
+
+			// Attach gallery
+			if( isset( $gallery ) ) {
+
+				$model->galleryId = $gallery->id;
+
+				$model->update();
+			}
+
+			$transaction->commit();
+		}
+		catch( Exception $e ) {
+
+			$transaction->rollBack();
+
+			return false;
+		}
+
+		return $model;
+	}
+
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
 
 		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
+		$avatar 	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'templateId', 'avatarId', 'bannerId', 'videoId',
+			'templateId', 'avatarId', 'bannerId', 'videoId', 'galleryId',
 			'name', 'slug', 'title', 'icon', 'texture', 'description', 'visibility',
 			'htmlOptions', 'summary', 'content'
 		];
-
-		$avatar	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
-		$banner	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
-		$video 	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 
 		if( $admin ) {
 
@@ -407,6 +495,19 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		}
 
 		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
+
+		// Create/Update gallery
+		if( isset( $gallery ) ) {
+
+			$galleryService = Yii::$app->factory->get( 'galleryService' );
+
+			$gallery = $galleryService->createOrUpdate( $gallery );
+
+			if( empty( $model->galleryId ) ) {
+
+				$model->galleryId = $gallery->id;
+			}
+		}
 
 		return parent::update( $model, [
 			'attributes' => $attributes

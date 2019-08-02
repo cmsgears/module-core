@@ -27,7 +27,8 @@ class CoreGlobal {
 
 	// System Pages ---------------------------------------------------
 
-	const PAGE_HOME = 'home';
+	const PAGE_HOME		= 'home';
+	const PAGE_THEME	= 'theme';
 
 	const PAGE_ACCOUNT_ACTIVATE		= 'activate-account';
 	const PAGE_PASSWORD_FORGOT		= 'forgot-password';

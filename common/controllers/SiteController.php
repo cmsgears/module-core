@@ -68,6 +68,7 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
+					'theme' => [ 'get' ],
 					'activate-account' => [ 'get', 'post' ],
 					'forgot-password' => [ 'get', 'post' ],
 					'reset-password' => [ 'get', 'post' ],
@@ -86,6 +87,16 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 	// CMG parent classes --------------------
 
 	// SiteController ------------------------
+
+	/**
+	 * It shows the UI components available with the theme.
+	 *
+	 * @return string
+	 */
+	public function actionTheme() {
+
+		return $this->render( CoreGlobal::PAGE_THEME );
+	}
 
 	/**
 	 * The users added by site admin can be activated by providing valid token and email. If

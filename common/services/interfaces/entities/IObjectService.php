@@ -11,6 +11,7 @@ namespace cmsgears\core\common\services\interfaces\entities;
 
 // CMG Imports
 use cmsgears\core\common\services\interfaces\base\IApproval;
+use cmsgears\core\common\services\interfaces\base\IFeatured;
 use cmsgears\core\common\services\interfaces\base\IEntityService;
 use cmsgears\core\common\services\interfaces\base\IMultiSite;
 use cmsgears\core\common\services\interfaces\base\INameType;
@@ -22,15 +23,15 @@ use cmsgears\core\common\services\interfaces\resources\IData;
  *
  * @since 1.0.0
  */
-interface IObjectService extends IApproval, IEntityService, IData, IMultiSite, INameType, ISlugType {
+interface IObjectService extends IEntityService, IApproval, IData, IFeatured, IMultiSite, INameType, ISlugType {
 
 	// Data Provider ------
+
+	public function getPageByTypeParent( $type, $parentId, $parentType, $config = [] );
 
 	// Read ---------------
 
 	// Read - Models ---
-
-	public function getFeatured();
 
 	public function getActive( $config = [] );
 

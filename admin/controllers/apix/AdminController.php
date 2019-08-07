@@ -62,10 +62,10 @@ class AdminController extends \cmsgears\core\common\controllers\apix\UserControl
 
 		if( !isset( $this->adminProperties ) ) {
 
-			$this->adminProperties = AdminProperties::getInstance();
+			$this->siteProperties = AdminProperties::getInstance();
 		}
 
-		return $this->adminProperties;
+		return $this->siteProperties;
 	}
 
 	// Compatibility Call

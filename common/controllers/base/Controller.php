@@ -214,18 +214,20 @@ abstract class Controller extends \yii\web\Controller {
 		// Send user to home if already logged in
 		if ( !Yii::$app->user->isGuest ) {
 
-			$user		= Yii::$app->user->getIdentity();
+			$siteMemberService = Yii::$app->factory->get( 'siteMemberService' );
+
+			$user		= Yii::$app->core->getUser();
 			$role		= $user->role;
 			$storedLink	= Url::previous( CoreGlobal::REDIRECT_LOGIN );
 
-			$siteId		= Yii::$app->core->getSiteId();
+			$siteId = Yii::$app->core->getSiteId();
 
-			$siteMember = Yii::$app->factory->get( 'siteMemberService' )->getBySiteIdUserId( $siteId, $user->id );
+			$siteMember = $siteMemberService->getBySiteIdUserId( $siteId, $user->id );
 
 			// Auto-Register site member
-			if( !isset( $siteMember ) ) {
+			if( !isset( $siteMember ) && Yii::$app->core->isAutoSiteMember() ) {
 
-				Yii::$app->factory->get( 'siteMemberService' )->create( $user );
+				$siteMemberService->createByParams( [ 'userId' => $user->id ] );
 			}
 
 			// Redirect user to stored link on login

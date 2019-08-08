@@ -18,8 +18,6 @@ use cmsgears\core\common\validators\CoreValidator;
 
 use cmsgears\core\common\services\entities\UserService;
 
-use cmsgears\core\common\base\Config;
-
 /**
  * The core component for CMSGears based sites. It must be initialised for app bootstrap
  * using the name core.
@@ -32,7 +30,7 @@ use cmsgears\core\common\base\Config;
  *
  * @since 1.0.0
  */
-class Core extends Config {
+class Core extends \cmsgears\core\common\base\Config {
 
 	// Variables ---------------------------------------------------
 
@@ -79,6 +77,11 @@ class Core extends Config {
 	 * @var boolean Check whether the web app is multi-site.
 	 */
 	public $multiSite			= false;
+
+	/**
+	 * @var boolean Check whether the user can join a child site without admin approval.
+	 */
+	public $autoSiteMember		= false;
 
 	/**
 	 * @var boolean Check whether the web app is sub domain or sub directory based in case $multiSite is set to true.
@@ -350,6 +353,11 @@ class Core extends Config {
 	public function isMultiSite() {
 
 		return $this->multiSite;
+	}
+
+	public function isAutoSiteMember() {
+
+		return $this->autoSiteMember;
 	}
 
 	public function isGuest() {

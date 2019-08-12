@@ -18,8 +18,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\interfaces\base\IMeta;
 
-use cmsgears\core\common\actions\base\ModelAction;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -27,7 +25,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class Create extends ModelAction {
+class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -93,6 +91,11 @@ class Create extends ModelAction {
 
 				$meta->parentId		= $parent->id;
 				$meta->parentType	= $this->modelService->getParentType();
+			}
+
+			if( empty( $meta->active ) ) {
+
+				$meta->active = true;
 			}
 
 			if( empty( $meta->type ) ) {

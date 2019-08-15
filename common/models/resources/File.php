@@ -657,6 +657,17 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 
 				ob_start();
 ?>
+<!-- Simple File -->
+<div class="wrap-editor-image">
+	<img class="fluid" src="<?= $fileUrl ?>" title="<?= $title ?>" alt="<?= $alt ?>" />
+<?php if( !empty( $this->caption ) ) { ?>
+	<p class="image-caption"><?= $this->caption ?></p>
+<?php } ?>
+<?php if( !empty( $this->description ) ) { ?>
+	<p class="image-desc"><?= $this->description ?></p>
+<?php } ?>
+</div>
+
 <!-- Responsive -->
 <div class="wrap-editor-image">
 	<img class="fluid" src="<?= $smallUrl ?>" srcset="<?= $smallUrl ?> 1x, <?= $mediumUrl ?> 1.5x, <?= $fileUrl ?> 2x" title="<?= $title ?>" sizes="(min-width: 1025px) 2x, (min-width: 481px) 1.5x, 1x" alt="<?= $alt ?>" />

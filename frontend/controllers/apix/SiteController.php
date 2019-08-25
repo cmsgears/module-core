@@ -275,7 +275,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 
 	public function actionCheckUser( $redirect = null ) {
 
-		$user = Yii::$app->user->getIdentity();
+		$user = Yii::$app->core->getUser();
 
 		if( isset( $user ) ) {
 

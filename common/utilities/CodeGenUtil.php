@@ -833,6 +833,8 @@ class CodeGenUtil {
 
 		$result .= $wrap ? '</ul>' : '';
 
+		$result = strip_tags( $result, '<ul><li><span><a><i>' );
+
 		return $result;
 	}
 

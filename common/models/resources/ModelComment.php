@@ -61,6 +61,11 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $status
  * @property string $type
  * @property integer $fragment
+ * @property integer $rate1
+ * @property integer $rate2
+ * @property integer $rate3
+ * @property integer $rate4
+ * @property integer $rate5
  * @property integer $rating
  * @property integer $order
  * @property boolean $pinned
@@ -186,6 +191,7 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 			// Other
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
 			[ [ 'pinned', 'featured', 'anonymous', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'rate1', 'rate2', 'rate3', 'rate4', 'rate5' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'ipNum', 'status', 'fragment', 'rating', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'siteId', 'baseId', 'bannerId', 'videoId', 'parentId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'approvedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]

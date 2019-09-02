@@ -427,6 +427,7 @@ class CoreGlobal {
 	const FIELD_AVATAR		= 'avatarField';
 	const FIELD_AVATAR_URL	= 'avatarUrlField';
 	const FIELD_BANNER		= 'bannerField';
+	const FIELD_BANNER_M	= 'mbannerField';
 	const FIELD_VIDEO		= 'videoField';
 	const FIELD_DOCUMENT	= 'documentField';
 

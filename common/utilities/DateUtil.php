@@ -10,6 +10,16 @@ class DateUtil {
 
     // Months ------------------------------------------------------
 
+	// PHP month - 1 to 12 - Jan to Dec
+	// $d = date( 'm' ); // With leading zero
+	// $d = date( 'n' ); // Without leading zero
+
+	// MySQL month - 1 to 12 - Jan to Dec
+	// SELECT MONTH( '2009-05-18' );
+
+	// JavaScript month - 0 to 12 - Jan to Dec
+	// Date.getMonth()
+
     const MONTH_JAN     = 1;
     const MONTH_FEB     = 2;
     const MONTH_MAR     = 3;
@@ -42,19 +52,23 @@ class DateUtil {
 
 	// PHP Week Days : 0 - Sunday, 1 - Monday, 2 - Tuesday, 3 - Wednesday, 4 - Thursday, 5 - Friday, 6 - Saturday
 	// $w = date( 'w', strtotime( '2017-06-28' ) );
+	// Notes: $w = date( 'N', strtotime( '2017-06-28' ) ); // It returns 7 for Sunday
 
 	// MySQL Week Days : 0 - Monday, 1 - Tuesday, 2 - Wednesday, 3 - Thursday, 4 - Friday, 5 - Saturday, 6 - Sunday
 	// select weekday('2017-06-28');
 
-	const WEEK_DAY_SUN		=  0;
-	const WEEK_DAY_MON		=  1;
-	const WEEK_DAY_TUE		=  2;
-	const WEEK_DAY_WED		=  3;
-	const WEEK_DAY_THU		=  4;
-	const WEEK_DAY_FRI		=  5;
-	const WEEK_DAY_SAT		=  6;
+	// JavaScript Week Days : 0 - Sunday, 1 - Monday, 2 - Tuesday, 3 - Wednesday, 4 - Thursday, 5 - Friday, 6 - Saturday
+	// Date.getDay()
 
-	const WEEK_DAY_ALL		= 10;
+	const WEEK_DAY_SUN	=  0;
+	const WEEK_DAY_MON	=  1;
+	const WEEK_DAY_TUE	=  2;
+	const WEEK_DAY_WED	=  3;
+	const WEEK_DAY_THU	=  4;
+	const WEEK_DAY_FRI	=  5;
+	const WEEK_DAY_SAT	=  6;
+
+	const WEEK_DAY_ALL	= 10;
 
 	public static $weekDaysMap = [
 		self::WEEK_DAY_MON => 'Monday',
@@ -269,7 +283,7 @@ class DateUtil {
 
 		$date = is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
 
-		return date( "N", $date );
+		return date( "w", $date );
 	}
 
 	public static function getWeekStartDate( $date ) {

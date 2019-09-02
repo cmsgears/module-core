@@ -223,6 +223,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_AVATAR => 'Avatar',
 		CoreGlobal::FIELD_AVATAR_URL => 'Avatar URL',
 		CoreGlobal::FIELD_BANNER => 'Banner',
+		CoreGlobal::FIELD_BANNER_M => 'Mobile Banner',
 		CoreGlobal::FIELD_VIDEO => 'Video',
 		CoreGlobal::FIELD_DOCUMENT => 'Document',
 

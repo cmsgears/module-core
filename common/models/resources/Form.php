@@ -268,13 +268,25 @@ class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IM
 	}
 
 	/**
+	 * Return all the active fields associated with the form.
+	 *
+	 * @return FormField[]
+	 */
+	public function getActiveFields() {
+
+		$fieldTable = FormField::tableName();
+
+		return $this->hasMany( FormField::class, [ 'formId' => 'id' ] )->where( $fieldTable . ".active=1" );
+	}
+
+	/**
 	 * Return map of form fields having field name as key and field itself as value.
 	 *
 	 * @return array FormField map
 	 */
 	public function getFieldsMap() {
 
-		$formFields = $this->fields;
+		$formFields = $this->activeFields;
 		$fieldsMap	= [];
 
 		foreach( $formFields as $formField ) {

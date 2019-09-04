@@ -80,7 +80,7 @@ class FormUtil {
 
 	public static function getFieldsHtml( $form, $model, $config = [] ) {
 
-		$fields				= $model->fields;
+		$fields				= $model->activeFields;
 		$fieldsHtml			= '';
 		$config[ 'label' ]	= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
 
@@ -104,7 +104,7 @@ class FormUtil {
 
 	public static function getApixFieldsHtml( $form, $model, $config = [] ) {
 
-		$fields					= $form->fields;
+		$fields					= $form->activeFields;
 		$fieldsHtml				= '';
 		$config[ 'label' ]		= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
 		$config[ 'modelName' ]	= isset( $config[ 'modelName' ] ) ? $config[ 'modelName' ] : 'GenericForm';

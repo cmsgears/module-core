@@ -20,7 +20,7 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * @since 1.0.0
  */
-abstract class CategoryController extends \cmsgears\core\admin\controllers\base\CrudController {
+abstract class CategoryController extends CrudController {
 
 	// Variables ---------------------------------------------------
 

@@ -20,11 +20,11 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\resources\File;
 
 /**
- * FileController provides actions specific to model files.
+ * ModelObjectController provides actions specific to model objects.
  *
  * @since 1.0.0
  */
-abstract class FileController extends Controller {
+abstract class ModelObjectController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -36,9 +36,11 @@ abstract class FileController extends Controller {
 
 	// Protected --------------
 
+	protected $type;
+
 	protected $parentService;
 
-	protected $fileService;
+	protected $objectService;
 
 	// Private ----------------
 
@@ -49,14 +51,14 @@ abstract class FileController extends Controller {
 		parent::init();
 
 		// Views
-		$this->setViewPath( '@cmsgears/module-core/admin/views/mfile' );
+		$this->setViewPath( '@cmsgears/module-core/admin/views/mobject' );
 
 		// Permission
 		$this->crudPermission = CoreGlobal::PERM_CORE;
 
-		$this->modelService = Yii::$app->factory->get( 'modelFileService' );
+		$this->modelService = Yii::$app->factory->get( 'modelObjectService' );
 
-		$this->fileService = Yii::$app->factory->get( 'fileService' );
+		$this->objectService = Yii::$app->factory->get( 'objectService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -73,21 +75,23 @@ abstract class FileController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'index'	 => [ 'permission' => $this->crudPermission ],
-					'all'  => [ 'permission' => $this->crudPermission ],
-					'create'  => [ 'permission' => $this->crudPermission ],
-					'update'  => [ 'permission' => $this->crudPermission ],
-					'delete'  => [ 'permission' => $this->crudPermission ]
+					'index' => [ 'permission' => $this->crudPermission ],
+					'all' => [ 'permission' => $this->crudPermission ],
+					'create' => [ 'permission' => $this->crudPermission ],
+					'update' => [ 'permission' => $this->crudPermission ],
+					'delete' => [ 'permission' => $this->crudPermission ],
+					'gallery' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
 					'index' => [ 'get', 'post' ],
-					'all'  => [ 'get' ],
-					'create'  => [ 'get', 'post' ],
-					'update'  => [ 'get', 'post' ],
-					'delete'  => [ 'get', 'post' ]
+					'all' => [ 'get' ],
+					'create' => [ 'get', 'post' ],
+					'update' => [ 'get', 'post' ],
+					'delete' => [ 'get', 'post' ],
+					'gallery' => [ 'get' ]
 				]
 			]
 		];
@@ -95,13 +99,25 @@ abstract class FileController extends Controller {
 
 	// yii\base\Controller ----
 
+	public function actions() {
+
+		return [
+			'gallery' => [
+				'class' => 'cmsgears\core\common\actions\regular\gallery\Browse',
+				'modelService' => $this->objectService
+			]
+		];
+	}
+
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
-	// FileController ------------------------
+	// ModelObjectController -----------------
 
 	public function actionAll( $pid ) {
+
+		$objectClass = $this->objectService->getModelClass();
 
 		$parent		= $this->parentService->getById( $pid );
 		$parentType	= $this->parentService->getParentType();
@@ -113,8 +129,8 @@ abstract class FileController extends Controller {
 			return $this->render( 'all', [
 				'dataProvider' => $dataProvider,
 				'parent' => $parent,
-				'visibilityMap' => File::$visibilityMap,
-				'typeMap' => File::$typeMap
+				'statusMap' => $objectClass::$statusMap,
+				'visibilityMap' => $objectClass::$visibilityMap
 			]);
 		}
 
@@ -128,25 +144,38 @@ abstract class FileController extends Controller {
 
 		if( isset( $parent ) ) {
 
-			$fileClass	= $this->fileService->getModelClass();
-			$parentType	= $this->parentService->getParentType();
+			$objectClass	= $this->objectService->getModelClass();
+			$parentType		= $this->parentService->getParentType();
 
-			$file = new $fileClass;
+			$object	= new $objectClass;
+			$model	= $this->modelService->getModelObject();
 
-			$file->siteId	= Yii::$app->core->siteId;
-			$file->shared	= false;
+			$object->siteId	= Yii::$app->core->siteId;
+			$object->type	= $this->type;
 
-			if( $file->load( Yii::$app->request->post(), $file->getClassName() ) && $file->validate() ) {
+			$avatar	= File::loadFile( null, 'Avatar' );
+			$banner	= File::loadFile( null, 'Banner' );
+			$video	= File::loadFile( null, 'Video' );
 
-				$this->model = $this->modelService->createWithParent( $file, [ 'parentId' => $parent->id, 'parentType' => $parentType ] );
+			if( $object->load( Yii::$app->request->post(), $object->getClassName() ) && $object->validate() ) {
+
+				$this->model = $this->modelService->createWithParent( $object, [
+					'parentId' => $parent->id, 'parentType' => $parentType, 'type' => $this->type,
+					'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+				]);
 
 				return $this->redirect( $this->returnUrl );
 			}
 
 			return $this->render( 'create', [
-				'file' => $file,
+				'object' => $object,
+				'model' => $model,
 				'parent' => $parent,
-				'visibilityMap' => File::$visibilityMap
+				'avatar' => $avatar,
+				'banner' => $banner,
+				'video' => $video,
+				'statusMap' => $objectClass::$statusMap,
+				'visibilityMap' => $objectClass::$visibilityMap
 			]);
 		}
 
@@ -162,11 +191,20 @@ abstract class FileController extends Controller {
 
 		if( isset( $model ) && isset( $parent ) && $model->isParentValid( $parent->id, $parentType ) ) {
 
-			$file = $this->fileService->getById( $model->modelId );
+			$objectClass = $this->objectService->getModelClass();
 
-			if( $file->load( Yii::$app->request->post(), $file->getClassName() ) && $file->validate() ) {
+			$object = $this->objectService->getById( $model->modelId );
 
-				$this->fileService->saveFile( $file, [ 'admin' => true ] );
+			$avatar	= File::loadFile( $object->avatar, 'Avatar' );
+			$banner	= File::loadFile( $object->banner, 'Banner' );
+			$video	= File::loadFile( $object->video, 'Video' );
+
+			if( $object->load( Yii::$app->request->post(), $object->getClassName() ) && $object->validate() ) {
+
+				$this->objectService->update( $object, [
+					'admin' => true,
+					'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+				]);
 
 				$this->model = $this->modelService->update( $model, [ 'admin' => true ] );
 
@@ -174,10 +212,14 @@ abstract class FileController extends Controller {
 			}
 
 			return $this->render( 'update', [
-				'file' => $file,
+				'object' => $object,
 				'model' => $model,
 				'parent' => $parent,
-				'visibilityMap' => File::$visibilityMap
+				'avatar' => $avatar,
+				'banner' => $banner,
+				'video' => $video,
+				'statusMap' => $objectClass::$statusMap,
+				'visibilityMap' => $objectClass::$visibilityMap
 			]);
 		}
 
@@ -193,23 +235,29 @@ abstract class FileController extends Controller {
 
 		if( isset( $model ) && isset( $parent ) && $model->isParentValid( $parent->id, $parentType ) ) {
 
-			$file = $this->fileService->getById( $model->modelId );
+			$modelClass = $this->modelService->getModelClass();
 
-			if( $file->load( Yii::$app->request->post(), $file->getClassName() ) && $file->validate() ) {
+			$object = $this->objectService->getById( $model->modelId );
+
+			if( $object->load( Yii::$app->request->post(), $object->getClassName() ) && $object->validate() ) {
 
 				$this->model = $model;
 
-				// Delete File and Mappings
-				$this->fileService->delete( $file, [ 'admin' => true ] );
+				// Delete Object and Mappings
+				$this->objectService->delete( $object, [ 'admin' => true ] );
 
 				return $this->redirect( $this->returnUrl );
 			}
 
 			return $this->render( 'delete', [
-				'file' => $file,
+				'object' => $object,
 				'model' => $model,
 				'parent' => $parent,
-				'visibilityMap' => File::$visibilityMap
+				'avatar' => $object->avatar,
+				'banner' => $object->banner,
+				'video' => $object->video,
+				'statusMap' => $objectClass::$statusMap,
+				'visibilityMap' => $objectClass::$visibilityMap
 			]);
 		}
 

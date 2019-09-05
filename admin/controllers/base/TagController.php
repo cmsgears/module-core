@@ -15,8 +15,6 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\CrudController;
-
 /**
  * TagController provides actions specific to tag model.
  *

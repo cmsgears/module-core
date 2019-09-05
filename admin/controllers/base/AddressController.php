@@ -22,7 +22,7 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * @since 1.0.0
  */
-abstract class AddressController extends \cmsgears\core\admin\controllers\base\Controller {
+abstract class AddressController extends Controller {
 
 	// Variables ---------------------------------------------------
 

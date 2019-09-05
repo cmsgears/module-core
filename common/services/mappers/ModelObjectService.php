@@ -10,6 +10,7 @@
 namespace cmsgears\core\common\services\mappers;
 
 // CMG Imports
+use cmsgears\core\common\services\interfaces\entities\IObjectService;
 use cmsgears\core\common\services\interfaces\mappers\IModelObjectService;
 
 use cmsgears\core\common\services\base\ModelMapperService;
@@ -41,9 +42,18 @@ class ModelObjectService extends ModelMapperService implements IModelObjectServi
 
 	// Private ----------------
 
+	private $objectService;
+
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+	public function __construct( IObjectService $objectService, $config = [] ) {
+
+		$this->objectService = $objectService;
+
+		parent::__construct( $config );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -70,6 +80,30 @@ class ModelObjectService extends ModelMapperService implements IModelObjectServi
 	// Read - Others ---
 
 	// Create -------------
+
+	public function createWithParent( $parent, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+
+		$parentId	= $config[ 'parentId' ];
+		$parentType	= $config[ 'parentType' ];
+		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_DEFAULT;
+		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
+
+		$object = $this->objectService->create( $parent, $config );
+
+		$model = new $modelClass;
+
+		$model->modelId		= $object->id;
+		$model->parentId	= $parentId;
+		$model->parentType	= $parentType;
+
+		$model->type	= $type;
+		$model->order	= $order;
+		$model->active	= true;
+
+		return parent::create( $model );
+	}
 
 	// Update -------------
 

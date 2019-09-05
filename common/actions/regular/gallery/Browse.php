@@ -41,9 +41,10 @@ class Browse extends \cmsgears\core\common\base\Action {
 
 	// Public -----------------
 
+	public $modelService;
+
 	// Protected --------------
 
-	protected $modelService;
 	protected $galleryService;
 
 	// Private ----------------
@@ -56,7 +57,7 @@ class Browse extends \cmsgears\core\common\base\Action {
 
 		parent::init();
 
-		$this->modelService		= Yii::$app->controller->modelService;
+		$this->modelService		= empty( $this->modelService ) ? Yii::$app->controller->modelService : $this->modelService;
 		$this->galleryService 	= Yii::$app->factory->get( 'galleryService' );
 	}
 

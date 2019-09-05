@@ -25,7 +25,7 @@ use cmsgears\core\common\behaviors\ActivityBehavior;
  *
  * @since 1.0.0
  */
-abstract class ObjectController extends \cmsgears\core\admin\controllers\base\CrudController {
+abstract class ObjectController extends CrudController {
 
 	// Variables ---------------------------------------------------
 

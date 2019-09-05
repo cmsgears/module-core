@@ -88,10 +88,10 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 	 */
 	public $model;
 
-	// Protected --------------
-
 	// Model service to identify model in action. The controller must define model service.
-	protected $modelService;
+	public $modelService;
+
+	// Protected --------------
 
 	// Private ----------------
 
@@ -111,7 +111,7 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 		parent::init();
 
 		// Model service provided by controller
-		$this->modelService	= $this->controller->modelService;
+		$this->modelService	= empty( $this->modelService ) ? $this->controller->modelService : $this->modelService;
 
 		// Configure parentType
 		if( $this->parent ) {

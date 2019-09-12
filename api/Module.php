@@ -1,10 +1,9 @@
 <?php
 /**
- * This file is part of project Century Real Estate. Please view License file distributed
+ * This file is part of project cmsgears. Please view License file distributed
  * with the source code for license details.
  *
- * @link https://www.centuryrealestate.in/
- * @copyright Copyright (c) 2018 Century Real Estate Holdings Pvt. Ltd.
+ * @copyright Copyright (c) 2018 cmsgears.
  */
 
 namespace cmsgears\core\api;
@@ -22,7 +21,7 @@ class Module extends \cmsgears\core\common\base\Module {
 
 	// Public -----------------
 
-	public $controllerNamespace = 'century\core\api\controllers';
+	public $controllerNamespace = 'cmsgears\core\api\controllers';
 
 	// Protected --------------
 
@@ -36,7 +35,7 @@ class Module extends \cmsgears\core\common\base\Module {
 
 		parent::init();
 
-		$this->setViewPath( '@century/module-core/api/views' );
+		$this->setViewPath( '@cmsgears/module-core/api/views' );
 	}
 
 	// Instance methods --------------------------------------------

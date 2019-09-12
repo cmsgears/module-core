@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\api\controllers\api;
+namespace cmsgears\core\api\controllers;
 
 use Yii;
 

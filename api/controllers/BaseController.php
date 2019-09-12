@@ -6,7 +6,7 @@ use Yii;
 
 // CMG Imports
 use cmsgears\core\frontend\config\SiteProperties;
-use cmsgears\core\api\controllers\api\RestTrait;
+use cmsgears\core\api\controllers\RestTrait;
 
 class BaseController extends \yii\rest\Controller {
 	

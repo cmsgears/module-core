@@ -80,7 +80,7 @@ class FormUtil {
 
 	public static function getFieldsHtml( $form, $model, $config = [] ) {
 
-		$fields				= $model->activeFields;
+		$fields				= $model->fields;
 		$fieldsHtml			= '';
 		$config[ 'label' ]	= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
 

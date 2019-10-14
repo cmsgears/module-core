@@ -46,6 +46,11 @@ $returnUrl		= $this->context->returnUrl;
 					</div>
 					<div class="row">
 						<div class="col col2">
+							<?= $form->field( $model, 'order' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
 							<?= $form->field( $model, 'validators' )->textarea( [ 'readonly' => 'true' ] ) ?>
 						</div>
 						<div class="col col2">

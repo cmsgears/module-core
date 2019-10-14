@@ -264,7 +264,8 @@ class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IM
 	 */
 	public function getFields() {
 
-		return $this->hasMany( FormField::class, [ 'formId' => 'id' ] );
+		return $this->hasMany( FormField::class, [ 'formId' => 'id' ] )
+				->orderBy( 'order DESC' );
 	}
 
 	/**
@@ -276,7 +277,8 @@ class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IM
 
 		$fieldTable = FormField::tableName();
 
-		return $this->hasMany( FormField::class, [ 'formId' => 'id' ] )->where( $fieldTable . ".active=1" );
+		return $this->hasMany( FormField::class, [ 'formId' => 'id' ] )->where( $fieldTable . ".active=1" )
+				->orderBy( 'order DESC' );
 	}
 
 	/**

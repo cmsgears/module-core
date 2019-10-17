@@ -496,11 +496,13 @@ class CodeGenUtil {
 		return $metaContent;
 	}
 
-	public static function generateSeoH1( $params ) {
+	public static function generateSeoH1( $params, $config = [] ) {
+
+		$stripTags = isset( $config[ 'stripTags' ] ) ? $config[ 'stripTags' ] : true;
 
 		if( isset( $params[ 'summary' ] ) ) {
 
-			$summary = $params[ 'summary' ];
+			$summary = $stripTags ? strip_tags( $params[ 'summary' ] ) : $params[ 'summary' ];
 
 			$seoH1 = "<h1 class=\"hidden\">$summary</h1>";
 

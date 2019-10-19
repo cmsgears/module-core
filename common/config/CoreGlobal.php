@@ -28,6 +28,7 @@ class CoreGlobal {
 	// System Pages ---------------------------------------------------
 
 	const PAGE_HOME		= 'home';
+	const PAGE_COLORS	= 'colors';
 	const PAGE_THEME	= 'theme';
 
 	const PAGE_ACCOUNT_ACTIVATE		= 'activate-account';

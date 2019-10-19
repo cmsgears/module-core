@@ -68,6 +68,7 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
+					'colors' => [ 'get' ],
 					'theme' => [ 'get' ],
 					'activate-account' => [ 'get', 'post' ],
 					'forgot-password' => [ 'get', 'post' ],
@@ -87,6 +88,16 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 	// CMG parent classes --------------------
 
 	// SiteController ------------------------
+
+	/**
+	 * It shows the colors available with the theme.
+	 *
+	 * @return string
+	 */
+	public function actionColors() {
+
+		return $this->render( CoreGlobal::PAGE_COLORS );
+	}
 
 	/**
 	 * It shows the UI components available with the theme.

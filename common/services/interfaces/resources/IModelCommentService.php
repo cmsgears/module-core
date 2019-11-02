@@ -32,7 +32,7 @@ interface IModelCommentService extends IModelResourceService, IData {
 
 	public function getPageByBaseId( $baseId, $config = [] );
 
-	public function getPageForApproved( $config = [] );
+	public function getPageForApproved( $parentId, $parentType, $config = [] );
 
 	// Read ---------------
 
@@ -57,8 +57,6 @@ interface IModelCommentService extends IModelResourceService, IData {
 	// Read - Others ---
 
 	// Create -------------
-
-	public function attachMedia( $model, $file, $mediaType, $parentType );
 
 	// Update -------------
 

@@ -20,8 +20,10 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\interfaces\base\IAuthor;
 use cmsgears\core\common\models\interfaces\base\IFeatured;
+use cmsgears\core\common\models\interfaces\base\IMultiSite;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
+use cmsgears\core\common\models\interfaces\resources\IVisual;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
 
 use cmsgears\core\common\models\base\CoreTables;
@@ -29,10 +31,11 @@ use cmsgears\core\common\models\base\ModelResource;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\FeaturedTrait;
+use cmsgears\core\common\models\traits\base\MultiSiteTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
+use cmsgears\core\common\models\traits\resources\VisualTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
-use cmsgears\core\common\models\traits\base\MultiSiteTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -82,7 +85,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, IFile, IGridCache {
+class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, IFile, IGridCache, IMultiSite, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -120,6 +123,24 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 		self::STATUS_TRASH => 'Trash'
 	];
 
+	// Used for external docs
+	public static $revStatusMap = [
+		'New' => self::STATUS_NEW,
+		'Spam' => self::STATUS_SPAM,
+		'Blocked' => self::STATUS_BLOCKED,
+		'Approved' => self::STATUS_APPROVED,
+		'Trash' => self::STATUS_TRASH
+	];
+
+	// Used for url params
+	public static $urlRevStatusMap = [
+		'new' => self::STATUS_NEW,
+		'spam' => self::STATUS_SPAM,
+		'blocked' => self::STATUS_BLOCKED,
+		'approved' => self::STATUS_APPROVED,
+		'trash' => self::STATUS_TRASH
+	];
+
 	// Protected --------------
 
 	// Variables -----------------------------
@@ -134,12 +155,13 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 
 	// Traits ------------------------------------------------------
 
-   	use MultiSiteTrait;
 	use AuthorTrait;
 	use DataTrait;
 	use FeaturedTrait;
 	use FileTrait;
 	use GridCacheTrait;
+   	use MultiSiteTrait;
+	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------
 

@@ -89,7 +89,7 @@ abstract class CrudController extends Controller {
 		$dataProvider = $this->modelService->getPage();
 
 		return $this->render( 'all', [
-			 'dataProvider' => $dataProvider
+			'dataProvider' => $dataProvider
 		]);
 	}
 

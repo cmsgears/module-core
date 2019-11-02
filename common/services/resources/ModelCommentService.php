@@ -19,11 +19,10 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\ModelComment;
 
-use cmsgears\files\components\FileManager;
-
 use cmsgears\core\common\services\interfaces\resources\IModelCommentService;
 
 use cmsgears\core\common\services\traits\resources\DataTrait;
+use cmsgears\core\common\services\traits\mappers\FileTrait;
 
 use cmsgears\core\common\utilities\DateUtil;
 
@@ -62,6 +61,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 	// Traits ------------------------------------------------------
 
 	use DataTrait;
+	use FileTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -92,8 +92,6 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
-		$userTable = Yii::$app->factory->get( 'userService' )->getModelTable();
-
 		// Sorting ----------
 
 		$sort = new Sort([
@@ -105,8 +103,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 					'label' => 'Id'
 				],
 	            'user' => [
-					'asc' => [ "$userTable.name" => SORT_ASC ],
-					'desc' => [ "$userTable.name" => SORT_DESC ],
+					'asc' => [ "creator.name" => SORT_ASC ],
+					'desc' => [ "creator.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 	                'label' => 'User'
 	            ],
@@ -151,6 +149,12 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 					'desc' => [ "$modelTable.featured" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Featured'
+				],
+				'anonymous' => [
+					'asc' => [ "$modelTable.anonymous" => SORT_ASC ],
+					'desc' => [ "$modelTable.anonymous" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Anonymous'
 				],
 	            'cdate' => [
 	                'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
@@ -214,6 +218,12 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 				case 'featured': {
 
 					$config[ 'conditions' ][ "$modelTable.featured" ] = true;
+
+					break;
+				}
+				case 'anonymous': {
+
+					$config[ 'conditions' ][ "$modelTable.anonymous" ] = true;
 
 					break;
 				}
@@ -307,22 +317,13 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		return $this->getPage( $config );
 	}
 
-	/**
-	 * We can pass parentType as condition to utilize the classification.
-	 */
-	public function getPageForApproved( $config = [] ) {
+	public function getPageForApproved( $parentId, $parentType, $config = [] ) {
 
 		$modelTable	= $this->getModelTable();
-		$topLevel	= isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
-
-		if( $topLevel ) {
-
-			$config[ 'conditions' ][ 'baseId' ] = null;
-		}
 
 		$config[ 'conditions' ][ "$modelTable.status" ]	= ModelComment::STATUS_APPROVED;
 
-		return $this->getPage( $config );
+		return $this->getPageByParent( $parentId, $parentType, $config );
 	}
 
 	// Read ---------------
@@ -400,57 +401,17 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 	// Create -------------
 
-	public function create( $comment, $config = [] ) {
+	public function create( $model, $config = [] ) {
 
 		$modelClass = static::$modelClass;
 
-		$comment->agent	= Yii::$app->request->userAgent;
-		$comment->ip	= Yii::$app->request->userIP;
+		$model->agent	= Yii::$app->request->userAgent;
+		$model->ip		= Yii::$app->request->userIP;
 
 		// Default New
-		$comment->status = $comment->status ?? $modelClass::STATUS_NEW;
+		$model->status = $model->status ?? $modelClass::STATUS_NEW;
 
-		return parent::create( $comment, $config );
-	}
-
-	public function attachMedia( $model, $file, $mediaType, $parentType ) {
-
-		switch( $mediaType ) {
-
-			case FileManager::FILE_TYPE_IMAGE: {
-
-				$file = $this->fileService->saveImage( $file );
-
-				break;
-			}
-			case FileManager::FILE_TYPE_MIXED: {
-
-				if( in_array( $file->extension, Yii::$app->fileManager->imageExtensions ) ) {
-
-					$file = $this->fileService->saveImage( $file );
-				}
-				else {
-
-					$file = $this->fileService->saveFile( $file );
-				}
-
-				break;
-			}
-			default: {
-
-				$file = $this->fileService->saveFile( $file );
-
-				break;
-			}
-		}
-
-		// Create Model File
-		if( $file->id > 0 ) {
-
-			$this->modelFileService->createByParams( [ 'modelId' => $file->id, 'parentId' => $model->id, 'parentType' => $parentType ] );
-		}
-
-		return $file;
+		return parent::create( $model, $config );
 	}
 
 	// Update -------------
@@ -474,7 +435,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		]);
 	}
 
-	// Various states
+	// States
 
 	public function updateStatus( $model, $status ) {
 
@@ -487,7 +448,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 	public function approve( $model ) {
 
-		$model->approvedAt	= DateUtil::getDateTime();
+		$model->approvedAt = DateUtil::getDateTime();
 
 		return $this->updateStatus( $model, ModelComment::STATUS_APPROVED );
 	}
@@ -534,9 +495,6 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		// Delete Files
 		$this->fileService->deleteMultiple( $model->files );
 
-		// Delete File Mappings - Shared Files
-		$this->modelFileService->deleteMultiple( $model->modelFiles );
-
 		// Delete model
 		return parent::delete( $model, $config );
 	}
@@ -551,7 +509,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 				switch( $action ) {
 
-					case 'approved': {
+					case 'approve': {
 
 						$this->approve( $model );
 
@@ -569,7 +527,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 						break;
 					}
-					case 'blocked': {
+					case 'block': {
 
 						$this->block( $model );
 

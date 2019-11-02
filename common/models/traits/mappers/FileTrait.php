@@ -9,7 +9,12 @@
 
 namespace cmsgears\core\common\models\traits\mappers;
 
+// Yii Imports
+use Yii;
+
 // CMG Imports
+use cmsgears\files\components\FileManager;
+
 use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\models\mappers\ModelFile;
 
@@ -138,6 +143,52 @@ trait FileTrait {
 			->where( "$modelFileTable.parentId=:pid AND $modelFileTable.parentType=:ptype AND $modelFileTable.tag=:tag", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':tag' => $tag ] )
 			->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] )
 			->one();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function attachFile( $model, $file, $fileType ) {
+
+		$fileService		= Yii::$app->factory->get( 'fileService' );
+		$modelFileService	= Yii::$app->factory->get( 'modelFileService' );
+
+		switch( $fileType ) {
+
+			case FileManager::FILE_TYPE_IMAGE: {
+
+				$file = $fileService->saveImage( $file );
+
+				break;
+			}
+			case FileManager::FILE_TYPE_MIXED: {
+
+				if( in_array( $file->extension, Yii::$app->fileManager->imageExtensions ) ) {
+
+					$file = $fileService->saveImage( $file );
+				}
+				else {
+
+					$file = $fileService->saveFile( $file );
+				}
+
+				break;
+			}
+			default: {
+
+				$file = $fileService->saveFile( $file );
+
+				break;
+			}
+		}
+
+		// Create Model File
+		if( $file->id > 0 ) {
+
+			$modelFileService->createByParams( [ 'modelId' => $file->id, 'parentId' => $model->id, 'parentType' => $this->modelType ] );
+		}
+
+		return $file;
 	}
 
 	// Static Methods ----------------------------------------------

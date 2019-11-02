@@ -42,7 +42,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'featured' => [ 'title' => 'Featured', 'type' => 'flag' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		'status' => [ 'approved' => 'Approve', 'trash' => 'Trash', 'spam' => 'Spam', 'blocked' => 'Block' ],
+		'status' => [ 'approve' => 'Approve', 'trash' => 'Trash', 'spam' => 'Spam', 'block' => 'Block' ],
 		'model' => [ 'pinned' => 'Pinned', 'featured' => 'Featured', 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,

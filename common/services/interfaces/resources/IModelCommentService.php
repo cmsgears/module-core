@@ -12,13 +12,14 @@ namespace cmsgears\core\common\services\interfaces\resources;
 // CMG Imports
 use cmsgears\core\common\services\interfaces\base\IModelResourceService;
 use cmsgears\core\common\services\interfaces\resources\IData;
+use cmsgears\core\common\services\interfaces\mappers\IFile;
 
 /**
  * IModelCommentService provide service methods for model comment.
  *
  * @since 1.0.0
  */
-interface IModelCommentService extends IModelResourceService, IData {
+interface IModelCommentService extends IModelResourceService, IData, IFile {
 
 	// Data Provider ------
 

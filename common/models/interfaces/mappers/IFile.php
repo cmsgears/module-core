@@ -71,9 +71,4 @@ interface IFile {
 	 */
 	public function getFileByTag( $tag );
 
-	/**
-	 * Attach the file to the given model.
-	 */
-	public function attachFile( $model, $file, $fileType );
-
 }

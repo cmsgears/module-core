@@ -493,6 +493,13 @@ class CodeGenUtil {
 			$metaContent .= "<meta name=\"robots\" content=\"$robot\" />";
 		}
 
+		if( isset( $params[ 'schema' ] ) ) {
+
+			$schema = $params[ 'schema' ];
+
+			$metaContent .= "<script type=\"application/ld+json\">$schema</script>";
+		}
+
 		return $metaContent;
 	}
 

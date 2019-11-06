@@ -198,6 +198,20 @@ abstract class Controller extends \yii\web\Controller {
 
 		if( isset( $this->breadcrumbs[ 'base' ] ) ) {
 
+			if( isset( $this->breadcrumbs[ 'subchild' ] ) ){
+				
+				$parent = ArrayHelper::merge( $this->breadcrumbs[ 'base' ], $this->breadcrumbs[ 'child' ] );
+				$child  = ArrayHelper::merge( $parent, $this->breadcrumbs[ 'subchild' ] );
+				
+				return ArrayHelper::merge( $child, $this->breadcrumbs[ $action ] );
+			}
+			else if( isset( $this->breadcrumbs[ 'child' ] ) ){
+				
+				$parent = ArrayHelper::merge( $this->breadcrumbs[ 'base' ], $this->breadcrumbs[ 'child' ] );
+				
+				return ArrayHelper::merge( $parent, $this->breadcrumbs[ $action ] );
+			}
+
 			return ArrayHelper::merge( $this->breadcrumbs[ 'base' ], $this->breadcrumbs[ $action ] );
 		}
 		else {

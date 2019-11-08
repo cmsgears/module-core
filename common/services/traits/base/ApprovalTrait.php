@@ -616,7 +616,7 @@ trait ApprovalTrait {
 
 			$approvalNotificationMap = $this->getApprovalNotificationMap();
 
-			$config[ 'template' ] = $approvalNotificationMap[ CoreGlobal::TPL_NOTIFY_STATUS_CHANGE ];
+			$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_CHANGED ];
 
 			$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
 			$config[ 'data' ][ 'oldStatus' ]	= $oldStatus;

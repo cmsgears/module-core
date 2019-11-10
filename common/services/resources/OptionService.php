@@ -234,8 +234,16 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 		$config[ 'valueColumn' ]	= "$modelTable.name";
 
 		$config[ 'conditions' ][ 'categoryId' ] = $categoryId;
+		$config[ 'conditions' ][ 'active' ]		= true;
 
 		return $this->getIdNameMap( $config );
+	}
+
+	public function getActiveValueNameMapByCategoryId( $categoryId, $config = [] ) {
+
+		$config[ 'conditions' ][ 'active' ] = true;
+
+		return $this->getValueNameMapByCategoryId( $categoryId, $config );
 	}
 
 	public function getIdNameMapByCategorySlug( $slug, $config = [] ) {

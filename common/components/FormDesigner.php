@@ -1,14 +1,16 @@
 <?php
 /**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
  * @link https://www.cmsgears.org/
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
- * @license https://www.cmsgears.org/license/
- * @package module
- * @subpackage core
  */
+
 namespace cmsgears\core\common\components;
 
 // Yii Imports
+use Yii;
 use yii\helpers\Html;
 use yii\helpers\StringHelper;
 use yii\helpers\HtmlPurifier;
@@ -36,9 +38,18 @@ class FormDesigner extends \yii\base\Component {
 
 	// Protected --------------
 
+	protected $optionService;
+
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		$this->optionService = Yii::$app->factory->get( 'optionService' );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -214,11 +225,17 @@ class FormDesigner extends \yii\base\Component {
 
 		$htmlOptions	= $field->htmlOptions;
 		$items			= isset( $htmlOptions[ 'items' ] ) ? $htmlOptions[ 'items' ] : [];
+		$value			= isset( $htmlOptions[ 'value' ] ) ? $htmlOptions[ 'value' ] : null;
 		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
-		$fieldHtml		= $form->field( $model, $key, $wrapperOptions )->radioList( $items, $fieldOptions );
+		if( isset( $value ) && empty( $model->$key ) ) {
+
+			$model->$key = $value;
+		}
+
+		$fieldHtml = $form->field( $model, $key, $wrapperOptions )->radioList( $items, $fieldOptions );
 
 		if( $config[ 'label' ] ) {
 
@@ -240,7 +257,12 @@ class FormDesigner extends \yii\base\Component {
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
-		$fieldHtml		= $form->field( $model, $key, $wrapperOptions )->dropDownList( $items, $fieldOptions );
+		if( isset( $field->categoryId ) ) {
+
+			$items = $this->optionService->getActiveValueNameMapByCategoryId( $field->categoryId );
+		}
+
+		$fieldHtml = $form->field( $model, $key, $wrapperOptions )->dropDownList( $items, $fieldOptions );
 
 		if( $config[ 'label' ] ) {
 
@@ -607,7 +629,7 @@ class FormDesigner extends \yii\base\Component {
 
 			$value	= true;
 
-			$fieldOptions[ 'value' ]	= $value;
+			$fieldOptions[ 'value' ] = $value;
 		}
 		else {
 
@@ -635,13 +657,13 @@ class FormDesigner extends \yii\base\Component {
 
 		$htmlOptions	= $field->htmlOptions;
 		$items			= isset( $htmlOptions[ 'items' ] ) ? $htmlOptions[ 'items' ] : [];
+		$value			= isset( $htmlOptions[ 'value' ] ) ? $htmlOptions[ 'value' ] : null;
 		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
-
-		$modelName		= $config[ 'modelName' ];
-		$fieldHtml		= Html::radioList( $modelName . "[$field->name]", null, $items, $fieldOptions );
+		$modelName	= $config[ 'modelName' ];
+		$fieldHtml	= Html::radioList( $modelName . "[$field->name]", $value, $items, $fieldOptions );
 
 		if( $config[ 'label' ] ) {
 
@@ -670,8 +692,13 @@ class FormDesigner extends \yii\base\Component {
 			$value	= preg_split( "/,/", $value );
 		}
 
-		$modelName		= $config[ 'modelName' ];
-		$fieldHtml		= Html::dropDownList( $modelName . "[$field->name]", $value, $items, $fieldOptions );
+		if( isset( $field->categoryId ) ) {
+
+			$items = $this->optionService->getActiveValueNameMapByCategoryId( $field->categoryId );
+		}
+
+		$modelName	= $config[ 'modelName' ];
+		$fieldHtml	= Html::dropDownList( $modelName . "[$field->name]", $value, $items, $fieldOptions );
 
 		if( $config[ 'label' ] ) {
 

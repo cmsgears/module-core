@@ -252,7 +252,7 @@ class FormFieldService extends \cmsgears\core\common\services\base\ResourceServi
 	public function update( $model, $config = [] ) {
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'name', 'label', 'type', 'compress', 'validators',
+			'categoryId', 'name', 'label', 'type', 'compress', 'validators',
 			'order', 'icon', 'active', 'htmlOptions', 'content'
 		];
 

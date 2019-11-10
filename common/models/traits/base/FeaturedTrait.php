@@ -62,6 +62,14 @@ trait FeaturedTrait {
 		return Yii::$app->formatter->asBoolean( $this->featured );
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public function getPopularStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->popular );
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii classes ---------------------------
@@ -181,6 +189,64 @@ trait FeaturedTrait {
 		else {
 
 			$query = static::find()->where( 'type=:type AND featured=:featured', [ ':type' => $type, ':featured' => true ] );
+		}
+
+		$query->limit( $limit );
+
+		return $query;
+	}
+
+	/**
+	 * Generate and return the query to filter popular models based on multi-site configuration.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery
+	 */
+	public static function queryByPopular( $config = [] ) {
+
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$query		= null;
+
+		if( static::isMultiSite() && !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			$query = static::find()->where( 'popular=:popular AND siteId=:siteId', [ ':popular' => true, ':siteId' => $siteId ] );
+		}
+		else {
+
+			$query = static::find()->where( 'popular=:popular', [ ':popular' => true ] );
+		}
+
+		$query->limit( $limit );
+
+		return $query;
+	}
+
+	/**
+	 * Generate and return the query to filter popular models based on multi-site configuration.
+	 *
+	 * It's useful for models having type column.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery
+	 */
+	public static function queryByPopularType( $type, $config = [] ) {
+
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$query		= null;
+
+		if( static::isMultiSite() && !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			$query = static::find()->where( 'type=:type AND popular=:popular AND siteId=:siteId', [ ':type' => $type, ':popular' => true, ':siteId' => $siteId ] );
+		}
+		else {
+
+			$query = static::find()->where( 'type=:type AND popular=:popular', [ ':type' => $type, ':popular' => true ] );
 		}
 
 		$query->limit( $limit );

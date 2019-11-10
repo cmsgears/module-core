@@ -794,6 +794,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->createTable( $this->prefix . 'core_form_field', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'formId' => $this->bigInteger( 20 )->notNull(),
+			'categoryId' => $this->bigInteger( 20 )->defaultValue( null ),
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'label' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->smallInteger( 6 )->defaultValue( 0 ),
@@ -810,6 +811,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		// Index for columns creator and modifier
 		$this->createIndex( 'idx_' . $this->prefix . 'form_field_parent', $this->prefix . 'core_form_field', 'formId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'form_field_ogroup', $this->prefix . 'core_form_field', 'categoryId' );
 	}
 
 	private function upTag() {
@@ -1354,6 +1356,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		// Form Field
 		$this->addForeignKey( 'fk_' . $this->prefix . 'form_field_parent', $this->prefix . 'core_form_field', 'formId', $this->prefix . 'core_form', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'form_field_ogroup', $this->prefix . 'core_form_field', 'categoryId', $this->prefix . 'core_category', 'id', 'RESTRICT' );
 
 		// Tag
 		$this->addForeignKey( 'fk_' . $this->prefix . 'tag_site', $this->prefix . 'core_tag', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
@@ -1582,6 +1585,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		// Form Field
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'form_field_parent', $this->prefix . 'core_form_field' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'form_field_ogroup', $this->prefix . 'core_form_field' );
 
 		// Tag
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'tag_site', $this->prefix . 'core_tag' );

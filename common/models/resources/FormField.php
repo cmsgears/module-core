@@ -28,6 +28,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  *
  * @property integer $id
  * @property integer $formId
+ * @property integer $categoryId
  * @property string $name
  * @property string $label
  * @property short $type
@@ -135,7 +136,8 @@ class FormField extends Resource implements IData {
 			// Other
 			[ 'name', 'alphanumu' ],
 			[ [ 'type', 'order' ], 'number', 'integerOnly' => true ],
-			[ [ 'compress', 'meta', 'active' ], 'boolean' ]
+			[ [ 'compress', 'meta', 'active' ], 'boolean' ],
+			[ [ 'formId', 'categoryId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 
 		// Trim Text
@@ -156,6 +158,7 @@ class FormField extends Resource implements IData {
 
 		return [
 			'formId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FORM ),
+			'categoryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_OPTION ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
@@ -186,6 +189,16 @@ class FormField extends Resource implements IData {
 	public function getForm() {
 
 		return $this->hasOne( Form::class, [ 'id' => 'formId' ] );
+	}
+
+	/**
+	 * Returns the option group associated with the field.
+	 *
+	 * @return Form
+	 */
+	public function getOptionGroup() {
+
+		return $this->hasOne( Category::class, [ 'id' => 'categoryId' ] );
 	}
 
 	/**

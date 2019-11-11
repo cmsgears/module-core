@@ -222,6 +222,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'siteId' => $this->bigInteger( 20 ),
 			'themeId' => $this->bigInteger( 20 ),
 			'templateId' => $this->bigInteger( 20 ),
+			'parentId' => $this->bigInteger( 20 ),
 			'avatarId' => $this->bigInteger( 20 ),
 			'bannerId' => $this->bigInteger( 20 ),
 			'videoId' => $this->bigInteger( 20 ),
@@ -259,6 +260,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'object_site', $this->prefix . 'core_object', 'siteId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_theme', $this->prefix . 'core_object', 'themeId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_template', $this->prefix . 'core_object', 'templateId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'object_parent', $this->prefix . 'core_object', 'parentId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_avatar', $this->prefix . 'core_object', 'avatarId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_banner', $this->prefix . 'core_object', 'bannerId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_video', $this->prefix . 'core_object', 'videoId' );
@@ -1261,6 +1263,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_site', $this->prefix . 'core_object', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_theme', $this->prefix . 'core_object', 'themeId', $this->prefix . 'core_theme', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_template', $this->prefix . 'core_object', 'templateId', $this->prefix . 'core_template', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'object_parent', $this->prefix . 'core_object', 'parentId', $this->prefix . 'core_object', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_avatar', $this->prefix . 'core_object', 'avatarId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_banner', $this->prefix . 'core_object', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_video', $this->prefix . 'core_object', 'videoId', $this->prefix . 'core_file', 'id', 'SET NULL' );
@@ -1492,6 +1495,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_site', $this->prefix . 'core_object' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_theme', $this->prefix . 'core_object' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_template', $this->prefix . 'core_object' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_parent', $this->prefix . 'core_object' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_avatar', $this->prefix . 'core_object' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_banner', $this->prefix . 'core_object' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_video', $this->prefix . 'core_object' );

@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\frontend\controllers\apix;
+namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
 use Yii;
@@ -17,11 +17,11 @@ use yii\filters\VerbFilter;
 use cmsgears\core\common\config\CoreGlobal;
 
 /**
- * CategoryController handles the ajax requests specific to Category Model.
+ * ObjectDataController provides actions common to all the object models.
  *
  * @since 1.0.0
  */
-class CategoryController extends \cmsgears\core\frontend\controllers\base\Controller {
+class ObjectDataController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -40,10 +40,10 @@ class CategoryController extends \cmsgears\core\frontend\controllers\base\Contro
 		parent::init();
 
 		// Permission
-		$this->crudPermission = CoreGlobal::PERM_USER;
+		$this->crudPermission = CoreGlobal::PERM_ADMIN;
 
 		// Services
-		$this->modelService = Yii::$app->factory->get( 'categoryService' );
+		$this->modelService = Yii::$app->factory->get( 'objectService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -60,12 +60,13 @@ class CategoryController extends \cmsgears\core\frontend\controllers\base\Contro
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'auto-search' => [ 'permission' => $this->crudPermission ]
+					// Protected actions
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
+					// Searching
 					'auto-search' => [ 'post' ]
 				]
 			]
@@ -77,6 +78,7 @@ class CategoryController extends \cmsgears\core\frontend\controllers\base\Contro
 	public function actions() {
 
 		return [
+			// Searching
 			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ]
 		];
 	}
@@ -85,6 +87,6 @@ class CategoryController extends \cmsgears\core\frontend\controllers\base\Contro
 
 	// CMG parent classes --------------------
 
-	// CategoryController --------------------
+	// ObjectDataController ------------------
 
 }

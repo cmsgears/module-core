@@ -75,6 +75,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $siteId
  * @property integer $themeId
  * @property integer $templateId
+ * @property integer $parentId
  * @property integer $avatarId
  * @property integer $bannerId
  * @property integer $videoId
@@ -223,7 +224,7 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 			// Other
 			[ [ 'pinned', 'featured', 'gridCacheValid' ], 'boolean' ],
 			[ [ 'visibility', 'status', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'themeId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'themeId', 'templateId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'siteId', 'avatarId', 'bannerId', 'videoId', 'galleryId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
@@ -350,6 +351,18 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	}
 
 	/**
+	 * Returns the immediate parent.
+	 *
+	 * Notes: Override in child classes to get the exact class object if required.
+	 *
+	 * @return ObjectData
+	 */
+	public function getParent() {
+
+		return $this->hasOne( ObjectData::class, [ 'id' => 'parentId' ] );
+	}
+
+	/**
 	 * Returns the objects mapped to it.
 	 *
 	 * @return ObjectData[]
@@ -396,6 +409,75 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	}
 
 	/**
+	 * Return query to find objects by type.
+	 *
+	 * @param string $type
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query by type.
+	 */
+	public static function queryByType( $type, $config = [] ) {
+
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+
+		if( static::isMultiSite() && !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			return static::find()->where( 'type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( [ 'order' => SORT_ASC ] );
+		}
+		else {
+
+			return static::find()->where( 'type=:type', [ ':type' => $type ] )->orderBy( [ 'order' => SORT_ASC ] );
+		}
+	}
+
+	/**
+	 * Return query to find top level objects by type.
+	 *
+	 * @param string $type
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query by type.
+	 */
+	public static function queryL0ByType( $type, $config = [] ) {
+
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+
+		if( static::isMultiSite() && !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			return static::find()->where( 'parentId IS NULL AND type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( [ 'order' => SORT_ASC ] );
+		}
+		else {
+
+			return static::find()->where( 'parentId IS NULL AND type=:type', [ ':type' => $type ] )->orderBy( [ 'order' => SORT_ASC ] );
+		}
+	}
+
+	/**
+	 * Return query to find top level objects by parent id and type.
+	 *
+	 * @param integer $parentId
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query by parent id and type.
+	 */
+	public static function queryByParentId( $parentId, $config = [] ) {
+
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+
+		if( static::isMultiSite() && !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			return static::find()->where( 'parentId=:pid AND siteId=:siteId', [ ':pid' => $parentId, ':siteId' => $siteId ] )->orderBy( [ 'order' => SORT_ASC ] );
+		}
+		else {
+
+			return static::find()->where( 'parentId=:pid', [ ':pid' => $parentId ] )->orderBy( [ 'order' => SORT_ASC ] );
+		}
+	}
+
+	/**
 	 * Return query to find the object with objects assigned to it.
 	 *
 	 * @param array $config
@@ -419,18 +501,31 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	 */
 	public static function findByType( $type, $config = [] ) {
 
-		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		return static::queryByType( $type, $config )->all();
+	}
 
-		if( static::isMultiSite() && !$ignoreSite ) {
+	/**
+	 * Find and returns the top level objects with given type.
+	 *
+	 * @param string $type
+	 * @param array $config
+	 * @return ObjectData[]
+	 */
+	public static function findL0ByType( $type, $config = [] ) {
 
-			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+		return static::queryL0ByType( $type, $config )->all();
+	}
 
-			return static::find()->where( 'type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( [ 'order' => SORT_ASC ] )->all();
-		}
-		else {
+	/**
+	 * Find and returns the top level objects with given type.
+	 *
+	 * @param integer $parentId
+	 * @param array $config
+	 * @return ObjectData[]
+	 */
+	public static function findByParentId( $parentId, $config = [] ) {
 
-			return static::find()->where( 'type=:type', [ ':type' => $type ] )->orderBy( [ 'order' => SORT_ASC ] )->all();
-		}
+		return static::queryByParentId( $parentId, $config )->all();
 	}
 
 	/**

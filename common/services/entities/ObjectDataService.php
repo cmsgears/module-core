@@ -126,6 +126,12 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 					'default' => SORT_DESC,
 					'label' => 'Template',
 				],
+				'parent' => [
+					'asc' => [ "$templateTable.parentId" => SORT_ASC ],
+					'desc' => [ "$templateTable.parentId" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Parent',
+				],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
@@ -308,6 +314,15 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		return $this->getPage( $config );
 	}
 
+	public function getPageByParentId( $parentId, $config = [] ) {
+
+		$modelTable = $this->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.parentId" ] = $parentId;
+
+		return $this->getPage( $config );
+	}
+
 	public function getPageByTypeParent( $type, $parentId, $parentType, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
@@ -360,6 +375,20 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		$modelClass = static::$modelClass;
 
 		return $modelClass::queryByType( $type, $config )->andWhere( [ 'status' => $modelClass::STATUS_ACTIVE ] )->all();
+	}
+
+	public static function getL0ByType( $type, $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::queryL0ByType( $type, $config )->andWhere( [ 'status' => $modelClass::STATUS_ACTIVE ] )->all();
+	}
+
+	public static function getByParentId( $parentId, $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::queryByParentId( $parentId, $config )->andWhere( [ 'status' => $modelClass::STATUS_ACTIVE ] )->all();
 	}
 
 	// Read - Lists ----
@@ -484,7 +513,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'templateId', 'avatarId', 'bannerId', 'videoId', 'galleryId',
+			'templateId', 'parentId', 'avatarId', 'bannerId', 'videoId', 'galleryId',
 			'name', 'slug', 'title', 'icon', 'texture', 'description', 'visibility',
 			'htmlOptions', 'summary', 'content'
 		];

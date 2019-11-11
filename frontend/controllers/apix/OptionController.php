@@ -16,8 +16,6 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\frontend\controllers\base\Controller;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -25,7 +23,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class OptionController extends Controller {
+class OptionController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

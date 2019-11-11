@@ -27,6 +27,21 @@ interface IObjectService extends IEntityService, IApproval, IData, IFeatured, IM
 
 	// Data Provider ------
 
+	/*
+	 * Returns the page by parent id.
+	 *
+	 * @param integer $parentId
+	 */
+	public function getPageByParentId( $parentId, $config = [] );
+
+	/**
+	 * Returns the page by mapped object.
+	 *
+	 * @param string $type
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param array $config
+	 */
 	public function getPageByTypeParent( $type, $parentId, $parentType, $config = [] );
 
 	// Read ---------------
@@ -36,6 +51,10 @@ interface IObjectService extends IEntityService, IApproval, IData, IFeatured, IM
 	public function getActive( $config = [] );
 
 	public function getActiveByType( $type, $config = [] );
+
+	public static function getL0ByType( $type, $config = [] );
+
+	public static function getByParentId( $parentId, $config = [] );
 
 	// Read - Lists ----
 

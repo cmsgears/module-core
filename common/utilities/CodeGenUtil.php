@@ -497,7 +497,7 @@ class CodeGenUtil {
 
 			$schema = $params[ 'schema' ];
 
-			$metaContent .= "<script type=\"application/ld+json\">$schema</script>";
+			$metaContent .= $schema;
 		}
 
 		return $metaContent;

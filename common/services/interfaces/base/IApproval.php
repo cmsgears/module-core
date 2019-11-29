@@ -30,9 +30,11 @@ interface IApproval {
 
 	// Read - Models ---
 
-	// Read - Lists ----
-
 	public function getByStatus( $status, $config = [] );
+
+	public function getActive( $config = [] );
+
+	// Read - Lists ----
 
 	// Read - Maps -----
 

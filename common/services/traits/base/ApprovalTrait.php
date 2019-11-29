@@ -118,8 +118,6 @@ trait ApprovalTrait {
 
 	// Read - Models ---
 
-	// Read - Lists ----
-
 	public function getByStatus( $status, $config = [] ) {
 
 		$limit = $config[ 'limit' ] ?? 10;
@@ -133,6 +131,13 @@ trait ApprovalTrait {
 
 		return $query->orderBy( [ 'id' => SORT_DESC ] )->all();
 	}
+
+	public function getActive( $config = [] ) {
+
+		return $this->getByStatus( IApproval::STATUS_ACTIVE, $config );
+	}
+
+	// Read - Lists ----
 
 	// Read - Maps -----
 

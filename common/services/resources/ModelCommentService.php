@@ -473,12 +473,13 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 	public function spamRequest( $model, $parent, $config = [] ) {
 
 		$parentType		= $config[ 'parentType' ];
+		$notify			= isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 		$commentType	= isset( $config[ 'commentType' ] ) ? $config[ 'commentType' ] : ModelComment::TYPE_COMMENT;
-		$baseUrl		= isset( $config[ 'baseUrl' ] ) ? $config[ 'baseUrl' ] : null;
+		$adminLink		= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : null;
 
 		$this->notifyAdmin( $model, [
 			'template' => CoreGlobal::TPL_COMMENT_REQUEST_SPAM,
-			'adminLink' => "/{$baseUrl}",
+			'adminLink' => "/{$adminLink}",
 			'data' => [ 'parent' => $parent, 'parentType' => $parentType, 'commentType' => $commentType ]
 		]);
 	}
@@ -486,12 +487,13 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 	public function approveRequest( $model, $parent, $config = [] ) {
 
 		$parentType		= $config[ 'parentType' ];
+		$notify			= isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 		$commentType	= isset( $config[ 'commentType' ] ) ? $config[ 'commentType' ] : ModelComment::TYPE_COMMENT;
-		$baseUrl		= isset( $config[ 'baseUrl' ] ) ? $config[ 'baseUrl' ] : null;
+		$adminLink		= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : null;
 
 		$this->notifyAdmin( $model, [
 			'template' => CoreGlobal::TPL_COMMENT_REQUEST_APPROVE,
-			'adminLink' => "/{$baseUrl}",
+			'adminLink' => "/{$adminLink}",
 			'data' => [ 'parent' => $parent, 'parentType' => $parentType, 'commentType' => $commentType ]
 		]);
 	}
@@ -499,12 +501,13 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 	public function deleteRequest( $model, $parent, $config = [] ) {
 
 		$parentType		= $config[ 'parentType' ];
+		$notify			= isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 		$commentType	= isset( $config[ 'commentType' ] ) ? $config[ 'commentType' ] : ModelComment::TYPE_COMMENT;
-		$baseUrl		= isset( $config[ 'baseUrl' ] ) ? $config[ 'baseUrl' ] : null;
+		$adminLink		= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : null;
 
 		$this->notifyAdmin( $model, [
 			'template' => CoreGlobal::TPL_COMMENT_REQUEST_DELETE,
-			'adminLink' => "/{$baseUrl}",
+			'adminLink' => "/{$adminLink}",
 			'data' => [ 'parent' => $parent, 'parentType' => $parentType, 'commentType' => $commentType ]
 		]);
 	}

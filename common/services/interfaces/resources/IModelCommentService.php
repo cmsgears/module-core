@@ -61,6 +61,8 @@ interface IModelCommentService extends IModelResourceService, IData, IFile {
 
 	// Update -------------
 
+	// States -----
+
 	public function updateStatus( $model, $status );
 
 	public function approve( $model );
@@ -71,9 +73,13 @@ interface IModelCommentService extends IModelResourceService, IData, IFile {
 
 	public function markTrash( $model );
 
-	public function updateSpamRequest( $model, $value = true );
+	// Requests ---
 
-	public function updateDeleteRequest( $model, $value = true );
+	public function spamRequest( $model, $parent, $config = [] );
+
+	public function approveRequest( $model, $parent, $config = [] );
+
+	public function deleteRequest( $model, $parent, $config = [] );
 
 	// Delete -------------
 

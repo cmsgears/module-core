@@ -13,15 +13,12 @@ namespace cmsgears\core\admin\controllers\apix\optiongroup;
 use Yii;
 use yii\filters\VerbFilter;
 
-// CMG Imports
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
  * OptionController provides actions specific to option model.
  *
  * @since 1.0.0
  */
-class OptionController extends Controller {
+class OptionController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

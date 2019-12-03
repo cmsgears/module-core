@@ -435,7 +435,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		]);
 	}
 
-	// States
+	// States -----
 
 	public function updateStatus( $model, $status ) {
 
@@ -468,24 +468,45 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		return $this->updateStatus( $model, ModelComment::STATUS_TRASH );
 	}
 
-	// Attributes
+	// Requests ---
 
-	public function updateSpamRequest( $model, $value = true ) {
+	public function spamRequest( $model, $parent, $config = [] ) {
 
-		$model->setDataMeta( CoreGlobal::META_COMMENT_SPAM_REQUEST, $value );
+		$parentType		= $config[ 'parentType' ];
+		$commentType	= isset( $config[ 'commentType' ] ) ? $config[ 'commentType' ] : ModelComment::TYPE_COMMENT;
+		$baseUrl		= isset( $config[ 'baseUrl' ] ) ? $config[ 'baseUrl' ] : null;
 
-		$model->update();
-
-		return $model;
+		$this->notifyAdmin( $model, [
+			'template' => CoreGlobal::TPL_COMMENT_REQUEST_SPAM,
+			'adminLink' => "/{$baseUrl}",
+			'data' => [ 'parent' => $parent, 'parentType' => $parentType, 'commentType' => $commentType ]
+		]);
 	}
 
-	public function updateDeleteRequest( $model, $value = true ) {
+	public function approveRequest( $model, $parent, $config = [] ) {
 
-		$model->setDataMeta( CoreGlobal::META_COMMENT_DELETE_REQUEST, $value );
+		$parentType		= $config[ 'parentType' ];
+		$commentType	= isset( $config[ 'commentType' ] ) ? $config[ 'commentType' ] : ModelComment::TYPE_COMMENT;
+		$baseUrl		= isset( $config[ 'baseUrl' ] ) ? $config[ 'baseUrl' ] : null;
 
-		$model->update();
+		$this->notifyAdmin( $model, [
+			'template' => CoreGlobal::TPL_COMMENT_REQUEST_APPROVE,
+			'adminLink' => "/{$baseUrl}",
+			'data' => [ 'parent' => $parent, 'parentType' => $parentType, 'commentType' => $commentType ]
+		]);
+	}
 
-		return $model;
+	public function deleteRequest( $model, $parent, $config = [] ) {
+
+		$parentType		= $config[ 'parentType' ];
+		$commentType	= isset( $config[ 'commentType' ] ) ? $config[ 'commentType' ] : ModelComment::TYPE_COMMENT;
+		$baseUrl		= isset( $config[ 'baseUrl' ] ) ? $config[ 'baseUrl' ] : null;
+
+		$this->notifyAdmin( $model, [
+			'template' => CoreGlobal::TPL_COMMENT_REQUEST_DELETE,
+			'adminLink' => "/{$baseUrl}",
+			'data' => [ 'parent' => $parent, 'parentType' => $parentType, 'commentType' => $commentType ]
+		]);
 	}
 
 	// Delete -------------

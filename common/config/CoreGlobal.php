@@ -120,6 +120,16 @@ class CoreGlobal {
 
 	const TPL_NOTIFY_STATUS_CHANGE		= 'status-change';
 
+	// Comment - Status Templates
+    const TPL_COMMENT_STATUS_NEW		= 'comment-new';
+	const TPL_COMMENT_STATUS_SPAM		= 'comment-spam';
+	const TPL_COMMENT_STATUS_APPROVE	= 'comment-approve';
+	const TPL_COMMENT_STATUS_TRASH		= 'comment-trash';
+	const TPL_COMMENT_STATUS_DELETE		= 'comment-delete';
+	const TPL_COMMENT_REQUEST_SPAM		= 'comment-r-spam';
+	const TPL_COMMENT_REQUEST_APPROVE	= 'comment-r-approve';
+	const TPL_COMMENT_REQUEST_DELETE	= 'comment-r-delete';
+
 	// Template Views --------------------------------------------------
 
 	const TPL_VIEW_ADMIN		= 'admin';

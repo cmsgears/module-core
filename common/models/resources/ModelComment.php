@@ -300,6 +300,31 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 		return self::$statusMap[ $this->status ];
 	}
 
+	public function isNew() {
+
+		return $this->status == self::STATUS_NEW;
+	}
+
+	public function isSpam() {
+
+		return $this->status == self::STATUS_SPAM;
+	}
+
+	public function isBlocked() {
+
+		return $this->status == self::STATUS_BLOCKED;
+	}
+
+	public function isApproved() {
+
+		return $this->status == self::STATUS_APPROVED;
+	}
+
+	public function isTrash() {
+
+		return $this->status == self::STATUS_TRASH;
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------

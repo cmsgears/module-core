@@ -357,6 +357,14 @@ trait ApprovalTrait {
 	/**
 	 * @inheritdoc
 	 */
+	public function isUpliftRequested() {
+
+		return $this->status == IApproval::STATUS_UPLIFT_FREEZE || $this->status == IApproval::STATUS_UPLIFT_BLOCK;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function toggleFrojen() {
 
 		if( $this->isFrojen() ) {

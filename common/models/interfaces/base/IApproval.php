@@ -232,6 +232,14 @@ interface IApproval {
 	public function isDeleted( $strict = true );
 
 	/**
+	 * Check whether model is submitted to uplift the restrictions.
+	 *
+	 * @param boolean $strict
+	 * @return boolean
+	 */
+	public function isUpliftRequested();
+
+	/**
 	 * Toggle between active and frozen states.
 	 *
 	 * @return boolean

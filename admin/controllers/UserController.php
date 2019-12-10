@@ -45,6 +45,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 	protected $roleService;
 
 	protected $superRoleId;
+	protected $userRoleId;
 
 	// Private ----------------
 
@@ -69,10 +70,15 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 		$this->memberService	= Yii::$app->factory->get( 'siteMemberService' );
 		$this->roleService		= Yii::$app->factory->get( 'roleService' );
 
+		// User Role
+		$userRole = $this->roleService->getBySlugType( CoreGlobal::ROLE_USER, CoreGlobal::TYPE_SYSTEM );
+
+		$this->userRoleId = isset( $userRole ) ? $userRole->id : null;
+
 		// Super Admin
 		$superRole = $this->roleService->getBySlugType( CoreGlobal::ROLE_SUPER_ADMIN, CoreGlobal::TYPE_SYSTEM );
 
-		$this->superRoleId = isset( $superRole ) ?$superRole->id : null;
+		$this->superRoleId = isset( $superRole ) ? $superRole->id : null;
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-rbac', 'child' => 'user' ];
@@ -185,6 +191,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 		$model->setScenario( 'create' );
 
 		$member->siteId = Yii::$app->core->siteId;
+		$member->roleId	= $this->userRoleId;
 
 		$model->type = $this->type;
 

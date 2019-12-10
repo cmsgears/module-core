@@ -265,7 +265,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$this->getMailer()->compose( self::MAIL_ACCEPT, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model ] )
 			->setTo( $email )
 			->setFrom( [ $fromEmail => $fromName ] )
-			->setSubject( "Accepted $model->name | " . $this->coreProperties->getSiteName() )
+			->setSubject( "Accepted - $model->name | " . $this->coreProperties->getSiteName() )
 			->send();
 	}
 
@@ -278,7 +278,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$this->getMailer()->compose( self::MAIL_APPROVE, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model ] )
 			->setTo( $email )
 			->setFrom( [ $fromEmail => $fromName ] )
-			->setSubject( "Approved $model->name | " . $this->coreProperties->getSiteName() )
+			->setSubject( "Approved - $model->name | " . $this->coreProperties->getSiteName() )
 			->send();
 	}
 
@@ -291,7 +291,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$this->getMailer()->compose( self::MAIL_REJECT, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model, 'message' => $message ] )
 			->setTo( $email )
 			->setFrom( [ $fromEmail => $fromName ] )
-			->setSubject( "Rejected $model->name | " . $this->coreProperties->getSiteName() )
+			->setSubject( "Rejected - $model->name | " . $this->coreProperties->getSiteName() )
 			->send();
 	}
 
@@ -304,7 +304,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$this->getMailer()->compose( self::MAIL_BLOCK, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model, 'message' => $message ] )
 			->setTo( $email )
 			->setFrom( [ $fromEmail => $fromName ] )
-			->setSubject( "Blocked $model->name | " . $this->coreProperties->getSiteName() )
+			->setSubject( "Blocked - $model->name | " . $this->coreProperties->getSiteName() )
 			->send();
 	}
 
@@ -317,7 +317,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$this->getMailer()->compose( self::MAIL_FROZEN, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model, 'message' => $message ] )
 			->setTo( $email )
 			->setFrom( [ $fromEmail => $fromName ] )
-			->setSubject( "Frozen $model->name | " . $this->coreProperties->getSiteName() )
+			->setSubject( "Frozen - $model->name | " . $this->coreProperties->getSiteName() )
 			->send();
 	}
 
@@ -330,7 +330,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$this->getMailer()->compose( self::MAIL_ACTIVATE, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model ] )
 			->setTo( $email )
 			->setFrom( [ $fromEmail => $fromName ] )
-			->setSubject( "Activated $model->name | " . $this->coreProperties->getSiteName() )
+			->setSubject( "Activated - $model->name | " . $this->coreProperties->getSiteName() )
 			->send();
 	}
 

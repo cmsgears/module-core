@@ -479,7 +479,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 		$this->notifyAdmin( $model, [
 			'template' => CoreGlobal::TPL_COMMENT_REQUEST_SPAM,
-			'adminLink' => "/{$adminLink}",
+			'adminLink' => $adminLink,
 			'data' => [ 'parent' => $parent, 'parentType' => $parentType, 'commentType' => $commentType ]
 		]);
 	}
@@ -493,7 +493,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 		$this->notifyAdmin( $model, [
 			'template' => CoreGlobal::TPL_COMMENT_REQUEST_APPROVE,
-			'adminLink' => "/{$adminLink}",
+			'adminLink' => $adminLink,
 			'data' => [ 'parent' => $parent, 'parentType' => $parentType, 'commentType' => $commentType ]
 		]);
 	}
@@ -507,7 +507,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 		$this->notifyAdmin( $model, [
 			'template' => CoreGlobal::TPL_COMMENT_REQUEST_DELETE,
-			'adminLink' => "/{$adminLink}",
+			'adminLink' => $adminLink,
 			'data' => [ 'parent' => $parent, 'parentType' => $parentType, 'commentType' => $commentType ]
 		]);
 	}

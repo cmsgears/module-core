@@ -276,14 +276,20 @@ class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridC
 
 		$urlParts = parse_url( $url );
 
-		if( Yii::$app->core->multiSite && $this->slug !== 'main' ) {
+		if( YII_ENV_PROD && Yii::$app->core->multiSite && $this->slug !== Yii::$app->core->mainSiteSlug ) {
 
           	$urlHost = preg_replace( '/www/', $this->slug, $urlParts[ 'host' ] );
 
 			return $urlParts[ 'scheme' ] . '://' . $urlHost;
 		}
 
-		return $urlParts[ 'scheme' ] . '://' . $urlParts[ 'host' ];
+		//return $urlParts[ 'scheme' ] . '://' . $urlParts[ 'host' ];
+
+		// Fix it for sub-directory
+		$url = Url::toRoute( '/' );
+		$url = substr( $url, 0, -1 );
+
+		return $url;
 	}
 
 	// Static Methods ----------------------------------------------

@@ -579,6 +579,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'active' => $this->boolean()->notNull()->defaultValue( false ),
 			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
+			'primary' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'content' => $this->mediumText(),

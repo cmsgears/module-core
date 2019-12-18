@@ -301,7 +301,7 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 
 		if( $admin ) {
 
-			$attributes = ArrayHelper::merge( $attributes, [ 'order', 'active', 'pinned', 'featured' ] );
+			$attributes = ArrayHelper::merge( $attributes, [ 'order', 'active', 'pinned', 'featured', 'primary' ] );
 		}
 
 		return parent::update( $model, [

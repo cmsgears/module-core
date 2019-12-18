@@ -63,6 +63,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property boolean $active
  * @property boolean $pinned
  * @property boolean $featured
+ * @property boolean $primary
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $data
@@ -160,7 +161,7 @@ class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridC
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'active', 'pinned', 'featured', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'active', 'pinned', 'featured', 'primary', 'gridCacheValid' ], 'boolean' ],
 			[ 'themeId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'avatarId', 'bannerId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ 'gridCachedAt', 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -268,6 +269,16 @@ class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridC
 	public function getActiveStr() {
 
 		return Yii::$app->formatter->asBoolean( $this->active );
+	}
+
+	/**
+	 * Returns string representation of primary flag.
+	 *
+	 * @return string
+	 */
+	public function getPrimaryStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->primary );
 	}
 
 	public function getSiteUrl() {

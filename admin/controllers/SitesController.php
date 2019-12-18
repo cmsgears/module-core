@@ -107,6 +107,8 @@ class SitesController extends \cmsgears\core\admin\controllers\base\CrudControll
 		$avatar	= File::loadFile( $model->avatar, 'Avatar' );
 		$banner	= File::loadFile( $model->banner, 'Banner' );
 
+		$model->primary = true;
+
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
 			$this->model = $this->modelService->create( $model, [ 'admin' => true, 'avatar' => $avatar, 'banner' => $banner ] );

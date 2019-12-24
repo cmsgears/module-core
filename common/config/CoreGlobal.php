@@ -141,6 +141,7 @@ class CoreGlobal {
 	const TPL_VIEW_ARCHIVE		= 'archive';
 	const TPL_VIEW_AUTHOR		= 'author';
 	const TPL_VIEW_PRINT		= 'print';
+	const TPL_VIEW_AMP			= 'amp';
 
 	// Categories Slug -------------------------------------------------
 

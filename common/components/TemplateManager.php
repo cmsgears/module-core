@@ -1,11 +1,12 @@
 <?php
 /**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
  * @link https://www.cmsgears.org/
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
- * @license https://www.cmsgears.org/license/
- * @package module
- * @subpackage core
  */
+
 namespace cmsgears\core\common\components;
 
 // Yii Imports
@@ -17,7 +18,6 @@ use cmsgears\core\common\config\CoreGlobal;
 /*
  * TemplateManager find appropriate template and render the view based on given configurations.
  *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
 class TemplateManager extends \yii\base\Component {
@@ -76,7 +76,7 @@ class TemplateManager extends \yii\base\Component {
 		// Render from file
 		if( $fileRender && !isset( $this->templatesPath ) ) {
 
-			$theme	= Yii::$app->core->site->theme;
+			$theme = Yii::$app->core->site->theme;
 
 			if( isset( $theme ) ) {
 
@@ -223,7 +223,8 @@ class TemplateManager extends \yii\base\Component {
 	}
 
 	/**
-	 * Admin view to be used for review purpose for data created by site users. The data collected by user will be submitted for admin review as part of approval process.
+	 * Admin view to be used for review purpose for data created by site users. The data collected by
+	 * user will be submitted for admin review as part of approval process.
 	 */
 	public function renderViewAdmin( $template, $data, $config = [] ) {
 
@@ -231,7 +232,8 @@ class TemplateManager extends \yii\base\Component {
 	}
 
 	/**
-	 * Private view to be viewed by logged in users. It's required for specific cases where views are different for logged in vs non logged in users.
+	 * Private view to be viewed by logged in users. It's required for specific cases where views are
+	 * different for logged in vs non logged in users.
 	 */
 	public function renderViewPrivate( $template, $data, $config = [] ) {
 
@@ -284,6 +286,14 @@ class TemplateManager extends \yii\base\Component {
 	public function renderViewAuthor( $template, $data, $config = [] ) {
 
 		return $this->renderViewGeneric( $template, $data, CoreGlobal::TPL_VIEW_AUTHOR, $config );
+	}
+
+	/**
+	 * AMP pages for slower networks.
+	 */
+	public function renderViewAmp( $template, $data, $config = [] ) {
+
+		return $this->renderViewGeneric( $template, $data, CoreGlobal::TPL_VIEW_AMP, $config );
 	}
 
 }

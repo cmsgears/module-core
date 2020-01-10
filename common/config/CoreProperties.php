@@ -205,7 +205,17 @@ class CoreProperties extends Properties {
 	 */
 	public function getSiteUrl() {
 
-		return $this->properties[ self::PROP_SITE_URL ];
+		$siteUrl = $this->properties[ self::PROP_SITE_URL ];
+
+		$siteSlug = array_shift( ( explode( '.', $_SERVER[ 'HTTP_HOST' ] ) ) );
+
+		// Child Domain
+		if( $siteSlug !== 'www' ) {
+
+			$siteUrl = preg_replace( '/www\./', "{$siteSlug}.", $siteUrl );
+		}
+
+		return $siteUrl;
 	}
 
 	/**
@@ -213,12 +223,32 @@ class CoreProperties extends Properties {
 	 */
 	public function getAdminUrl() {
 
-		return $this->properties[ self::PROP_ADMIN_URL ];
+		$adminUrl = $this->properties[ self::PROP_ADMIN_URL ];
+
+		$siteSlug = array_shift( ( explode( '.', $_SERVER[ 'HTTP_HOST' ] ) ) );
+
+		// Child Domain
+		if( $siteSlug !== 'www' ) {
+
+			$adminUrl = preg_replace( '/www\./', "{$siteSlug}.", $adminUrl );
+		}
+
+		return $adminUrl;
 	}
 
 	public function getResourceUrl() {
 
-		return $this->properties[ self::PROP_RESOURCE_URL ];
+		$resourceUrl = $this->properties[ self::PROP_RESOURCE_URL ];
+
+		$siteSlug = array_shift( ( explode( '.', $_SERVER[ 'HTTP_HOST' ] ) ) );
+
+		// Child Domain
+		if( $siteSlug !== 'www' ) {
+
+			$resourceUrl = preg_replace( '/www\./', "{$siteSlug}.", $resourceUrl );
+		}
+
+		return $resourceUrl;
 	}
 
 	/**

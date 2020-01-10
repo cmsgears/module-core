@@ -220,6 +220,7 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 			'link' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINK ),
 			'srcset' => 'Srcset Breakpoints',
 			'sizes' => 'Responsive Sizes',
+			'shared' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SHARED ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
 			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )

@@ -148,9 +148,13 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\CrudContro
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
+			$template = $model->template;
+
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->model = $this->modelService->update( $model, [ 'admin' => true ] );
+				$this->model = $this->modelService->update( $model, [
+					'admin' => true, 'oldTemplate' => $template
+				]);
 
 				return $this->redirect( $this->returnUrl );
 			}

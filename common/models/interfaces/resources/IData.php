@@ -80,6 +80,15 @@ interface IData {
 	public function updateDataMeta( $name, $value, $assoc = false );
 
 	/**
+	 * Remove the property of data object without updating the model.
+	 *
+	 * @param string $name
+	 * @param boolean $assoc
+	 * @return void
+	 */
+	public function unsetDataMeta( $name, $assoc = false );
+
+	/**
 	 * Remove the property of data object and also update the model to persist data object.
 	 *
 	 * @param string $name

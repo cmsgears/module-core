@@ -243,7 +243,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
-			'direct' => $this->boolean()->notNull()->defaultValue( false ), // Mapped only to one parent
+			'admin' => $this->boolean()->notNull()->defaultValue( false ), // Admin Object
 			'shared' => $this->boolean()->notNull()->defaultValue( false ), // Shared Object
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),

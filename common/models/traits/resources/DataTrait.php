@@ -43,7 +43,8 @@ trait DataTrait {
 	 */
 	public function generateJsonFromDataObject( $dataObject ) {
 
-		$data		= json_encode( $dataObject );
+		$data = json_encode( $dataObject );
+
 		$this->data	= $data;
 	}
 
@@ -174,6 +175,21 @@ trait DataTrait {
 
 		// Save model meta state
 		$this->update();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function unsetDataMeta( $name, $assoc = false ) {
+
+		// Convert data to object
+		$object	= $this->generateDataObjectFromJson( $assoc );
+
+		// Remove meta
+		unset( $object->$name );
+
+		// Convert object back to data
+		$this->generateJsonFromDataObject( $object );
 	}
 
 	/**

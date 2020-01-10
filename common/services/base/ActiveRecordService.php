@@ -485,6 +485,73 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		]);
 	}
 
+	protected function copyTemplate( $model, $config = [] ) {
+
+		$configure		= isset( $config[ 'configure' ] ) ? $config[ 'configure' ] : true;
+		$pTemplate		= isset( $config[ 'template' ] ) ? $config[ 'template' ] : null;
+		$oldTemplate	= isset( $config[ 'oldTemplate' ] ) ? $config[ 'oldTemplate' ] : null;
+		$template		= null;
+
+		if( $configure ) {
+
+			// Present Template is different than Old Template
+			if( isset( $pTemplate ) && isset( $oldTemplate ) && $pTemplate->id != $oldTemplate->id ) {
+
+				$template = $pTemplate;
+			}
+			// Template is assigned for the first time
+			else if( isset( $pTemplate ) && empty( $oldTemplate ) ) {
+
+				$template = $pTemplate;
+			}
+
+			if( isset( $template ) ) {
+
+				$configurations = json_decode( $template->data );
+
+				if( isset( $configurations->tdata ) ) {
+
+					$model->setDataMeta( 'data', $configurations->tdata );
+				}
+				else {
+
+					$model->unsetDataMeta( 'data' );
+				}
+
+				if( isset( $configurations->tattributes ) ) {
+
+					$model->setDataMeta( 'attributes', $configurations->tattributes );
+				}
+				else {
+
+					$model->unsetDataMeta( 'attributes' );
+				}
+
+				if( isset( $configurations->tconfig ) ) {
+
+					$model->setDataMeta( 'config', $configurations->tconfig );
+				}
+				else {
+
+					$model->unsetDataMeta( 'config' );
+				}
+
+				if( isset( $configurations->tsettings ) ) {
+
+					$model->setDataMeta( 'settings', $configurations->tsettings );
+				}
+				else {
+
+					$model->unsetDataMeta( 'settings' );
+				}
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	// Delete -------------
 
 	/**

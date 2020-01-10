@@ -152,9 +152,13 @@ abstract class FormController extends Controller {
 		// Update if exist
 		if( isset( $model ) ) {
 
+			$template = $model->template;
+
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->model = $this->modelService->update( $model );
+				$this->model = $this->modelService->update( $model, [
+					'admin' => true, 'oldTemplate' => $template
+				]);
 
 				return $this->redirect( $this->returnUrl );
 			}

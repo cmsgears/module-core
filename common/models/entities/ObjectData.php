@@ -96,6 +96,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $order
  * @property boolean $pinned
  * @property boolean $featured
+ * @property boolean $admin
+ * @property boolean $shared
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $htmlOptions
@@ -222,7 +224,7 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 			[ [ 'title', 'classPath', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
-			[ [ 'pinned', 'featured', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'pinned', 'featured', 'admin', 'shared', 'gridCacheValid' ], 'boolean' ],
 			[ [ 'visibility', 'status', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'themeId', 'templateId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'siteId', 'avatarId', 'bannerId', 'videoId', 'galleryId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
@@ -267,6 +269,8 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'pinned' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PINNED ),
 			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
+			'admin' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ADMIN ),
+			'shared' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SHARED ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'summary' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SUMMARY ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
@@ -360,6 +364,26 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	public function getParent() {
 
 		return $this->hasOne( ObjectData::class, [ 'id' => 'parentId' ] );
+	}
+
+	/**
+	 * Returns string representation of [[$admin]].
+	 *
+	 * @return boolean
+	 */
+	public function getAdminStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->admin );
+	}
+
+	/**
+	 * Returns string representation of [[$shared]].
+	 *
+	 * @return boolean
+	 */
+	public function getSharedStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->shared );
 	}
 
 	/**

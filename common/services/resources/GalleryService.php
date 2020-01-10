@@ -287,6 +287,16 @@ class GalleryService extends \cmsgears\core\common\services\base\ResourceService
 
 	// Create -------------
 
+	public function create( $model, $config = [] ) {
+
+		// Copy Template
+		$config[ 'template' ] = $model->template;
+
+		$this->copyTemplate( $model, $config );
+
+		return parent::create( $model, $config );
+	}
+
 	public function createItem( $gallery, $item, $type = null ) {
 
 		$modelFile = Yii::$app->factory->get( 'modelFileService' )->getModelObject();
@@ -316,7 +326,7 @@ class GalleryService extends \cmsgears\core\common\services\base\ResourceService
 
 	public function update( $model, $config = [] ) {
 
-		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
 			'templateId', 'name', 'slug', 'icon', 'title',
@@ -326,6 +336,14 @@ class GalleryService extends \cmsgears\core\common\services\base\ResourceService
 		if( $admin ) {
 
 			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'pinned', 'featured' ] );
+		}
+
+		// Copy Template
+		$config[ 'template' ] = $model->template;
+
+		if( $this->copyTemplate( $model, $config ) ) {
+
+			$attributes[] = 'data';
 		}
 
 		return parent::update( $model, [

@@ -116,4 +116,124 @@ abstract class TemplateController extends CrudController {
 		]);
 	}
 
+	public function actionData( $id ) {
+
+		// Find Model
+		$model = $this->modelService->getById( $id );
+
+		// Update/Render if exist
+		if( isset( $model ) ) {
+
+			$dataClass	= $model->dataPath;
+			$data		= new $dataClass( $model->getDataMeta( 'tdata' ) );
+
+			$this->setViewPath( $model->dataForm );
+
+			if( $data->load( Yii::$app->request->post(), $data->getClassName() ) && $data->validate() ) {
+
+				$this->modelService->updateDataMeta( $model, 'tdata', $data );
+
+				return $this->redirect( $this->returnUrl );
+			}
+
+			return $this->render( 'data', [
+				'model' => $model,
+				'data' => $data
+			]);
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+
+	public function actionAttributes( $id ) {
+
+		// Find Model
+		$model = $this->modelService->getById( $id );
+
+		// Update/Render if exist
+		if( isset( $model ) ) {
+
+			$attributesClass	= $model->attributesPath;
+			$attributes			= new $attributesClass( $model->getDataMeta( 'tattributes' ) );
+
+			$this->setViewPath( $model->attributesForm );
+
+			if( $attributes->load( Yii::$app->request->post(), $attributes->getClassName() ) && $attributes->validate() ) {
+
+				$this->modelService->updateDataMeta( $model, 'tattributes', $attributes );
+
+				return $this->redirect( $this->returnUrl );
+			}
+
+			return $this->render( 'attributes', [
+				'model' => $model,
+				'attributes' => $attributes
+			]);
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+
+	public function actionConfig( $id ) {
+
+		// Find Model
+		$model = $this->modelService->getById( $id );
+
+		// Update/Render if exist
+		if( isset( $model ) ) {
+
+			$configClass	= $model->configPath;
+			$config			= new $configClass( $model->getDataMeta( 'tconfig' ) );
+
+			$this->setViewPath( $model->configForm );
+
+			if( $config->load( Yii::$app->request->post(), $config->getClassName() ) && $config->validate() ) {
+
+				$this->modelService->updateDataMeta( $model, 'tconfig', $config );
+
+				return $this->redirect( $this->returnUrl );
+			}
+
+			return $this->render( 'config', [
+				'model' => $model,
+				'config' => $config
+			]);
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+
+	public function actionSettings( $id ) {
+
+		// Find Model
+		$model = $this->modelService->getById( $id );
+
+		// Update/Render if exist
+		if( isset( $model ) ) {
+
+			$settingsClass	= $model->settingsPath;
+			$settings		= new $settingsClass( $model->getDataMeta( 'tsettings' ) );
+
+			$this->setViewPath( $model->settingsForm );
+
+			if( $settings->load( Yii::$app->request->post(), $settings->getClassName() ) && $settings->validate() ) {
+
+				$this->modelService->updateDataMeta( $model, 'tsettings', $settings );
+
+				return $this->redirect( $this->returnUrl );
+			}
+
+			return $this->render( 'settings', [
+				'model' => $model,
+				'settings' => $settings
+			]);
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+
 }

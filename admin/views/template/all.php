@@ -43,7 +43,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'model' => [ 'active' => 'Activate', 'inactive' => 'Disable', 'frender' => 'File Render', 'crender' => 'Content Render', 'group' => 'Layout Group', 'single' => 'Single Layout', 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x2', 'x2', null, null, null, null, 'x2', 'x3', null ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x2', 'x2', null, null, null, null, null, 'x3', 'x2' ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'name' => 'Name',
@@ -60,7 +60,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 	'templateDir' => "$themeTemplates/widget/grid",
 	//'dataView' => "$moduleTemplates/grid/data/template",
 	//'cardView' => "$moduleTemplates/grid/cards/template",
-	//'actionView' => "$moduleTemplates/grid/actions/template"
+	'actionView' => "$moduleTemplates/grid/actions/template"
 ]) ?>
 
 <?= Popup::widget([

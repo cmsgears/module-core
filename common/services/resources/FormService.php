@@ -314,6 +314,16 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 
 	// Create -------------
 
+	public function create( $model, $config = [] ) {
+
+		// Copy Template
+		$config[ 'template' ] = $model->template;
+
+		$this->copyTemplate( $model, $config );
+
+		return parent::create( $model, $config );
+	}
+
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
@@ -330,6 +340,14 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 		if( $admin ) {
 
 			$attributes[] = 'status';
+		}
+
+		// Copy Template
+		$config[ 'template' ] = $model->template;
+
+		if( $this->copyTemplate( $model, $config ) ) {
+
+			$attributes[] = 'data';
 		}
 
 		return parent::update( $model, [

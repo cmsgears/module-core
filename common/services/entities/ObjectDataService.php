@@ -198,6 +198,18 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 					'default' => SORT_DESC,
 					'label' => 'Featured'
 				],
+				'admin' => [
+					'asc' => [ "$modelTable.admin" => SORT_ASC ],
+					'desc' => [ "$modelTable.admin" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Admin'
+				],
+				'shared' => [
+					'asc' => [ "$modelTable.shared" => SORT_ASC ],
+					'desc' => [ "$modelTable.shared" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Shared'
+				],
 				'cdate' => [
 					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
 					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
@@ -264,6 +276,18 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 				case 'featured': {
 
 					$config[ 'conditions' ][ "$modelTable.featured" ] = true;
+
+					break;
+				}
+				case 'admin': {
+
+					$config[ 'conditions' ][ "$modelTable.admin" ] = true;
+
+					break;
+				}
+				case 'shared': {
+
+					$config[ 'conditions' ][ "$modelTable.shared" ] = true;
 
 					break;
 				}
@@ -457,6 +481,11 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 		try {
 
+			// Copy Template
+			$config[ 'template' ] = $model->template;
+
+			$this->copyTemplate( $model, $config );
+
 			// Create Model
 			$model = $this->create( $model, $config );
 
@@ -520,9 +549,20 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 		if( $admin ) {
 
-			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'pinned', 'featured' ] );
+			$attributes	= ArrayHelper::merge( $attributes, [
+				'status', 'order', 'pinned', 'featured'
+			]);
 		}
 
+		// Copy Template
+		$config[ 'template' ] = $model->template;
+
+		if( $this->copyTemplate( $model, $config ) ) {
+
+			$attributes[] = 'data';
+		}
+
+		// Save Files
 		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
 
 		// Create/Update gallery

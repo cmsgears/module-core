@@ -35,6 +35,9 @@ abstract class ObjectController extends CrudController {
 
 	// Protected --------------
 
+	protected $admin;
+	protected $shared;
+
 	protected $type;
 	protected $templateType;
 
@@ -138,6 +141,8 @@ abstract class ObjectController extends CrudController {
 
 		$model->siteId	= Yii::$app->core->siteId;
 		$model->type	= $this->type;
+		$model->admin	= $this->admin;
+		$model->shared	= $this->shared;
 
 		$avatar	= File::loadFile( null, 'Avatar' );
 		$banner	= File::loadFile( null, 'Banner' );
@@ -145,7 +150,9 @@ abstract class ObjectController extends CrudController {
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->model = $this->modelService->add( $model, [ 'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video ] );
+			$this->model = $this->modelService->add( $model, [
+				'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+			]);
 
 			return $this->redirect( 'all' );
 		}
@@ -173,13 +180,18 @@ abstract class ObjectController extends CrudController {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
+			$template = $model->template;
+
 			$avatar	= File::loadFile( $model->avatar, 'Avatar' );
 			$banner	= File::loadFile( $model->banner, 'Banner' );
 			$video	= File::loadFile( $model->video, 'Video' );
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->model = $this->modelService->update( $model, [ 'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video ] );
+				$this->model = $this->modelService->update( $model, [
+					'admin' => true, 'oldTemplate' => $template,
+					'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+				]);
 
 				return $this->redirect( $this->returnUrl );
 			}

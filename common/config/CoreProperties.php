@@ -205,9 +205,9 @@ class CoreProperties extends Properties {
 	 */
 	public function getSiteUrl() {
 
-		$siteUrl = $this->properties[ self::PROP_SITE_URL ];
-
-		$siteSlug = array_shift( ( explode( '.', $_SERVER[ 'HTTP_HOST' ] ) ) );
+		$siteUrl 	= $this->properties[ self::PROP_SITE_URL ];
+		$host		= explode( '.', $_SERVER[ 'HTTP_HOST' ] );
+		$siteSlug 	= array_shift( $host );
 
 		// Child Domain
 		if( $siteSlug !== 'www' ) {
@@ -223,9 +223,9 @@ class CoreProperties extends Properties {
 	 */
 	public function getAdminUrl() {
 
-		$adminUrl = $this->properties[ self::PROP_ADMIN_URL ];
-
-		$siteSlug = array_shift( ( explode( '.', $_SERVER[ 'HTTP_HOST' ] ) ) );
+		$adminUrl	= $this->properties[ self::PROP_ADMIN_URL ];
+		$host		= explode( '.', $_SERVER[ 'HTTP_HOST' ] );
+		$siteSlug 	= array_shift( $host );
 
 		// Child Domain
 		if( $siteSlug !== 'www' ) {
@@ -238,9 +238,9 @@ class CoreProperties extends Properties {
 
 	public function getResourceUrl() {
 
-		$resourceUrl = $this->properties[ self::PROP_RESOURCE_URL ];
-
-		$siteSlug = array_shift( ( explode( '.', $_SERVER[ 'HTTP_HOST' ] ) ) );
+		$resourceUrl 	= $this->properties[ self::PROP_RESOURCE_URL ];
+		$host			= explode( '.', $_SERVER[ 'HTTP_HOST' ] );
+		$siteSlug 		= array_shift( $host );
 
 		// Child Domain
 		if( $siteSlug !== 'www' ) {

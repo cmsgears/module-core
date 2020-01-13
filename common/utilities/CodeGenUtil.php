@@ -507,13 +507,15 @@ class CodeGenUtil {
 
 		$stripTags = isset( $config[ 'stripTags' ] ) ? $config[ 'stripTags' ] : true;
 
+		$settings = isset( $params[ 'settings' ] ) ? $params[ 'settings' ] : [];
+
 		if( isset( $params[ 'summary' ] ) ) {
 
 			$summary = $stripTags ? strip_tags( $params[ 'summary' ] ) : $params[ 'summary' ];
 
 			$seoH1 = "<h1 class=\"hidden\">$summary</h1>";
 
-			return $seoH1;
+			return isset( $settings->h1Summary ) && !$settings->h1Summary ? null : $seoH1;
 		}
 
 		return null;

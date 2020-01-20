@@ -17,8 +17,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\Meta;
 
-use cmsgears\core\common\actions\base\ModelAction;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -26,7 +24,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class Toggle extends ModelAction {
+class Toggle extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -83,16 +81,32 @@ class Toggle extends ModelAction {
 
 			if( $meta->hasAttribute( 'modelId' ) ) {
 
-				$meta = $this->metaService->initByNameType( $parent->id, $key, $ctype, Meta::VALUE_TYPE_FLAG, $label );
+				$meta = $this->metaService->getByNameType( $parent->id, $key, $ctype );
+
+				if( empty( $meta ) ) {
+
+					$this->metaService->initByNameType( $parent->id, $key, $ctype, Meta::VALUE_TYPE_FLAG, $label );
+				}
+				else {
+
+					$this->metaService->toggle( $meta );
+				}
 			}
 			else {
 
 				$parentType	= $this->modelService->getParentType();
 
-				$meta = $this->metaService->initByNameType( $parent->id, $parentType, $key, $ctype, Meta::VALUE_TYPE_FLAG, $label );
-			}
+				$meta = $this->metaService->getByNameType( $parent->id, $parentType, $key, $ctype );
 
-			$this->metaService->toggle( $meta );
+				if( empty( $meta ) ) {
+
+					$this->metaService->initByNameType( $parent->id, $parentType, $key, $ctype, Meta::VALUE_TYPE_FLAG, $label );
+				}
+				else {
+
+					$this->metaService->toggle( $meta );
+				}
+			}
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );

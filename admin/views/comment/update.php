@@ -18,7 +18,7 @@ Editor::widget();
 <div class="box-crud-wrap">
 	<div class="box-crud-wrap-main">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-comment', 'options' => [ 'class' => 'form' ] ] ); ?>
-		<div class="box box-crud">
+		<div class="box box-crud layer layer-10">
 			<div class="box-header">
 				<div class="box-header-title">Basic Details</div>
 			</div>
@@ -69,8 +69,8 @@ Editor::widget();
 				</div>
 			</div>
 		</div>
-		<div class="filler-height filler-height-medium"></div>
-		<div class="box box-crud">
+		<div class="filler-height filler-height-medium layer layer-5"></div>
+		<div class="box box-crud layer layer-5">
 			<div class="box-header">
 				<div class="box-header-title">Content</div>
 			</div>
@@ -80,8 +80,8 @@ Editor::widget();
 				</div>
 			</div>
 		</div>
-		<div class="filler-height filler-height-medium"></div>
-		<div class="align align-right">
+		<div class="filler-height filler-height-medium layer layer-5"></div>
+		<div class="align align-right layer layer-5">
 			<?= Html::a( 'View All', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
 			<input class="frm-element-medium" type="submit" value="Update" />
 		</div>

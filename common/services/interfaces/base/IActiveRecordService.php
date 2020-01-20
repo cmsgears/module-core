@@ -149,6 +149,8 @@ interface IActiveRecordService {
 
 	public function applyBulkByTargetId( $column, $action, $target, $config = [] );
 
+	public function applyBulkByUserTargetId( $column, $action, $target, $config = [] );
+
 	// Notifications ------
 
 	// Trigger Admin Notifications

@@ -319,10 +319,10 @@ class CategoryService extends \cmsgears\core\common\services\base\ResourceServic
 
 	public function update( $model, $config = [] ) {
 
-		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'name', 'slug', 'type', 'icon', 'title', 'description', 'htmlOptions', 'content' ];
+			'name', 'slug', 'icon', 'texture', 'title', 'description', 'htmlOptions', 'content' ];
 
 		// Update Hierarchy
 		$this->updateInHierarchy( $model );

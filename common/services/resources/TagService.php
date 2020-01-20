@@ -205,7 +205,8 @@ class TagService extends \cmsgears\core\common\services\base\ResourceService imp
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'slug', 'icon', 'title', 'description' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'slug', 'icon', 'texture', 'title', 'description', 'htmlOptions', 'content' ];
 
 		return parent::update( $model, [
 			'attributes' => $attributes

@@ -56,10 +56,10 @@ abstract class ObjectSuggest extends ObjectMapper {
 	public $modelObjects = [];
 
 	// Application
-	public $app = 'mapper';
+	public $app = 'core';
 
 	// Controller where mapping request need to be triggered
-	public $controller = 'model';
+	public $controller = 'modelMapper';
 
 	// Controller action to handle the search request
 	public $action = 'autoSearch';

@@ -67,13 +67,17 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Traits ------------------------------------------------------
 
-	use ApprovalTrait;
 	use DataTrait;
 	use FeaturedTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
 	use VisualTrait;
+
+	use ApprovalTrait {
+
+		getPageByOwnerId as baseGetPageByOwnerId;
+	}
 
 	// Constructor and Initialisation ------------------------------
 
@@ -101,6 +105,11 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -223,9 +232,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 					'label' => 'Updated At'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -296,18 +303,23 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'content' => "$modelTable.content"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description",
-				'content' => "$modelTable.content"
-			];
-
 			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $search;
 		}
 
 		// Reporting --------
@@ -329,15 +341,9 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		return parent::getPage( $config );
 	}
 
-	public function getPageByType( $type, $config = [] ) {
-
-		$modelTable = $this->getModelTable();
-
-		$config[ 'conditions' ][ "$modelTable.type" ] = $type;
-
-		return $this->getPage( $config );
-	}
-
+	/**
+	 * Returns the child objects.
+	 */
 	public function getPageByParentId( $parentId, $config = [] ) {
 
 		$modelTable = $this->getModelTable();
@@ -347,7 +353,26 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		return $this->getPage( $config );
 	}
 
+	/**
+	 * Returns the collection made by the user.
+	 */
+	public function getPageByOwnerId( $ownerId, $config = [] ) {
+
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.admin" ] = false;
+		$config[ 'conditions' ][ "$modelTable.shared" ] = true;
+
+		return $this->baseGetPageByOwnerId( $ownerId, $config );
+	}
+
+	/**
+	 * Returns the collection made for the parent i.e. directly mapped models.
+	 */
 	public function getPageByTypeParent( $type, $parentId, $parentType, $config = [] ) {
+
+		$admin	= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false; // Returns frontend mappings
+		$shared	= isset( $config[ 'shared' ] ) ? $config[ 'shared' ] : false; // Returns direct mappings
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -359,7 +384,9 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		$query->leftJoin( $modelObjectTable, "$modelObjectTable.modelId=$modelTable.id" );
 		$query->where( "$modelObjectTable.parentId=$parentId AND $modelObjectTable.parentType='$parentType' AND $modelObjectTable.type='$type'" );
 
-		$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		$config[ 'conditions' ][ "$modelTable.type" ]	= $type;
+		$config[ 'conditions' ][ "$modelTable.admin" ]	= $admin;
+		$config[ 'conditions' ][ "$modelTable.shared" ]	= $shared;
 
 		$config[ 'query' ] = $query;
 

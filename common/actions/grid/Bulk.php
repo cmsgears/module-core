@@ -15,8 +15,6 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Action;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -24,7 +22,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class Bulk extends Action {
+class Bulk extends \cmsgears\core\common\base\Action {
 
 	// Variables ---------------------------------------------------
 
@@ -39,6 +37,8 @@ class Bulk extends Action {
 	// Variables -----------------------------
 
 	// Public -----------------
+
+	public $userBulk = false;
 
 	public $modelService;
 
@@ -69,7 +69,7 @@ class Bulk extends Action {
 
 	// CMG parent classes --------------------
 
-	// ToggleEmp -----------------------------
+	// Bulk ----------------------------------
 
 	public function run() {
 
@@ -81,7 +81,14 @@ class Bulk extends Action {
 
 			$target	= preg_split( '/,/', $target );
 
-			$this->modelService->applyBulkByTargetId( $column, $action, $target, $this->config );
+			if( $this->userBulk ) {
+
+				$this->modelService->applyBulkByUserTargetId( $column, $action, $target, $this->config );
+			}
+			else {
+
+				$this->modelService->applyBulkByTargetId( $column, $action, $target, $this->config );
+			}
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );

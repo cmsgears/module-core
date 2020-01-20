@@ -650,6 +650,29 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		}
 	}
 
+	/**
+	 * Bulk actions by user.
+	 *
+	 * @param string $column
+	 * @param string $action
+	 * @param string $target
+	 */
+	public function applyBulkByUserTargetId( $column, $action, $target, $config = [] ) {
+
+		$user = Yii::$app->core->getUser();
+
+		foreach ( $target as $id ) {
+
+			$model = $this->getById( $id );
+
+			// Bulk Conditions
+			if( isset( $model ) && $model->isOwner( $user ) ) {
+
+				$this->applyBulk( $model, $column, $action, $target, $config );
+			}
+		}
+	}
+
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		// adapter method for bulk actions
@@ -853,6 +876,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		// search and sort
 		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
 		$searchCol		= $config[ 'search-col' ] ?? [];
 		$sort			= $config[ 'sort' ] ?? false;
 

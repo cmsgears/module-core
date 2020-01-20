@@ -123,8 +123,12 @@ abstract class ObjectController extends CrudController {
 	public function actionAll( $config = [] ) {
 
 		$modelClass = $this->modelService->getModelClass();
+		$modelTable = $this->modelService->getModelTable();
 
-		$dataProvider = $this->modelService->getPageByType( $this->type );
+		$config[ 'conditions' ][ "$modelTable.admin" ]	= $this->admin;
+		$config[ 'conditions' ][ "$modelTable.shared" ] = $this->shared;
+
+		$dataProvider = $this->modelService->getPageByType( $this->type, $config );
 
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,

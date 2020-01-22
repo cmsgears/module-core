@@ -102,7 +102,7 @@ class ModelMetaService extends \cmsgears\core\common\services\base\ModelResource
 
 				case ModelMeta::VALUE_TYPE_FLAG: {
 
-					$meta->value = 1;
+					$meta->value = 1; // The flag should be turned on by default
 
 					break;
 				}

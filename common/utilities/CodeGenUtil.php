@@ -167,7 +167,7 @@ class CodeGenUtil {
 	// Generic Select for any table
 	public static function generateSelectOptions( $data, $selected = null, $key1, $key2 ) {
 
-		$options	= "";
+		$options = "";
 
 		if( isset( $data ) ) {
 
@@ -203,22 +203,26 @@ class CodeGenUtil {
 	}
 
 	// Generic Select for any table
-	public static function generateSelectOptionsFromArray( $data, $selected = null ) {
+	public static function generateSelectOptionsFromArray( $data, $selected = null, $config = [] ) {
+
+		$keyPrefix = isset( $config[ 'keyPrefix' ] ) ? $config[ 'keyPrefix' ] : null;
 
 		$options = "";
 
 		if( isset( $data ) ) {
 
-			if( isset($selected) ) {
+			if( isset( $selected ) ) {
 
 				foreach ( $data as $key => $value ) {
 
-					if( $selected === $key ) {
+					$oKey = isset( $keyPrefix ) ? $keyPrefix . $key : $key;
 
-						$options .= "<option value='$key' selected>$value</option>";
+					if( $selected === $oKey ) {
+
+						$options .= "<option value='$oKey' selected>$value</option>";
 					}
 					else {
-						$options .= "<option value='$key'>$value</option>";
+						$options .= "<option value='$oKey'>$value</option>";
 					}
 				}
 			}
@@ -226,7 +230,9 @@ class CodeGenUtil {
 
 				foreach ( $data as $key => $value ) {
 
-					$options .= "<option value='$key'>$value</option>";
+					$oKey = isset( $keyPrefix ) ? $keyPrefix . $key : $key;
+
+					$options .= "<option value='$oKey'>$value</option>";
 				}
 			}
 		}

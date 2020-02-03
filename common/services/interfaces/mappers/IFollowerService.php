@@ -27,7 +27,9 @@ interface IFollowerService extends IMapperService {
 
 	// Read - Models ---
 
-	public static function getByFollower( $parentId, $type = IFollower::TYPE_FOLLOW );
+	public function getByFollower( $parentId, $type = IFollower::TYPE_FOLLOW ) ;
+
+	public function getFollowing( $type = IFollower::TYPE_FOLLOW, $config = [] );
 
 	// Read - Lists ----
 

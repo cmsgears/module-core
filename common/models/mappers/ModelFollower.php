@@ -147,18 +147,6 @@ class ModelFollower extends ModelMapper implements IData, IFeatured, IFollower {
 
 	// Read - Query -----------
 
-    /**
-     * @inheritdoc
-     */
-	public static function queryWithHasOne( $config = [] ) {
-
-		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'user' ];
-
-		$config[ 'relations' ] = $relations;
-
-		return parent::queryWithAll( $config );
-	}
-
 	/**
 	 * Return query to find the mapping by type and follower id.
 	 *

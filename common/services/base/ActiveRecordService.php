@@ -346,7 +346,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	public function createByParams( $params = [], $config = [] ) {
 
-		$model	= new static::$modelClass;
+		$model = new static::$modelClass;
 
 		foreach( $params as $key => $value ) {
 

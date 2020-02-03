@@ -22,6 +22,18 @@ trait FollowerTrait {
 
 	// Public -----------------
 
+	/**
+	 * Stores the map of types having follower type as key and value as text representation of key.
+	 *
+	 * @var array
+	 */
+	public static $typeMap	= [
+		self::TYPE_LIKE => 'Like',
+		self::TYPE_DISLIKE => 'Dislike',
+		self::TYPE_FOLLOW => 'Follow',
+		self::TYPE_WISHLIST => 'Wish'
+	];
+
 	// Protected --------------
 
 	// Private ----------------
@@ -39,6 +51,46 @@ trait FollowerTrait {
 	// Validators ----------------------------
 
 	// FollowerTrait -------------------------
+
+	/**
+	 * @inheritdoc
+	 */
+	public function isLike() {
+
+		return $this->type == self::TYPE_LIKE;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function isDislike() {
+
+		return $this->type == self::TYPE_DISLIKE;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function isFollow() {
+
+		return $this->type == self::TYPE_FOLLOW;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function isWish() {
+
+		return $this->type == self::TYPE_WISHLIST;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getTypeStr() {
+
+		return static::$typeMap[ $this->type ];
+	}
 
 	// Static Methods ----------------------------------------------
 

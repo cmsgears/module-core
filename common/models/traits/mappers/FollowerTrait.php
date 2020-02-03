@@ -12,10 +12,10 @@ namespace cmsgears\core\common\models\traits\mappers;
 // CMG Imports
 use cmsgears\core\common\models\interfaces\base\IFollower;
 
-use cmsgears\core\common\models\entities\User;
+use cmsgears\core\common\models\base\CoreTables;
 
 /**
- * FollowerTrait can be used to add follow, like, wish features to relevant models.
+ * FollowerTrait can be used to add like, dislike, follow, wish features to relevant models.
  *
  * @since 1.0.0
  */
@@ -54,11 +54,20 @@ trait FollowerTrait {
 	 */
 	public function getFollowers() {
 
-		$followerClass = $this->followerClass;
-		$followerTable = $followerClass::tableName();
+		$userTable		= CoreTables::getTableName( CoreTables::TABLE_USER );
+		$followerClass	= $this->followerClass;
+		$followerTable	= $followerClass::tableName();
 
-		return $this->hasMany( User::class, [ 'id' => 'followerId' ] )
+		/*
+		return $this->hasMany( User::class, [ 'id' => 'modelId' ] )
 			->viaTable( $followerTable, [ 'modelId' => 'id' ] );
+		*/
+
+		return $followerClass::find()
+			->leftJoin( $userTable, "$followerTable.modelId=$userTable.id" )
+			->where( "$followerTable.parentId=$this->id" )
+			->orderBy( [ "$followerTable.order" => SORT_DESC, "$followerTable.id" => SORT_ASC ] )
+			->all();
 	}
 
 	/**
@@ -66,15 +75,24 @@ trait FollowerTrait {
 	 */
 	public function getActiveFollowers() {
 
-		$followerClass = $this->followerClass;
-		$followerTable = $followerClass::tableName();
+		$userTable		= CoreTables::getTableName( CoreTables::TABLE_USER );
+		$followerClass	= $this->followerClass;
+		$followerTable	= $followerClass::tableName();
 
-		return $this->hasMany( User::class, [ 'id' => 'followerId' ] )
+		/*
+		return $this->hasMany( User::class, [ 'id' => 'modelId' ] )
 			->viaTable( $followerTable, [ 'modelId' => 'id' ],
 				function( $query ) use( $followerTable ) {
 					$query->onCondition( [ "$followerTable.active" => true ] );
 				}
 			);
+		*/
+
+		return $followerClass::find()
+			->leftJoin( $userTable, "$followerTable.modelId=$userTable.id" )
+			->where( "$followerTable.parentId=$this->id AND $followerTable.active=1" )
+			->orderBy( [ "$followerTable.order" => SORT_DESC, "$followerTable.id" => SORT_ASC ] )
+			->all();
 	}
 
 	/**
@@ -82,29 +100,24 @@ trait FollowerTrait {
 	 */
 	public function getFollowersByType( $type, $active = true ) {
 
-		$followerClass = $this->followerClass;
-		$followerTable = $followerClass::tableName();
+		$userTable		= CoreTables::getTableName( CoreTables::TABLE_USER );
+		$followerClass	= $this->followerClass;
+		$followerTable	= $followerClass::tableName();
 
-		$users = $this->hasMany( User::class, [ 'id' => 'followerId' ] )
+		/*
+		return $this->hasMany( User::class, [ 'id' => 'modelId' ] )
 			->viaTable( $followerTable, [ 'modelId' => 'id' ],
 				function( $query ) use( $followerTable, $type, $active ) {
 					$query->onCondition( [ "$followerTable.type" => $type, "$followerTable.active" => $active ] );
 				}
 			)->all();
+		*/
 
-		return $users;
-	}
-
-	/**
-	 * Returns follower models.
-	 *
-	 * @return \cmsgears\core\common\models\base\Meta[]
-	 */
-	public function getModelFollowers() {
-
-		$followerClass = $this->followerClass;
-
-		return $this->hasMany( $followerClass, [ 'parentId' => 'id' ] );
+		return $followerClass::find()
+			->leftJoin( $userTable, "$followerTable.modelId=$userTable.id" )
+			->where( "$followerTable.parentId=$this->id AND $followerTable.type='$type' AND $followerTable.active=$active" )
+			->orderBy( [ "$followerTable.order" => SORT_DESC, "$followerTable.id" => SORT_ASC ] )
+			->all();
 	}
 
 	/**
@@ -205,7 +218,7 @@ trait FollowerTrait {
 		$followerClass = $this->followerClass;
 		$followerTable = $followerClass::tableName();
 
-		$user		= Yii::$app->user->identity;
+		$user		= Yii::$app->core->getUser();
 		$returnArr	= [ IFollower::TYPE_LIKE => false, IFollower::TYPE_DISLIKE => false, IFollower::TYPE_FOLLOW => false, IFollower::TYPE_WISHLIST => false ];
 
 		if( isset( $user ) ) {
@@ -214,7 +227,7 @@ trait FollowerTrait {
 
 	    	$query->select( [ 'type', 'active' ] )
 					->from( $followerTable )
-					->where( [ 'parentId' => $this->id, 'parentType' => $this->modelType, 'modelId' => $user->id ] );
+					->where( [ 'parentId' => $this->id, 'modelId' => $user->id ] );
 
 			$follows = $query->all();
 

@@ -9,19 +9,21 @@
 
 namespace cmsgears\core\common\services\mappers;
 
+// Yii Imports
+use Yii;
+use yii\db\Query;
+
 // CMG Imports
 use cmsgears\core\common\models\interfaces\base\IFollower;
 
 use cmsgears\core\common\services\interfaces\mappers\IModelFollowerService;
-
-use cmsgears\core\common\services\base\ModelMapperService;
 
 /**
  * ModelFollowerService provide service methods of model follower.
  *
  * @since 1.0.0
  */
-class ModelFollowerService extends ModelMapperService implements IModelFollowerService {
+class ModelFollowerService extends \cmsgears\core\common\services\base\ModelMapperService implements IModelFollowerService {
 
 	// Variables ---------------------------------------------------
 
@@ -65,27 +67,33 @@ class ModelFollowerService extends ModelMapperService implements IModelFollowerS
 
 	// Read - Models ---
 
-	public static function getByFollower( $parentId, $parentType, $type = IFollower::TYPE_FOLLOW ) {
+	public function getByFollower( $parentId, $parentType, $type = IFollower::TYPE_FOLLOW ) {
 
 		$modelClass = static::$modelClass;
 
-		$user = Yii::$app->user->identity;
+		$user = Yii::$app->core->getUser();
 
-		return $modelClass::findByParentModelIdType( $parentId, $parentType, $user->id, $type );
+		return isset( $user ) ? $modelClass::findByParentModelIdType( $parentId, $parentType, $user->id, $type ) : null;
 	}
 
 	// Read - Lists ----
 
     public function getFollowersIdList( $parentId, $parentType ) {
 
-        return self::findList( [  'column' => 'modelId', 'conditions' => [ 'type' => IFollower::TYPE_FOLLOW, 'active' => true, 'parentId' => $parentId, 'parentType' => $parentType ] ] );
+        return self::findList([
+			'column' => 'modelId',
+			'conditions' => [ 'type' => IFollower::TYPE_FOLLOW, 'active' => true, 'parentId' => $parentId, 'parentType' => $parentType ]
+		]);
     }
 
     public function getFollowingIdList( $parentType ) {
 
-		$user = Yii::$app->user->identity;
+		$user = Yii::$app->core->getUser();
 
-        return self::findList( [  'column' => 'parentId', 'conditions' => [ 'type' => IFollower::TYPE_FOLLOW, 'active' => true, 'parentType' => $parentType, 'modelId' => $user->id ] ] );
+        return isset( $user ) ? self::findList([
+			'column' => 'parentId',
+			'conditions' => [ 'type' => IFollower::TYPE_FOLLOW, 'active' => true, 'parentType' => $parentType, 'modelId' => $user->id ]
+		]) : [];
     }
 
 	// Read - Maps -----
@@ -96,9 +104,9 @@ class ModelFollowerService extends ModelMapperService implements IModelFollowerS
 
 		$modelClass = static::$modelClass;
 
-		$user = Yii::$app->user->identity;
+		$user = Yii::$app->core->getUser();
 
-		return IFollower::queryByTypeParentTypeModelId( $type, $parentType, $user->id )->andWhere( [ 'active' => true ] )->count();
+		return isset( $user ) ? IFollower::queryByTypeParentTypeModelId( $type, $parentType, $user->id )->andWhere( [ 'active' => true ] )->count() : 0;
 	}
 
 	public function getFollowersCount( $parentId, $parentType, $type = IFollower::TYPE_FOLLOW ) {
@@ -110,7 +118,7 @@ class ModelFollowerService extends ModelMapperService implements IModelFollowerS
 
     public function getStatusCounts( $parentId, $parentType, $type = IFollower::TYPE_FOLLOW ) {
 
-        $followerTable = static::$modelTable;
+        $followerTable = $this->getModelTable();
 
         $query = new Query();
 
@@ -157,9 +165,10 @@ class ModelFollowerService extends ModelMapperService implements IModelFollowerS
 
 		$modelClass = static::$modelClass;
 
-		$user = Yii::$app->user->identity;
+		$user = Yii::$app->core->getUser();
 
-		//$userId		= $params[ 'modelId' ];
+		$params[ 'modelId' ] = $user->id;
+
 		$parentId	= $params[ 'parentId' ];
 		$parentType	= $params[ 'parentType' ];
 		$type		= $params[ 'type' ];

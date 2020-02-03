@@ -122,10 +122,22 @@ trait ApprovalTrait {
 
 		$limit = $config[ 'limit' ] ?? 10;
 
-		$modelClass	 = static::$modelClass;
-		$modelTable	 = $modelClass::tableName();
+		$modelClass		= static::$modelClass;
+		$modelTable		= $modelClass::tableName();
+		$parentType		= static::$parentType;
 
-		$query = $modelClass::find()->where( [ "$modelTable.status" => $status ] );
+		$query = null;
+
+		// TODO: Cover the case where $parentType is same for different types
+
+		if( isset( $parentType ) ) {
+
+			$query = $modelClass::find()->where( [ "$modelTable.status" => $status, "$modelTable.type" => $parentType ] );
+		}
+		else {
+
+			$query = $modelClass::find()->where( [ "$modelTable.status" => $status ] );
+		}
 
 		$query->limit( $limit );
 

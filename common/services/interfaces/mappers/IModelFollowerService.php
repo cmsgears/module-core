@@ -27,7 +27,7 @@ interface IModelFollowerService extends IModelMapperService {
 
 	// Read - Models ---
 
-	public static function getByFollower( $parentId, $parentType, $type = IFollower::TYPE_FOLLOW );
+	public function getByFollower( $parentId, $parentType, $type = IFollower::TYPE_FOLLOW );
 
 	// Read - Lists ----
 

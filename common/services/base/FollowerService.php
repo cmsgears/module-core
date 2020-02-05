@@ -108,6 +108,34 @@ abstract class FollowerService extends MapperService implements IFollowerService
 		]) : [];
     }
 
+    public function getLikeIdList( $config = [] ) {
+
+		$config[ 'type' ] = IFollower::TYPE_LIKE;
+
+		return $this->getFollowingIdList( $config );
+    }
+
+    public function getDisikeIdList( $config = [] ) {
+
+		$config[ 'type' ] = IFollower::TYPE_DISLIKE;
+
+		return $this->getFollowingIdList( $config );
+    }
+
+    public function getFollowIdList( $config = [] ) {
+
+		$config[ 'type' ] = IFollower::TYPE_FOLLOW;
+
+		return $this->getFollowingIdList( $config );
+    }
+
+    public function getWishlistIdList( $config = [] ) {
+
+		$config[ 'type' ] = IFollower::TYPE_WISHLIST;
+
+		return $this->getFollowingIdList( $config );
+    }
+
 	// Read - Maps -----
 
 	// Read - Others ---

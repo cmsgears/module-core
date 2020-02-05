@@ -37,6 +37,14 @@ interface IFollowerService extends IMapperService {
 
     public function getFollowingIdList( $config );
 
+    public function getLikeIdList( $config = [] );
+
+    public function getDisikeIdList( $config = [] );
+
+    public function getFollowIdList( $config = [] );
+
+    public function getWishlistIdList( $config = [] );
+
 	// Read - Maps -----
 
 	// Read - Others ---

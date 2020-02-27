@@ -7,16 +7,13 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-// CMG Imports
-use cmsgears\core\common\base\Migration;
-
 /**
  * The core stats migration insert the default row count for all the tables available in
  * core module. A scheduled console job can be executed to update these stats.
  *
  * @since 1.0.0
  */
-class m160621_016618_core_stats extends Migration {
+class m160621_016618_core_stats extends \cmsgears\core\common\base\Migration {
 
 	// Public Variables
 
@@ -87,6 +84,7 @@ class m160621_016618_core_stats extends Migration {
 			[ $this->prefix . 'core_tag', 'rows', 0 ],
 			[ $this->prefix . 'core_category', 'rows', 0 ],
 			[ $this->prefix . 'core_option', 'rows', 0 ],
+			[ $this->prefix . 'core_locale_message', 'rows', 0 ],
 			[ $this->prefix . 'core_model_message', 'rows', 0 ],
 			[ $this->prefix . 'core_model_hierarchy', 'rows', 0 ],
 			[ $this->prefix . 'core_model_comment', 'rows', 0 ],

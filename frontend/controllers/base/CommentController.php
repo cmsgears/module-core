@@ -95,7 +95,7 @@ abstract class CommentController extends \cmsgears\cms\frontend\controllers\base
 
 		$parentType = $this->parentService->getParentType();
 
-		$dataProvider = $this->modelService->getPageByParent( $parent->id, $parentType, [ 'conditions' => [ "$commentTable.type" => $this->commentType ] ] );
+		$dataProvider = $this->modelService->getPageByParent( $parent->id, $parentType, [ 'type' => $this->commentType ] );
 
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,

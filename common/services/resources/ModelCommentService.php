@@ -263,58 +263,53 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		return parent::findPage( $config );
 	}
 
-	public function getPageByParent( $parentId, $parentType, $config = [] ) {
+	public function getPageByParentType( $parentType, $config = [] ) {
 
-		$topLevel = isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
+		$modelTable	= $this->getModelTable();
+		$topLevel	= isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
+		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : ModelComment::TYPE_COMMENT;
 
 		if( $topLevel ) {
 
 			$config[ 'conditions' ][ 'baseId' ] = null;
 		}
 
-		$config[ 'conditions' ][ 'parentId' ]	= $parentId;
-		$config[ 'conditions' ][ 'parentType' ]	= $parentType;
+		$config[ 'conditions' ][ "$modelTable.parentType" ]	= $parentType;
+		$config[ 'conditions' ][ "$modelTable.type" ]		= $type;
 
 		return $this->getPage( $config );
 	}
 
-	public function getCommentPageByParent( $parentId, $parentType, $config = [] ) {
+	public function getReviewPageByParentType( $parentType, $config = [] ) {
 
-        $modelTable	= $this->getModelTable();
+		$config[ 'type' ] = ModelComment::TYPE_REVIEW;
 
-		$config[ 'conditions' ][ "$modelTable.type" ] = ModelComment::TYPE_COMMENT;
+		return $this->getPageByParent( $parentType, $config );
+	}
 
-		return $this->getPageByParent( $parentId, $parentType, $config );
+	public function getPageByParent( $parentId, $parentType, $config = [] ) {
+
+		$modelTable	= $this->getModelTable();
+		$topLevel	= isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
+		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : ModelComment::TYPE_COMMENT;
+
+		if( $topLevel ) {
+
+			$config[ 'conditions' ][ 'baseId' ] = null;
+		}
+
+		$config[ 'conditions' ][ "$modelTable.parentId" ]	= $parentId;
+		$config[ 'conditions' ][ "$modelTable.parentType" ]	= $parentType;
+		$config[ 'conditions' ][ "$modelTable.type" ]		= $type;
+
+		return $this->getPage( $config );
 	}
 
 	public function getReviewPageByParent( $parentId, $parentType, $config = [] ) {
 
-       $modelTable	= $this->getModelTable();
-
-		$config[ 'conditions' ][ "$modelTable.type" ] = ModelComment::TYPE_REVIEW;
+		$config[ 'type' ] = ModelComment::TYPE_REVIEW;
 
 		return $this->getPageByParent( $parentId, $parentType, $config );
-	}
-
-	public function getPageByParentType( $parentType, $config = [] ) {
-
-		$topLevel = isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
-
-		if( $topLevel ) {
-
-			$config[ 'conditions' ][ 'baseId' ] = null;
-		}
-
-		$config[ 'conditions' ][ 'parentType' ]	= $parentType;
-
-		return $this->getPage( $config );
-	}
-
-	public function getPageByBaseId( $baseId, $config = [] ) {
-
-		$config[ 'conditions' ][ 'baseId' ] = $baseId;
-
-		return $this->getPage( $config );
 	}
 
 	public function getPageForApproved( $parentId, $parentType, $config = [] ) {
@@ -324,6 +319,26 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		$config[ 'conditions' ][ "$modelTable.status" ]	= ModelComment::STATUS_APPROVED;
 
 		return $this->getPageByParent( $parentId, $parentType, $config );
+	}
+
+	public function getReviewPageForApproved( $parentId, $parentType, $config = [] ) {
+
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.status" ]	= ModelComment::STATUS_APPROVED;
+
+		$config[ 'type' ] = ModelComment::TYPE_REVIEW;
+
+		return $this->getPageByParent( $parentId, $parentType, $config );
+	}
+
+	public function getPageByBaseId( $baseId, $config = [] ) {
+
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.baseId" ] = $baseId;
+
+		return $this->getPage( $config );
 	}
 
 	// Read ---------------
@@ -344,20 +359,20 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 		$modelClass	= self::$modelClass;
 
-		$user = Yii::$app->user->getIdentity();
+		$user = Yii::$app->core->getUser();
 
-		return $modelClass::findByUser( $parentId, $parentType, $user->id );
+		return $modelClass::findByUserId( $parentId, $parentType, $user->id );
 	}
 
 	public function isExistByUser( $parentId, $parentType ) {
 
 		$modelClass	= self::$modelClass;
 
-		$user = Yii::$app->user->getIdentity();
+		$user = Yii::$app->core->getUser();
 
 		if( isset( $user ) ) {
 
-			return $modelClass::isExistByUser( $parentId, $parentType, $user->id );
+			return $modelClass::isExistByUserId( $parentId, $parentType, $user->id );
 		}
 
 		return false;
@@ -384,6 +399,13 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		$query		= $modelClass::queryByType( $parentId, $parentType, $type, $config );
 
 		return $query->andWhere( [ 'featured' => true ] )->all();
+	}
+
+	public function getFeaturedReviews( $parentId, $parentType, $config = [] ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $this->getFeaturedByType( $parentId, $parentType, $modelClass::TYPE_REVIEW, $config );
 	}
 
 	public function getFeaturedTestimonials( $parentId, $parentType, $config = [] ) {

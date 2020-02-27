@@ -226,12 +226,17 @@ class m160621_014612_core_index extends Migration {
 
 	private function upDependent() {
 
+		// Locale message
+		$this->createIndex( 'idx_' . $this->prefix . 'locale_message_parent_t', $this->prefix . 'core_locale_message', 'parentType' );
+		//$this->createIndex( 'idx_' . $this->prefix . 'locale_message_name', $this->prefix . 'core_locale_message', 'name' );
+		$this->createIndex( 'idx_' . $this->prefix . 'locale_message_type', $this->prefix . 'core_locale_message', 'type' );
+		//$this->createIndex( 'idx_' . $this->prefix . 'locale_message_pipt', $this->prefix . 'core_locale_message', [ 'parentId', 'parentType' ] );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_locale_message' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'locale_message_search' . '(name, value)' );
+
 		// Model message
-		$this->createIndex( 'idx_' . $this->prefix . 'model_message_parent_t', $this->prefix . 'core_model_message', 'parentType' );
-		//$this->createIndex( 'idx_' . $this->prefix . 'model_message_name', $this->prefix . 'core_model_message', 'name' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_message_type', $this->prefix . 'core_model_message', 'type' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_message_pipt', $this->prefix . 'core_model_message', [ 'parentId', 'parentType' ] );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_model_message' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'model_message_search' . '(name, value)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_model_message' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'model_message_search' . '(name, email, agent, content)' );
 
 		// Model Comment
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_comment_name', $this->prefix . 'core_model_comment', 'name' );
@@ -485,10 +490,15 @@ class m160621_014612_core_index extends Migration {
 
 	private function downDependent() {
 
+		// Locale message
+		$this->dropIndex( 'idx_' . $this->prefix . 'locale_message_parent_t', $this->prefix . 'core_locale_message' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'locale_message_name', $this->prefix . 'core_locale_message' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'locale_message_type', $this->prefix . 'core_locale_message' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'locale_message_pipt', $this->prefix . 'core_locale_message' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'locale_message_search', $this->prefix . 'core_locale_message' );
+
 		// Model message
-		$this->dropIndex( 'idx_' . $this->prefix . 'model_message_parent_t', $this->prefix . 'core_model_message' );
-		//$this->dropIndex( 'idx_' . $this->prefix . 'model_message_name', $this->prefix . 'core_model_message' );
-		$this->dropIndex( 'idx_' . $this->prefix . 'model_message_type', $this->prefix . 'core_model_message' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'model_message_type', $this->prefix . 'core_model_message', 'type' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'model_message_pipt', $this->prefix . 'core_model_message' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'model_message_search', $this->prefix . 'core_model_message' );
 

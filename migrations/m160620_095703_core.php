@@ -104,8 +104,9 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->upDependency();
 
 		// Traits - Resources
-		$this->upModelMessage();
 		$this->upModelHierarchy();
+		$this->upLocaleMessage();
+		$this->upModelMessage();
 		$this->upModelComment();
 		$this->upModelAnalytics();
 		$this->upModelHistory();
@@ -917,23 +918,6 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'dependency_ttype', $this->prefix . 'core_dependency', 'targetType' );
 	}
 
-	private function upModelMessage() {
-
-		$this->createTable( $this->prefix . 'core_model_message', [
-			'id' => $this->bigPrimaryKey( 20 ),
-			'localeId' => $this->bigInteger( 20 )->notNull(),
-			'parentId' => $this->bigInteger( 20 )->notNull(),
-			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
-			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
-			'module' => $this->string( Yii::$app->core->mediumText ),
-			'type' => $this->string( Yii::$app->core->mediumText ),
-			'value' => $this->mediumText()
-		], $this->options );
-
-		// Index for columns creator and modifier
-		$this->createIndex( 'idx_' . $this->prefix . 'model_message_locale', $this->prefix . 'core_model_message', 'localeId' );
-	}
-
 	private function upModelHierarchy() {
 
 		$this->createTable( $this->prefix . 'core_model_hierarchy', [
@@ -945,6 +929,60 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'lValue' => $this->smallInteger( 6 ),
 			'rValue' => $this->smallInteger( 6 )
 		], $this->options );
+	}
+
+	private function upLocaleMessage() {
+
+		$this->createTable( $this->prefix . 'core_locale_message', [
+			'id' => $this->bigPrimaryKey( 20 ),
+			'localeId' => $this->bigInteger( 20 )->notNull(),
+			'parentId' => $this->bigInteger( 20 )->notNull(),
+			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
+			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'module' => $this->string( Yii::$app->core->mediumText ),
+			'type' => $this->string( Yii::$app->core->mediumText ),
+			'value' => $this->mediumText()
+		], $this->options );
+
+		// Index for columns creator and modifier
+		$this->createIndex( 'idx_' . $this->prefix . 'locale_message_locale', $this->prefix . 'core_locale_message', 'localeId' );
+	}
+
+	private function upModelMessage() {
+
+		$this->createTable( $this->prefix . 'core_model_message', [
+			'id' => $this->bigPrimaryKey( 20 ),
+			'siteId' => $this->bigInteger( 20 )->notNull(),
+			'baseId' => $this->bigInteger( 20 ),
+			'bannerId' => $this->bigInteger( 20 ),
+			'videoId' => $this->bigInteger( 20 ),
+			'createdBy' => $this->bigInteger( 20 ),
+			'modifiedBy' => $this->bigInteger( 20 ),
+			'parentId' => $this->bigInteger( 20 )->notNull(),
+			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
+			'title' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
+			'type' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
+			'ip' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
+			'ipNum' => $this->integer( 11 )->defaultValue( 0 ),
+			'agent' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'consumed' => $this->boolean()->notNull()->defaultValue( false ),
+			'trash' => $this->boolean()->notNull()->defaultValue( false ),
+			'createdAt' => $this->dateTime()->notNull(),
+			'modifiedAt' => $this->dateTime(),
+			'content' => $this->mediumText(),
+			'data' => $this->mediumText(),
+			'gridCache' => $this->longText(),
+			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
+			'gridCachedAt' => $this->dateTime()
+		], $this->options );
+
+		// Index for columns base, creator and modifier
+		$this->createIndex( 'idx_' . $this->prefix . 'model_message_site', $this->prefix . 'core_model_message', 'siteId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_message_base', $this->prefix . 'core_model_message', 'baseId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_message_banner', $this->prefix . 'core_model_message', 'bannerId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_message_video', $this->prefix . 'core_model_message', 'videoId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_message_creator', $this->prefix . 'core_model_message', 'createdBy' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_message_modifier', $this->prefix . 'core_model_message', 'modifiedBy' );
 	}
 
 	private function upModelComment() {
@@ -1012,11 +1050,13 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'views' => $this->integer( 11 )->defaultValue( 0 ),
 			'referrals' => $this->integer( 11 )->defaultValue( 0 ),
 			'comments' => $this->integer( 11 )->defaultValue( 0 ),
+			'reviews' => $this->integer( 11 )->defaultValue( 0 ),
 			'ratings' => $this->float(),
 			'likes' => $this->integer( 11 )->defaultValue( 0 ),
 			'wish' => $this->integer( 11 )->defaultValue( 0 ),
-			'weight' => $this->float(),
+			'followers' => $this->integer( 11 )->defaultValue( 0 ),
 			'rank' => $this->integer( 11 )->defaultValue( 0 ),
+			'weight' => $this->float(),
 			'data' => $this->mediumText(),
 			'gridCache' => $this->longText(),
 			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
@@ -1376,8 +1416,16 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		// Option
 		$this->addForeignKey( 'fk_' . $this->prefix . 'option_category', $this->prefix . 'core_option', 'categoryId', $this->prefix . 'core_category', 'id', 'RESTRICT' );
 
+		// Locale Message
+		$this->addForeignKey( 'fk_' . $this->prefix . 'locale_message_locale', $this->prefix . 'core_locale_message', 'localeId', $this->prefix . 'core_locale', 'id', 'CASCADE' );
+
 		// Model Message
-		$this->addForeignKey( 'fk_' . $this->prefix . 'model_message_locale', $this->prefix . 'core_model_message', 'localeId', $this->prefix . 'core_locale', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_message_site', $this->prefix . 'core_model_message', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_message_base', $this->prefix . 'core_model_message', 'baseId', $this->prefix . 'core_model_message', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_message_banner', $this->prefix . 'core_model_message', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_message_video', $this->prefix . 'core_model_message', 'videoId', $this->prefix . 'core_file', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_message_creator', $this->prefix . 'core_model_message', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_message_modifier', $this->prefix . 'core_model_message', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
 
 		// Model Comment
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_comment_site', $this->prefix . 'core_model_comment', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
@@ -1461,8 +1509,8 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		$this->dropTable( $this->prefix . 'core_dependency' );
 
-		$this->dropTable( $this->prefix . 'core_model_message' );
 		$this->dropTable( $this->prefix . 'core_model_hierarchy' );
+		$this->dropTable( $this->prefix . 'core_locale_message' );
 		$this->dropTable( $this->prefix . 'core_model_comment' );
 		$this->dropTable( $this->prefix . 'core_model_analytics' );
 		$this->dropTable( $this->prefix . 'core_model_history' );
@@ -1606,8 +1654,16 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		// Option
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'option_category', $this->prefix . 'core_option' );
 
+		// Locale Message
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'locale_message_locale', $this->prefix . 'core_locale_message' );
+
 		// Model Message
-		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_message_locale', $this->prefix . 'core_model_message' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_message_site', $this->prefix . 'core_model_message' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_message_base', $this->prefix . 'core_model_message' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_message_banner', $this->prefix . 'core_model_message' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_message_video', $this->prefix . 'core_model_message' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_message_creator', $this->prefix . 'core_model_message' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_message_modifier', $this->prefix . 'core_model_message' );
 
 		// Model Comment
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_site', $this->prefix . 'core_model_comment' );

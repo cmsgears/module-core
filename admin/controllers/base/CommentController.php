@@ -134,11 +134,11 @@ abstract class CommentController extends Controller {
 
 			$parent = $this->parentService->findById( $pid );
 
-			$dataProvider = $this->modelService->getPageByParent( $parent->id, $this->parentType, [ 'conditions' => [ "$commentTable.type" => $this->commentType ] ] );
+			$dataProvider = $this->modelService->getPageByParent( $parent->id, $this->parentType, [ 'type' => $this->commentType ] );
 		}
 		else {
 
-			$dataProvider = $this->modelService->getPageByParentType( $this->parentType, [ 'conditions' => [ "$commentTable.type" => $this->commentType ] ] );
+			$dataProvider = $this->modelService->getPageByParentType( $this->parentType, [ 'type' => $this->commentType ] );
 		}
 
 		return $this->render( 'all', [

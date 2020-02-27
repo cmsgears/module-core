@@ -81,6 +81,7 @@ class CoreGlobal {
 	const TYPE_LOCATION			= 'location';
 	const TYPE_CATEGORY			= 'category';
 	const TYPE_COMMENT			= 'comment';
+	const TYPE_MESSAGE			= 'message';
 	const TYPE_FILE				= 'file';
 	const TYPE_FORM				= 'form';
 	const TYPE_FORM_FIELD		= 'form-field';
@@ -174,10 +175,10 @@ class CoreGlobal {
 
 	// Roles -----------------------------------------------------------
 
-	const ROLE_SUPER_ADMIN		= 'super-admin';
+	const ROLE_SUPER_ADMIN = 'super-admin';
 
-	const ROLE_ADMIN			= 'admin';
-	const ROLE_USER				= 'user';
+	const ROLE_ADMIN	= 'admin';
+	const ROLE_USER		= 'user';
 
 	const ROLE_USER_ADMIN		= 'user-admin';
 	const ROLE_GALLERY_ADMIN	= 'gallery-admin';

@@ -11,46 +11,69 @@ namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
 use Yii;
+use yii\db\Expression;
 use yii\helpers\ArrayHelper;
+use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\interfaces\base\IModelResource;
+use cmsgears\core\common\models\interfaces\base\IAuthor;
+use cmsgears\core\common\models\interfaces\base\IMultiSite;
+use cmsgears\core\common\models\interfaces\resources\IData;
+use cmsgears\core\common\models\interfaces\resources\IGridCache;
+use cmsgears\core\common\models\interfaces\resources\IVisual;
+use cmsgears\core\common\models\interfaces\mappers\IFile;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\ModelResource;
-use cmsgears\core\common\models\entities\Locale;
 
-use cmsgears\core\common\models\traits\base\ModelResourceTrait;
+use cmsgears\core\common\models\traits\base\AuthorTrait;
+use cmsgears\core\common\models\traits\base\MultiSiteTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\resources\GridCacheTrait;
+use cmsgears\core\common\models\traits\resources\VisualTrait;
+use cmsgears\core\common\models\traits\mappers\FileTrait;
+
+use cmsgears\core\common\behaviors\AuthorBehavior;
 
 /**
- * Stores messages and templates in different languages apart from primary language.
- *
- * The message can belong either to main or child sites and other models. These messages are
- * ideally templates, warnings, text or errors.
- *
- * Other models can also store their messages. These can be either model property or content.
- *
- * These messages can be further categorized using the type attribute.
+ * The message model stores the messages for relevant parent models supporting message feature.
  *
  * @property integer $id
- * @property integer $localeId
+ * @property integer $siteId
+ * @property integer $baseId
+ * @property integer $bannerId
+ * @property integer $videoId
+ * @property integer $createdBy
+ * @property integer $modifiedBy
  * @property integer $parentId
  * @property string $parentType
- * @property string $name
+ * @property string $title
  * @property string $type
- * @property string $value
+ * @property string $ip
+ * @property integer $ipNum
+ * @property string $agent
+ * @property boolean $consumed
+ * @property datetime $createdAt
+ * @property datetime $modifiedAt
+ * @property string $content
+ * @property string $data
+ * @property string $gridCache
+ * @property boolean $gridCacheValid
+ * @property datetime $gridCachedAt
  *
  * @since 1.0.0
  */
-class ModelMessage extends ModelResource implements IModelResource {
+class ModelMessage extends \cmsgears\core\common\models\base\ModelResource implements IAuthor,
+		IData, IFile, IGridCache, IMultiSite, IVisual {
 
 	// Variables ---------------------------------------------------
 
 	// Globals -------------------------------
 
 	// Constants --------------
+
+	const TYPE_MESSAGE = CoreGlobal::TYPE_MESSAGE;
 
 	// Public -----------------
 
@@ -62,11 +85,18 @@ class ModelMessage extends ModelResource implements IModelResource {
 
 	// Protected --------------
 
+	protected $modelType = CoreGlobal::TYPE_MESSAGE;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
-	use ModelResourceTrait;
+	use AuthorTrait;
+	use DataTrait;
+	use FileTrait;
+	use GridCacheTrait;
+   	use MultiSiteTrait;
+	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -78,6 +108,24 @@ class ModelMessage extends ModelResource implements IModelResource {
 
 	// yii\base\Component -----
 
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors() {
+
+		return [
+			'authorBehavior' => [
+				'class' => AuthorBehavior::class
+			],
+			'timestampBehavior' => [
+				'class' => TimestampBehavior::class,
+				'createdAtAttribute' => 'createdAt',
+				'updatedAtAttribute' => 'modifiedAt',
+				'value' => new Expression('NOW()')
+			]
+		];
+	}
+
 	// yii\base\Model ---------
 
 	/**
@@ -88,22 +136,24 @@ class ModelMessage extends ModelResource implements IModelResource {
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'localeId', 'parentId', 'parentType', 'name' ], 'required' ],
-			[ [ 'id', 'value' ], 'safe' ],
-			// Unique
-			[ 'name', 'unique', 'targetAttribute' => [ 'localeId', 'parentId', 'parentType', 'name' ] ],
+			[ [ 'siteId', 'parentId', 'parentType', 'content' ], 'required' ],
+			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Text Limit
-			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'parentType', 'type', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'agent', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'title', 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ 'content', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
-			[ 'localeId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ 'parentId', 'number', 'integerOnly' => true, 'min' => 1 ]
+			[ [ 'consumed', 'gridCacheValid' ], 'boolean' ],
+			[ 'ipNum', 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'siteId', 'baseId', 'bannerId', 'videoId', 'parentId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'value' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'title' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -117,12 +167,19 @@ class ModelMessage extends ModelResource implements IModelResource {
 	public function attributeLabels() {
 
 		return [
-			'localeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LOCALE ),
+			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+			'baseId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE )
+			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ADDRESS_TYPE ),
+			'ip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP ),
+			'ipNum' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP_NUM ),
+			'agent' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AGENT_BROWSER ),
+			'consumed' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONSUMED ),
+			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
+			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
 		];
 	}
 
@@ -135,13 +192,38 @@ class ModelMessage extends ModelResource implements IModelResource {
 	// ModelMessage --------------------------
 
 	/**
-	 * Return the corresponding locale.
+	 * Return the immediate parent message.
 	 *
-	 * @return Locale
+	 * @return ModelMessage
 	 */
-	public function getLocale() {
+	public function getBase() {
 
-		return $this->hasOne( Locale::class, [ 'id' => 'localeId' ] );
+		return $this->hasOne( ModelMessage::class, [ 'id' => 'baseId' ] );
+	}
+
+	/**
+	 * Return all the immediate child messages.
+	 *
+	 * @return ModelMessage
+	 */
+	public function getChildren() {
+
+		return $this->hasMany( ModelMessage::class, [ 'baseId' => 'id' ] );
+	}
+
+	public function isNew() {
+
+		return !$this->consumed;
+	}
+
+	public function isConsumed() {
+
+		return $this->consumed;
+	}
+
+	public function getConsumedStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->consumed );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -155,7 +237,7 @@ class ModelMessage extends ModelResource implements IModelResource {
 	 */
 	public static function tableName() {
 
-		return CoreTables::getTableName( CoreTables::TABLE_LOCALE_MESSAGE );
+		return CoreTables::getTableName( CoreTables::TABLE_MODEL_MESSAGE );
 	}
 
 	// CMG parent classes --------------------
@@ -169,58 +251,114 @@ class ModelMessage extends ModelResource implements IModelResource {
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'locale' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'creator', 'modifier' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
 
 	/**
-	 * Return query to find the message with locale.
+	 * Return query to find the messages by type.
 	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param string $type
 	 * @param array $config
-	 * @return \yii\db\ActiveQuery to query with locale.
+	 * @return \yii\db\ActiveQuery to query by type.
 	 */
-	public static function queryWithLocale( $config = [] ) {
+	public static function queryByType( $parentId, $parentType, $type = ModelMessage::TYPE_MESSAGE, $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'locale' ];
+		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
 
-		return parent::queryWithAll( $config );
+		return self::queryByParent( $parentId, $parentType, $config )->andWhere( [ 'type' => $type, 'status' => $status ] );
+	}
+
+	/**
+	 * Return query to find top level messages.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param string $type
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query by type.
+	 */
+	public static function queryL0ByType( $parentId, $parentType, $type = ModelMessage::TYPE_MESSAGE, $config = [] ) {
+
+		return self::queryByType( $parentId, $parentType, $type, $config )->andWhere( [ 'baseId' => null ] );
+	}
+
+	/**
+	 * Return query to find the messages by user id.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param integer $userId
+	 * @param string $type
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query by type.
+	 */
+	public static function queryByUserIdType( $parentId, $parentType, $userId, $type = ModelMessage::TYPE_MESSAGE, $config = [] ) {
+
+		return self::queryByType( $parentId, $parentType, $type, $config )->andWhere( [ 'createdBy' => $userId ] );
+	}
+
+	/**
+	 * Return query to find top level messages by user id.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param integer $userId
+	 * @param string $type
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query by type.
+	 */
+	public static function queryL0ByUserIdType( $parentId, $parentType, $userId, $type = ModelMessage::TYPE_MESSAGE, $config = [] ) {
+
+		return self::queryByType( $parentId, $parentType, $type, $config )->andWhere( [ 'baseId' => null, 'createdBy' => $userId ] );
+	}
+
+	/**
+	 * Return query to find the child messages.
+	 *
+	 * @param integer $baseId
+	 * @param string $type
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query child messages.
+	 */
+	public static function queryByBaseIdType( $baseId, $type = ModelMessage::TYPE_MESSAGE, $config = [] ) {
+
+		return self::find()->where( [ 'baseId' => $baseId, 'type' => $type ] );
 	}
 
 	// Read - Find ------------
 
 	/**
-	 * Find and return the message specific to given name, type and locale id.
+	 * Find and return the messages for given user id.
 	 *
 	 * @param integer $parentId
 	 * @param string $parentType
-	 * @param string $name
+	 * @param integer $userId
 	 * @param string $type
-	 * @param int $localeId
-	 * @return ModelMessage by name, type and locale id
+	 * @return ModelMessage
 	 */
-	public static function findByNameTypeLocaleId( $parentId, $parentType, $name, $type, $localeId ) {
+	public static function findByUserId( $parentId, $parentType, $userId, $type = ModelMessage::TYPE_MESSAGE, $config = [] ) {
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:name AND type=:type AND localeId=:lid' )
-			->addParams( [ ':pid' => $parentId, ':ptype' => $parentType, ':name' => $name, ':type' => $type, ':lid' => $localeId ] )
-			->one();
+		return self::queryByUserIdType( $parentId, $parentType, $userId, $type, $config )->all();
 	}
 
 	/**
-	 * Check whether the message exists for given name, type and locale id.
+	 * Find and return the messages for given user id.
 	 *
 	 * @param integer $parentId
 	 * @param string $parentType
-	 * @param string $name
-	 * @param int $localeId
-	 * @return boolean
+	 * @param integer $userId
+	 * @param string $type
+	 * @return ModelMessage
 	 */
-	public static function isExistByNameTypeLocaleId( $parentId, $parentType, $name, $type, $localeId ) {
+	public static function findL0ByUserId( $parentId, $parentType, $userId, $type = ModelMessage::TYPE_MESSAGE, $config = [] ) {
 
-		$message = self::findByNameLocaleId( $parentId, $parentType, $name, $type, $localeId );
-
-		return isset( $message );
+		return self::queryL0ByUserIdType( $parentId, $parentType, $userId, $type, $config )->all();
 	}
 
 	// Create -----------------
@@ -229,13 +367,4 @@ class ModelMessage extends ModelResource implements IModelResource {
 
 	// Delete -----------------
 
-	/**
-	 * Delete all messages related to a locale.
-	 *
-	 * @return int the number of rows deleted.
-	 */
-	public static function deleteByLocaleId( $localeId ) {
-
-		return self::deleteAll( 'localeId=:id', [ ':id' => $localeId ] );
-	}
 }

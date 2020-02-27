@@ -84,9 +84,10 @@ class Factory extends Component {
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IFormFieldService', 'cmsgears\core\common\services\resources\FormFieldService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IFormService', 'cmsgears\core\common\services\resources\FormService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IGalleryService', 'cmsgears\core\common\services\resources\GalleryService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelCommentService', 'cmsgears\core\common\services\resources\ModelCommentService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelHierarchyService', 'cmsgears\core\common\services\resources\ModelHierarchyService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\ILocaleMessageService', 'cmsgears\core\common\services\resources\LocaleMessageService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelMessageService', 'cmsgears\core\common\services\resources\ModelMessageService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelCommentService', 'cmsgears\core\common\services\resources\ModelCommentService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelAnalyticsService', 'cmsgears\core\common\services\resources\ModelAnalyticsService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelMetaService', 'cmsgears\core\common\services\resources\ModelMetaService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IObjectMetaService', 'cmsgears\core\common\services\resources\ObjectMetaService' );
@@ -157,9 +158,10 @@ class Factory extends Component {
 		$factory->set( 'formFieldService', 'cmsgears\core\common\services\resources\FormFieldService' );
 		$factory->set( 'formService', 'cmsgears\core\common\services\resources\FormService' );
 		$factory->set( 'galleryService', 'cmsgears\core\common\services\resources\GalleryService' );
-		$factory->set( 'modelCommentService', 'cmsgears\core\common\services\resources\ModelCommentService' );
 		$factory->set( 'modelHierarchyService', 'cmsgears\core\common\services\resources\ModelHierarchyService' );
+		$factory->set( 'localeMessageService', 'cmsgears\core\common\services\resources\LocaleMessageService' );
 		$factory->set( 'modelMessageService', 'cmsgears\core\common\services\resources\ModelMessageService' );
+		$factory->set( 'modelCommentService', 'cmsgears\core\common\services\resources\ModelCommentService' );
 		$factory->set( 'modelAnalyticsService', 'cmsgears\core\common\services\resources\ModelAnalyticsService' );
 		$factory->set( 'modelMetaService', 'cmsgears\core\common\services\resources\ModelMetaService' );
 		$factory->set( 'objectMetaService', 'cmsgears\core\common\services\resources\ObjectMetaService' );

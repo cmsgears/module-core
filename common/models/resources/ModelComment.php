@@ -27,7 +27,6 @@ use cmsgears\core\common\models\interfaces\resources\IVisual;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\ModelResource;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\FeaturedTrait;
@@ -85,7 +84,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, IFile, IGridCache, IMultiSite, IVisual {
+class ModelComment extends \cmsgears\core\common\models\base\ModelResource implements IAuthor,
+		IData, IFeatured, IFile, IGridCache, IMultiSite, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -275,7 +275,7 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 	 *
 	 * @return ModelComment
 	 */
-	public function getBaseComment() {
+	public function getBase() {
 
 		return $this->hasOne( ModelComment::class, [ 'id' => 'baseId' ] );
 	}
@@ -285,7 +285,7 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 	 *
 	 * @return ModelComment
 	 */
-	public function getChildComments() {
+	public function getChildren() {
 
 		return $this->hasMany( ModelComment::class, [ 'baseId' => 'id' ] );
 	}
@@ -441,9 +441,23 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 	 * @param string $type
 	 * @return ModelComment
 	 */
-	public static function findByUser( $parentId, $parentType, $userId, $type = ModelComment::TYPE_COMMENT ) {
+	public static function findByUserId( $parentId, $parentType, $userId, $type = ModelComment::TYPE_COMMENT ) {
 
 		return static::find()->where( 'parentId=:pid AND parentType=:ptype AND createdBy=:uid AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':uid' => $userId, ':type' => $type ] )->one();
+	}
+
+	/**
+	 * Find and return the comments for given user id.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param integer $userId
+	 * @param string $type
+	 * @return ModelComment
+	 */
+	public static function findAllByUser( $parentId, $parentType, $userId, $type = ModelComment::TYPE_COMMENT ) {
+
+		return static::find()->where( 'parentId=:pid AND parentType=:ptype AND createdBy=:uid AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':uid' => $userId, ':type' => $type ] )->all();
 	}
 
 	/**
@@ -455,7 +469,7 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 	 * @param string $type
 	 * @return boolean
 	 */
-	public static function isExistByUser( $parentId, $parentType, $userId, $type = ModelComment::TYPE_COMMENT ) {
+	public static function isExistByUserId( $parentId, $parentType, $userId, $type = ModelComment::TYPE_COMMENT ) {
 
 		$comment = static::findByUser( $parentId, $parentType, $userId, $type );
 

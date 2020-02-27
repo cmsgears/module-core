@@ -23,17 +23,19 @@ interface IModelCommentService extends IModelResourceService, IData, IFile {
 
 	// Data Provider ------
 
-	public function getPageByParent( $parentId, $parentType, $config = [] );
+	public function getPageByParentType( $parentType, $config = [] );
 
-	public function getCommentPageByParent( $parentId, $parentType, $config = [] );
+	public function getReviewPageByParentType( $parentType, $config = [] );
+
+	public function getPageByParent( $parentId, $parentType, $config = [] );
 
 	public function getReviewPageByParent( $parentId, $parentType, $config = [] );
 
-	public function getPageByParentType( $parentType, $config = [] );
+	public function getPageForApproved( $parentId, $parentType, $config = [] );
+
+	public function getReviewPageForApproved( $parentId, $parentType, $config = [] );
 
 	public function getPageByBaseId( $baseId, $config = [] );
-
-	public function getPageForApproved( $parentId, $parentType, $config = [] );
 
 	// Read ---------------
 
@@ -50,6 +52,10 @@ interface IModelCommentService extends IModelResourceService, IData, IFile {
 	public function getByEmail( $email );
 
 	public function getFeaturedByType( $parentId, $parentType, $type, $config = [] );
+
+	public function getFeaturedReviews( $parentId, $parentType, $config = [] );
+
+	public function getFeaturedTestimonials( $parentId, $parentType, $config = [] );
 
 	// Read - Lists ----
 

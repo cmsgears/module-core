@@ -22,6 +22,8 @@ use cmsgears\core\common\config\CoreGlobal;
  * is owned by the currently logged in user. In all other cases, it ignore the action and throws
  * ForbiddenHttpException exception. The model must implement IOwner interface or provide isOwner method.
  *
+ * It's independent of Discover Filter.
+ * 
  * Ex:
  *	public function behaviors() {
  *

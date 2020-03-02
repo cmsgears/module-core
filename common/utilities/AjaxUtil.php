@@ -106,11 +106,12 @@ class AjaxUtil {
 		// Multiple instances of same Class
 		if( $multiple ) {
 
+			$modelErrors = [];
+
 			foreach( $source as $idx => $model ) {
 
-				$errors			= $model->getErrors();
-				$modelClass		= isset( $modelClass ) ? $modelClass : $model->getClassName();
-				$modelErrors	= [];
+				$errors		= $model->getErrors();
+				$modelClass	= isset( $modelClass ) ? $modelClass : $model->getClassName();
 
 				foreach( $errors as $key => $value ) {
 
@@ -121,11 +122,12 @@ class AjaxUtil {
 		// Models of different class
 		else if( $variable ) {
 
+			$modelErrors = [];
+
 			foreach( $source as $idx => $model ) {
 
-				$errors			= $model->getErrors();
-				$modelClass		= $model->getClassName();
-				$modelErrors	= [];
+				$errors		= $model->getErrors();
+				$modelClass	= $model->getClassName();
 
 				foreach( $errors as $key => $value ) {
 

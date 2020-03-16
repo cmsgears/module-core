@@ -209,6 +209,8 @@ class Application extends BaseApplication {
 
 				$themePath = 'themes\\' . $theme->slug . '\\Theme';
 
+				Yii::$app->view->theme
+
 				Yii::$app->view->theme = new $themePath;
 
 				Yii::$app->assetManager->bundles = require( Yii::getAlias( '@themes' ) . "/assets/$theme->slug/" . ( YII_ENV_PROD ? 'prod.php' : 'dev.php' ) );

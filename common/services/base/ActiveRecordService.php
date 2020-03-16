@@ -806,6 +806,8 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 			// Select only active and frozen models excluding new, blocked and terminated models.
 			if( $status && isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IApproval' ] ) ) {
 
+				//$config[ 'conditions' ][ "$modelTable.status" ] = IVisibility::STATUS_ACTIVE;
+
 				$config[ 'filters' ][] = [ 'in', "$modelTable.status", [ IApproval::STATUS_ACTIVE, IApproval::STATUS_FROJEN ] ];
 			}
 

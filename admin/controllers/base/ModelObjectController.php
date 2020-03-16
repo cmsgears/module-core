@@ -80,6 +80,7 @@ abstract class ModelObjectController extends Controller {
 					'create' => [ 'permission' => $this->crudPermission ],
 					'update' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ],
+					'review' => [ 'permission' => $this->crudPermission ],
 					'gallery' => [ 'permission' => $this->crudPermission ]
 				]
 			],
@@ -91,6 +92,7 @@ abstract class ModelObjectController extends Controller {
 					'create' => [ 'get', 'post' ],
 					'update' => [ 'get', 'post' ],
 					'delete' => [ 'get', 'post' ],
+					'review' => [ 'get', 'post' ],
 					'gallery' => [ 'get' ]
 				]
 			]

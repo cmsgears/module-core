@@ -209,7 +209,7 @@ class Application extends BaseApplication {
 
 				$themePath = 'themes\\' . $theme->slug . '\\Theme';
 
-				Yii::$app->view->theme
+				Yii::$app->view->theme;
 
 				Yii::$app->view->theme = new $themePath;
 

@@ -32,7 +32,7 @@ $renderers		= Yii::$app->templateManager->renderers;
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'default', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'default', [ 'disabled' => true ] ) ?>
 						</div>
 						<div class="col col2">
 							<?= $form->field( $model, 'renderer' )->dropDownList( $renderers, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>

@@ -1511,6 +1511,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		$this->dropTable( $this->prefix . 'core_model_hierarchy' );
 		$this->dropTable( $this->prefix . 'core_locale_message' );
+		$this->dropTable( $this->prefix . 'core_model_message' );
 		$this->dropTable( $this->prefix . 'core_model_comment' );
 		$this->dropTable( $this->prefix . 'core_model_analytics' );
 		$this->dropTable( $this->prefix . 'core_model_history' );

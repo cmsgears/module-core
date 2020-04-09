@@ -44,7 +44,7 @@ Editor::widget();
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active', null, 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active' ) ?>
 						</div>
 						<div class="col col2">
 							<?= $form->field( $model, 'description' )->textarea() ?>
@@ -87,7 +87,7 @@ Editor::widget();
 							<?= $form->field( $model, 'classPath' ) ?>
 						</div>
 						<div class="col col2">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'fileRender', [ 'class' => 'cmt-checkbox cmt-choice cmt-field-group', 'group-target' => 'render-file', 'group-alt' => 'render-content' ], 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'fileRender', [ 'class' => 'cmt-checkbox cmt-choice cmt-field-group', 'group-target' => 'render-file', 'group-alt' => 'render-content' ] ) ?>
 						</div>
 					</div>
 					<div class="row">
@@ -100,7 +100,7 @@ Editor::widget();
 							<?= $form->field( $model, 'layout' ) ?>
 						</div>
 						<div class="col col2">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'layoutGroup', null, 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'layoutGroup' ) ?>
 						</div>
 					</div>
 					<div class="row render-file">

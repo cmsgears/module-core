@@ -16,8 +16,6 @@ use yii\db\Expression;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\actions\base\ModelAction;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -25,7 +23,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class Create extends ModelAction {
+class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -78,6 +76,10 @@ class Create extends ModelAction {
 	// Create --------------------------------
 
 	public function run() {
+
+		$scenario = Yii::$app->request->post( 'scenario' );
+
+		$this->scenario = !empty( $scenario ) ? $scenario : $this->scenario;
 
 		if( isset( $this->model ) ) {
 

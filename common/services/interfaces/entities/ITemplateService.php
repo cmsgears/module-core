@@ -40,6 +40,8 @@ interface ITemplateService extends IEntityService, IData, IGridCacheable, IMulti
 
 	// Read - Maps -----
 
+	public function getFrontendIdNameMapByType( $type, $config = [] );
+
 	// Read - Others ---
 
 	// Create -------------

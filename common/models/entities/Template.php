@@ -55,6 +55,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $title
  * @property string $description
  * @property boolean $active
+ * @property boolean $frontend
  * @property string $classPath
  * @property string $dataPath
  * @property string $dataForm
@@ -174,7 +175,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 			[ 'title', 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
-			[ [ 'active', 'fileRender', 'layoutGroup', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'active', 'frontend', 'fileRender', 'layoutGroup', 'gridCacheValid' ], 'boolean' ],
 			[ 'themeId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -206,6 +207,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'frontend' => 'Frontend',
 			'classPath' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CLASSPATH ),
 			'renderer' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RENDERER ),
 			'fileRender' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FILE_RENDER ),

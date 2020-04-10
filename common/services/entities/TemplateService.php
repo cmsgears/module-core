@@ -141,6 +141,12 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 	                'default' => SORT_DESC,
 	                'label' => 'Active'
 	            ],
+				'frontend' => [
+	                'asc' => [ "$modelTable.frontend" => SORT_ASC ],
+	                'desc' => [ "$modelTable.frontend" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Frontend'
+	            ],
 	            'renderer' => [
 	                'asc' => [ "$modelTable.renderer" => SORT_ASC ],
 	                'desc' => [ "$modelTable.renderer" => SORT_DESC ],
@@ -227,6 +233,12 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 					break;
 				}
+				case 'frontend': {
+
+					$config[ 'conditions' ][ "$modelTable.frontend" ] = true;
+
+					break;
+				}
 				case 'frender': {
 
 					$config[ 'conditions' ][ "$modelTable.fileRender" ] = true;
@@ -266,6 +278,7 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
 			'active' => "$modelTable.active",
+			'frontend' => "$modelTable.frontend",
 			'renderer' => "$modelTable.renderer",
 			'frender' => "$modelTable.fileRender",
 			'layout' => "$modelTable.layout",
@@ -309,6 +322,14 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 	// Read - Maps -----
 
+	public function getFrontendIdNameMapByType( $type, $config = [] ) {
+
+		$config[ 'conditions' ][ 'type' ]		= $type;
+		$config[ 'conditions' ][ 'frontend' ]	= true;
+
+		return $this->getIdNameMap( $config );
+	}
+
 	// Read - Others ---
 
 	// Create -------------
@@ -329,6 +350,7 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 		if( $admin ) {
 
 			$attributes[] = 'active';
+			$attributes[] = 'frontend';
 		}
 
 		return parent::update( $model, [
@@ -392,6 +414,14 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 					case 'inactive': {
 
 						$model->active = false;
+
+						$model->update();
+
+						break;
+					}
+					case 'frontend': {
+
+						$model->frontend = true;
 
 						$model->update();
 

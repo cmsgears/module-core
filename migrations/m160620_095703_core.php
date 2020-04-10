@@ -182,6 +182,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'title' => $this->string( Yii::$app->core->xxxLargeText ),
 			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'active' => $this->boolean()->notNull()->defaultValue( false ),
+			'frontend' => $this->boolean()->notNull()->defaultValue( false ),
 			'classPath' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'dataPath' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'dataForm' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),

@@ -118,8 +118,13 @@ class Address extends Resource {
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'countryId', 'provinceId', 'cityName', 'line1', 'zip' ], 'required' ],
+			[ [ 'countryId', 'provinceId', 'cityName', 'line1' ], 'required' ],
+			[ [ 'regionId' ], 'required', 'on' => 'region' ],
+			[ [ 'zip' ], 'required', 'on' => 'postal' ],
 			[ [ 'latitude', 'longitude' ], 'required', 'on' => 'location' ],
+			[ [ 'regionId', 'zip' ], 'required', 'on' => 'regionpostal' ],
+			[ [ 'regionId', 'latitude', 'longitude' ], 'required', 'on' => 'regionlocation' ],
+			[ [ 'regionId', 'zip', 'latitude', 'longitude' ], 'required', 'on' => 'regionpostallocation' ],
 			[ [ 'id' ], 'safe' ],
 			// Text Limit
 			[ [ 'zip', 'subZip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
@@ -129,6 +134,8 @@ class Address extends Resource {
 			[ [ 'website', 'landmark' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
 			// Other
 			[ [ 'zip', 'subZip' ], 'alphanumhyphenspace' ],
+			[ 'regionId', 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ 'regionId', 'number', 'on' => [ 'region', 'regionpostal', 'regionlocation', 'regionpostallocation' ], 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'countryId', 'provinceId', 'regionId', 'cityId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'longitude', 'latitude', 'zoomLevel' ], 'number' ]
 		];

@@ -21,6 +21,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\resources\File;
+use cmsgears\core\common\models\resources\ModelMeta;
 
 use cmsgears\core\common\behaviors\ActivityBehavior;
 
@@ -206,6 +207,12 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 
 			// Add User to current Site
 			$member = $this->memberService->create( $member );
+
+			// Default Settings
+			$metaService = Yii::$app->factory->get( 'modelMetaService' );
+
+			$metaService->initByNameType( $this->model->id, CoreGlobal::TYPE_USER, 'receive_email', 'notification', ModelMeta::VALUE_TYPE_FLAG );
+			$metaService->initByNameType( $this->model->id, CoreGlobal::TYPE_USER, 'receive_email', 'reminder', ModelMeta::VALUE_TYPE_FLAG );
 
 			if( $this->model && $member ) {
 

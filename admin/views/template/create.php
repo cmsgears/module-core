@@ -40,10 +40,13 @@ Editor::widget();
 						</div>
 					</div>
 					<div class="row">
-						<div class="col col2">
+						<div class="col col3">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active' ) ?>
 						</div>
-						<div class="col col2">
+						<div class="col col3">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'frontend' ) ?>
+						</div>
+						<div class="col col3">
 							<?= $form->field( $model, 'description' )->textarea() ?>
 						</div>
 					</div>

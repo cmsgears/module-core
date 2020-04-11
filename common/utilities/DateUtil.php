@@ -145,22 +145,12 @@ class DateUtil {
 	/**
 	 * @return datetime - current datetime having specified format
 	 */
-	public static function getDateTime( $format = null ) {
-
-		if( !isset( $format ) ) {
-
-			$format	= 'Y-m-d H:i:s';
-		}
+	public static function getDateTime( $format = 'Y-m-d H:i:s' ) {
 
 		return	date( $format );
 	}
 
-	public static function getDateTimeFromMillis( $millis, $format = null ) {
-
-		if( !isset( $format ) ) {
-
-			$format	= 'Y-m-d H:i:s';
-		}
+	public static function getDateTimeFromMillis( $millis, $format = 'Y-m-d H:i:s' ) {
 
 	    return  date( $format, $millis );
 	}
@@ -168,12 +158,7 @@ class DateUtil {
 	/**
 	 * @return datetime - current date having specified format
 	 */
-	public static function getDate( $format = null ) {
-
-		if( !isset( $format ) ) {
-
-			$format	= 'Y-m-d';
-		}
+	public static function getDate( $format = 'Y-m-d' ) {
 
 		return	date( $format );
 	}
@@ -181,25 +166,15 @@ class DateUtil {
 	/**
 	 * @return time - current time having specified format
 	 */
-	public static function getTime( $format = null ) {
-
-		if( !isset( $format ) ) {
-
-			$format	= 'H:i:s';
-		}
+	public static function getTime( $format = 'H:i:s' ) {
 
 		return date( $format );
 	}
 
-	public static function getDateTimeUtc( $format = null, $timezone = 'UTC', $date = "now" ) {
+	public static function getDateTimeUtc( $format = 'Y-m-d H:i:s', $timezone = 'UTC', $date = "now" ) {
 
 		$UTC		= new \DateTimeZone( $timezone );
 		$dateUTC	= new \DateTime( $date, $UTC );
-
-		if( !isset( $format ) ) {
-
-			$format	= 'Y-m-d H:i:s';
-		}
 
 		return $dateUTC->format( $format );
 	}

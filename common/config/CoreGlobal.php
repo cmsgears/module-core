@@ -377,6 +377,7 @@ class CoreGlobal {
 	const FIELD_EXPIRED		= 'expiredField';
 	const FIELD_PINNED		= 'pinnedField';
 	const FIELD_FEATURED	= 'featuredField';
+	const FIELD_POPULAR		= 'popularField';
 	const FIELD_ANONYMOUS	= 'anonymousField';
 	const FIELD_USER_MAPPED	= 'userMappedField';
 	const FIELD_FAILED		= 'failedField';

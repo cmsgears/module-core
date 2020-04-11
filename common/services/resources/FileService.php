@@ -508,6 +508,7 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 
 		foreach( $files as $key => $value ) {
 
+			// Ignores empty files
 			if( isset( $value ) ) {
 
 				if( $value->type == 'image' ) {

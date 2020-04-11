@@ -1,15 +1,16 @@
 <?php
 /**
- * This file is part of project cmsgears. Please view License file distributed
+ * This file is part of CMSGears Framework. Please view License file distributed
  * with the source code for license details.
  *
- * @copyright Copyright (c) 2018 cmsgears.
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
 namespace cmsgears\core\api;
 
 /**
- * The frontend module component of core module.
+ * The api module component of core module.
  *
  * @since 1.0.0
  */

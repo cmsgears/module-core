@@ -57,7 +57,7 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'message' ) ?>
 						</div>
 						<div class="col col2">
-							<?= Yii::$app->formDesigner->getIconInput( $form, $model, 'dob', [ 'right' => true, 'icon' => 'cmti cmti-calendar', 'options' => [ 'class' => 'datepicker' ] ] ) ?>
+							<?= Yii::$app->formDesigner->getIconInput( $form, $model, 'dob', [ 'right' => true, 'icon' => 'cmti cmti-calendar', 'options' => [ 'class' => 'datepicker', 'autocomplete' => 'off' ] ] ) ?>
 						</div>
 					</div>
 					<div class="row">

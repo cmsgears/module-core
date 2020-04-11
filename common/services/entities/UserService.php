@@ -417,15 +417,13 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		return static::findIdNameList( $config );
 	}
 
-	// Read - Maps -----
-
 	public function searchByName( $name, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
 		$config[ 'query' ]		= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.email" ];
+		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.email", "$modelTable.mobile" ];
 		$config[ 'array' ]		= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
 
 		$config[ 'query' ]->andWhere( "$modelTable.name LIKE :name", [ ':name' => "$name%" ] );
@@ -446,6 +444,8 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 		return static::searchModels( $config );
 	}
+
+	// Read - Maps -----
 
 	/**
 	 * @param string $roleSlug
@@ -519,7 +519,8 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	}
 
 	/**
-	 * Register User - It register the user and set status to new. It also generate verification token.
+	 * Register User - It register the user and set status to new. It also generate
+	 * verification token.
 	 *
 	 * @param RegisterForm $model
 	 * @return User

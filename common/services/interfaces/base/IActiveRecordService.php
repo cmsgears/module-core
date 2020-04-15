@@ -141,6 +141,8 @@ interface IActiveRecordService {
 
 	public function delete( $model, $config = [] );
 
+	public function softDelete( $model, $softDeleteStatus );
+
 	public function deleteMultiple( $models, $config = [] );
 
 	public function deleteById( $id, $config = [] );

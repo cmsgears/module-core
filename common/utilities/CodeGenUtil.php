@@ -932,4 +932,84 @@ class CodeGenUtil {
 		return $protocol;
 	}
 
+	// Number Format
+
+	public static function getMinNum( $num ) {
+
+		if( strlen( $num ) >= 8 ) {
+
+			$num = $num / 10000000;
+		}
+		else if( strlen( $num ) >= 6 ) {
+
+			$num = $num / 100000;
+		}
+		else if( strlen( $num ) >= 5 ) {
+
+			$num = $num / 1000;
+		}
+		else if( $num == 0 ) {
+
+			$num = null;
+		}
+
+		return $num;
+	}
+
+	public static function getMinNumUnit( $num ) {
+
+		$priceUnit = null;
+
+		if( strlen( $num ) >= 8 ) {
+
+			$priceUnit = 'Cr';
+		}
+		else if( strlen( $num ) >= 6 ) {
+
+			$priceUnit = 'L';
+		}
+		else if( strlen( $num ) >= 5 ) {
+
+			$priceUnit = 'K';
+		}
+
+		return $priceUnit;
+	}
+
+	public static function getMinNumText( $num, $round = 2 ) {
+
+		if( strlen( $num ) >= 8 ) {
+
+			$num = round( $num / 10000000, $round ) . ' Cr';
+		}
+		else if( strlen( $num ) >= 6 ) {
+
+			$num = round( $num / 100000, $round ) . ' L';
+		}
+		else if( strlen( $num ) >= 5 ) {
+
+			$num = round( $num / 1000, $round ) . ' K';
+		}
+		else if( $num == 0 ) {
+
+			$num = null;
+		}
+
+		return $num;
+	}
+
+	public static function createAcronym( $string ) {
+
+		$output	= null;
+		$token	= strtok( $string, ' ' );
+
+		while( $token !== false ) {
+
+			$output .= $token[ 0 ];
+
+			$token = strtok( ' ' );
+		}
+
+		return $output;
+	}
 }

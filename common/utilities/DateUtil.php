@@ -2,6 +2,7 @@
 namespace cmsgears\core\common\utilities;
 
 use \DateTime;
+use \DateInterval;
 
 /**
  * DateUtil provide several utility methods related to date and time.
@@ -153,6 +154,16 @@ class DateUtil {
 	public static function getDateTimeFromMillis( $millis, $format = 'Y-m-d H:i:s' ) {
 
 	    return  date( $format, $millis );
+	}
+
+	public static function getDateTimePlusMinutes( $minutes, $format = 'Y-m-d H:i:s' ) {
+
+		$date = date( $format );
+
+		$time = new DateTime( $date );
+		$time->add( new DateInterval( 'PT' . $minutes . 'M' ) );
+
+		return $time->format( $format );
 	}
 
 	/**

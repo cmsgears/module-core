@@ -1039,7 +1039,7 @@ class FormDesigner extends \yii\base\Component {
 			$itemlist = CoreGlobal::$yesNoMap;
 		}
 
-		$template = "<div class=\"cmt-choice clearfix\">{label}<div class=\"radio-group\">{input}</div><div class=\"help-block\">\n{hint}\n{error}</div></div>";
+		$template = "<div class=\"cmt-choice cmt-choice-inline clearfix\">{label}<div class=\"radio-group\">{input}</div><div class=\"help-block\">\n{hint}\n{error}</div></div>";
 
 		$field = $form->field( $model, $field, [ 'template' => $template ]	)
 			->radioList(

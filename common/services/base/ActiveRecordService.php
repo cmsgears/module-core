@@ -565,6 +565,8 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		$config[ 'notify' ] = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
+		$config[ 'softDeleteStatus' ] = isset( $config[ 'softDeleteStatus' ] ) ? $config[ 'softDeleteStatus' ] : IApproval::STATUS_DELETED;
+
 		$hard = isset( $config[ 'hard' ] ) ? $config[ 'hard' ] : true;
 
 		if( isset( $model ) ) {
@@ -586,7 +588,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 				}
 				else {
 
-					return $this->softDelete( $model );
+					return $this->softDelete( $model, $config[ 'softDeleteStatus' ] );
 				}
 			}
 		}
@@ -594,12 +596,12 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		return false;
 	}
 
-	public function softDelete( $model ) {
+	public function softDelete( $model, $softDeleteStatus ) {
 
 		// Delete if not deleted yet
-		if( !$model->status == IApproval::STATUS_DELETED ) {
+		if( !$model->status == $softDeleteStatus ) {
 
-			$model->status = IApproval::STATUS_DELETED;
+			$model->status = $softDeleteStatus;
 
 			$model->update();
 

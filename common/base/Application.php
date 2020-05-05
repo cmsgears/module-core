@@ -180,7 +180,19 @@ class Application extends BaseApplication {
 
 			Yii::$app->formatter->datetimeFormat = $coreProperties->getDateTimeFormat();
 
-			Yii::$app->timeZone = $coreProperties->getTimezone();
+			$timezone = $coreProperties->getTimezone();
+
+			if( !empty( $timezone ) ) {
+
+				Yii::$app->timeZone = $timezone;
+
+				$time	= new \DateTime( 'now', new \DateTimeZone( $timezone ) );
+				$offset	= $time->format( 'P' );
+
+				Yii::$app->db->on( 'afterOpen', function( $event ) {
+					$event->sender->createCommand( "SET time_zone='$offset';" )->execute();
+				});
+			}
 		}
 
 		if( isset( $siteRoute ) ) {

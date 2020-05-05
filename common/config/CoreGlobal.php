@@ -150,6 +150,8 @@ class CoreGlobal {
 
 	// Text Limits - Ideal for string validators -----------------------
 
+	const TEXT_MICRO		=   8;
+	const TEXT_MINI			=  16;
 	const TEXT_TINY			=  32;
 	const TEXT_SMALL		=  64;
 	const TEXT_MEDIUM		= 160; // Meta Description Limit

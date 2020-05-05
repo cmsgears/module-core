@@ -190,6 +190,8 @@ class Core extends \cmsgears\core\common\base\Config {
 	public $trimFieldValue		= true;
 
 	// Different Text Sizes - These can be overriden using config if required
+	public $microText			= CoreGlobal::TEXT_MICRO;
+	public $miniText			= CoreGlobal::TEXT_MINI;
 	public $tinyText			= CoreGlobal::TEXT_TINY;
 	public $smallText			= CoreGlobal::TEXT_SMALL;
 	public $mediumText			= CoreGlobal::TEXT_MEDIUM;
@@ -511,6 +513,21 @@ class Core extends \cmsgears\core\common\base\Config {
 	public function isTrimFieldValue() {
 
 		return $this->trimFieldValue;
+	}
+
+	public function getMicroText() {
+
+		return $this->microText;
+	}
+
+	public function getMiniText() {
+
+		return $this->miniText;
+	}
+
+	public function getTinyText() {
+
+		return $this->tinyText;
 	}
 
 	public function getSmallText() {

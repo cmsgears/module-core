@@ -146,6 +146,15 @@ abstract class ObjectWidget extends Widget {
 
 				$this->templateDir	= $template->viewPath;
 				$this->template		= !empty( $template->view ) ? $template->view : 'view';
+
+				// Override template view
+				if( isset( $model->viewPath ) ) {
+
+					$mPath = preg_split( '/\//', $model->viewPath );
+
+					$this->template		= array_pop( $mPath );
+					$this->templateDir	= join( '/', $mPath );
+				}
 			}
 
 			// Pass model and data to widget view

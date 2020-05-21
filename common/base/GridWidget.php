@@ -30,17 +30,17 @@ abstract class GridWidget extends Widget {
 
 	// Public -----------------
 
-	public $wrap		= true;
+	public $wrap = true;
 
-	public $template	= 'simple';
+	public $template = 'simple';
 
 	// HTML options used by the widget div
-	public $options		= [ 'class' => 'grid-data' ];
+	public $options = [ 'class' => 'grid-data' ];
 
 	// Additional data
-	public $data 		= [];
+	public $data = [];
 
-	public $provider 	= true; // Flag to check whether data provider is required
+	public $provider = true; // Flag to check whether data provider is required
 
 	// Data provider having sort, pagination and query to provide data
 	public $dataProvider;
@@ -59,19 +59,21 @@ abstract class GridWidget extends Widget {
 	public $add = true;
 
 	// Base URL to form sub URLs
-	public $baseUrl		= null;
+	public $baseUrl = null;
 
 	// Url to add model
-	public $addUrl		= 'add';
+	public $addUrl = 'add';
 
 	// Add using popup
-	public $addPopup	= false;
+	public $addPopup = false;
 
 	// Widget Sections
 	public $sort	= true;	// Show sort options
 	public $search	= true;	// Show search options
 	public $filter	= true; // Show grid filters
 	public $bulk	= true; // Show bulk options
+	public $import	= false; // Show import options
+	public $export	= false; // Show export options
 	public $report	= true; // Show report options
 
 	public $head	= true; // Show grid title
@@ -85,34 +87,36 @@ abstract class GridWidget extends Widget {
 	public $searchView		= 'search';
 	public $filtersView		= 'filters';
 	public $bulkView		= 'bulk';
+	public $importView		= 'import';
+	public $exportView		= 'export';
 	public $reportView		= 'report';
 
-	public $headView		= 'head';
-	public $optionsView		= 'options';
+	public $headView	= 'head';
+	public $optionsView	= 'options';
 
-	public $headerView		= 'header';
+	public $headerView = 'header';
 
-	public $dataView		= 'data';
-	public $listView		= 'list';
-	public $cardView		= 'cards';
-	public $actionView		= 'actions';
+	public $dataView	= 'data';
+	public $listView	= 'list';
+	public $cardView	= 'cards';
+	public $actionView	= 'actions';
 
-	public $footerView		= 'footer';
+	public $footerView = 'footer';
 
-	public $gridView		= 'grid';
+	public $gridView = 'grid';
 
 	// Sorting - columns available for sorting
-	public $sortColumns		= [];
+	public $sortColumns = [];
 
 	// Searching - columns available for searching
-	public $searchColumns	= [];
+	public $searchColumns = [];
 
 	// Quick Filters - filter the data
-	public $filters			= [];
+	public $filters = [];
 
 	// Bulk Options
-	public $bulkActions		= [];
-	public $bulkPopup		= 'popup-bulk';
+	public $bulkActions = [];
+	public $bulkPopup	= 'popup-bulk';
 
 	// Reporting - generate report
 	public $reportColumns	= [];
@@ -139,17 +143,13 @@ abstract class GridWidget extends Widget {
 	public $cardColumns	= []; // Configure only if specific columns are required for card view
 
 	// Grid Cards
-	public $gridCards	= [];
+	public $gridCards = [];
 
 	// Grid Actions
-	public $actions		= [];
-
-	// Import/Export
-	public $import = false;
-	public $export = false;
+	public $actions = [];
 
 	// Grid having static columns
-	public $fixedColumns	= [];
+	public $fixedColumns = [];
 
 	public $leftColumns		= [];
 	public $rightColumns	= [];
@@ -231,29 +231,38 @@ abstract class GridWidget extends Widget {
 
 		$bulkHtml		= $this->bulk ? $this->renderBulk( $config ) : null;
 
+		$importHtml		= $this->import ? $this->renderImport( $config ) : null;
+
+		$exportHtml		= $this->export ? $this->renderExport( $config ) : null;
+
 		$reportHtml		= $this->report ? $this->renderReport( $config ) : null;
 
-		$headHtml		= $this->head ? $this->renderHead( $config, [ 'sortHtml' => $sortHtml, 'searchHtml' => $searchHtml, 'filtersHtml' => $filtersHtml, 'bulkHtml' => $bulkHtml ] ) : null;
+		$headHtml = $this->head ? $this->renderHead( $config, [
+			'sortHtml' => $sortHtml, 'searchHtml' => $searchHtml,
+			'filtersHtml' => $filtersHtml, 'bulkHtml' => $bulkHtml ] ) : null;
 
-		$optionsHtml	= $this->option ? $this->renderOptions( $config, [ 'sortHtml' => $sortHtml, 'searchHtml' => $searchHtml, 'filtersHtml' => $filtersHtml, 'bulkHtml' => $bulkHtml ] ) : null;
+		$optionsHtml = $this->option ? $this->renderOptions( $config, [
+			'sortHtml' => $sortHtml, 'searchHtml' => $searchHtml,
+			'filtersHtml' => $filtersHtml, 'bulkHtml' => $bulkHtml ] ) : null;
 
-		$headerHtml		= $this->header ? $this->renderHeader( $config ) : null;
+		$headerHtml = $this->header ? $this->renderHeader( $config ) : null;
 
-		$dataHtml		= $this->grid && $this->layout == 'data' ? $this->renderData( $config ) : null;
-		$dataHtml		= $this->table && $this->layout == 'table' ? $this->renderData( $config ) : $dataHtml;
+		$dataHtml	= $this->grid && $this->layout == 'data' ? $this->renderData( $config ) : null;
+		$dataHtml	= $this->table && $this->layout == 'table' ? $this->renderData( $config ) : $dataHtml;
 
-		$listHtml		= $this->list && $this->layout == 'list' ? $this->renderList( $config ) : null;
+		$listHtml = $this->list && $this->layout == 'list' ? $this->renderList( $config ) : null;
 
-		$cardHtml		= $this->card && $this->layout == 'card' ? $this->renderCards( $config ) : null;
+		$cardHtml = $this->card && $this->layout == 'card' ? $this->renderCards( $config ) : null;
 
-		$footerHtml		= $this->footer ? $this->renderFooter( $config ) : null;
+		$footerHtml = $this->footer ? $this->renderFooter( $config ) : null;
 
-		$gridView		= CodeGenUtil::isAbsolutePath( $this->gridView ) ? $this->gridView : "$this->template/$this->gridView";
+		$gridView = CodeGenUtil::isAbsolutePath( $this->gridView ) ? $this->gridView : "$this->template/$this->gridView";
 
 		$widgetHtml = $this->render( $gridView, [
 			'widget' => $this,
 			'sortHtml' => $sortHtml, 'searchHtml' => $searchHtml, 'filtersHtml' => $filtersHtml,
-			'bulkHtml' => $bulkHtml, 'reportHtml' => $reportHtml, 'headHtml' => $headHtml, 'optionsHtml' => $optionsHtml,
+			'bulkHtml' => $bulkHtml, 'importHtml' => $importHtml, 'exportHtml' => $exportHtml,
+			'reportHtml' => $reportHtml, 'headHtml' => $headHtml, 'optionsHtml' => $optionsHtml,
 			'headerHtml' => $headerHtml, 'footerHtml' => $footerHtml,
 			'dataHtml' => $dataHtml, 'listHtml' => $listHtml, 'cardHtml' => $cardHtml
 		]);
@@ -294,6 +303,20 @@ abstract class GridWidget extends Widget {
 		$bulkView = CodeGenUtil::isAbsolutePath( $this->bulkView ) ? $this->bulkView : "$this->template/$this->bulkView";
 
         return $this->render( $bulkView, [ 'widget' => $this ] );
+	}
+
+	public function renderImport( $config = [] ) {
+
+		$importView = CodeGenUtil::isAbsolutePath( $this->importView ) ? $this->importView : "$this->template/$this->importView";
+
+        return $this->render( $importView, [ 'widget' => $this ] );
+	}
+
+	public function renderExport( $config = [] ) {
+
+		$exportView = CodeGenUtil::isAbsolutePath( $this->exportView ) ? $this->exportView : "$this->template/$this->exportView";
+
+        return $this->render( $exportView, [ 'widget' => $this ] );
 	}
 
 	public function renderReport( $config = [] ) {

@@ -93,6 +93,11 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
@@ -212,9 +217,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	                'label' => 'Last Activity'
 	            ]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -250,18 +253,23 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name", 'message' => "$modelTable.message", 'desc' => "$modelTable.description",
+			'username' => "$modelTable.username", 'email' => "$modelTable.email",
+			'mobile' => "$modelTable.mobile", 'phone' => "$modelTable.phone",
+			'content' => "$modelTable.ontent"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name", 'message' => "$modelTable.message", 'desc' => "$modelTable.description",
-				'username' => "$modelTable.username", 'email' => "$modelTable.email",
-				'mobile' => "$modelTable.mobile", 'phone' => "$modelTable.phone",
-				'content' => "$modelTable.ontent"
-			];
-
 			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $search;
 		}
 
 		// Reporting --------

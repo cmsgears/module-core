@@ -43,6 +43,11 @@ abstract class Controller extends \yii\rest\Controller {
 
 	// Protected --------------
 
+	/**
+	 * The service used to identify the user.
+	 *
+	 * @var \cmsgears\core\common\services\entities\UserService
+	 */
 	protected $userService;
 
 	// Private ----------------
@@ -64,14 +69,16 @@ abstract class Controller extends \yii\rest\Controller {
 
 	// yii\base\Component -----
 
-	use RestTrait;
-
 	public static function allowedDomains() {
 
 		return [ '*' ];
 	}
 
 	// yii\base\Controller ----
+
+	// Traits -----------------
+
+	use RestTrait;
 
 	// CMG interfaces ------------------------
 

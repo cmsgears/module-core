@@ -93,6 +93,7 @@ class TemplateManager extends \yii\base\Component {
 		$layout			= isset( $config[ 'layout' ] ) ? $config[ 'layout' ] : true;
 		$layoutPath		= isset( $config[ 'layoutPath' ] ) ? $config[ 'layoutPath' ] : null;
 		$view			= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : null;
+		$viewPath		= isset( $config[ 'viewPath' ] ) ? $config[ 'viewPath' ] : null;
 
 		// Pass the config to template for some conditional messages based on the config
 		$data[ 'config' ] = empty( $data[ 'config' ] ) ? $config : $data[ 'config' ];
@@ -109,6 +110,12 @@ class TemplateManager extends \yii\base\Component {
 			if( isset( $theme ) && isset( $renderEngine ) && strcmp( $renderEngine, 'default' ) == 0 ) {
 
 				$path = $template->viewPath[ 0 ] == '@' ? "$template->viewPath/$view" : "$theme->basePath/$template->viewPath/$view";
+
+				// Override template view
+				if( !empty( $viewPath ) ) {
+
+					$path = $viewPath;
+				}
 
 				// Render using controller
 				if( $page ) {

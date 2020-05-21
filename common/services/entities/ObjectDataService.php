@@ -577,7 +577,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		if( $admin ) {
 
 			$attributes	= ArrayHelper::merge( $attributes, [
-				'status', 'order', 'pinned', 'featured'
+				'status', 'order', 'pinned', 'featured', 'classPath', 'viewPath'
 			]);
 		}
 

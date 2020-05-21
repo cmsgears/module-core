@@ -239,6 +239,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'title' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'classPath' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
+			'viewPath' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'link' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'status' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'visibility' => $this->smallInteger( 6 )->defaultValue( 0 ),

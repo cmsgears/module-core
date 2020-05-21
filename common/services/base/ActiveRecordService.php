@@ -219,17 +219,17 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public function getRandom( $config = [] ) {
 
-		$offset			= $config[ 'offset' ] ?? 0;
-		$limit			= $config[ 'limit' ] ?? 10;
-		$conditions		= $config[ 'conditions' ] ?? null;
+		$offset		= $config[ 'offset' ] ?? 0;
+		$limit		= $config[ 'limit' ] ?? 10;
+		$conditions	= $config[ 'conditions' ] ?? null;
 
 		// model class
-		$modelClass		= static::$modelClass;
+		$modelClass = static::$modelClass;
 
 		// query generation
-		$results		= [];
+		$results = [];
 
-		$query			= $modelClass::find();
+		$query = $modelClass::find();
 
 		if( isset( $conditions ) ) {
 

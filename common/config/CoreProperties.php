@@ -205,14 +205,18 @@ class CoreProperties extends Properties {
 	 */
 	public function getSiteUrl() {
 
-		$siteUrl 	= $this->properties[ self::PROP_SITE_URL ];
-		$host		= explode( '.', $_SERVER[ 'HTTP_HOST' ] );
-		$siteSlug 	= array_shift( $host );
+		$siteUrl = $this->properties[ self::PROP_SITE_URL ];
 
-		// Child Domain
-		if( $siteSlug !== 'www' ) {
+		if( isset( $_SERVER[ 'HTTP_HOST' ] ) ) {
 
-			$siteUrl = preg_replace( '/www\./', "{$siteSlug}.", $siteUrl );
+			$host		= explode( '.', $_SERVER[ 'HTTP_HOST' ] );
+			$siteSlug 	= array_shift( $host );
+
+			// Child Domain
+			if( $siteSlug !== 'www' ) {
+
+				$siteUrl = preg_replace( '/www\./', "{$siteSlug}.", $siteUrl );
+			}
 		}
 
 		return $siteUrl;

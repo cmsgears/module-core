@@ -148,7 +148,7 @@ abstract class ObjectWidget extends Widget {
 				$this->template		= !empty( $template->view ) ? $template->view : 'view';
 
 				// Override template view
-				if( isset( $model->viewPath ) ) {
+				if( !empty( $model->viewPath ) ) {
 
 					$mPath = preg_split( '/\//', $model->viewPath );
 

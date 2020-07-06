@@ -91,9 +91,9 @@ class TemplateManager extends \yii\base\Component {
 
 		$page			= isset( $config[ 'page' ] ) ? $config[ 'page' ] : false;
 		$layout			= isset( $config[ 'layout' ] ) ? $config[ 'layout' ] : true;
-		$layoutPath		= isset( $config[ 'layoutPath' ] ) ? $config[ 'layoutPath' ] : null;
-		$view			= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : null;
-		$viewPath		= isset( $config[ 'viewPath' ] ) ? $config[ 'viewPath' ] : null;
+		$layoutPath		= !empty( $config[ 'layoutPath' ] ) ? $config[ 'layoutPath' ] : null;
+		$view			= !empty( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : null;
+		$viewPath		= !empty( $config[ 'viewPath' ] ) ? $config[ 'viewPath' ] : null;
 
 		// Pass the config to template for some conditional messages based on the config
 		$data[ 'config' ] = empty( $data[ 'config' ] ) ? $config : $data[ 'config' ];

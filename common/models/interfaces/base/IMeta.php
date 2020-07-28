@@ -28,7 +28,7 @@ interface IMeta {
 	/**
 	 * Generate and return label using meta name.
 	 *
-	 * It replace underscore(_) by space and update first letter of words to uppercase.
+	 * It replace underscore(_) and hyphen(-) by space and update first letter of words to uppercase.
 	 *
 	 * @return string generated label.
 	 */

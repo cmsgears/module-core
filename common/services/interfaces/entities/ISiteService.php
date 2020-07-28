@@ -11,8 +11,10 @@ namespace cmsgears\core\common\services\interfaces\entities;
 
 // CMG Imports
 use cmsgears\core\common\services\interfaces\base\IEntityService;
+use cmsgears\core\common\services\interfaces\base\IFeatured;
 use cmsgears\core\common\services\interfaces\base\IName;
 use cmsgears\core\common\services\interfaces\base\ISlug;
+use cmsgears\core\common\services\interfaces\cache\IGridCacheable;
 use cmsgears\core\common\services\interfaces\resources\IData;
 use cmsgears\core\common\services\interfaces\resources\IMeta;
 use cmsgears\core\common\services\interfaces\resources\IVisual;
@@ -22,7 +24,7 @@ use cmsgears\core\common\services\interfaces\resources\IVisual;
  *
  * @since 1.0.0
  */
-interface ISiteService extends IEntityService, IData, IMeta, IName, ISlug, IVisual {
+interface ISiteService extends IEntityService, IData, IFeatured, IGridCacheable, IMeta, IName, ISlug, IVisual {
 
 	// Data Provider ------
 

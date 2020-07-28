@@ -150,6 +150,15 @@ class m160621_014612_core_index extends Migration {
 		$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_user' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'user_name' . '(name)' );
 		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_user' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'user_search' . '(name, message, description, content)' );
 
+		// User Meta
+		$this->createIndex( 'idx_' . $this->prefix . 'user_meta_name', $this->prefix . 'core_user_meta', 'name' );
+		$this->createIndex( 'idx_' . $this->prefix . 'user_meta_type', $this->prefix . 'core_user_meta', 'type' );
+		//$this->createIndex( 'idx_' . $this->prefix . 'user_meta_label', $this->prefix . 'core_user_meta', 'label' );
+		//$this->createIndex( 'idx_' . $this->prefix . 'user_meta_vtype', $this->prefix . 'core_user_meta', 'valueType' );
+		//$this->createIndex( 'idx_' . $this->prefix . 'user_meta_mit', $this->prefix . 'core_user_meta', [ 'modelId', 'type' ] );
+		//$this->createIndex( 'idx_' . $this->prefix . 'user_meta_mitn', $this->prefix . 'core_user_meta', [ 'modelId', 'type', 'name' ] );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_user_meta' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'user_meta_search' . '(name, value)' );
+
 		// Site
 		$this->createIndex( 'idx_' . $this->prefix . 'site_name', $this->prefix . 'core_site', 'name' );
 		$this->createIndex( 'idx_' . $this->prefix . 'site_slug', $this->prefix . 'core_site', 'slug' );
@@ -413,6 +422,15 @@ class m160621_014612_core_index extends Migration {
 		//$this->dropIndex( 'idx_' . $this->prefix . 'user_tzone', $this->prefix . 'core_user' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'user_name', $this->prefix . 'core_user' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'user_search', $this->prefix . 'core_user' );
+
+		// User Meta
+		$this->dropIndex( 'idx_' . $this->prefix . 'user_meta_name', $this->prefix . 'core_user_meta' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'user_meta_type', $this->prefix . 'core_user_meta' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'user_meta_label', $this->prefix . 'core_user_meta' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'user_meta_vtype', $this->prefix . 'core_user_meta' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'user_meta_mit', $this->prefix . 'core_user_meta' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'user_meta_mitn', $this->prefix . 'core_user_meta' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'user_meta_search', $this->prefix . 'core_user_meta' );
 
 		// Site
 		$this->dropIndex( 'idx_' . $this->prefix . 'site_name', $this->prefix . 'core_site' );

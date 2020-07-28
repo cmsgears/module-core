@@ -84,7 +84,7 @@ trait MultiSiteTrait {
 	 */
 	public static function queryWithSite( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'site' ];
+		$config[ 'relations' ] = [ 'site' ];
 
 		return parent::queryWithAll( $config );
 	}

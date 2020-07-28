@@ -81,6 +81,11 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
@@ -190,9 +195,7 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 	                'label' => 'Updated At'
 	            ]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -233,6 +236,12 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 					break;
 				}
+				case 'disabled': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = false;
+
+					break;
+				}
 				case 'frontend': {
 
 					$config[ 'conditions' ][ "$modelTable.frontend" ] = true;
@@ -256,18 +265,23 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'content' => "$modelTable.content"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description",
-				'content' => "$modelTable.content"
-			];
-
 			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $search;
 		}
 
 		// Reporting --------
@@ -297,6 +311,13 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 	// Read - Models ---
 
+	public function getActiveByType( $type, $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::findActiveByType( $type, $config );
+	}
+
 	public function getGlobalBySlugType( $slug, $type, $config = [] ) {
 
 		$modelClass = static::$modelClass;
@@ -309,13 +330,6 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 		$modelClass = static::$modelClass;
 
 		return $modelClass::findByThemeSlugType( $slug, $type, $config );
-	}
-
-	public function getActiveByType( $type ) {
-
-		$modelClass = static::$modelClass;
-
-		return $modelClass::findActiveByType( $type );
 	}
 
 	// Read - Lists ----
@@ -382,9 +396,9 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 	public function toggleGroupLayout( $model, $config = [] ) {
 
-		$global = $model->layoutGroup ? false : true;
+		$group = $model->layoutGroup ? false : true;
 
-		$model->layoutGroup	= $global;
+		$model->layoutGroup	= $group;
 
 		return parent::updateSelective( $model, [
 			'attributes' => [ 'layoutGroup' ]
@@ -403,7 +417,7 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 				switch( $action ) {
 
-					case 'active': {
+					case 'activate': {
 
 						$model->active = true;
 
@@ -411,7 +425,7 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 						break;
 					}
-					case 'inactive': {
+					case 'disable': {
 
 						$model->active = false;
 

@@ -11,14 +11,13 @@ namespace cmsgears\core\common\services\interfaces\resources;
 
 // CMG Imports
 use cmsgears\core\common\services\interfaces\base\IResourceService;
-use cmsgears\core\common\services\interfaces\resources\IData;
 
 /**
- * ILocationService provide service methods for location model.
+ * IUserMetaService provide service methods for user meta.
  *
  * @since 1.0.0
  */
-interface ILocationService extends IResourceService, IData {
+interface IUserMetaService extends IResourceService {
 
 	// Data Provider ------
 

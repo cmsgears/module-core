@@ -105,6 +105,13 @@ abstract class Controller extends \yii\web\Controller {
 	 */
 	protected $scenario;
 
+	/**
+	 * Flag to check whether last active timestamp is supported by the controller.
+	 *
+	 * @var boolean
+	 */
+	protected $logLastActive;
+
 	// Private ----------------
 
 	/**
@@ -130,6 +137,13 @@ abstract class Controller extends \yii\web\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
+	public function init() {
+
+		parent::init();
+
+		$this->logLastActive = false;
+	}
+
 	// For development purpose only - Publish assets for each request
 	public function beforeAction( $action ) {
 
@@ -138,10 +152,11 @@ abstract class Controller extends \yii\web\Controller {
 			Yii::$app->assetManager->forceCopy = true;
 		}
 
-		// TODO: Enable it carefully considering performance factors
-
 		// Log user's last activity to trace when user was last active
-		//Yii::$app->factory->get( 'userService' )->logLastActivity();
+		if( $this->logLastActive ) {
+
+			Yii::$app->factory->get( 'userService' )->logLastActivity();
+		}
 
 		return parent::beforeAction( $action );
 	}

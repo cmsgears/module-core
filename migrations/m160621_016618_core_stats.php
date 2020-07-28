@@ -73,6 +73,7 @@ class m160621_016618_core_stats extends \cmsgears\core\common\base\Migration {
 			[ $this->prefix . 'core_permission', 'rows', 0 ],
 			[ $this->prefix . 'core_role_permission', 'rows', 0 ],
 			[ $this->prefix . 'core_user', 'rows', 0 ],
+			[ $this->prefix . 'core_user_meta', 'rows', 0 ],
 			[ $this->prefix . 'core_site', 'rows', 0 ],
 			[ $this->prefix . 'core_site_meta', 'rows', 0 ],
 			[ $this->prefix . 'core_site_member', 'rows', 0 ],

@@ -11,16 +11,20 @@ namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
 use Yii;
+use yii\base\Exception;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\resources\IFormService;
 
+use cmsgears\core\common\services\traits\base\ApprovalTrait;
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\base\VisibilityTrait;
 use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 
@@ -57,11 +61,13 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 
 	// Traits ------------------------------------------------------
 
+	use ApprovalTrait;
 	use DataTrait;
 	use GridCacheTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
+	use VisibilityTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -80,6 +86,11 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -187,9 +198,7 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 					'label' => 'Updated At'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -246,7 +255,7 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 
 					break;
 				}
-				case 'unsubmit': {
+				case 'uqsubmit': {
 
 					$config[ 'conditions' ][ "$modelTable.uniqueSubmit" ] = true;
 
@@ -263,20 +272,25 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'success' => "$modelTable.description",
+			'failure' => "$modelTable.description",
+			'content' => "$modelTable.content"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description",
-				'success' => "$modelTable.description",
-				'failure' => "$modelTable.description",
-				'content' => "$modelTable.content"
-			];
-
 			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $search;
 		}
 
 		// Reporting --------
@@ -339,7 +353,9 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 
 		if( $admin ) {
 
-			$attributes[] = 'status';
+			$attributes	= ArrayHelper::merge( $attributes, [
+				'status'
+			]);
 		}
 
 		// Copy Template
@@ -359,11 +375,30 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete mappings
-		Yii::$app->factory->get( 'modelFormService' )->deleteByModelId( $model->id );
+		$config[ 'hard' ] = $config[ 'hard' ] ?? !Yii::$app->core->isSoftDelete();
 
-		// Delete Fields
-		Yii::$app->factory->get( 'formFieldService' )->deleteByFormId( $model->id );
+		if( $config[ 'hard' ] ) {
+
+			$transaction = Yii::$app->db->beginTransaction();
+
+			try {
+
+				// Delete mappings
+				Yii::$app->factory->get( 'modelFormService' )->deleteByModelId( $model->id );
+
+				// Delete Fields
+				Yii::$app->factory->get( 'formFieldService' )->deleteByFormId( $model->id );
+
+				// Delete model
+				return parent::delete( $model, $config );
+			}
+			catch( Exception $e ) {
+
+				$transaction->rollBack();
+
+				throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+			}
+		}
 
 		// Delete model
 		return parent::delete( $model, $config );
@@ -373,6 +408,9 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
+		$direct = isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : true; // Trigger direct notifications
+		$users	= isset( $config[ 'users' ] ) ? $config[ 'users' ] : []; // Trigger user notifications
+
 		switch( $column ) {
 
 			case 'status': {
@@ -381,37 +419,37 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 
 					case 'confirm': {
 
-						$this->confirm( $model );
+						$this->confirm( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
 					case 'approve': {
 
-						$this->approve( $model );
+						$this->approve( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
 					case 'reject': {
 
-						$this->reject( $model );
+						$this->reject( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
 					case 'activate': {
 
-						$this->activate( $model );
+						$this->activate( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
 					case 'freeze': {
 
-						$this->freeze( $model );
+						$this->freeze( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
 					case 'block': {
 
-						$this->block( $model );
+						$this->block( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
@@ -433,7 +471,7 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 					}
 					case 'umail': {
 
-						$model->umail = true;
+						$model->userMail = true;
 
 						$model->update();
 
@@ -441,15 +479,15 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 					}
 					case 'amail': {
 
-						$model->amail = true;
+						$model->adminMail = true;
 
 						$model->update();
 
 						break;
 					}
-					case 'unsubmit': {
+					case 'uqsubmit': {
 
-						$model->unsubmit = true;
+						$model->uniqueSubmit = true;
 
 						$model->update();
 
@@ -457,7 +495,7 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 					}
 					case 'upsubmit': {
 
-						$model->upsubmit = true;
+						$model->updateSubmit = true;
 
 						$model->update();
 

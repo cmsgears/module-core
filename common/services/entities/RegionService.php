@@ -18,8 +18,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\entities\IRegionService;
 
-use cmsgears\core\common\services\base\EntityService;
-
 use cmsgears\core\common\services\traits\base\NameTrait;
 
 /**
@@ -27,7 +25,7 @@ use cmsgears\core\common\services\traits\base\NameTrait;
  *
  * @since 1.0.0
  */
-class RegionService extends EntityService implements IRegionService {
+class RegionService extends \cmsgears\core\common\services\base\EntityService implements IRegionService {
 
 	// Variables ---------------------------------------------------
 
@@ -73,8 +71,16 @@ class RegionService extends EntityService implements IRegionService {
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
+
+		$countryTable	= Yii::$app->factory->get( 'countryService' )->getModelTable();
+		$provinceTable	= Yii::$app->factory->get( 'provinceService' )->getModelTable();
 
 		// Sorting ----------
 
@@ -85,6 +91,18 @@ class RegionService extends EntityService implements IRegionService {
 					'desc' => [ "$modelTable.id" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Id'
+				],
+				'country' => [
+					'asc' => [ "$countryTable.name" => SORT_ASC ],
+					'desc' => [ "$countryTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Country'
+				],
+				'province' => [
+					'asc' => [ "$provinceTable.name" => SORT_ASC ],
+					'desc' => [ "$provinceTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Province'
 				],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
@@ -126,17 +144,22 @@ class RegionService extends EntityService implements IRegionService {
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'code' => "$modelTable.code",
+			'iso' => "$modelTable.iso"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'code' => "$modelTable.code",
-				'iso' => "$modelTable.iso"
-			];
-
 			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $search;
 		}
 
 		// Reporting --------
@@ -167,7 +190,7 @@ class RegionService extends EntityService implements IRegionService {
 
 	// Read - Maps -----
 
-	public function getMapByProvinceId( $provinceId, $config = [] ) {
+	public function getIdNameMapByProvinceId( $provinceId, $config = [] ) {
 
 		$config[ 'conditions' ][] = [ 'provinceId' => $provinceId ];
 
@@ -184,7 +207,9 @@ class RegionService extends EntityService implements IRegionService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'code', 'iso', 'name', 'title' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'code', 'iso', 'name', 'title'
+		];
 
 		return parent::update( $model, [
 			'attributes' => $attributes

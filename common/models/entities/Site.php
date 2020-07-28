@@ -30,7 +30,6 @@ use cmsgears\core\common\models\interfaces\resources\IGridCache;
 use cmsgears\core\common\models\interfaces\resources\IVisual;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Entity;
 use cmsgears\core\common\models\resources\SiteMeta;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
@@ -73,7 +72,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridCache, IName, ISlug, IVisual {
+class Site extends \cmsgears\core\common\models\base\Entity implements IAuthor, IContent, IData,
+	IFeatured, IGridCache, IName, ISlug, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -150,7 +150,7 @@ class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridC
 		$rules = [
 			// Required, Safe
 			[ 'name', 'required' ],
-			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'content', 'gridCache' ], 'safe' ],
 			// Unique
 			[ 'name', 'unique' ],
 			// Text Limit
@@ -212,6 +212,11 @@ class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridC
 			if( $this->themeId <= 0 ) {
 
 				$this->themeId = null;
+			}
+
+			if( !isset( $this->order ) || strlen( $this->order ) <= 0 ) {
+
+				$this->order = 0;
 			}
 
 			return true;
@@ -328,10 +333,9 @@ class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridC
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		//$modelTable				= CoreTables::getTableName( CoreTables::TABLE_SITE );
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'banner', 'theme' ];
-		$config[ 'relations' ]	= $relations;
-		//$config[ 'groups' ]		= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : [ "$modelTable.id" ];
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'banner', 'theme' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -344,7 +348,7 @@ class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridC
 	 */
 	public static function queryWithTheme( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'avatar', 'banner', 'theme' ];
+		$config[ 'relations' ] = [ 'avatar', 'banner', 'theme' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -357,7 +361,7 @@ class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridC
 	 */
 	public static function queryWithMetas( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'avatar', 'banner', 'metas' ];
+		$config[ 'relations' ] = [ 'avatar', 'banner', 'metas' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -370,7 +374,7 @@ class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridC
 	 */
 	public static function queryWithMembers( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'avatar', 'banner', 'members' ];
+		$config[ 'relations' ] = [ 'avatar', 'banner', 'members' ];
 
 		return parent::queryWithAll( $config );
 	}

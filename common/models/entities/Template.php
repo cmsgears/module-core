@@ -161,7 +161,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 		$rules = [
 			// Required, Safe
 			[ [ 'name', 'type' ], 'required' ],
-			[ [ 'id', 'htmlOptions', 'help', 'message', 'content', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'htmlOptions', 'help', 'message', 'content', 'gridCache' ], 'safe' ],
 			// Unique
 			// Need both slug and name unique
 			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'slug' ] ],
@@ -207,7 +207,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
-			'frontend' => 'Frontend',
+			'frontend' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FRONTEND ),
 			'classPath' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CLASSPATH ),
 			'renderer' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RENDERER ),
 			'fileRender' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FILE_RENDER ),
@@ -230,10 +230,18 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 
 		if( parent::beforeSave( $insert ) ) {
 
+			if( $this->siteId <= 0 ) {
+
+				$this->siteId = null;
+			}
+
 			if( $this->themeId <= 0 ) {
 
 				$this->themeId = null;
 			}
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
 
 			return true;
 		}
@@ -299,6 +307,16 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
         return Yii::$app->formatter->asBoolean( $this->layoutGroup );
     }
 
+	/**
+	 * Returns string representation of frontend flag.
+	 *
+	 * @return string
+	 */
+    public function getFrontendStr() {
+
+        return Yii::$app->formatter->asBoolean( $this->frontend );
+    }
+
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------
@@ -324,60 +342,66 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'theme', 'creator', 'modifier' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'theme', 'creator', 'modifier' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
 
 	// Read - Find ------------
 
+	/**
+	 * Find and return the active templates for the given type.
+	 *
+	 * @param string $type
+	 * @param array $config
+	 * @return \cmsgears\core\common\models\entities\Template[]
+	 */
+	public static function findActiveByType( $type, $config = [] ) {
+
+		return self::queryByType( $type, $config )->andWhere( 'active=:active', [ ':active' => true ] )->all();
+	}
+
+	/**
+	 * Find and return the global model using given slug and type.
+	 *
+	 * @param string $slug
+	 * @param string $type
+	 * @return \cmsgears\core\common\models\entities\Template
+	 */
 	public static function findGlobalBySlugType( $slug, $type, $config = [] ) {
 
 		return static::find()->where( 'slug=:slug AND type=:type AND siteId IS NULL AND themeId IS NULL', [ ':slug' => $slug, ':type' => $type ] )->one();
 	}
 
+	/**
+	 * Find and return the model using given slug, type, and active theme's id. It assumes that site id is NULL.
+	 *
+	 * @param string $slug
+	 * @param string $type
+	 * @return \cmsgears\core\common\models\entities\Template
+	 */
 	public static function findByThemeSlugType( $slug, $type, $config = [] ) {
 
 		$theme = Yii::$app->core->site->theme;
 
-		return static::find()->where( 'slug=:slug AND type=:type AND siteId IS NULL AND themeId=:tid', [ ':slug' => $slug, ':type' => $type, ':tid' => $theme->id ] )->one();
+		return $this->findByThemeId( $slug, $type, $theme->id );
 	}
 
 	/**
-	 * Find and return the active templates for given type.
-	 *
-	 * @param string $type
-	 * @param array $config
-	 * @return Template[]
-	 */
-	public static function findActiveByType( $type, $config = [] ) {
-
-		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
-
-		if( static::isMultiSite() && !$ignoreSite ) {
-
-			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
-
-			return self::queryByType( $type )->andWhere( 'active=:active AND siteId=:siteId', [ ':active' => true, ':siteId' => $siteId ] )->all();
-		}
-		else {
-
-			return self::queryByType( $type )->andWhere( 'active=:active', [ ':active' => true ] )->all();
-		}
-	}
-
-	/**
-	 * Find and return model using given slug and type.
+	 * Find and return the model using given slug, type, and theme id. It assumes that site id is NULL.
 	 *
 	 * @param string $slug
 	 * @param string $type
 	 * @param integer $themeId
-	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 * @return \cmsgears\core\common\models\entities\Template
 	 */
-	public static function findByThemeId( $slug, $type, $themeId ) {
+	public static function findByThemeId( $slug, $type, $themeId, $config = [] ) {
 
-		return self::queryBySlugType( $slug, $type, [ 'ignoreSite' => true ] )->andWhere( 'themeId=:themeId', [ ':themeId' => $themeId ] )->one();
+		$config[ 'ignoreSite' ] = isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : true;
+
+		return self::queryBySlugType( $slug, $type, $config )->andWhere( 'themeId=:themeId', [ ':themeId' => $themeId ] )->one();
 	}
 
 	// Create -----------------

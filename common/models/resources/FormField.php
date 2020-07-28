@@ -16,11 +16,12 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Resource;
 
+use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
@@ -28,11 +29,11 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  *
  * @property integer $id
  * @property integer $formId
- * @property integer $categoryId
  * @property string $name
  * @property string $label
  * @property short $type
  * @property string $icon
+ * @property string $group
  * @property boolean $compress
  * @property boolean $meta
  * @property boolean $active
@@ -44,7 +45,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  *
  * @since 1.0.0
  */
-class FormField extends Resource implements IData {
+class FormField extends \cmsgears\core\common\models\base\Resource implements IContent, IData {
 
 	// TODO: further analysis is required to remove the alphanumu validator for name field to support html forms.
 
@@ -102,6 +103,7 @@ class FormField extends Resource implements IData {
 
 	// Traits ------------------------------------------------------
 
+	use ContentTrait;
 	use DataTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -125,10 +127,11 @@ class FormField extends Resource implements IData {
 		$rules = [
 			// Required, Safe
 			[ [ 'formId', 'name' ], 'required' ],
-			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
+			[ [ 'id', 'htmlOptions', 'content' ], 'safe' ],
 			// Unique
 			[ 'name', 'unique', 'targetAttribute' => [ 'formId', 'name' ] ],
 			// Text Limit
+			[ 'group', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'label', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
@@ -137,7 +140,7 @@ class FormField extends Resource implements IData {
 			[ 'name', 'alphanumu' ],
 			[ [ 'type', 'order' ], 'number', 'integerOnly' => true ],
 			[ [ 'compress', 'meta', 'active' ], 'boolean' ],
-			[ [ 'formId', 'categoryId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+			[ 'formId', 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 
 		// Trim Text
@@ -158,17 +161,18 @@ class FormField extends Resource implements IData {
 
 		return [
 			'formId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FORM ),
-			'categoryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_OPTION ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'group' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GROUP ),
 			'compress' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COMPRESS ),
 			'meta' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_META ),
 			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'validators' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALIDATORS ),
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_META )
 		];
 	}
@@ -189,16 +193,6 @@ class FormField extends Resource implements IData {
 	public function getForm() {
 
 		return $this->hasOne( Form::class, [ 'id' => 'formId' ] );
-	}
-
-	/**
-	 * Returns the option group associated with the field.
-	 *
-	 * @return Form
-	 */
-	public function getOptionGroup() {
-
-		return $this->hasOne( Category::class, [ 'id' => 'categoryId' ] );
 	}
 
 	/**
@@ -409,8 +403,9 @@ class FormField extends Resource implements IData {
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'form' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'form' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -423,7 +418,7 @@ class FormField extends Resource implements IData {
 	 */
 	public static function queryWithForm( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'form' ];
+		$config[ 'relations' ] = [ 'form' ];
 
 		return parent::queryWithAll( $config );
 	}

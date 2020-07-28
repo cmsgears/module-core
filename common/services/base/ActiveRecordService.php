@@ -63,13 +63,13 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	/**
 	 * The model class used to call model static methods.
 	 */
-	public static $modelClass	= null;
+	public static $modelClass = null;
 
 	/**
 	 * The service must specify whether it's corresponding model supports type for classification
 	 * of the model.
 	 */
-	public static $typed		= false;
+	public static $typed = false;
 
 	/**
 	 * Parent type is required to associate multiple mapper or resources to the corresponding model.
@@ -77,7 +77,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 * is no relation between $typed and $parentType. The variable $typed is specific for service model
 	 * whereas $parentType is required for mapper and resources.
 	 */
-	public static $parentType	= null;
+	public static $parentType = null;
 
 	// Protected --------------
 
@@ -326,7 +326,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		if( $modelClass::isMultiSite() && !$ignoreSite ) {
 
-			$model->siteId	= $config[ 'siteId' ] ?? Yii::$app->core->siteId;
+			$model->siteId = $config[ 'siteId' ] ?? Yii::$app->core->siteId;
 		}
 
 		$model->save();
@@ -640,7 +640,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public function applyBulkByTargetId( $column, $action, $target, $config = [] ) {
 
-		foreach ( $target as $id ) {
+		foreach( $target as $id ) {
 
 			$model = $this->getById( $id );
 
@@ -659,16 +659,61 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 * @param string $action
 	 * @param string $target
 	 */
-	public function applyBulkByUserTargetId( $column, $action, $target, $config = [] ) {
+	public function applyBulkByTargetIdUser( $column, $action, $target, $config = [] ) {
 
 		$user = Yii::$app->core->getUser();
 
-		foreach ( $target as $id ) {
+		foreach( $target as $id ) {
 
 			$model = $this->getById( $id );
 
 			// Bulk Conditions
 			if( isset( $model ) && $model->isOwner( $user ) ) {
+
+				$this->applyBulk( $model, $column, $action, $target, $config );
+			}
+		}
+	}
+
+	/**
+	 * Bulk actions by user id.
+	 *
+	 * @param string $column
+	 * @param string $action
+	 * @param string $target
+	 * @param integer $userId
+	 */
+	public function applyBulkByTargetIdUserId( $column, $action, $target, $userId, $config = [] ) {
+
+		foreach( $target as $id ) {
+
+			$model = $this->getById( $id );
+
+			// Bulk Conditions
+			if( isset( $model ) && $model->userId == $userId ) {
+
+				$this->applyBulk( $model, $column, $action, $target, $config );
+			}
+		}
+	}
+
+	/**
+	 * Bulk actions by parent.
+	 *
+	 * @param string $column
+	 * @param string $action
+	 * @param string $target
+	 * @param integer $parentId
+	 * @param string $parentType
+	 */
+	public function applyBulkByTargetIdParent( $column, $action, $target, $parentId, $parentType, $config = [] ) {
+
+		foreach( $target as $id ) {
+
+			$model = $this->getById( $id );
+
+			// Bulk Conditions
+			if( isset( $model ) && $model->parentId == $parentId && $model->parentType == $parentType ) {
 
 				$this->applyBulk( $model, $column, $action, $target, $config );
 			}

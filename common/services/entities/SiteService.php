@@ -21,8 +21,10 @@ use cmsgears\core\common\services\interfaces\entities\ISiteService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\core\common\services\interfaces\resources\ISiteMetaService;
 
+use cmsgears\core\common\services\traits\base\FeaturedTrait;
 use cmsgears\core\common\services\traits\base\NameTrait;
 use cmsgears\core\common\services\traits\base\SlugTrait;
+use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 use cmsgears\core\common\services\traits\resources\MetaTrait;
 use cmsgears\core\common\services\traits\resources\VisualTrait;
@@ -62,6 +64,8 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 	// Traits ------------------------------------------------------
 
 	use DataTrait;
+	use FeaturedTrait;
+	use GridCacheTrait;
 	use MetaTrait;
 	use NameTrait;
 	use SlugTrait;
@@ -92,6 +96,11 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -162,6 +171,12 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 					'default' => SORT_DESC,
 					'label' => 'Featured'
 				],
+				'popular' => [
+					'asc' => [ "$modelTable.popular" => SORT_ASC ],
+					'desc' => [ "$modelTable.popular" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Popular'
+				],
 				'cdate' => [
 					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
 					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
@@ -175,9 +190,7 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 					'label' => 'Updated At'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -208,6 +221,12 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 
 					break;
 				}
+				case 'disabled': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ]	= false;
+
+					break;
+				}
 				case 'pinned': {
 
 					$config[ 'conditions' ][ "$modelTable.pinned" ] = true;
@@ -220,22 +239,39 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 
 					break;
 				}
+				case 'popular': {
+
+					$config[ 'conditions' ][ "$modelTable.popular" ] = true;
+
+					break;
+				}
+				case 'primary': {
+
+					$config[ 'conditions' ][ "$modelTable.primary" ] = true;
+
+					break;
+				}
 			}
 		}
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description",
-			];
-
 			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $search;
 		}
 
 		// Reporting --------
@@ -247,7 +283,8 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 			'order' => "$modelTable.order",
 			'active' => "$modelTable.active",
 			'pinned' => "$modelTable.pinned",
-			'featured' => "$modelTable.featured"
+			'featured' => "$modelTable.featured",
+			'popular' => "$modelTable.popular"
 		];
 
 		// Result -----------
@@ -301,7 +338,7 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 
 		if( $admin ) {
 
-			$attributes = ArrayHelper::merge( $attributes, [ 'order', 'active', 'pinned', 'featured', 'primary' ] );
+			$attributes = ArrayHelper::merge( $attributes, [ 'order', 'active', 'pinned', 'featured', 'popular', 'primary' ] );
 		}
 
 		return parent::update( $model, [
@@ -315,6 +352,9 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 
 		// Delete dependencies
 		$this->fileService->deleteFiles( [ $model->avatar, $model->banner ] );
+
+		// Delete Members
+		Yii::$app->factory->get( 'siteMemberService' )->deleteBySiteId( $model->id );
 
 		// Delete model
 		return parent::delete( $model, $config );
@@ -330,7 +370,7 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 
 				switch( $action ) {
 
-					case 'active': {
+					case 'activate': {
 
 						$model->active = true;
 
@@ -338,9 +378,33 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 
 						break;
 					}
-					case 'inactive': {
+					case 'disable': {
 
 						$model->active = false;
+
+						$model->update();
+
+						break;
+					}
+					case 'pinned': {
+
+						$model->pinned = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'featured': {
+
+						$model->featured = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'popular': {
+
+						$model->popular = true;
 
 						$model->update();
 

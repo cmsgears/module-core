@@ -12,6 +12,7 @@ namespace cmsgears\core\common\services\resources;
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -73,6 +74,11 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
@@ -116,7 +122,8 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 					'default' => SORT_DESC,
 					'label' => 'Order'
 				]
-			]
+			],
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -126,20 +133,53 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 
 		// Query ------------
 
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
 		// Filters ----------
+
+		// Params
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'active': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = true;
+
+					break;
+				}
+				case 'disabled': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = false;
+
+					break;
+				}
+			}
+		}
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'value' => "$modelTable.value"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'value' => "$modelTable.value"
-			];
-
 			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $search;
 		}
 
 		// Reporting --------
@@ -215,11 +255,9 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 
 	public function getActiveIdNameMapByCategoryId( $categoryId, $config = [] ) {
 
-		$config[ 'conditions' ][ 'categoryId' ] = $categoryId;
-
 		$config[ 'conditions' ][ 'active' ] = true;
 
-		return $this->getIdNameMap( $config );
+		return $this->getIdNameMapByCategoryId( $categoryId, $config );
 	}
 
 	/**
@@ -234,7 +272,6 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 		$config[ 'valueColumn' ]	= "$modelTable.name";
 
 		$config[ 'conditions' ][ 'categoryId' ] = $categoryId;
-		$config[ 'conditions' ][ 'active' ]		= true;
 
 		return $this->getIdNameMap( $config );
 	}
@@ -275,6 +312,13 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 		return $this->getValueNameMapByCategoryId( $category->id, $config );
 	}
 
+	public function getActiveValueNameMapByCategorySlug( $slug, $config = [] ) {
+
+		$config[ 'conditions' ][ 'active' ] = true;
+
+		return $this->getValueNameMapByCategorySlug( $slug, $config );
+	}
+
 	// Read - Others ---
 
 	// Create -------------
@@ -293,9 +337,18 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 
 	public function update( $model, $config = [] ) {
 
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'name', 'value', 'icon', 'active', 'input', 'order', 'htmlOptions'
+			'name', 'value', 'icon', 'input', 'order', 'htmlOptions'
 		];
+
+		if( $admin ) {
+
+			$attributes	= ArrayHelper::merge( $attributes, [
+				'active'
+			]);
+		}
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -333,6 +386,22 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 
 				switch( $action ) {
 
+					case 'activate': {
+
+						$model->active = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'disable': {
+
+						$model->active = false;
+
+						$model->update();
+
+						break;
+					}
 					case 'delete': {
 
 						$this->delete( $model );

@@ -12,6 +12,7 @@ namespace cmsgears\core\common\services\resources;
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -22,6 +23,7 @@ use cmsgears\core\common\services\interfaces\resources\IFileService;
 
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\VisibilityTrait;
+use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
@@ -56,6 +58,7 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 	// Traits ------------------------------------------------------
 
 	use DataTrait;
+	use GridCacheTrait;
 	use MultiSiteTrait;
 	use VisibilityTrait;
 
@@ -76,6 +79,11 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -163,9 +171,7 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 	                'label' => 'Updated At'
 	            ]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -200,19 +206,24 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'caption' => "$modelTable.caption",
+			'extension' => "$modelTable.extension",
+			'directory' => "$modelTable.directory"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description",
-				'caption' => "$modelTable.caption",
-				'extension' => "$modelTable.extension",
-				'directory' => "$modelTable.directory"
-			];
-
 			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $search;
 		}
 
 		// Reporting --------
@@ -263,18 +274,16 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 	 */
 	public function create( $model, $config = [] ) {
 
-		// model class
+		// Model Class
 		$modelClass = static::$modelClass;
 
-		// Default visibility
+		// Default Visibility
 		if( !isset( $model->visibility ) ) {
 
 			$model->visibility = File::VISIBILITY_PUBLIC;
 		}
 
-		$model->siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
-
-		// Default sharing
+		// Default Sharing
 		if( !isset( $model->shared ) ) {
 
 			$model->shared = false;
@@ -291,9 +300,18 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 
 	public function update( $model, $config = [] ) {
 
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
 			'title', 'description', 'caption', 'altText', 'link', 'type', 'content'
 		];
+
+		if( $admin ) {
+
+			$attributes	= ArrayHelper::merge( $attributes, [
+				'shared'
+			]);
+		}
 
 		if( $model->changed ) {
 

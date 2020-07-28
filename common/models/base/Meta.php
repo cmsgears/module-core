@@ -94,7 +94,7 @@ abstract class Meta extends Resource implements IData, IMeta {
 			[ [ 'modelId', 'name', 'type' ], 'required' ],
 			[ [ 'id', 'value', 'data' ], 'safe' ],
 			// Unique
-			[ [ 'name' ], 'unique', 'targetAttribute' => [ 'modelId', 'type', 'name' ], 'comboNotUnique' => 'Attribute with the same name and type already exist.' ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'modelId', 'type', 'name' ], 'comboNotUnique' => 'Attribute with the same name and type already exist.' ],
 			// Text Limit
 			[ [ 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
@@ -134,6 +134,29 @@ abstract class Meta extends Resource implements IData, IMeta {
 			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
+	}
+
+	// yii\db\BaseActiveRecord
+
+	/**
+	 * @inheritdoc
+	 */
+	public function beforeSave( $insert ) {
+
+		if( parent::beforeSave( $insert ) ) {
+
+			if( empty( $this->order ) || $this->order <= 0 ) {
+
+				$this->order = 0;
+			}
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
+
+			return true;
+		}
+
+		return false;
 	}
 
 	// CMG interfaces ------------------------
@@ -278,9 +301,7 @@ abstract class Meta extends Resource implements IData, IMeta {
 	 */
 	public static function findByName( $modelId, $name ) {
 
-		$query	= self::queryByName( $modelId, $name );
-
-		return $query->all();
+		return self::queryByName( $modelId, $name )->all();
 	}
 
 	/**
@@ -292,9 +313,7 @@ abstract class Meta extends Resource implements IData, IMeta {
 	 */
 	public static function findFirstByName( $modelId, $name ) {
 
-		$query	= self::queryByName( $modelId, $name );
-
-		return $query->one();
+		return self::queryByName( $modelId, $name )->one();
 	}
 
 	/**

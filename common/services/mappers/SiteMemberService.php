@@ -12,6 +12,7 @@ namespace cmsgears\core\common\services\mappers;
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -22,6 +23,8 @@ use cmsgears\core\common\services\interfaces\mappers\ISiteMemberService;
 use cmsgears\core\common\services\interfaces\entities\IRoleService;
 use cmsgears\core\common\services\interfaces\entities\ISiteService;
 use cmsgears\core\common\services\interfaces\entities\IUserService;
+
+use cmsgears\core\common\services\traits\base\FeaturedTrait;
 
 /**
  * SiteMemberService provide service methods of site member mapper.
@@ -56,6 +59,8 @@ class SiteMemberService extends \cmsgears\core\common\services\base\MapperServic
 
 	// Traits ------------------------------------------------------
 
+	use FeaturedTrait;
+
 	// Constructor and Initialisation ------------------------------
 
 	public function __construct( ISiteService $siteService, IRoleService $roleService, IUserService $userService, $config = [] ) {
@@ -82,6 +87,11 @@ class SiteMemberService extends \cmsgears\core\common\services\base\MapperServic
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -136,6 +146,12 @@ class SiteMemberService extends \cmsgears\core\common\services\base\MapperServic
 					'default' => SORT_DESC,
 					'label' => 'Featured'
 				],
+				'popular' => [
+					'asc' => [ "$modelTable.popular" => SORT_ASC ],
+					'desc' => [ "$modelTable.popular" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Popular'
+				],
 				'cdate' => [
 					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
 					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
@@ -149,9 +165,7 @@ class SiteMemberService extends \cmsgears\core\common\services\base\MapperServic
 					'label' => 'Updated At'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -188,37 +202,47 @@ class SiteMemberService extends \cmsgears\core\common\services\base\MapperServic
 
 					break;
 				}
+				case 'popular': {
+
+					$config[ 'conditions' ][ "$modelTable.popular" ] = true;
+
+					break;
+				}
 			}
 		}
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$userTable.name",
+			'site' => "$siteTable.name",
+			'role' => "$roleTable.name",
+			'content' => "$userTable.content"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description",
-				'content' => "$modelTable.content"
-			];
-
 			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $search;
 		}
 
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name",
-			'title' => "$modelTable.title",
-			'desc' => "$modelTable.description",
-			'content' => "$modelTable.content",
-			'status' => "$modelTable.status",
-			'visibility' => "$modelTable.visibility",
+			'name' => "$userTable.name",
+			'site' => "$siteTable.name",
+			'role' => "$roleTable.name",
+			'content' => "$userTable.content",
 			'order' => "$modelTable.order",
 			'pinned' => "$modelTable.pinned",
-			'featured' => "$modelTable.featured"
+			'featured' => "$modelTable.featured",
+			'popular' => "$modelTable.popular"
 		];
 
 		// Result -----------
@@ -261,9 +285,11 @@ class SiteMemberService extends \cmsgears\core\common\services\base\MapperServic
 
 	public function create( $model, $config = [] ) {
 
-		if( empty( $model->userId ) ) {
+		$user = Yii::$app->core->getUser();
 
-			$model->userId = Yii::$app->user->identity->id;
+		if( empty( $model->userId ) && isset( $user ) ) {
+
+			$model->userId = $user->id;
 		}
 
 		if( empty( $model->roleId ) || $model->roleId <= 0 ) {
@@ -287,9 +313,11 @@ class SiteMemberService extends \cmsgears\core\common\services\base\MapperServic
 		$roleId = isset( $params[ 'roleId' ] ) ? $params[ 'roleId' ] : null;
 		$siteId = isset( $params[ 'siteId' ] ) ? $params[ 'siteId' ] : null;
 
-		if( !isset( $userId ) && isset( Yii::$app->user->identity ) ) {
+		$user = Yii::$app->core->getUser();
 
-			$userId = Yii::$app->user->identity->id;
+		if( !isset( $userId ) && isset( $user ) ) {
+
+			$userId = $user->id;
 		}
 
 		if( !isset( $roleId ) ) {
@@ -315,7 +343,14 @@ class SiteMemberService extends \cmsgears\core\common\services\base\MapperServic
 
 	public function update( $model, $config = [] ) {
 
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'roleId' ];
+
+		if( $admin ) {
+
+			$attributes = ArrayHelper::merge( $attributes, [ 'pinned', 'featured', 'popular' ] );
+		}
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -323,6 +358,13 @@ class SiteMemberService extends \cmsgears\core\common\services\base\MapperServic
 	}
 
 	// Delete -------------
+
+	public static function deleteBySiteId( $siteId ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::deleteBySiteId( $siteId );
+	}
 
 	// Bulk ---------------
 

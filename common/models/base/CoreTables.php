@@ -60,6 +60,7 @@ class CoreTables extends DbTables {
 	const TABLE_FORM_FIELD	= 'cmg_core_form_field';
 
 	// Model Meta
+	const TABLE_USER_META	= 'cmg_core_user_meta';
 	const TABLE_SITE_META	= 'cmg_core_site_meta';
 	const TABLE_OBJECT_META	= 'cmg_core_object_meta';
 
@@ -73,6 +74,8 @@ class CoreTables extends DbTables {
 	const TABLE_SITE_ACCESS = 'cmg_core_site_access';
 
 	const TABLE_STATS = 'cmg_core_stats';
+
+	const TABLe_OTP = 'cmg_core_otp';
 
 	// Mappers --------------
 

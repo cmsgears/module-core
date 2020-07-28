@@ -13,8 +13,9 @@ namespace cmsgears\core\common\services\interfaces\entities;
 use cmsgears\core\common\models\entities\Theme;
 
 use cmsgears\core\common\services\interfaces\base\IEntityService;
-use cmsgears\core\common\services\interfaces\base\IName;
-use cmsgears\core\common\services\interfaces\base\ISlug;
+use cmsgears\core\common\services\interfaces\base\INameType;
+use cmsgears\core\common\services\interfaces\base\ISlugType;
+use cmsgears\core\common\services\interfaces\cache\IGridCacheable;
 use cmsgears\core\common\services\interfaces\resources\IData;
 
 /**
@@ -22,7 +23,7 @@ use cmsgears\core\common\services\interfaces\resources\IData;
  *
  * @since 1.0.0
  */
-interface IThemeService extends IEntityService, IData, IName, ISlug {
+interface IThemeService extends IEntityService, IData, IGridCacheable, INameType, ISlugType {
 
 	// Data Provider ------
 

@@ -86,9 +86,7 @@ abstract class CategoryController extends CrudController {
 
 		$model = $this->modelService->getModelObject();
 
-		$model->type	= $this->type;
-		$model->siteId	= Yii::$app->core->siteId;
-		$model->order	= 0;
+		$model->type = $this->type;
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 

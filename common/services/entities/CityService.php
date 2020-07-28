@@ -74,6 +74,11 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
@@ -107,6 +112,12 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'name'
+				],
+				'code' => [
+					'asc' => [ "$modelTable.code" => SORT_ASC ],
+					'desc' => [ "$modelTable.code" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Code'
 				],
 				'iso' => [
 					'asc' => [ "$modelTable.iso" => SORT_ASC ],
@@ -150,6 +161,9 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 					'default' => SORT_DESC,
 					'label' => 'Longitude'
 				]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 
@@ -178,19 +192,24 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'code' => "$modelTable.code",
+			'iso' => "$modelTable.iso",
+			'postal' => "$modelTable.postal",
+			'zone' => "$modelTable.zone"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'code' => "$modelTable.code",
-				'iso' => "$modelTable.iso",
-				'postal' => "$modelTable.postal",
-				'zone' => "$modelTable.zone"
-			];
-
 			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $search;
 		}
 
 		// Reporting --------
@@ -240,6 +259,20 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 		return $modelClass::isUniqueExistByZone( $name, $countryId, $provinceId, $zone );
 	}
 
+	public function getUniqueByRegionId( $name, $countryId, $provinceId, $regionId ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::findUniqueByRegionId( $name, $countryId, $provinceId, $regionId );
+	}
+
+	public function isUniqueExistByRegionId( $name, $countryId, $provinceId, $regionId ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::isUniqueExistByRegionId( $name, $countryId, $provinceId, $regionId );
+	}
+
 	// Read - Lists ----
 
 	public function searchByName( $name, $config = [] ) {
@@ -249,7 +282,9 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 
 		$autoCache = isset( $config[ 'autoCache' ] ) ? $config[ 'autoCache' ] : false;
 
-		$config[ 'columns' ] = isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.latitude", "$modelTable.longitude", "$modelTable.postal" ];
+		$config[ 'columns' ] = isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [
+			"$modelTable.id", "$modelTable.name", "$modelTable.latitude", "$modelTable.longitude", "$modelTable.postal"
+		];
 
 		if( $autoCache ) {
 
@@ -275,6 +310,18 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 	// Create -------------
 
 	// Update -------------
+
+	public function update( $model, $config = [] ) {
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'title', 'code', 'iso', 'type', 'postal', 'zone', 'regions', 'zipCodes',
+			'timeZone', 'latitude', 'longitude'
+		];
+
+		return parent::update( $model, [
+			'attributes' => $attributes
+		]);
+	}
 
 	// Delete -------------
 

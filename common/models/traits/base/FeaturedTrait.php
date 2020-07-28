@@ -89,8 +89,9 @@ trait FeaturedTrait {
 	public static function queryByPinned( $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
-		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 1;
-		$query		= null;
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 1;
+		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
@@ -119,8 +120,9 @@ trait FeaturedTrait {
 	public static function queryByPinnedType( $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
-		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 1;
-		$query		= null;
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 1;
+		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
@@ -147,8 +149,9 @@ trait FeaturedTrait {
 	public static function queryByFeatured( $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
-		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
-		$query		= null;
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
@@ -177,8 +180,9 @@ trait FeaturedTrait {
 	public static function queryByFeaturedType( $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
-		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
-		$query		= null;
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
@@ -205,8 +209,9 @@ trait FeaturedTrait {
 	public static function queryByPopular( $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
-		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
-		$query		= null;
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
@@ -235,8 +240,9 @@ trait FeaturedTrait {
 	public static function queryByPopularType( $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
-		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
-		$query		= null;
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 

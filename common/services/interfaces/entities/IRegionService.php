@@ -31,7 +31,7 @@ interface IRegionService extends IEntityService {
 
 	// Read - Maps -----
 
-	public function getMapByProvinceId( $provinceId, $config = [] );
+	public function getIdNameMapByProvinceId( $provinceId, $config = [] );
 
 	// Read - Others ---
 

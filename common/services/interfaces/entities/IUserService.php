@@ -12,8 +12,9 @@ namespace cmsgears\core\common\services\interfaces\entities;
 // CMG Imports
 use cmsgears\core\common\services\interfaces\base\IApproval;
 use cmsgears\core\common\services\interfaces\base\IEntityService;
+use cmsgears\core\common\services\interfaces\cache\IGridCacheable;
 use cmsgears\core\common\services\interfaces\resources\IData;
-use cmsgears\core\common\services\interfaces\resources\IModelMeta;
+use cmsgears\core\common\services\interfaces\resources\IMeta;
 use cmsgears\core\common\services\interfaces\resources\ISocialLink;
 
 /**
@@ -21,7 +22,7 @@ use cmsgears\core\common\services\interfaces\resources\ISocialLink;
  *
  * @since 1.0.0
  */
-interface IUserService extends IEntityService, IApproval, IData, IModelMeta, ISocialLink {
+interface IUserService extends IEntityService, IApproval, IData, IGridCacheable, IMeta, ISocialLink {
 
 	// Data Provider ------
 
@@ -59,7 +60,7 @@ interface IUserService extends IEntityService, IApproval, IData, IModelMeta, ISo
 
 	public function searchByNameType( $name, $type, $config = [] );
 
-	public function getIdNameMapByRoleSlug( $roleSlug );
+	public function getIdNameMapByRoleSlug( $roleSlug, $config = [] );
 
 	// Read - Others ---
 

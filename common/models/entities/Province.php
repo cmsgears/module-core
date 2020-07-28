@@ -19,7 +19,6 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\interfaces\base\IName;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Entity;
 
 use cmsgears\core\common\models\traits\base\NameTrait;
 
@@ -31,10 +30,11 @@ use cmsgears\core\common\models\traits\base\NameTrait;
  * @property string $code
  * @property string $iso
  * @property string $name
+ * @property string $title
  *
  * @since 1.0.0
  */
-class Province extends Entity implements IName {
+class Province extends \cmsgears\core\common\models\base\Entity implements IName {
 
 	// Variables ---------------------------------------------------
 
@@ -84,10 +84,12 @@ class Province extends Entity implements IName {
 			[ 'id', 'safe' ],
 			// Unique
 			[ 'code', 'unique', 'targetAttribute' => [ 'countryId', 'code' ] ],
+			[ 'iso', 'unique', 'targetAttribute' => [ 'countryId', 'iso' ] ],
 			[ 'name', 'unique', 'targetAttribute' => [ 'countryId', 'name' ] ],
 			// Text Limit
 			[ [ 'code', 'iso' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ 'title', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
 			[ 'countryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ]
 		];
@@ -95,7 +97,7 @@ class Province extends Entity implements IName {
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'code', 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'code', 'iso', 'name', 'title' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -112,7 +114,8 @@ class Province extends Entity implements IName {
 			'countryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
 			'code' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CODE ),
 			'iso' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ISO ),
-			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME )
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE )
 		];
 	}
 
@@ -132,6 +135,26 @@ class Province extends Entity implements IName {
 	public function getCountry() {
 
 		return $this->hasOne( Country::class, [ 'id' => 'countryId' ] );
+	}
+
+	/**
+	 * Return list of regions belonging to this province.
+	 *
+	 * @return Region[]
+	 */
+	public function getRegions() {
+
+		return $this->hasMany( Region::class, [ 'provinceId' => 'id' ] );
+	}
+
+	/**
+	 * Return list of cities belonging to this province.
+	 *
+	 * @return City[]
+	 */
+	public function getCities() {
+
+		return $this->hasMany( City::class, [ 'provinceId' => 'id' ] );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -179,6 +202,32 @@ class Province extends Entity implements IName {
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the province with regions.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with provinces.
+	 */
+	public static function queryWithRegions( $config = [] ) {
+
+		$config[ 'relations' ] = [ 'regions' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	/**
+	 * Return query to find the province with cities.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with cities.
+	 */
+	public static function queryWithCities( $config = [] ) {
+
+		$config[ 'relations' ] = [ 'cities' ];
+
+		return parent::queryWithAll( $config );
+	}
+
 	// Read - Find ------------
 
 	/**
@@ -214,6 +263,18 @@ class Province extends Entity implements IName {
 	public static function findByCountryIdIso( $countryId, $iso ) {
 
 		return self::find()->where( 'countryId=:id AND iso=:iso', [ ':id' => $countryId, ':iso' => $iso ] )->one();
+	}
+
+	/**
+	 * Find and return the province associated with given country id and name.
+	 *
+	 * @param integer $countryId
+	 * @param string $name
+	 * @return Province
+	 */
+	public static function findByCountryIdName( $countryId, $name ) {
+
+		return self::find()->where( 'countryId=:id AND name=:name', [ ':id' => $countryId, ':name' => $name ] )->one();
 	}
 
 	// Create -----------------

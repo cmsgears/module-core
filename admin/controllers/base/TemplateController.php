@@ -101,8 +101,7 @@ abstract class TemplateController extends CrudController {
 
 		$model = $this->modelService->getModelObject();
 
-		$model->type	= $this->type;
-		$model->siteId	= Yii::$app->core->siteId;
+		$model->type = $this->type;
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
@@ -124,8 +123,9 @@ abstract class TemplateController extends CrudController {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$dataClass	= $model->dataPath;
-			$data		= new $dataClass( $model->getDataMeta( 'tdata' ) );
+			$dataClass = $model->dataPath;
+
+			$data = new $dataClass( $model->getDataMeta( 'tdata' ) );
 
 			$this->setViewPath( $model->dataForm );
 
@@ -154,8 +154,9 @@ abstract class TemplateController extends CrudController {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$attributesClass	= $model->attributesPath;
-			$attributes			= new $attributesClass( $model->getDataMeta( 'tattributes' ) );
+			$attributesClass = $model->attributesPath;
+
+			$attributes = new $attributesClass( $model->getDataMeta( 'tattributes' ) );
 
 			$this->setViewPath( $model->attributesForm );
 
@@ -184,8 +185,9 @@ abstract class TemplateController extends CrudController {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$configClass	= $model->configPath;
-			$config			= new $configClass( $model->getDataMeta( 'tconfig' ) );
+			$configClass = $model->configPath;
+
+			$config = new $configClass( $model->getDataMeta( 'tconfig' ) );
 
 			$this->setViewPath( $model->configForm );
 
@@ -214,8 +216,9 @@ abstract class TemplateController extends CrudController {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$settingsClass	= $model->settingsPath;
-			$settings		= new $settingsClass( $model->getDataMeta( 'tsettings' ) );
+			$settingsClass = $model->settingsPath;
+
+			$settings = new $settingsClass( $model->getDataMeta( 'tsettings' ) );
 
 			$this->setViewPath( $model->settingsForm );
 

@@ -10,6 +10,7 @@
 namespace cmsgears\core\common\services\interfaces\resources;
 
 // CMG Imports
+use cmsgears\core\common\services\interfaces\base\IMultiSite;
 use cmsgears\core\common\services\interfaces\base\INameType;
 use cmsgears\core\common\services\interfaces\base\ISlugType;
 use cmsgears\core\common\services\interfaces\base\IResourceService;
@@ -21,7 +22,7 @@ use cmsgears\core\common\services\interfaces\resources\IData;
  *
  * @since 1.0.0
  */
-interface ICategoryService extends IResourceService, IData, INameType, INestedSet, ISlugType {
+interface ICategoryService extends IResourceService, IData, IMultiSite, INameType, INestedSet, ISlugType {
 
 	// Data Provider ------
 

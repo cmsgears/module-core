@@ -17,7 +17,6 @@ use yii\helpers\ArrayHelper;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Resource;
 use cmsgears\core\common\models\entities\Country;
 use cmsgears\core\common\models\entities\Province;
 use cmsgears\core\common\models\entities\Region;
@@ -54,7 +53,7 @@ use cmsgears\core\common\models\entities\City;
  *
  * @since 1.0.0
  */
-class Address extends Resource {
+class Address extends \cmsgears\core\common\models\base\Resource {
 
 	// Variables ---------------------------------------------------
 
@@ -77,6 +76,14 @@ class Address extends Resource {
 		self::TYPE_DEFAULT => 'Default',
 		self::TYPE_PRIMARY => 'Primary',
 		self::TYPE_RESIDENTIAL => 'Residential',
+		self::TYPE_SHIPPING => 'Shipping',
+		self::TYPE_BILLING => 'Billing',
+		self::TYPE_OFFICE => 'Office',
+		self::TYPE_MAILING => 'Mailing',
+		self::TYPE_BRANCH => 'Branch'
+	];
+
+	public static $officeTypeMap = [
 		self::TYPE_SHIPPING => 'Shipping',
 		self::TYPE_BILLING => 'Billing',
 		self::TYPE_OFFICE => 'Office',
@@ -119,6 +126,7 @@ class Address extends Resource {
 		$rules = [
 			// Required, Safe
 			[ [ 'countryId', 'provinceId', 'cityName', 'line1' ], 'required' ],
+			[ [ 'email' ], 'required', 'on' => 'email' ],
 			[ [ 'regionId' ], 'required', 'on' => 'region' ],
 			[ [ 'zip' ], 'required', 'on' => 'postal' ],
 			[ [ 'latitude', 'longitude' ], 'required', 'on' => 'location' ],
@@ -136,7 +144,7 @@ class Address extends Resource {
 			[ [ 'zip', 'subZip' ], 'alphanumhyphenspace' ],
 			[ 'regionId', 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ 'regionId', 'number', 'on' => [ 'region', 'regionpostal', 'regionlocation', 'regionpostallocation' ], 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'countryId', 'provinceId', 'regionId', 'cityId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'countryId', 'provinceId', 'cityId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'longitude', 'latitude', 'zoomLevel' ], 'number' ]
 		];
 
@@ -198,6 +206,11 @@ class Address extends Resource {
 				$this->regionId = null;
 			}
 
+			if( $this->cityId <= 0 ) {
+
+				$this->cityId = null;
+			}
+
 			return true;
 		}
 
@@ -247,9 +260,9 @@ class Address extends Resource {
 	// TODO: Use address template to return the address string.
 	public function toString() {
 
-		$country	= isset( $this->countryName ) ? $this->countryName : $this->country->name;
-		$province	= isset( $this->provinceName ) ? $this->provinceName : $this->province->name;
-		$region		= isset( $this->regionName ) ? $this->regionName : ( isset( $this->region ) ? $this->region->name : null );
+		$country	= !empty( $this->countryName ) ? $this->countryName : $this->country->name;
+		$province	= !empty( $this->provinceName ) ? $this->provinceName : $this->province->name;
+		$region		= !empty( $this->regionName ) ? $this->regionName : ( isset( $this->region ) ? $this->region->name : null );
 		$address	= $this->line1;
 
 		if( !empty( $this->line2 ) ) {
@@ -278,14 +291,18 @@ class Address extends Resource {
 		}
 
 		$address .= ", $province, $country";
-		//$address .= ", $this->zip";
 
 		return $address;
 	}
 
 	public function copyTo( $address ) {
 
-		$this->copyForUpdateTo( $address, [ 'countryId', 'provinceId', 'cityId', 'title', 'line1', 'line2', 'line3', 'cityName', 'provinceName', 'countryName', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'longitude', 'latitude', 'zoomLevel' ] );
+		$this->copyForUpdateTo( $address, [
+			'countryId', 'provinceId', 'cityId', 'title',
+			'line1', 'line2', 'line3', 'cityName', 'provinceName', 'countryName',
+			'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website',
+			'longitude', 'latitude', 'zoomLevel'
+		]);
 	}
 
 	// Static Methods ----------------------------------------------
@@ -313,8 +330,9 @@ class Address extends Resource {
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country', 'province', 'city' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country', 'province', 'region', 'city' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -327,7 +345,7 @@ class Address extends Resource {
 	 */
 	public static function queryWithCountry( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'country' ];
+		$config[ 'relations' ] = [ 'country' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -340,7 +358,7 @@ class Address extends Resource {
 	 */
 	public static function queryWithProvince( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'province' ];
+		$config[ 'relations' ] = [ 'province' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -354,6 +372,19 @@ class Address extends Resource {
 	public static function queryWithCountryProvince( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'country', 'province' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	/**
+	 * Return query to find the address with region.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with region.
+	 */
+	public static function queryWithRegion( $config = [] ) {
+
+		$config[ 'relations' ] = [ 'region' ];
 
 		return parent::queryWithAll( $config );
 	}

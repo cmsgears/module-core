@@ -28,6 +28,7 @@ use cmsgears\core\common\services\traits\base\FeaturedTrait;
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 use cmsgears\core\common\services\traits\resources\VisualTrait;
 
@@ -69,6 +70,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	use DataTrait;
 	use FeaturedTrait;
+	use GridCacheTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
@@ -286,6 +288,12 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 					break;
 				}
+				case 'popular': {
+
+					$config[ 'conditions' ][ "$modelTable.popular" ] = true;
+
+					break;
+				}
 				case 'admin': {
 
 					$config[ 'conditions' ][ "$modelTable.admin" ] = true;
@@ -397,23 +405,35 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Read - Models ---
 
+	/**
+	 * Returns all the models having the given name and using the parent type.
+	 */
 	public function getByName( $name ) {
 
 		return $this->getByNameType( $name, static::$parentType );
 	}
 
+	/**
+	 * Returns the first model having the given name and using the parent type.
+	 */
 	public function getFirstByName( $name ) {
 
 		return $this->getFirstByNameType( $name, static::$parentType );
 	}
 
+	/**
+	 * Returns the featured and active models using the parent type.
+	 */
 	public function getFeatured( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::find()->where( 'featured=:featured AND type=:type', [ ':featured' => true, ':type' => static::$parentType ] )->all();
+		return $modelClass::find()->where( 'featured=:featured AND type=:type AND status=:status', [ ':featured' => true, ':type' => static::$parentType, ':status' => $modelClass::STATUS_ACTIVE ] )->all();
 	}
 
+	/**
+	 * Returns the active models using the parent type.
+	 */
 	public function getActive( $config = [] ) {
 
 		$modelClass = static::$modelClass;
@@ -421,6 +441,9 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		return $modelClass::queryByType( static::$parentType, $config )->andWhere( [ 'status' => $modelClass::STATUS_ACTIVE ] )->all();
 	}
 
+	/**
+	 * Returns the active models using the given type.
+	 */
 	public function getActiveByType( $type, $config = [] ) {
 
 		$modelClass = static::$modelClass;
@@ -428,6 +451,9 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		return $modelClass::queryByType( $type, $config )->andWhere( [ 'status' => $modelClass::STATUS_ACTIVE ] )->all();
 	}
 
+	/**
+	 * Returns the top level active models using the given type.
+	 */
 	public static function getL0ByType( $type, $config = [] ) {
 
 		$modelClass = static::$modelClass;
@@ -435,6 +461,9 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		return $modelClass::queryL0ByType( $type, $config )->andWhere( [ 'status' => $modelClass::STATUS_ACTIVE ] )->all();
 	}
 
+	/**
+	 * Returns the active models using the given parent id.
+	 */
 	public static function getByParentId( $parentId, $config = [] ) {
 
 		$modelClass = static::$modelClass;
@@ -444,6 +473,9 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Read - Lists ----
 
+	/**
+	 * Returns the id list for mapping purposes using the parent type.
+	 */
 	public function getIdList( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
@@ -454,6 +486,9 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		return parent::getIdList( $config );
 	}
 
+	/**
+	 * Returns the id and name list for mapping purposes using the parent type.
+	 */
 	public function getIdNameList( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
@@ -524,7 +559,6 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
-				$gallery->siteId	= Yii::$app->core->siteId;
 
 				$gallery = $galleryService->create( $gallery );
 			}
@@ -532,8 +566,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 				$gallery = $galleryService->createByParams([
 					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
-					'name' => $model->name, 'title' => $model->title,
-					'siteId' => Yii::$app->core->siteId
+					'name' => $model->name, 'title' => $model->title
 				]);
 			}
 
@@ -614,15 +647,40 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete files
-		$this->fileService->deleteMultiple( [ $model->avatar, $model->banner, $model->video ] );
-		$this->fileService->deleteMultiple( $model->files );
+		$config[ 'hard' ] = $config[ 'hard' ] ?? !Yii::$app->core->isSoftDelete();
 
-		// Delete File Mappings - Shared Files
-		$this->modelFileService->deleteMultiple( $model->modelFiles );
+		if( $config[ 'hard' ] ) {
 
-		// Delete mapping
-		Yii::$app->factory->get( 'modelObjectService' )->deleteByModelId( $model->id );
+			$transaction = Yii::$app->db->beginTransaction();
+
+			try {
+
+				// Delete files
+				$this->fileService->deleteMultiple( [ $model->avatar, $model->banner, $model->video ] );
+				$this->fileService->deleteMultiple( $model->files );
+
+				// Delete File Mappings - Shared Files
+				$this->modelFileService->deleteMultiple( $model->modelFiles );
+
+				// Delete mappings
+				Yii::$app->factory->get( 'modelObjectService' )->deleteByModelId( $model->id );
+
+				// Delete Gallery
+				if( isset( $model->gallery ) ) {
+
+					Yii::$app->factory->get( 'galleryService' )->delete( $model->gallery );
+				}
+
+				// Delete model
+				return parent::delete( $model, $config );
+			}
+			catch( Exception $e ) {
+
+				$transaction->rollBack();
+
+				throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+			}
+		}
 
 		// Delete model
 		return parent::delete( $model, $config );
@@ -696,6 +754,14 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 					case 'featured': {
 
 						$model->featured = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'popular': {
+
+						$model->popular = true;
 
 						$model->update();
 

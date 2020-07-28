@@ -151,7 +151,11 @@ interface IActiveRecordService {
 
 	public function applyBulkByTargetId( $column, $action, $target, $config = [] );
 
-	public function applyBulkByUserTargetId( $column, $action, $target, $config = [] );
+	public function applyBulkByTargetIdUser( $column, $action, $target, $config = [] );
+
+	public function applyBulkByTargetIdUserId( $column, $action, $target, $userId, $config = [] );
+
+	public function applyBulkByTargetIdParent( $column, $action, $target, $parentId, $parentType, $config = [] );
 
 	// Notifications ------
 

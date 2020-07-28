@@ -230,12 +230,12 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord {
 
 		// Query Config --------
 
-		$query			= static::find();
+		$query = static::find();
 
-		$relations		= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [];
-		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
-		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
-		$groups			= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : null;
+		$relations	= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [];
+		$conditions	= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+		$filters	= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
+		$groups		= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : null;
 
 		// Relations -----------
 
@@ -278,7 +278,7 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord {
 
 		if( isset( $filters ) ) {
 
-			foreach ( $filters as $filter ) {
+			foreach( $filters as $filter ) {
 
 				$query = $query->andFilterWhere( $filter );
 			}
@@ -288,9 +288,9 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord {
 
 		if( isset( $groups ) ) {
 
-			foreach ( $groups as $group ) {
+			foreach( $groups as $group ) {
 
-				$query	= $query->groupBy( $group );
+				$query = $query->groupBy( $group );
 			}
 		}
 

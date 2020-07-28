@@ -24,17 +24,16 @@ use cmsgears\core\common\models\interfaces\base\IMultiSite;
 use cmsgears\core\common\models\interfaces\base\IOwner;
 use cmsgears\core\common\models\interfaces\base\IVisibility;
 use cmsgears\core\common\models\interfaces\resources\IData;
-use cmsgears\core\common\models\interfaces\resources\IModelMeta;
+use cmsgears\core\common\models\interfaces\resources\IGridCache;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Resource;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
 use cmsgears\core\common\models\traits\base\OwnerTrait;
 use cmsgears\core\common\models\traits\base\VisibilityTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
-use cmsgears\core\common\models\traits\resources\ModelMetaTrait;
+use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 
 use cmsgears\files\components\FileManager;
 
@@ -63,6 +62,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $thumb
  * @property string $placeholder
  * @property string $smallPlaceholder
+ * @property string $ogg
+ * @property string $webm
  * @property string $caption
  * @property string $altText
  * @property string $link
@@ -79,7 +80,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, IOwner, IVisibility {
+class File extends \cmsgears\core\common\models\base\Resource implements IAuthor, IData,
+	IGridCache, IMultiSite, IOwner, IVisibility {
 
 	// Variables ---------------------------------------------------
 
@@ -114,6 +116,8 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 	public $height;
 	public $mwidth;
 	public $mheight;
+	public $swidth;
+	public $sheight;
 	public $twidth;
 	public $theight;
 
@@ -127,7 +131,7 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 
 	use AuthorTrait;
 	use DataTrait;
-	use ModelMetaTrait;
+	use GridCacheTrait;
 	use MultiSiteTrait;
 	use OwnerTrait;
 	use VisibilityTrait;
@@ -170,18 +174,18 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'siteId', 'name', 'extension', 'directory' ], 'required' ],
+			[ [ 'name', 'extension', 'directory' ], 'required' ],
 			[ 'changed', 'required', 'on' => 'upload', 'message' => 'Please provide a valid file.' ],
-			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'content', 'gridCache' ], 'safe' ],
 			// Text Limit
 			[ [ 'extension', 'type', 'storage', 'srcset' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'tag', 'sizes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ [ 'directory', 'altText' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'name', 'url', 'medium', 'small', 'thumb', 'placeholder', 'smallPlaceholder' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
-			[ [ 'title', 'caption', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'name', 'url', 'medium', 'small', 'thumb', 'placeholder', 'smallPlaceholder', 'ogg', 'webm', 'caption' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'title', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
-			[ [ 'visibility', 'width', 'height', 'mwidth', 'mheight', 'twidth', 'theight' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'visibility', 'width', 'height', 'mwidth', 'mheight', 'swidth', 'sheight', 'twidth', 'theight' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ 'size', 'number', 'min' => 0 ],
 			[ [ 'shared', 'changed', 'gridCacheValid' ], 'boolean' ],
 			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
@@ -191,7 +195,8 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'title', 'description', 'extension', 'directory', 'altText', 'url', 'medium', 'thumb', 'link' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'title', 'description', 'extension', 'directory', 'altText', 'link' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'url', 'medium', 'small', 'thumb', 'placeholder', 'smallPlaceholder', 'ogg', 'webm', 'caption' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -217,14 +222,35 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 			'url' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_URL ),
 			'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'storage' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STORAGE ),
+			'caption' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CAPTION ),
+			'altText' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ALT_TEXT ),
 			'link' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINK ),
-			'srcset' => 'Srcset Breakpoints',
-			'sizes' => 'Responsive Sizes',
+			'srcset' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IMG_SRCSET ),
+			'sizes' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IMG_SIZES ),
 			'shared' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SHARED ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
 			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
 		];
+	}
+
+	// yii\db\BaseActiveRecord
+
+    /**
+     * @inheritdoc
+     */
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			// Default Type - Default
+			$this->type = $this->type ?? FileManager::FILE_TYPE_DOCUMENT;
+
+	        return true;
+	    }
+
+		return false;
 	}
 
 	// CMG interfaces ------------------------
@@ -391,7 +417,7 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 
 	public function getWebmUrl() {
 
-		if( !empty( $this->ogg ) ) {
+		if( !empty( $this->webm ) ) {
 
 			return Yii::$app->fileManager->uploadUrl . '/' . $this->webm;
 		}
@@ -521,7 +547,7 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 	 */
 	public function resetSize() {
 
-		$filePath	= $this->getFilePath();
+		$filePath = $this->getFilePath();
 
 		if( $filePath && file_exists( $filePath ) && is_file( $filePath ) ) {
 
@@ -545,6 +571,8 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 		$thumbPath	= $this->getThumbPath();
 		$plPath		= $this->getPlaceholderPath();
 		$plsPath	= $this->getSmallPlaceholderPath();
+		$oggPath	= $this->getOggPath();
+		$webmPath	= $this->getWebmPath();
 
 		// Delete from disk
 		if( $filePath && file_exists( $filePath ) && is_file( $filePath ) ) {
@@ -575,6 +603,16 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 		if( $plsPath && file_exists( $plsPath ) && is_file( $plsPath ) ) {
 
 			unlink( $plsPath );
+		}
+
+		if( $oggPath && file_exists( $oggPath ) && is_file( $oggPath ) ) {
+
+			unlink( $oggPath );
+		}
+
+		if( $webmPath && file_exists( $webmPath ) && is_file( $webmPath ) ) {
+
+			unlink( $webmPath );
 		}
 	}
 
@@ -782,11 +820,6 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 
 		$file->load( Yii::$app->request->post(), $name );
 
-		if( empty( $file->siteId ) ) {
-
-			$file->siteId = Yii::$app->core->siteId;
-		}
-
 		return $file;
 	}
 
@@ -799,8 +832,9 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 	 */
 	public function loadFiles( $name, $files = [] ) {
 
-		$filesToLoad	= Yii::$app->request->post( $name );
-		$count			= count( $filesToLoad );
+		$filesToLoad = Yii::$app->request->post( $name );
+
+		$count = count( $filesToLoad );
 
 		if ( $count > 0 ) {
 

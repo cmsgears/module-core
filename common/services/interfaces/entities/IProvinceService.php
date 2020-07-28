@@ -31,13 +31,15 @@ interface IProvinceService extends IEntityService {
 
 	public function getByCountryIdIso( $countryId, $iso );
 
+	public function getByCountryIdName( $countryId, $name );
+
 	// Read - Lists ----
 
-	public function getListByCountryId( $countryId );
+	public function getIdNameListByCountryId( $countryId );
 
 	// Read - Maps -----
 
-	public function getMapByCountryId( $countryId, $config = [] );
+	public function getIdNameMapByCountryId( $countryId, $config = [] );
 
 	public function getIsoNameMapByCountryId( $countryId );
 

@@ -16,6 +16,7 @@ use cmsgears\core\common\services\interfaces\base\IEntityService;
 use cmsgears\core\common\services\interfaces\base\IMultiSite;
 use cmsgears\core\common\services\interfaces\base\INameType;
 use cmsgears\core\common\services\interfaces\base\ISlugType;
+use cmsgears\core\common\services\interfaces\cache\IGridCacheable;
 use cmsgears\core\common\services\interfaces\resources\IData;
 
 /**
@@ -23,7 +24,7 @@ use cmsgears\core\common\services\interfaces\resources\IData;
  *
  * @since 1.0.0
  */
-interface IObjectService extends IEntityService, IApproval, IData, IFeatured, IMultiSite, INameType, ISlugType {
+interface IObjectService extends IEntityService, IApproval, IData, IFeatured, IGridCacheable, IMultiSite, INameType, ISlugType {
 
 	// Data Provider ------
 
@@ -33,6 +34,13 @@ interface IObjectService extends IEntityService, IApproval, IData, IFeatured, IM
 	 * @param integer $parentId
 	 */
 	public function getPageByParentId( $parentId, $config = [] );
+
+	/*
+	 * Returns the collection made by the user.
+	 *
+	 * @param integer $parentId
+	 */
+	public function getPageByOwnerId( $ownerId, $config = [] );
 
 	/**
 	 * Returns the page by mapped object.

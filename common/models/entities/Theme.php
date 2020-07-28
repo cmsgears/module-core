@@ -20,18 +20,17 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\interfaces\base\IAuthor;
-use cmsgears\core\common\models\interfaces\base\IName;
-use cmsgears\core\common\models\interfaces\base\ISlug;
+use cmsgears\core\common\models\interfaces\base\INameType;
+use cmsgears\core\common\models\interfaces\base\ISlugType;
 use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Entity;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
-use cmsgears\core\common\models\traits\base\NameTrait;
-use cmsgears\core\common\models\traits\base\SlugTrait;
+use cmsgears\core\common\models\traits\base\NameTypeTrait;
+use cmsgears\core\common\models\traits\base\SlugTypeTrait;
 use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
@@ -46,7 +45,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $modifiedBy
  * @property string $name
  * @property string $slug
- * @property string $type Required to distinguish between admin and site themes.
+ * @property string $type - Required to distinguish between admin and site themes.
  * @property string $title
  * @property string $description
  * @property boolean $default
@@ -62,7 +61,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Theme extends Entity implements IAuthor, IContent, IData, IGridCache, IName, ISlug {
+class Theme extends \cmsgears\core\common\models\base\Entity implements IAuthor, IContent, IData, IGridCache, INameType, ISlugType {
 
 	// Variables ---------------------------------------------------
 
@@ -90,8 +89,8 @@ class Theme extends Entity implements IAuthor, IContent, IData, IGridCache, INam
 	use ContentTrait;
 	use DataTrait;
 	use GridCacheTrait;
-	use NameTrait;
-	use SlugTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -137,7 +136,7 @@ class Theme extends Entity implements IAuthor, IContent, IData, IGridCache, INam
 		$rules = [
 			// Required, Safe
 			[ [ 'name' ], 'required' ],
-			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'content', 'gridCache' ], 'safe' ],
 			// Unique
 			[ 'name', 'unique' ],
 			// Text Limit
@@ -183,6 +182,24 @@ class Theme extends Entity implements IAuthor, IContent, IData, IGridCache, INam
 		];
 	}
 
+	// yii\db\BaseActiveRecord
+
+    /**
+     * @inheritdoc
+     */
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_SITE;
+
+	        return true;
+	    }
+
+		return false;
+	}
+
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
@@ -226,8 +243,9 @@ class Theme extends Entity implements IAuthor, IContent, IData, IGridCache, INam
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}

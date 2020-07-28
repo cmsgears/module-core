@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\CrudController;
-
 /**
  * OptiongroupController provides actions specific to category models categorized for option group.
  *
  * @since 1.0.0
  */
-class OptiongroupController extends CrudController {
+class OptiongroupController extends \cmsgears\core\admin\controllers\base\CrudController {
 
 	// Variables ---------------------------------------------------
 
@@ -104,8 +102,7 @@ class OptiongroupController extends CrudController {
 
 		$model = $this->modelService->getModelObject();
 
-		$model->type	= $this->type;
-		$model->siteId	= Yii::$app->core->siteId;
+		$model->type = $this->type;
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 

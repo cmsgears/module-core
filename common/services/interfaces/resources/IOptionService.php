@@ -54,6 +54,8 @@ interface IOptionService extends IResourceService, IData {
 
 	public function getValueNameMapByCategorySlug( $slug, $config = [] );
 
+	public function getActiveValueNameMapByCategorySlug( $slug, $config = [] );
+
 	// Read - Others ---
 
 	// Create -------------

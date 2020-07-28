@@ -12,15 +12,12 @@ namespace cmsgears\core\common\components;
 // Yii Imports
 use Yii;
 
-// CMG Imports
-use cmsgears\core\common\base\Component;
-
 /**
  * The Core Factory component initialise the services available in Core Module.
  *
  * @since 1.0.0
  */
-class Factory extends Component {
+class Factory extends \cmsgears\core\common\base\Component {
 
 	// Variables ---------------------------------------------------
 
@@ -92,7 +89,9 @@ class Factory extends Component {
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelMetaService', 'cmsgears\core\common\services\resources\ModelMetaService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IObjectMetaService', 'cmsgears\core\common\services\resources\ObjectMetaService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IOptionService', 'cmsgears\core\common\services\resources\OptionService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IOtpService', 'cmsgears\core\common\services\resources\OtpService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\ISiteAccessService', 'cmsgears\core\common\services\resources\SiteAccessService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IUserMetaService', 'cmsgears\core\common\services\resources\UserMetaService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\ISiteMetaService', 'cmsgears\core\common\services\resources\SiteMetaService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IStatsService', 'cmsgears\core\common\services\resources\StatsService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\ITagService', 'cmsgears\core\common\services\resources\TagService' );
@@ -166,7 +165,9 @@ class Factory extends Component {
 		$factory->set( 'modelMetaService', 'cmsgears\core\common\services\resources\ModelMetaService' );
 		$factory->set( 'objectMetaService', 'cmsgears\core\common\services\resources\ObjectMetaService' );
 		$factory->set( 'optionService', 'cmsgears\core\common\services\resources\OptionService' );
+		$factory->set( 'otpService', 'cmsgears\core\common\services\resources\OtpService' );
 		$factory->set( 'siteAccessService', 'cmsgears\core\common\services\resources\SiteAccessService' );
+		$factory->set( 'userMetaService', 'cmsgears\core\common\services\resources\UserMetaService' );
 		$factory->set( 'siteMetaService', 'cmsgears\core\common\services\resources\SiteMetaService' );
 		$factory->set( 'statsService', 'cmsgears\core\common\services\resources\StatsService' );
 		$factory->set( 'tagService', 'cmsgears\core\common\services\resources\TagService' );

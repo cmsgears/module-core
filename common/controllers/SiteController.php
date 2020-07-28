@@ -366,6 +366,10 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 			// Redirect user to home
 			$this->checkHome();
 		}
+		else {
+
+			$model->password = null;
+		}
 
 		return $this->render( CoreGlobal::PAGE_LOGIN, [ CoreGlobal::MODEL_GENERIC => $model ] );
 	}

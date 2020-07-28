@@ -35,6 +35,8 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  * @property string $name
  * @property string $label
  * @property string $type
+ * @property boolean $active
+ * @property integer $order
  * @property string $valueType
  * @property string $value
  * @property string $data
@@ -95,6 +97,8 @@ class ModelMeta extends ModelResource implements IData, IMeta {
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'label', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
+			[ 'active', 'boolean' ],
+			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 
@@ -123,6 +127,27 @@ class ModelMeta extends ModelResource implements IData, IMeta {
 			'valueType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE_TYPE ),
 			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE )
 		];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function beforeSave( $insert ) {
+
+		if( parent::beforeSave( $insert ) ) {
+
+			if( empty( $this->order ) || $this->order <= 0 ) {
+
+				$this->order = 0;
+			}
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
+
+			return true;
+		}
+
+		return false;
 	}
 
 	// CMG interfaces ------------------------

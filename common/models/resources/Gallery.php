@@ -29,12 +29,10 @@ use cmsgears\core\common\models\interfaces\base\ISlugType;
 use cmsgears\core\common\models\interfaces\base\IVisibility;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
-use cmsgears\core\common\models\interfaces\resources\IModelMeta;
 use cmsgears\core\common\models\interfaces\resources\ITemplate;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Resource;
 
 use cmsgears\core\common\models\traits\base\ApprovalTrait;
 use cmsgears\core\common\models\traits\base\AuthorTrait;
@@ -46,7 +44,6 @@ use cmsgears\core\common\models\traits\base\SlugTypeTrait;
 use cmsgears\core\common\models\traits\base\VisibilityTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
-use cmsgears\core\common\models\traits\resources\ModelMetaTrait;
 use cmsgears\core\common\models\traits\resources\TemplateTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
 
@@ -71,6 +68,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $order
  * @property boolean $pinned
  * @property boolean $featured
+ * @property boolean $popular
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $content
@@ -81,18 +79,14 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Gallery extends Resource implements IApproval, IAuthor, IData, IFeatured, IFile, IGridCache, IModelMeta, IMultiSite,
-	INameType, IOwner, ISlugType, ITemplate, IVisibility {
+class Gallery extends \cmsgears\core\common\models\base\Resource implements IApproval, IAuthor,
+	IData, IFeatured, IFile, IGridCache, IMultiSite, INameType, IOwner, ISlugType, ITemplate, IVisibility {
 
 	// Variables ---------------------------------------------------
 
 	// Globals -------------------------------
 
 	// Constants --------------
-
-	const TYPE_IMAGE	= 'image';
-	const TYPE_AUDIO	= 'audio';
-	const TYPE_VIDEO	= 'video';
 
 	// Public -----------------
 
@@ -116,7 +110,6 @@ class Gallery extends Resource implements IApproval, IAuthor, IData, IFeatured, 
 	use FeaturedTrait;
 	use FileTrait;
 	use GridCacheTrait;
-	use ModelMetaTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use OwnerTrait;
@@ -170,8 +163,8 @@ class Gallery extends Resource implements IApproval, IAuthor, IData, IFeatured, 
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'siteId', 'name' ], 'required' ],
-			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'name' ], 'required' ],
+			[ [ 'id', 'content', 'gridCache' ], 'safe' ],
 			// Unique
 			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
 			// Text Limit
@@ -182,7 +175,7 @@ class Gallery extends Resource implements IApproval, IAuthor, IData, IFeatured, 
 			[ 'title', 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			//Other
-			[ [ 'pinned', 'featured', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'pinned', 'featured', 'popular', 'gridCacheValid' ], 'boolean' ],
 			[ 'templateId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'status', 'visibility' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
@@ -219,6 +212,7 @@ class Gallery extends Resource implements IApproval, IAuthor, IData, IFeatured, 
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'pinned' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PINNED ),
 			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
+			'popular' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_POPULAR ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
 			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
@@ -239,6 +233,14 @@ class Gallery extends Resource implements IApproval, IAuthor, IData, IFeatured, 
 				$this->templateId = null;
 			}
 
+			if( empty( $this->order ) || $this->order <= 0 ) {
+
+				$this->order = 0;
+			}
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
+
 			return true;
 		}
 
@@ -254,7 +256,9 @@ class Gallery extends Resource implements IApproval, IAuthor, IData, IFeatured, 
 	// Gallery -------------------------------
 
 	/**
-	 * THe method belongsTo check whether the gallery belongs to given model. The model must have galleryId column.
+	 * The method belongsTo check whether the gallery belongs to given model. The model
+	 * must have galleryId column.
+	 *
 	 * @return boolean
 	 */
 	public function belongsTo( $model ) {

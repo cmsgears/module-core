@@ -16,11 +16,12 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Resource;
 
+use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
@@ -41,7 +42,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  *
  * @since 1.0.0
  */
-class Option extends Resource implements IData {
+class Option extends \cmsgears\core\common\models\base\Resource implements IContent, IData {
 
 	// Variables ---------------------------------------------------
 
@@ -65,6 +66,7 @@ class Option extends Resource implements IData {
 
 	// Traits ------------------------------------------------------
 
+	use ContentTrait;
 	use DataTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -88,13 +90,14 @@ class Option extends Resource implements IData {
 		$rules = [
 			// Required, Safe
 			[ 'name', 'required' ],
-			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
+			[ [ 'id', 'htmlOptions', 'content' ], 'safe' ],
 			// Unique
 			[ 'name', 'unique', 'targetAttribute' => [ 'categoryId', 'name' ] ],
 			// Text Limit
 			[ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'value', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
+			[ 'name', 'alphanumu' ],
 			[ [ 'active', 'input' ], 'boolean' ],
 			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ]
@@ -128,6 +131,26 @@ class Option extends Resource implements IData {
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
+	}
+
+	// yii\db\BaseActiveRecord
+
+    /**
+     * @inheritdoc
+     */
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			if( empty( $this->order ) || $this->order <= 0 ) {
+
+				$this->order = 0;
+			}
+
+	        return true;
+	    }
+
+		return false;
 	}
 
 	// CMG interfaces ------------------------

@@ -34,6 +34,10 @@ interface ICityService extends IEntityService, IName {
 
 	public function isUniqueExistByZone( $name, $countryId, $provinceId, $zone );
 
+	public function getUniqueByRegionId( $name, $countryId, $provinceId, $regionId );
+
+	public function isUniqueExistByRegionId( $name, $countryId, $provinceId, $regionId );
+
 	// Read - Lists ----
 
 	// Read - Maps -----

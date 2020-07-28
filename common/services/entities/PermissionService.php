@@ -12,6 +12,7 @@ namespace cmsgears\core\common\services\entities;
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -22,6 +23,7 @@ use cmsgears\core\common\services\interfaces\entities\IPermissionService;
 
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
@@ -58,6 +60,7 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 	// Traits ------------------------------------------------------
 
 	use DataTrait;
+	use GridCacheTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
 
@@ -78,6 +81,11 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -135,9 +143,7 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 	                'label' => 'Updated At'
 	            ]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -180,16 +186,21 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'desc' => "$modelTable.description"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'desc' => "$modelTable.description"
-			];
-
 			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $search;
 		}
 
 		// Reporting --------
@@ -228,7 +239,18 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'slug', 'icon', 'description', 'group' ];
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'slug', 'icon', 'description'
+		];
+
+		if( $admin ) {
+
+			$attributes	= ArrayHelper::merge( $attributes, [
+				'group'
+			]);
+		}
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -250,7 +272,7 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 		// Create updated mappings
 		if( count( $binded ) > 0 ) {
 
-			foreach ( $binded as $id ) {
+			foreach( $binded as $id ) {
 
 				$toSave	= new RolePermission();
 

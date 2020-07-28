@@ -12,10 +12,10 @@ namespace cmsgears\core\common\models\resources;
 // CMG Imports
 use cmsgears\core\common\models\base\CoreTables;
 
-use cmsgears\core\common\models\entities\Site;
+use cmsgears\core\common\models\entities\User;
 
 /**
- * The meta model used to store site meta data and attributes.
+ * The meta model used to store user meta data and attributes.
  *
  * @property integer $id
  * @property integer $modelId
@@ -24,14 +24,13 @@ use cmsgears\core\common\models\entities\Site;
  * @property string $label
  * @property string $type
  * @property boolean $active
- * @property integer $order
  * @property string $valueType
  * @property string $value
  * @property string $data
  *
  * @since 1.0.0
  */
-class SiteMeta extends \cmsgears\core\common\models\base\Meta {
+class UserMeta extends \cmsgears\core\common\models\base\Meta {
 
 	// Variables ---------------------------------------------------
 
@@ -71,16 +70,16 @@ class SiteMeta extends \cmsgears\core\common\models\base\Meta {
 
 	// Validators ----------------------------
 
-	// SiteMeta ------------------------------
+	// UserMeta ------------------------------
 
 	/**
 	 * Returns the site model using one-to-one(hasOne) relationship.
 	 *
-	 * @return \cmsgears\core\common\models\entities\Site Site to which this meta belongs.
+	 * @return \cmsgears\core\common\models\entities\User User to which this meta belongs.
 	 */
 	public function getParent() {
 
-		return $this->hasOne( Site::class, [ 'id' => 'modelId' ] );
+		return $this->hasOne( User::class, [ 'id' => 'modelId' ] );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -94,12 +93,12 @@ class SiteMeta extends \cmsgears\core\common\models\base\Meta {
 	 */
 	public static function tableName() {
 
-		return CoreTables::getTableName( CoreTables::TABLE_SITE_META );
+		return CoreTables::getTableName( CoreTables::TABLE_USER_META );
 	}
 
 	// CMG parent classes --------------------
 
-	// SiteMeta ------------------------------
+	// UserMeta ------------------------------
 
 	// Read - Query -----------
 

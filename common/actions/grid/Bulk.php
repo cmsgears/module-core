@@ -38,11 +38,12 @@ class Bulk extends \cmsgears\core\common\base\Action {
 
 	// Public -----------------
 
-	public $userBulk = false;
-
-	public $modelService;
+	public $admin	= false;
+	public $user	= false;
 
 	public $config = [];
+
+	public $modelService;
 
 	// Protected --------------
 
@@ -81,13 +82,15 @@ class Bulk extends \cmsgears\core\common\base\Action {
 
 			$target	= preg_split( '/,/', $target );
 
-			if( $this->userBulk ) {
-
-				$this->modelService->applyBulkByUserTargetId( $column, $action, $target, $this->config );
-			}
-			else {
+			// Apply bulk action on admin specific models
+			if( $this->admin ) {
 
 				$this->modelService->applyBulkByTargetId( $column, $action, $target, $this->config );
+			}
+			// Apply bulk action on user specific models
+			else if( $this->user ) {
+
+				$this->modelService->applyBulkByTargetIdUser( $column, $action, $target, $this->config );
 			}
 
 			// Trigger Ajax Success

@@ -43,7 +43,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'model' => [ 'active' => 'Activate', 'inactive' => 'Disable', 'frender' => 'File Render', 'crender' => 'Content Render', 'group' => 'Layout Group', 'single' => 'Single Layout', 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x2', 'x2', null, null, null, null, null, 'x3', 'x2' ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x2', 'x2', null, null, null, null, null, null, 'x2', 'x2' ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'name' => 'Name',
@@ -51,6 +51,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'frender' => [ 'title' => 'File', 'generate' => function( $model ) { return $model->getFileRenderStr(); } ],
 		'lgroup' => [ 'title' => 'Grouped Layout', 'generate' => function( $model ) { return $model->getGroupLayoutStr(); } ],
 		'active' => [ 'title' => 'Active', 'generate' => function( $model ) { return $model->getActiveStr(); } ],
+		'frontend' => [ 'title' => 'Frontend', 'generate' => function( $model ) { return $model->getFrontendStr(); } ],
 		'renderer' => 'Renderer',
 		'layout' => 'Layout',
 		'viewPath' => 'View Path',
@@ -61,16 +62,16 @@ $themeTemplates		= '@themes/admin/views/templates';
 	//'dataView' => "$moduleTemplates/grid/data/template",
 	//'cardView' => "$moduleTemplates/grid/cards/template",
 	'actionView' => "$moduleTemplates/grid/actions/template"
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
 	'data' => [ 'model' => 'Template', 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Delete Template', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
 	'data' => [ 'model' => 'Template', 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
-]) ?>
+])?>

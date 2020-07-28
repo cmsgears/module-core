@@ -19,6 +19,7 @@ use cmsgears\core\common\models\entities\ObjectData;
  *
  * @property integer $id
  * @property integer $modelId
+ * @property string $icon
  * @property string $name
  * @property string $label
  * @property string $type

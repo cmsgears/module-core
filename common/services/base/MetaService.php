@@ -152,7 +152,7 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 					break;
 				}
-				case 'inactive': {
+				case 'disabled': {
 
 					$config[ 'conditions' ][ "$modelTable.active" ] = false;
 
@@ -525,7 +525,7 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 				switch( $action ) {
 
-					case 'active': {
+					case 'activate': {
 
 						$model->active = true;
 
@@ -533,7 +533,7 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 						break;
 					}
-					case 'inactive': {
+					case 'disable': {
 
 						$model->active = false;
 

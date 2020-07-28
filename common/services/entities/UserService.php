@@ -20,10 +20,12 @@ use cmsgears\core\common\models\entities\User;
 
 use cmsgears\core\common\services\interfaces\entities\IUserService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
+use cmsgears\core\common\services\interfaces\resources\IUserMetaService;
 
 use cmsgears\core\common\services\traits\base\ApprovalTrait;
+use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
-use cmsgears\core\common\services\traits\resources\ModelMetaTrait;
+use cmsgears\core\common\services\traits\resources\MetaTrait;
 use cmsgears\core\common\services\traits\resources\SocialLinkTrait;
 use cmsgears\core\common\services\traits\resources\VisualTrait;
 
@@ -59,20 +61,23 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	// Private ----------------
 
 	private $fileService;
+	private $metaService;
 
 	// Traits ------------------------------------------------------
 
 	use ApprovalTrait;
 	use DataTrait;
-	use ModelMetaTrait;
+	use GridCacheTrait;
+	use MetaTrait;
 	use SocialLinkTrait;
 	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( IFileService $fileService, $config = [] ) {
+	public function __construct( IFileService $fileService, IUserMetaService $metaService, $config = [] ) {
 
-		$this->fileService = $fileService;
+		$this->fileService	= $fileService;
+		$this->metaService	= $metaService;
 
 		parent::__construct( $config );
 	}
@@ -445,7 +450,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		$modelTable	= $this->getModelTable();
 
 		$config[ 'query' ]		= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.email" ];
+		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.email", "$modelTable.mobile" ];
 		$config[ 'array' ]		= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
 
 		$config[ 'query' ]->andWhere( "$modelTable.name LIKE :name AND type=:type", [ ':name' => "$name%", ':type' => $type ] );
@@ -459,20 +464,29 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	 * @param string $roleSlug
 	 * @return array
 	 */
-	public function getIdNameMapByRoleSlug( $roleSlug ) {
+	public function getIdNameMapByRoleSlug( $roleSlug, $config = [] ) {
+
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
 		$roleTable			= Yii::$app->get( 'roleService' )->getModelTable();
-		$siteTable			= Yii::$app->get( 'siteService' )->getModelTable();
 		$siteMemberTable	= Yii::$app->get( 'siteMemberService' )->getModelTable();
 
-		$users	= $modelClass::find()
-					->leftJoin( $siteMemberTable, "$siteMemberTable.userId = $modelTable.id" )
-					->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
-					->leftJoin( $roleTable, "$roleTable.id = $siteMemberTable.roleId" )
-					->where( "$roleTable.slug=:slug AND $siteTable.name=:name", [ ':slug' => $roleSlug, ':name' => Yii::$app->core->getSiteName() ] )->all();
+		$query = $modelClass::find()
+			->leftJoin( $siteMemberTable, "$siteMemberTable.userId = $modelTable.id" )
+			->leftJoin( $roleTable, "$roleTable.id = $siteMemberTable.roleId" )
+			->where( "$roleTable.slug=:slug", [ ':slug' => $roleSlug ] );
+
+		if( !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			$query->andWhere( "$siteMemberTable.siteId=:siteId", [ ':siteId' => $siteId ] );
+		}
+
+		$users = $query->all();
 
 		$usersMap = [];
 
@@ -508,9 +522,6 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 		// Default Status - New
 		$model->status = $model->status ?? $modelClass::STATUS_NEW;
-
-		// Default Type - Default
-		$model->type = $model->type ?? CoreGlobal::TYPE_DEFAULT;
 
 		// Default Slug - Username
 		$model->slug = $model->slug ?? $model->username;
@@ -600,7 +611,8 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	}
 
 	/**
-	 * Confirm User - The method verify and confirm user by accepting valid token sent via mail. It also set user status to active.
+	 * Confirm User - The method verify and confirm user by accepting valid token
+	 * sent via mail. It also set user status to active.
 	 *
 	 * @param User $user
 	 * @param string $token
@@ -639,7 +651,8 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	}
 
 	/**
-	 * Activate User / Reset Password - Activates the User created from Admin Panel or reset password.
+	 * Activate User / Reset Password - Activates the User created from Admin Panel or
+	 * reset password.
 	 *
 	 * @param User $user
 	 * @param string $token
@@ -685,6 +698,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 	/**
 	 * The method generate a new reset token which can be used later to update user password.
+	 *
 	 * @param User $user
 	 * @return User
 	 */
@@ -706,7 +720,9 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	}
 
 	/**
-	 * The method generate a new secure password for the given password and unset the reset token. It also activate user.
+	 * The method generate a new secure password for the given password and unset the
+	 * reset token. It also activate user.
+	 *
 	 * @param User $user
 	 * @param ResetPasswordForm $resetForm
 	 * @param boolean $activate
@@ -766,11 +782,39 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	 */
 	public function delete( $model, $config = [] ) {
 
-		// Delete Files
-		$this->fileService->deleteMultiple( [ $model->avatar, $model->banner, $model->video ] );
+		$config[ 'hard' ] = $config[ 'hard' ] ?? !Yii::$app->core->isSoftDelete();
 
-		// Delete Notifications
-		Yii::$app->eventManager->deleteNotificationsByUserId( $model->id );
+		if( $config[ 'hard' ] ) {
+
+			$transaction = Yii::$app->db->beginTransaction();
+
+			try {
+
+				// Delete Meta
+				$this->metaService->deleteByModelId( $model->id );
+
+				// Delete Files
+				$this->fileService->deleteMultiple( [ $model->avatar, $model->banner, $model->video ] );
+
+				// Delete Model Files
+				$this->fileService->deleteFiles( $model->files );
+
+				// Delete Option Mappings
+				Yii::$app->factory->get( 'modelOptionService' )->deleteByParent( $model->id, static::$parentType );
+
+				// Delete Notifications
+				Yii::$app->eventManager->deleteNotificationsByUserId( $model->id );
+
+				// Delete model
+				return parent::delete( $model, $config );
+			}
+			catch( Exception $e ) {
+
+				$transaction->rollBack();
+
+				throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+			}
+		}
 
 		// Delete model
 		return parent::delete( $model, $config );
@@ -780,40 +824,42 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
+		$direct = isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : true; // Trigger direct notifications
+		$users	= isset( $config[ 'users' ] ) ? $config[ 'users' ] : [ $model->id ]; // Trigger user notifications
+
 		switch( $column ) {
 
 			case 'status': {
 
 				switch( $action ) {
 
-					case 'active': {
+					case 'approve': {
 
-						if( $model->isBelowActive( true ) ) {
+						$this->approve( $model, [ 'direct' => $direct, 'users' => $users ] );
 
-							$this->approve( $model, [ 'users' => [ $model->id ] ] );
-						}
-						else {
+						break;
+					}
+					case 'activate': {
 
-							$this->activate( $model, [ 'users' => [ $model->id ] ] );
-						}
+						$this->activate( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
 					case 'freeze': {
 
-						$this->freeze( $model, [ 'users' => [ $model->id ] ] );
+						$this->freeze( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
 					case 'block': {
 
-						$this->block( $model, [ 'users' => [ $model->id ] ] );
+						$this->block( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
 					case 'terminate': {
 
-						$this->terminate( $model, [ 'users' => [ $model->id ] ] );
+						$this->terminate( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}

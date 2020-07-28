@@ -359,12 +359,16 @@ class CoreGlobal {
 	const FIELD_VALUE_TYPE	= 'valueTypeField';
 	const FIELD_DESCRIPTION	= 'descField';
 	const FIELD_OTP			= 'otp';
+	const FIELD_NOTE		= 'noteField';
 	const FIELD_NOTES		= 'notesField';
 	const FIELD_GUEST		= 'guestField';
 
 	const FIELD_ACTIVE		= 'activeField';
 	const FIELD_STATUS		= 'statusField';
 	const FIELD_ACCESS		= 'accessField';
+	const FIELD_PRIMARY		= 'primaryField';
+	const FIELD_SECONDARY	= 'secondaryField';
+	const FIELD_MODE		= 'modeField';
 	const FIELD_SENT		= 'sentField';
 	const FIELD_DELIVERED	= 'deliveredField';
 	const FIELD_CONSUMED	= 'consumedField';
@@ -384,6 +388,11 @@ class CoreGlobal {
 	const FIELD_USER_MAPPED	= 'userMappedField';
 	const FIELD_FAILED		= 'failedField';
 	const FIELD_FAIL_COUNT	= 'failCountField';
+	const FIELD_STORAGE		= 'storageField';
+	const FIELD_CAPTION		= 'captionField';
+	const FIELD_IMG_SRCSET	= 'imgSrcsetField';
+	const FIELD_IMG_SIZES	= 'imgSizesField';
+	const FIELD_ALT_TEXT	= 'altTextField';
 
 	const FIELD_DATE_START	= 'startDateField';
 	const FIELD_DATE_END	= 'endDateField';
@@ -411,6 +420,7 @@ class CoreGlobal {
 	const FIELD_NOK			= 'nokField';
 	const FIELD_NOK_RELATION = 'nokRelationField';
 	const FIELD_AGE			= 'ageField';
+	const FIELD_ROOT		= 'rootField';
 	const FIELD_PARENT		= 'parentField';
 	const FIELD_PARENT_TYPE	= 'parentTypeField';
 	const FIELD_LOCALE		= 'localeField';
@@ -441,6 +451,7 @@ class CoreGlobal {
 	const FIELD_SHARED		= 'sharedField';
 
 	const FIELD_WEBSITE		= 'websiteField';
+	const FIELD_FRONTEND	= 'frontendField';
 	const FIELD_AVATAR		= 'avatarField';
 	const FIELD_AVATAR_URL	= 'avatarUrlField';
 	const FIELD_BANNER		= 'bannerField';
@@ -448,6 +459,7 @@ class CoreGlobal {
 	const FIELD_VIDEO		= 'videoField';
 	const FIELD_DOCUMENT	= 'documentField';
 
+	const FIELD_MULTIPLE	= 'multipleField';
 	const FIELD_GLOBAL		= 'globalField';
 	const FIELD_SESSION		= 'sessionField';
 	const FIELD_TOKEN		= 'tokenField';

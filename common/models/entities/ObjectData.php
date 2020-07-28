@@ -32,6 +32,7 @@ use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
 use cmsgears\core\common\models\interfaces\resources\IHierarchy;
+use cmsgears\core\common\models\interfaces\resources\ISocialLink;
 use cmsgears\core\common\models\interfaces\resources\IMeta;
 use cmsgears\core\common\models\interfaces\resources\ITemplate;
 use cmsgears\core\common\models\interfaces\resources\IVisual;
@@ -102,7 +103,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $htmlOptions
- * @property string $summary;
+ * @property string $summary
  * @property string $content
  * @property string $data
  * @property string $gridCache
@@ -111,8 +112,9 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComment, IContent, IData, IFeatured, IFile,
-	IGallery, IGridCache, IHierarchy, IMeta, IMultiSite, INameType, IObject, IOwner, ISlugType, ITemplate, IVisibility, IVisual {
+class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComment, IContent,
+	IData, IFeatured, IFile, IGallery, IGridCache, IHierarchy, IMeta, IMultiSite, INameType,
+	IObject, IOwner, ISlugType, ISocialLink, ITemplate, IVisibility, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -163,11 +165,11 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 
 	// Constructor and Initialisation ------------------------------
 
-	public function init() {
-
-		parent::init();
+	public function __construct( $config = [] ) {
 
 		$this->metaClass = ObjectMeta::class;
+
+		parent::__construct();
 	}
 
 	// Instance methods --------------------------------------------
@@ -213,7 +215,7 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 		$rules = [
 			// Required, Safe
 			[ [ 'name', 'type' ], 'required' ],
-			[ [ 'id', 'htmlOptions', 'summary', 'content', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'htmlOptions', 'summary', 'content', 'gridCache' ], 'safe' ],
 			// Unique - Allowed multiple names for same type. Slug will differentiate the models.
 			//[ [ 'siteId', 'themeId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'slug' ] ],
@@ -290,6 +292,11 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 
 		if( parent::beforeSave( $insert ) ) {
 
+			if( $this->siteId <= 0 ) {
+
+				$this->siteId = null;
+			}
+
 			if( $this->themeId <= 0 ) {
 
 				$this->themeId = null;
@@ -300,10 +307,13 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 				$this->templateId = null;
 			}
 
-			if( !isset( $this->order ) || strlen( $this->order ) <= 0 ) {
+			if( empty( $this->order ) || $this->order <= 0 ) {
 
 				$this->order = 0;
 			}
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
 
 			return true;
 		}
@@ -389,7 +399,7 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	}
 
 	/**
-	 * Returns the objects mapped to it.
+	 * Returns the child objects mapped to it.
 	 *
 	 * @return ObjectData[]
 	 */
@@ -435,6 +445,19 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	}
 
 	/**
+	 * Return query to find the object with objects assigned to it.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with assigned objects.
+	 */
+    public static function queryWithModelObjects( $config = [] ) {
+
+        $config[ 'relations' ] = [ 'objects' ];
+
+        return parent::queryWithAll( $config );
+    }
+
+	/**
 	 * Return query to find objects by type.
 	 *
 	 * @param string $type
@@ -449,11 +472,11 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( [ 'order' => SORT_ASC ] );
+			return static::find()->where( 'type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( [ 'order' => SORT_DESC ] );
 		}
 		else {
 
-			return static::find()->where( 'type=:type', [ ':type' => $type ] )->orderBy( [ 'order' => SORT_ASC ] );
+			return static::find()->where( 'type=:type', [ ':type' => $type ] )->orderBy( [ 'order' => SORT_DESC ] );
 		}
 	}
 
@@ -472,11 +495,11 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'parentId IS NULL AND type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( [ 'order' => SORT_ASC ] );
+			return static::find()->where( 'parentId IS NULL AND type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( [ 'order' => SORT_DESC ] );
 		}
 		else {
 
-			return static::find()->where( 'parentId IS NULL AND type=:type', [ ':type' => $type ] )->orderBy( [ 'order' => SORT_ASC ] );
+			return static::find()->where( 'parentId IS NULL AND type=:type', [ ':type' => $type ] )->orderBy( [ 'order' => SORT_DESC ] );
 		}
 	}
 
@@ -495,26 +518,13 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'parentId=:pid AND siteId=:siteId', [ ':pid' => $parentId, ':siteId' => $siteId ] )->orderBy( [ 'order' => SORT_ASC ] );
+			return static::find()->where( 'parentId=:pid AND siteId=:siteId', [ ':pid' => $parentId, ':siteId' => $siteId ] )->orderBy( [ 'order' => SORT_DESC ] );
 		}
 		else {
 
-			return static::find()->where( 'parentId=:pid', [ ':pid' => $parentId ] )->orderBy( [ 'order' => SORT_ASC ] );
+			return static::find()->where( 'parentId=:pid', [ ':pid' => $parentId ] )->orderBy( [ 'order' => SORT_DESC ] );
 		}
 	}
-
-	/**
-	 * Return query to find the object with objects assigned to it.
-	 *
-	 * @param array $config
-	 * @return \yii\db\ActiveQuery to query with assigned objects.
-	 */
-    public static function queryWithModelObjects( $config = [] ) {
-
-        $config[ 'relations' ] = [ 'objects' ];
-
-        return parent::queryWithAll( $config );
-    }
 
 	// Read - Find ------------
 
@@ -555,16 +565,18 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	}
 
 	/**
-	 * Find and return model using given slug and type.
+	 * Find and return the model using given slug, type, and theme id. It assumes that site id is NULL.
 	 *
 	 * @param string $slug
 	 * @param string $type
 	 * @param integer $themeId
-	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 * @return \cmsgears\core\common\models\entities\ObjectData
 	 */
-	public static function findByThemeId( $slug, $type, $themeId ) {
+	public static function findByThemeId( $slug, $type, $themeId, $config = [] ) {
 
-		return self::queryBySlugType( $slug, $type, [ 'ignoreSite' => true ] )->andWhere( 'themeId=:themeId', [ ':themeId' => $themeId ] )->one();
+		$config[ 'ignoreSite' ] = isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : true;
+
+		return self::queryBySlugType( $slug, $type, $config )->andWhere( 'themeId=:themeId', [ ':themeId' => $themeId ] )->one();
 	}
 
 	// Create -----------------

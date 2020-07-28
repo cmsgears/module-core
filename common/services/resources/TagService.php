@@ -18,6 +18,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\resources\ITagService;
 
+use cmsgears\core\common\services\traits\base\MultisiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
@@ -56,6 +57,7 @@ class TagService extends \cmsgears\core\common\services\base\ResourceService imp
 	// Traits ------------------------------------------------------
 
 	use DataTrait;
+	use MultisiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
 
@@ -76,6 +78,11 @@ class TagService extends \cmsgears\core\common\services\base\ResourceService imp
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -133,9 +140,7 @@ class TagService extends \cmsgears\core\common\services\base\ResourceService imp
 					'label' => 'Updated At'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -163,17 +168,23 @@ class TagService extends \cmsgears\core\common\services\base\ResourceService imp
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'content' => "$modelTable.content"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description"
-			];
-
 			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $search;
 		}
 
 		// Reporting --------
@@ -181,7 +192,8 @@ class TagService extends \cmsgears\core\common\services\base\ResourceService imp
 		$config[ 'report-col' ]	= [
 			'name' => "$modelTable.name",
 			'title' => "$modelTable.title",
-			'desc' => "$modelTable.description"
+			'desc' => "$modelTable.description",
+			'content' => "$modelTable.content"
 		];
 
 		// Result -----------

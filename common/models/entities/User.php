@@ -31,9 +31,9 @@ use cmsgears\core\common\models\interfaces\resources\ISocialLink;
 use cmsgears\core\common\models\interfaces\resources\IVisual;
 use cmsgears\core\common\models\interfaces\mappers\IAddress;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
+use cmsgears\core\common\models\interfaces\mappers\IOption;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Entity;
 use cmsgears\core\common\models\mappers\SiteMember;
 use cmsgears\core\common\models\resources\Gallery;
 use cmsgears\core\common\models\resources\Option;
@@ -106,8 +106,8 @@ use cmsgears\core\common\utilities\DateUtil;
  *
  * @since 1.0.0
  */
-class User extends Entity implements IdentityInterface, IAddress, IApproval, IContent, IData,
-	IGridCache, IFile, IModelMeta, ISocialLink, IVisual {
+class User extends \cmsgears\core\common\models\base\Entity implements IdentityInterface, IAddress,
+	IApproval, IContent, IData, IGridCache, IFile, IModelMeta, IOption, ISocialLink, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -119,7 +119,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 * It will be used when user need to go through admin approval process and required to submit
 	 * registration application for approval in order to continue with the application.
 	 */
-	const STATUS_VERIFIED	= 100;
+	const STATUS_VERIFIED = 100;
 
 	const REG_TYPE_DEFAULT	= 0;
 	const REG_TYPE_SNS 		= 1;
@@ -222,12 +222,11 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			[ 'slug', 'validateSlugUpdate', 'on' => [ 'update', 'profile' ] ],
 			[ 'slug', 'validateSlugChange', 'on' => [ 'profile' ] ],
 			// Mobile
-			[ 'mobile', 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ 'mobile', 'validateMobileCreate', 'on' => [ 'create' ] ],
 			[ 'mobile', 'validateMobileUpdate', 'on' => [ 'update', 'profile' ] ],
 			[ 'mobile', 'validateMobileChange', 'on' => [ 'profile' ] ],
 			// Text Limit
-			[ [ 'type', 'title', 'phone' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
+			[ [ 'type', 'title', 'phone', 'mobile' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ 'accessTokenType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'icon', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ [ 'username', 'passwordHash' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
@@ -317,6 +316,9 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 
 				$this->timeZone = null;
 			}
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
 
 			$this->name = $this->getName();
 
@@ -604,7 +606,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public function getActiveSiteMember() {
 
-		$site		= Yii::$app->core->site;
+		$site = Yii::$app->core->site;
 
 		return $this->hasOne( SiteMember::class, [ "userId" => 'id' ] )->where( [ "siteId" => $site->id ] );
 	}
@@ -620,7 +622,6 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 		$siteTable			= CoreTables::getTableName( CoreTables::TABLE_SITE );
 		$siteMemberTable	= CoreTables::getTableName( CoreTables::TABLE_SITE_MEMBER );
 
-		// TODO: Check why it's not working without appending one() after recent Yii Upgrade
 		return Role::find()
 			->leftJoin( $siteMemberTable, "$siteMemberTable.roleId = $roleTable.id" )
 			->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
@@ -710,7 +711,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 
 		if( empty( $name ) ) {
 
-			$name	= $this->username;
+			$name = $this->username;
 
 			if( empty( $name ) ) {
 
@@ -995,7 +996,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 		if( Yii::$app->core->isApis() ) {
 
 			// Find valid User
-			$user	= static::findByAccessToken( $token );
+			$user = static::findByAccessToken( $token );
 
 			// Load User Permissions
 			if( isset( $user ) ) {
@@ -1037,8 +1038,9 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'locale', 'gender' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'locale', 'gender' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -1051,8 +1053,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function queryWithLocale( $config = [] ) {
 
-		// TODO: Check why it's not working with avatar with recent Yii Upgrade
-		$config[ 'relations' ]	= [ 'avatar', 'locale' ];
+		$config[ 'relations' ] = [ 'locale' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -1065,8 +1066,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function queryWithGender( $config = [] ) {
 
-		// TODO: Check why it's not working with avatar with recent Yii Upgrade
-		$config[ 'relations' ]	= [ 'avatar', 'gender' ];
+		$config[ 'relations' ] = [ 'gender' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -1079,10 +1079,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function queryWithSiteMembers( $config = [] ) {
 
-		// TODO: Check why it's not working with avatar with recent Yii Upgrade
-		//$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
-
-		$config[ 'relations' ]	= [ 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
+		$config[ 'relations' ] = [ 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -1095,7 +1092,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function queryWithSiteMembersPermissions( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role', 'siteMembers.role.permissions' ];
+		$config[ 'relations' ] = [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role', 'siteMembers.role.permissions' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -1132,7 +1129,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function isExistByEmail( $email ) {
 
-		$user = self::find()->where( 'email=:email', [ ':email' => $email ] )->one();
+		$user = self::findByEmail( $email );
 
 		return isset( $user );
 	}
@@ -1156,7 +1153,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function isExistByUsername( $username ) {
 
-		$user = self::find()->where( 'username=:username', [ ':username' => $username ] )->one();
+		$user = self::findByUsername( $username );
 
 		return isset( $user );
 	}
@@ -1180,7 +1177,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function isExistBySlug( $slug ) {
 
-		$user = self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+		$user = self::findBySlug( $slug );
 
 		return isset( $user );
 	}
@@ -1199,7 +1196,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	/**
 	 * Check whether user exist for given username.
 	 *
-	 * @param string $username
+	 * @param string $mobile
 	 * @return boolean
 	 */
 	public static function isExistByMobile( $mobile ) {

@@ -17,34 +17,28 @@ use yii\behaviors\TimestampBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\interfaces\base\IMultiSite;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\entities\User;
-use cmsgears\core\common\models\entities\Role;
 
-use cmsgears\core\common\models\traits\base\MultiSiteTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 
 /**
- * Logs user stats specific to login sessions and actions executed by user.
+ * OTP stores the OTPs triggered for verification purposes.
  *
  * @property integer $id
- * @property integer $siteId
  * @property integer $userId
- * @property integer $roleId
+ * @property string $email
+ * @property string $mobile
  * @property string $ip
  * @property integer $ipNum
  * @property string $agent
- * @property string $controller
- * @property string $action
- * @property string $url
- * @property boolean $failed
- * @property integer $failCount
+ * @property integer $otp
+ * @property datetime $otpValidTill
+ * @property boolean $sent
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $data
@@ -54,7 +48,7 @@ use cmsgears\core\common\models\traits\resources\GridCacheTrait;
  *
  * @since 1.0.0
  */
-class SiteAccess extends \cmsgears\core\common\models\base\Resource implements IData, IGridCache, IMultiSite {
+class Otp extends \cmsgears\core\common\models\base\Resource implements IData, IGridCache, IMultiSite {
 
 	// Variables ---------------------------------------------------
 
@@ -114,17 +108,19 @@ class SiteAccess extends \cmsgears\core\common\models\base\Resource implements I
 
 		return [
 			// Required, Safe
-			[ [ 'siteId', 'userId', 'roleId' ], 'required' ],
-			[ 'gridCache', 'safe' ],
+			[ [ 'id', 'data', 'gridCache' ], 'safe' ],
+			// Email
+			[ 'email', 'email' ],
 			// Text Limit
+			[ 'mobile', 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ 'ip', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'agent', 'controller', 'action' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
-			[ 'url', 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ 'agent', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'email', 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Other
-			[ [ 'siteId', 'userId', 'roleId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ [ 'ipNum', 'failCount' ], 'number', 'integerOnly' => true ],
-			[ [ 'failed', 'gridCacheValid' ] => 'boolean' ],
-			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+			[ [ 'ipNum', 'otp' ], 'number', 'integerOnly' => true ],
+			[ [ 'sent', 'gridCacheValid' ] => 'boolean' ],
+			[ [ 'userId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'otpValidTill', 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 	}
 
@@ -134,15 +130,14 @@ class SiteAccess extends \cmsgears\core\common\models\base\Resource implements I
 	public function attributeLabels() {
 
 		return [
-			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'userId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
-			'roleId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ROLE ),
+			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+			'mobile' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MOBILE ),
 			'ip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP ),
 			'ipNum' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP_NUM ),
 			'agent' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AGENT_BROWSER ),
-			'url' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_URL ),
-			'failed' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FAILED ),
-			'failCount' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FAIL_COUNT ),
+			'otp' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_OTP ),
+			'sent' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SENT ),
 			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
 		];
 	}
@@ -153,17 +148,7 @@ class SiteAccess extends \cmsgears\core\common\models\base\Resource implements I
 
 	// Validators ----------------------------
 
-	// SiteAccess ----------------------------
-
-	/**
-	 * Return the site associated with the access log.
-	 *
-	 * @return Site
-	 */
-	public function getSite() {
-
-		return $this->hasOne( Site::class, [ 'id' => 'siteId' ] );
-	}
+	// Otp -----------------------------------
 
 	/**
 	 * Return the user associated with the access log.
@@ -176,13 +161,13 @@ class SiteAccess extends \cmsgears\core\common\models\base\Resource implements I
 	}
 
 	/**
-	 * Return the role associated with the access log.
+	 * Return the string representation of $sent flag.
 	 *
-	 * @return Role
+	 * @return string
 	 */
-	public function getRole() {
+	public function getSentStr() {
 
-		return $this->hasOne( Role::class, [ 'id' => 'roleId' ] );
+		return Yii::$app->formatter->asBoolean( $this->sent );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -196,12 +181,12 @@ class SiteAccess extends \cmsgears\core\common\models\base\Resource implements I
 	 */
 	public static function tableName() {
 
-		return CoreTables::getTableName( CoreTables::TABLE_SITE_ACCESS );
+		return CoreTables::getTableName( CoreTables::TABLe_OTP );
 	}
 
 	// CMG parent classes --------------------
 
-	// SiteAccess ----------------------------
+	// Otp -----------------------------------
 
 	// Read - Query -----------
 
@@ -210,22 +195,9 @@ class SiteAccess extends \cmsgears\core\common\models\base\Resource implements I
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'user', 'role' ];
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'user' ];
 
 		$config[ 'relations' ] = $relations;
-
-		return parent::queryWithAll( $config );
-	}
-
-	/**
-	 * Return query to find the access log with site assigned to it.
-	 *
-	 * @param array $config
-	 * @return \yii\db\ActiveQuery to query with site.
-	 */
-	public static function queryWithSite( $config = [] ) {
-
-		$config[ 'relations' ] = [ 'site' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -245,54 +217,10 @@ class SiteAccess extends \cmsgears\core\common\models\base\Resource implements I
 
 	// Read - Find ------------
 
-	/**
-	 * Return all the access logs associated with given user id and site id.
-	 *
-	 * @param integer $siteId
-	 * @param integer $userId
-	 * @return SiteAccess
-	 */
-	public static function findBySiteIdUserId( $siteId, $userId ) {
-
-		return self::find()->where( 'siteId=:sid AND userId=:uid', [ ':sid' => $siteId, ':uid' => $userId ] )->one();
-	}
-
 	// Create -----------------
 
 	// Update -----------------
 
 	// Delete -----------------
 
-	/**
-	 * Delete the access log for given site id.
-	 *
-	 * @param integer $siteId
-	 * @return int the number of rows deleted.
-	 */
-	public static function deleteBySiteId( $siteId ) {
-
-		return self::deleteAll( 'siteId=:id', [ ':id' => $siteId ] );
-	}
-
-	/**
-	 * Delete the access log for given user id.
-	 *
-	 * @param integer $userId
-	 * @return int the number of rows deleted.
-	 */
-	public static function deleteByUserId( $userId ) {
-
-		return self::deleteAll( 'userId=:id', [ ':id' => $userId ] );
-	}
-
-	/**
-	 * Delete the access log for given role id.
-	 *
-	 * @param integer $roleId
-	 * @return int the number of rows deleted.
-	 */
-	public static function deleteByRoleId( $roleId ) {
-
-		return self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
-	}
 }

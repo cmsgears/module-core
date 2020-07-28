@@ -113,7 +113,7 @@ class ModelAnalytics extends ModelResource implements IData, IGridCache {
 		$rules = [
 			// Required, Safe
 			[ [ 'parentId', 'parentType' ], 'required' ],
-			[ [ 'id', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'gridCache' ], 'safe' ],
 			// Text Limit
 			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			// Other
@@ -149,6 +149,24 @@ class ModelAnalytics extends ModelResource implements IData, IGridCache {
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
 			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
 		];
+	}
+
+	// yii\db\BaseActiveRecord
+
+    /**
+     * @inheritdoc
+     */
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_SITE;
+
+	        return true;
+	    }
+
+		return false;
 	}
 
 	// CMG interfaces ------------------------

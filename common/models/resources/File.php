@@ -177,6 +177,8 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 			[ [ 'name', 'extension', 'directory' ], 'required' ],
 			[ 'changed', 'required', 'on' => 'upload', 'message' => 'Please provide a valid file.' ],
 			[ [ 'id', 'content', 'gridCache' ], 'safe' ],
+			// Unique
+			[ 'tag', 'unique', 'on' => 'tag' ],
 			// Text Limit
 			[ [ 'extension', 'type', 'storage', 'srcset' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'tag', 'sizes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

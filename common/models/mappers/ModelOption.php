@@ -14,7 +14,6 @@ use Yii;
 
 // CMG Imports
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\resources\Option;
 
 /**
@@ -31,7 +30,7 @@ use cmsgears\core\common\models\resources\Option;
  *
  * @since 1.0.0
  */
-class ModelOption extends ModelMapper {
+class ModelOption extends \cmsgears\core\common\models\base\ModelMapper {
 
 	// Variables ---------------------------------------------------
 

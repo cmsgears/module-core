@@ -65,7 +65,9 @@ abstract class FollowerService extends MapperService implements IFollowerService
 
 	// Read - Models ---
 
-	public function getByFollower( $parentId, $type = IFollower::TYPE_FOLLOW ) {
+	public function getByFollower( $parentId, $config = [] ) {
+
+		$type = $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
 
 		$modelClass = static::$modelClass;
 
@@ -74,37 +76,48 @@ abstract class FollowerService extends MapperService implements IFollowerService
 		return isset( $user ) ? $modelClass::findByFollower( $user->id, $parentId, $type ) : null;
 	}
 
-	public function getFollowing( $type = IFollower::TYPE_FOLLOW, $config = [] ) {
+	public function getFollowing( $config = [] ) {
 
-		$limit = $config[ 'limit' ] ?? 10;
+		$type	= $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
+		$limit	= $config[ 'limit' ] ?? null;
 
 		$modelClass = static::$modelClass;
 
 		$user = Yii::$app->core->getUser();
 
-		return $modelClass::find()->where( 'type=:type AND modelId=:mid', [ ':type' => $type, ':mid' => $user->id ] )->limit( $limit )->all();
+		$query = $modelClass::find()->where( 'type=:type AND modelId=:mid', [ ':type' => $type, ':mid' => $user->id ] );
+
+		if( isset( $limit ) ) {
+
+			$query->limit( $limit );
+		}
+
+		$query->all();
 	}
 
 	// Read - Lists ----
 
     public function getFollowersIdList( $parentId, $config = [] ) {
 
-		$type = $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
+		$type	= $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
+		$active = $config[ 'active' ] ?? true;
 
         return self::findList([
 			'column' => 'modelId',
-			'conditions' => [ 'type' => $type, 'active' => true, 'parentId' => $parentId ]
+			'conditions' => [ 'type' => $type, 'active' => $active, 'parentId' => $parentId ]
 		]);
     }
 
     public function getFollowingIdList( $config = [] ) {
 
+		$type	= $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
+		$active = $config[ 'active' ] ?? true;
+
 		$user = Yii::$app->core->getUser();
-		$type = $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
 
 		return isset( $user ) ? self::findList([
 			'column' => 'parentId',
-			'conditions' => [ 'type' => $type, 'active' => true, 'modelId' => $user->id ]
+			'conditions' => [ 'type' => $type, 'active' => $active, 'modelId' => $user->id ]
 		]) : [];
     }
 
@@ -140,23 +153,31 @@ abstract class FollowerService extends MapperService implements IFollowerService
 
 	// Read - Others ---
 
-	public function getFollowCount( $type = IFollower::TYPE_FOLLOW ) {
+	public function getFollowCount( $config = [] ) {
+
+		$type	= $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
+		$active = $config[ 'active' ] ?? true;
 
 		$modelClass = static::$modelClass;
 
 		$user = Yii::$app->core->getUser();
 
-		return isset( $user ) ? $modelClass::queryByTypeModelId( $type, $user->id )->andWhere( [ 'active' => true ] )->count() : 0;
+		return isset( $user ) ? $modelClass::queryByTypeModelId( $type, $user->id )->andWhere( [ 'active' => $active ] )->count() : 0;
 	}
 
-	public function getFollowersCount( $parentId, $type = IFollower::TYPE_FOLLOW ) {
+	public function getFollowersCount( $parentId, $config = [] ) {
+
+		$type	= $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
+		$active = $config[ 'active' ] ?? true;
 
 		$modelClass = static::$modelClass;
 
-		return $modelClass::queryByTypeParentId( $type, $parentId )->andWhere( [ 'active' => true ] )->count();
+		return $modelClass::queryByTypeParentId( $type, $parentId )->andWhere( [ 'active' => $active ] )->count();
 	}
 
-    public function getStatusCounts( $parentId, $type = IFollower::TYPE_FOLLOW ) {
+    public function getStatusCounts( $parentId, $config = [] ) {
+
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : IFollower::TYPE_FOLLOW;
 
         $followerTable = $this->getModelTable();
 
@@ -187,7 +208,7 @@ abstract class FollowerService extends MapperService implements IFollowerService
 
 	public function createByParams( $params = [], $config = [] ) {
 
-		$params[ 'active' ]	= true;
+		$params[ 'active' ]	= isset( $params[ 'active' ] ) ? $params[ 'active' ] : CoreGlobal::STATUS_ACTIVE;
 
 		return parent::createByParams( $params, $config );
 	}
@@ -196,9 +217,11 @@ abstract class FollowerService extends MapperService implements IFollowerService
 
 	public function update( $model, $config = [] ) {
 
-		return parent::update( $model, [
-			'attributes' => [ 'active' ]
-		]);
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'order', 'active' ];
+
+        $config[ 'attributes' ] = $attributes;
+
+		return parent::update( $model, $config );
 	}
 
 	public function updateByParams( $params = [], $config = [] ) {
@@ -216,13 +239,31 @@ abstract class FollowerService extends MapperService implements IFollowerService
 
 		if( isset( $follower ) ) {
 
-			return $this->toggleStatus( $follower );
+			return $this->toggleActive( $follower );
 		}
 
 		return $this->createByParams( $params, $config );
 	}
 
-	public function toggleStatus( $model ) {
+	public function activate( $model ) {
+
+		$model->active = true;
+
+		$model->update();
+
+		return $model;
+	}
+
+	public function disable( $model ) {
+
+		$model->active = false;
+
+		$model->update();
+
+		return $model;
+	}
+
+	public function toggleActive( $model ) {
 
 		if( $model->active ) {
 

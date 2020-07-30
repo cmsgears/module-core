@@ -16,7 +16,6 @@ use Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Mapper;
 
 /**
  * Mapper to map source model to target model.
@@ -25,10 +24,12 @@ use cmsgears\core\common\models\base\Mapper;
  * @property string $sourceType
  * @property integer $targetId
  * @property string $targetType
+ * @property boolean $active
+ * @property integer $order
  *
  * @since 1.0.0
  */
-class Dependency extends Mapper {
+class Dependency extends \cmsgears\core\common\models\base\Mapper {
 
 	// Variables ---------------------------------------------------
 
@@ -76,7 +77,9 @@ class Dependency extends Mapper {
 			// Text Limit
 			[ [ 'sourceType', 'targetType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			// Other
-			[ [ 'sourceId', 'targetId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+			[ [ 'sourceId', 'targetId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ 'active', 'boolean' ],
+			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ]
 		];
 
 		return $rules;
@@ -91,8 +94,30 @@ class Dependency extends Mapper {
 			'sourceId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SOURCE ),
 			'sourceType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SOURCE_TYPE ),
 			'targetId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TARGET ),
-			'targetType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TARGET_TYPE )
+			'targetType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TARGET_TYPE ),
+			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER )
 		];
+	}
+
+	// yii\db\BaseActiveRecord
+
+    /**
+     * @inheritdoc
+     */
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			if( empty( $this->order ) || $this->order <= 0 ) {
+
+				$this->order = 0;
+			}
+
+	        return true;
+	    }
+
+		return false;
 	}
 
 	// CMG interfaces ------------------------

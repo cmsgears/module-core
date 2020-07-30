@@ -11,6 +11,7 @@ namespace cmsgears\core\common\services\interfaces\resources;
 
 // CMG Imports
 use cmsgears\core\common\services\interfaces\base\IModelResourceService;
+use cmsgears\core\common\services\interfaces\base\IMultiSite;
 use cmsgears\core\common\services\interfaces\resources\IData;
 use cmsgears\core\common\services\interfaces\mappers\IFile;
 
@@ -19,7 +20,7 @@ use cmsgears\core\common\services\interfaces\mappers\IFile;
  *
  * @since 1.0.0
  */
-interface IModelCommentService extends IModelResourceService, IData, IFile {
+interface IModelCommentService extends IModelResourceService, IData, IFile, IMultiSite {
 
 	// Data Provider ------
 
@@ -41,11 +42,11 @@ interface IModelCommentService extends IModelResourceService, IData, IFile {
 
 	// Read - Models ---
 
+	public function getByBaseId( $baseId, $config = [] );
+
 	public function getByUser( $parentId, $parentType );
 
 	public function isExistByUser( $parentId, $parentType );
-
-	public function getByBaseId( $baseId, $config = [] );
 
 	public function isExistByEmail( $email );
 

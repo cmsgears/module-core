@@ -9,12 +9,15 @@
 
 namespace cmsgears\core\common\services\interfaces\resources;
 
+// CMG Imports
+use cmsgears\core\common\services\interfaces\base\IModelResourceService;
+
 /**
  * ILocaleMessageService provide service methods for model message.
  *
  * @since 1.0.0
  */
-interface ILocaleMessageService {
+interface ILocaleMessageService extends IModelResourceService {
 
 	// Data Provider ------
 

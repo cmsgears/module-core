@@ -9,15 +9,12 @@
 
 namespace cmsgears\core\common\models\resources\address;
 
-// CMG Imports
-use cmsgears\core\common\models\resources\Address;
-
 /**
  * The branch address model.
  *
  * @since 1.0.0
  */
-class BranchAddress extends Address {
+class BranchAddress extends \cmsgears\core\common\models\resources\Address {
 
 	// Variables ---------------------------------------------------
 
@@ -33,7 +30,7 @@ class BranchAddress extends Address {
 
 	// Public -----------------
 
-	public $type	= self::TYPE_BRANCH;
+	public $type = self::TYPE_BRANCH;
 
 	// Protected --------------
 
@@ -59,7 +56,7 @@ class BranchAddress extends Address {
 
 	// Validators ----------------------------
 
-	// BillingAddress ------------------------
+	// BranchAddress -------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -69,7 +66,7 @@ class BranchAddress extends Address {
 
 	// CMG parent classes --------------------
 
-	// BillingAddress ------------------------
+	// BranchAddress -------------------------
 
 	// Read - Query -----------
 

@@ -7,17 +7,19 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\services\interfaces\mappers;
+namespace cmsgears\core\common\services\interfaces\resources;
 
 // CMG Imports
-use cmsgears\core\common\services\interfaces\base\IModelMapperService;
+use cmsgears\core\common\services\interfaces\base\IModelResourceService;
+use cmsgears\core\common\services\interfaces\cache\IGridCacheable;
+use cmsgears\core\common\services\interfaces\resources\IData;
 
 /**
- * IModelGalleryService provide service methods for gallery mapper.
+ * IModelHistoryService provide service methods for model history.
  *
  * @since 1.0.0
  */
-interface IModelGalleryService extends IModelMapperService {
+interface IModelHistoryService extends IModelResourceService, IData, IGridCacheable {
 
 	// Data Provider ------
 
@@ -34,6 +36,8 @@ interface IModelGalleryService extends IModelMapperService {
 	// Create -------------
 
 	// Update -------------
+
+	// States -----
 
 	// Delete -------------
 

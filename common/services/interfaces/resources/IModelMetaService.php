@@ -37,11 +37,11 @@ interface IModelMetaService extends IModelResourceService {
 
 	// Read - Maps -----
 
-	public function getNameValueMapByType( $parentId, $parentType, $type );
+	public function getNameValueMapByType( $parentId, $parentType, $type, $config = [] );
 
-	public function getIdMetaMapByType( $parentId, $parentType, $type );
+	public function getIdMetaMapByType( $parentId, $parentType, $type, $config = [] );
 
-	public function getNameMetaMapByType( $parentId, $parentType, $type );
+	public function getNameMetaMapByType( $parentId, $parentType, $type, $config = [] );
 
 	// Read - Others ---
 
@@ -49,7 +49,13 @@ interface IModelMetaService extends IModelResourceService {
 
 	// Update -------------
 
-	public function toggle( $model );
+	public function creatOrUpdateByParent( $parentId, $parentType, $metas, $config = [] );
+
+	public function toggleActive( $model );
+
+	public function toggleValue( $model );
+
+	public function disableByType( $parentId, $parentType, $type );
 
 	// Delete -------------
 

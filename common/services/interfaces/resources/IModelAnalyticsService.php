@@ -9,12 +9,14 @@
 
 namespace cmsgears\core\common\services\interfaces\resources;
 
+use cmsgears\core\common\services\interfaces\base\IModelResourceService;
+
 /**
  * IModelAnalyticsService provide service methods for model analytics.
  *
  * @since 1.0.0
  */
-interface IModelAnalyticsService {
+interface IModelAnalyticsService extends IModelResourceService {
 
 	// Data Provider ------
 

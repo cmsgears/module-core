@@ -11,7 +11,6 @@ namespace cmsgears\core\common\models\mappers;
 
 // CMG Imports
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\resources\Form;
 
 /**
@@ -27,7 +26,7 @@ use cmsgears\core\common\models\resources\Form;
  *
  * @since 1.0.0
  */
-class ModelForm extends ModelMapper {
+class ModelForm extends \cmsgears\core\common\models\base\ModelMapper {
 
 	// Variables ---------------------------------------------------
 

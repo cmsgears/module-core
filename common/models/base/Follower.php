@@ -36,6 +36,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  * @property boolean $active
  * @property boolean $pinned
  * @property boolean $featured
+ * @property boolean $popular
  * @property integer $createdAt
  * @property integer $modifiedAt
  * @property string data
@@ -110,7 +111,7 @@ abstract class Follower extends Mapper implements IData, IFeatured, IFollower {
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			// Other
-			[ [ 'active', 'pinned', 'featured' ], 'boolean' ],
+			[ [ 'active', 'pinned', 'featured', 'popular' ], 'boolean' ],
 			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'modelId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -132,6 +133,7 @@ abstract class Follower extends Mapper implements IData, IFeatured, IFollower {
 			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'pinned' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PINNED ),
 			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
+			'popular' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_POPULAR ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}

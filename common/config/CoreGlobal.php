@@ -423,6 +423,7 @@ class CoreGlobal {
 	const FIELD_ROOT		= 'rootField';
 	const FIELD_PARENT		= 'parentField';
 	const FIELD_PARENT_TYPE	= 'parentTypeField';
+	const FIELD_CHILD		= 'childField';
 	const FIELD_LOCALE		= 'localeField';
 	const FIELD_PROVINCE	= 'provinceField';
 	const FIELD_REGION		= 'regionField';
@@ -439,6 +440,7 @@ class CoreGlobal {
 	const FIELD_COMMENTS	= 'commentsField';
 	const FIELD_REVIEWS		= 'reviewsField';
 	const FIELD_TEMPLATE	= 'templateField';
+	const FIELD_MODULE		= 'moduleField';
 
 	const FIELD_USER		= 'userField';
 	const FIELD_ADMIN		= 'adminField';
@@ -447,6 +449,7 @@ class CoreGlobal {
 	const FIELD_OWNER		= 'ownerField';
 	const FIELD_APPROVER	= 'approverField';
 	const FIELD_FOLLOWER	= 'followerField';
+	const FIELD_FOLLOWERS	= 'followersField';
 	const FIELD_PROFILE		= 'profileField';
 	const FIELD_SHARED		= 'sharedField';
 

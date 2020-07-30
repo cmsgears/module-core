@@ -69,7 +69,7 @@ class Meta extends \cmsgears\core\common\models\base\Meta {
 
 	// CMG parent classes --------------------
 
-	// SiteMeta ------------------------------
+	// Meta ----------------------------------
 
 	// Read - Query -----------
 

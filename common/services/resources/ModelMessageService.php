@@ -20,6 +20,8 @@ use cmsgears\core\common\models\resources\ModelMessage;
 
 use cmsgears\core\common\services\interfaces\resources\IModelMessageService;
 
+use cmsgears\core\common\services\traits\base\MultisiteTrait;
+use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 use cmsgears\core\common\services\traits\mappers\FileTrait;
 
@@ -59,6 +61,8 @@ class ModelMessageService extends \cmsgears\core\common\services\base\ModelResou
 
 	use DataTrait;
 	use FileTrait;
+	use GridCacheTrait;
+	use MultisiteTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -85,6 +89,11 @@ class ModelMessageService extends \cmsgears\core\common\services\base\ModelResou
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -136,9 +145,7 @@ class ModelMessageService extends \cmsgears\core\common\services\base\ModelResou
 	                'label' => 'Updated At'
 	            ]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -156,12 +163,13 @@ class ModelMessageService extends \cmsgears\core\common\services\base\ModelResou
 		// Filters ----------
 
 		// Params
-		$filter	= Yii::$app->request->getQueryParam( 'model' );
+		$cons	= Yii::$app->request->getQueryParam( 'consumed' );
+		$trash	= Yii::$app->request->getQueryParam( 'trash' );
 
-		// Filter - Model
-		if( isset( $filter ) ) {
+		// Filter - Consumed
+		if( isset( $cons ) ) {
 
-			switch( $filter ) {
+			switch( $cons ) {
 
 				case 'new': {
 
@@ -169,7 +177,7 @@ class ModelMessageService extends \cmsgears\core\common\services\base\ModelResou
 
 					break;
 				}
-				case 'consumed': {
+				case 'read': {
 
 					$config[ 'conditions' ][ "$modelTable.consumed" ] = true;
 
@@ -178,19 +186,44 @@ class ModelMessageService extends \cmsgears\core\common\services\base\ModelResou
 			}
 		}
 
+		// Filter - Trash
+		if( isset( $trash ) ) {
+
+			switch( $trash ) {
+
+				case 'trash': {
+
+					$config[ 'conditions' ][ "$modelTable.trash" ] = true;
+
+					break;
+				}
+				case 'active': {
+
+					$config[ 'conditions' ][ "$modelTable.trash" ] = false;
+
+					break;
+				}
+			}
+		}
+
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'user' => "concat(creator.firstName, ' ', creator.lastName)",
+			'title' => "$modelTable.title",
+			'content' => "$modelTable.content"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'user' => "concat(creator.firstName, ' ', creator.lastName)",
-				'title' => "$modelTable.title",
-				'content' => "$modelTable.content"
-			];
-
 			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
+
+			$config[ 'search-col' ] = $search;
 		}
 
 		// Reporting --------
@@ -212,7 +245,8 @@ class ModelMessageService extends \cmsgears\core\common\services\base\ModelResou
 
 		$modelTable	= $this->getModelTable();
 		$topLevel	= isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
-		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : ModelMessage::TYPE_MESSAGE;
+
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : ModelMessage::TYPE_MESSAGE;
 
 		if( $topLevel ) {
 
@@ -272,7 +306,6 @@ class ModelMessageService extends \cmsgears\core\common\services\base\ModelResou
 
 		$model->agent	= Yii::$app->request->userAgent;
 		$model->ip		= Yii::$app->request->userIP;
-		$model->type	= empty( $model->type ) ? ModelMessage::TYPE_MESSAGE : $model->type;
 
 		return parent::create( $model, $config );
 	}
@@ -312,6 +345,24 @@ class ModelMessageService extends \cmsgears\core\common\services\base\ModelResou
 		]);
 	}
 
+	public function markTrash( $model ) {
+
+		$model->trash = true;
+
+		return parent::update( $model, [
+			'attributes' => [ 'trash' ]
+		]);
+	}
+
+	public function unTrash( $model ) {
+
+		$model->trash = false;
+
+		return parent::update( $model, [
+			'attributes' => [ 'trash' ]
+		]);
+	}
+
 	// Delete -------------
 
 	public function delete( $model, $config = [] ) {
@@ -329,7 +380,7 @@ class ModelMessageService extends \cmsgears\core\common\services\base\ModelResou
 
 		switch( $column ) {
 
-			case 'model': {
+			case 'consumed': {
 
 				switch( $action ) {
 
@@ -339,12 +390,40 @@ class ModelMessageService extends \cmsgears\core\common\services\base\ModelResou
 
 						break;
 					}
-					case 'consumed': {
+					case 'read': {
 
 						$this->markConsumed( $model );
 
 						break;
 					}
+				}
+
+				break;
+			}
+			case 'trash': {
+
+				switch( $action ) {
+
+					case 'trash': {
+
+						$this->markTrash( $model );
+
+						break;
+					}
+					case 'untrash': {
+
+						$this->unTrash( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+			case 'model': {
+
+				switch( $action ) {
+
 					case 'delete': {
 
 						$this->delete( $model );

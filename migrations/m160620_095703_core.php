@@ -960,7 +960,9 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'sourceType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'targetId' => $this->bigInteger( 20 )->notNull(),
 			'targetType' => $this->string( Yii::$app->core->mediumText )->notNull(),
-			'PRIMARY KEY( sourceId, sourceType, targetId, targetType )',
+			'active' => $this->boolean()->notNull()->defaultValue( true ),
+			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
+			'PRIMARY KEY( sourceId, sourceType, targetId, targetType )'
 		], $this->options );
 
 		// Index for columns creator and modifier
@@ -1061,7 +1063,6 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'agent' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'status' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
-			'fragment' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'rate1' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'rate2' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'rate3' => $this->smallInteger( 6 )->defaultValue( 0 ),
@@ -1071,13 +1072,13 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
+			'popular' => $this->boolean()->notNull()->defaultValue( false ),
 			'anonymous' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'approvedAt' => $this->dateTime(),
 			'content' => $this->mediumText(),
 			'data' => $this->mediumText(),
-			'userAgent' => $this->mediumText(),
 			'gridCache' => $this->longText(),
 			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
 			'gridCachedAt' => $this->dateTime()
@@ -1125,14 +1126,16 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'id' => $this->bigPrimaryKey( 20 ),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
+			'title' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'ip' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'ipNum' => $this->integer(11)->defaultValue( 0 ),
 			'agent' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'data' => $this->mediumText(),
-			'userAgent' => $this->mediumText(),
-			'gridCache' => $this->longText()
+			'gridCache' => $this->longText(),
+			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
+			'gridCachedAt' => $this->dateTime()
 		], $this->options );
 
 		// Index for columns base, creator and modifier
@@ -1173,7 +1176,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'active' => $this->boolean()->notNull()->defaultValue( true ),
 			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
-			//'userMapped' => $this->boolean()->notNull()->defaultValue( false ),
+			'popular' => $this->boolean()->notNull()->defaultValue( false ),
 			'nodes' => $this->text()
 		], $this->options );
 
@@ -1227,7 +1230,8 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true ),
 			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
-			'featured' => $this->boolean()->notNull()->defaultValue( false )
+			'featured' => $this->boolean()->notNull()->defaultValue( false ),
+			'popular' => $this->boolean()->notNull()->defaultValue( false )
 		], $this->options );
 
 		// Index for columns user
@@ -1279,7 +1283,6 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'type' => $this->string( Yii::$app->core->mediumText ),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true ),
-			//'userMapped' => $this->boolean()->notNull()->defaultValue( false ),
 			'nodes' => $this->text()
 		], $this->options );
 
@@ -1332,6 +1335,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'active' => $this->boolean()->notNull()->defaultValue( true ),
 			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
+			'popular' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'data' => $this->mediumText()

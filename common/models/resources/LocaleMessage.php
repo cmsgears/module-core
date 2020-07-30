@@ -16,13 +16,8 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\interfaces\base\IModelResource;
-
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\ModelResource;
 use cmsgears\core\common\models\entities\Locale;
-
-use cmsgears\core\common\models\traits\base\ModelResourceTrait;
 
 /**
  * Stores messages and templates in different languages apart from primary language.
@@ -39,12 +34,13 @@ use cmsgears\core\common\models\traits\base\ModelResourceTrait;
  * @property integer $parentId
  * @property string $parentType
  * @property string $name
+ * @property string $module
  * @property string $type
  * @property string $value
  *
  * @since 1.0.0
  */
-class LocaleMessage extends ModelResource implements IModelResource {
+class LocaleMessage extends \cmsgears\core\common\models\base\ModelResource {
 
 	// Variables ---------------------------------------------------
 
@@ -65,8 +61,6 @@ class LocaleMessage extends ModelResource implements IModelResource {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
-
-	use ModelResourceTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -91,7 +85,7 @@ class LocaleMessage extends ModelResource implements IModelResource {
 			[ [ 'localeId', 'parentId', 'parentType', 'name' ], 'required' ],
 			[ [ 'id', 'value' ], 'safe' ],
 			// Unique
-			[ 'name', 'unique', 'targetAttribute' => [ 'localeId', 'parentId', 'parentType', 'name' ] ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'localeId', 'parentId', 'parentType', 'module', 'name' ] ],
 			// Text Limit
 			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
@@ -121,9 +115,28 @@ class LocaleMessage extends ModelResource implements IModelResource {
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'module' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MODULE ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE )
 		];
+	}
+
+	// yii\db\BaseActiveRecord
+
+    /**
+     * @inheritdoc
+     */
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
+
+	        return true;
+	    }
+
+		return false;
 	}
 
 	// CMG interfaces ------------------------
@@ -169,8 +182,9 @@ class LocaleMessage extends ModelResource implements IModelResource {
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'locale' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'locale' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -183,7 +197,7 @@ class LocaleMessage extends ModelResource implements IModelResource {
 	 */
 	public static function queryWithLocale( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'locale' ];
+		$config[ 'relations' ] = [ 'locale' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -200,7 +214,14 @@ class LocaleMessage extends ModelResource implements IModelResource {
 	 * @param int $localeId
 	 * @return LocaleMessage by name, type and locale id
 	 */
-	public static function findByNameTypeLocaleId( $parentId, $parentType, $name, $type, $localeId ) {
+	public static function findByNameTypeLocaleId( $parentId, $parentType, $name, $type, $localeId, $module = null ) {
+
+		if( isset( $module ) ) {
+
+			return self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:name AND type=:type AND localeId=:lid AND module=:module' )
+				->addParams( [ ':pid' => $parentId, ':ptype' => $parentType, ':name' => $name, ':type' => $type, ':lid' => $localeId, ':module' => $module ] )
+				->one();
+		}
 
 		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:name AND type=:type AND localeId=:lid' )
 			->addParams( [ ':pid' => $parentId, ':ptype' => $parentType, ':name' => $name, ':type' => $type, ':lid' => $localeId ] )
@@ -216,9 +237,9 @@ class LocaleMessage extends ModelResource implements IModelResource {
 	 * @param int $localeId
 	 * @return boolean
 	 */
-	public static function isExistByNameTypeLocaleId( $parentId, $parentType, $name, $type, $localeId ) {
+	public static function isExistByNameTypeLocaleId( $parentId, $parentType, $name, $type, $localeId, $module = null ) {
 
-		$message = self::findByNameLocaleId( $parentId, $parentType, $name, $type, $localeId );
+		$message = self::findByNameLocaleId( $parentId, $parentType, $name, $type, $localeId, $module );
 
 		return isset( $message );
 	}
@@ -238,4 +259,5 @@ class LocaleMessage extends ModelResource implements IModelResource {
 
 		return self::deleteAll( 'localeId=:id', [ ':id' => $localeId ] );
 	}
+
 }

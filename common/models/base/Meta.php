@@ -91,8 +91,8 @@ abstract class Meta extends Resource implements IData, IMeta {
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'modelId', 'name', 'type' ], 'required' ],
-			[ [ 'id', 'value', 'data' ], 'safe' ],
+			[ [ 'modelId', 'name' ], 'required' ],
+			[ [ 'id', 'value' ], 'safe' ],
 			// Unique
 			[ 'name', 'unique', 'targetAttribute' => [ 'modelId', 'type', 'name' ], 'comboNotUnique' => 'Attribute with the same name and type already exist.' ],
 			// Text Limit
@@ -109,7 +109,7 @@ abstract class Meta extends Resource implements IData, IMeta {
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'type', 'valueType', 'value' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'label', 'valueType', 'type', 'value' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}

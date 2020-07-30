@@ -20,13 +20,13 @@ use cmsgears\core\common\models\interfaces\base\IMeta;
 use cmsgears\core\common\models\interfaces\resources\IData;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\ModelResource;
 
 use cmsgears\core\common\models\traits\base\MetaTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
- * ModelMeta Entity
+ * ModelMeta represents meta data of a model. It's the shared table to store the
+ * meta data.
  *
  * @property integer $id
  * @property integer $parentId
@@ -43,7 +43,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  *
  * @since 1.0.0
  */
-class ModelMeta extends ModelResource implements IData, IMeta {
+class ModelMeta extends \cmsgears\core\common\models\base\ModelResource implements IData, IMeta {
 
 	// Variables ---------------------------------------------------
 
@@ -91,21 +91,22 @@ class ModelMeta extends ModelResource implements IData, IMeta {
 			[ [ 'parentId', 'parentType', 'name' ], 'required' ],
 			[ [ 'id', 'value' ], 'safe' ],
 			// Unique
-			[ 'name', 'unique', 'targetAttribute' => [ 'parentId', 'parentType', 'type', 'name' ] ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'parentId', 'parentType', 'type', 'name' ], 'comboNotUnique' => 'Attribute with the same name and type already exist.' ],
 			// Text Limit
 			[ [ 'parentType', 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'label', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
 			[ 'active', 'boolean' ],
 			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+			[ 'parentId', 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'label', 'value', 'valueType', 'type' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'label', 'valueType', 'type', 'value' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -121,11 +122,15 @@ class ModelMeta extends ModelResource implements IData, IMeta {
 		return [
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'valueType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE_TYPE ),
-			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE )
+			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
 
@@ -168,6 +173,16 @@ class ModelMeta extends ModelResource implements IData, IMeta {
 	public function belongsTo( $parent, $parentType ) {
 
 		return $this->parentId == $parent->id && $this->parentType == $parentType;
+	}
+
+	/**
+	 * Returns string representation of active flag.
+	 *
+	 * @return boolean
+	 */
+	public function getActiveStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->active );
 	}
 
 	// Static Methods ----------------------------------------------

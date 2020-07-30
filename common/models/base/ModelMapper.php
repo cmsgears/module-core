@@ -119,6 +119,29 @@ abstract class ModelMapper extends Mapper {
 		];
 	}
 
+	// yii\db\BaseActiveRecord
+
+	/**
+	 * @inheritdoc
+	 */
+	public function beforeSave( $insert ) {
+
+		if( parent::beforeSave( $insert ) ) {
+
+			if( empty( $this->order ) || $this->order <= 0 ) {
+
+				$this->order = 0;
+			}
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
+
+			return true;
+		}
+
+		return false;
+	}
+
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
@@ -509,8 +532,9 @@ abstract class ModelMapper extends Mapper {
 		$tableName = static::tableName();
 
 		// Disable all mappings
-		$query		= "UPDATE $tableName SET `active`=0 WHERE `parentType`='$parentType' AND `parentId`=$parentId";
-		$command	= Yii::$app->db->createCommand( $query );
+		$query = "UPDATE $tableName SET `active`=0 WHERE `parentType`=:ptype AND `parentId`=:pid";
+
+		$command = Yii::$app->db->createCommand( $query, [ ':ptype' => $parentType, ':pid' => $parentId ] );
 
 		$command->execute();
 	}

@@ -13,14 +13,14 @@ namespace cmsgears\core\common\services\mappers;
 use cmsgears\core\common\services\interfaces\entities\IObjectService;
 use cmsgears\core\common\services\interfaces\mappers\IModelObjectService;
 
-use cmsgears\core\common\services\base\ModelMapperService;
+use cmsgears\core\common\services\traits\base\FeaturedTrait;
 
 /**
  * ModelObjectService provide service methods of object mapper.
  *
  * @since 1.0.0
  */
-class ModelObjectService extends ModelMapperService implements IModelObjectService {
+class ModelObjectService extends \cmsgears\core\common\services\base\ModelMapperService implements IModelObjectService {
 
 	// Variables ---------------------------------------------------
 
@@ -42,15 +42,15 @@ class ModelObjectService extends ModelMapperService implements IModelObjectServi
 
 	// Private ----------------
 
-	private $objectService;
-
 	// Traits ------------------------------------------------------
+
+	use FeaturedTrait;
 
 	// Constructor and Initialisation ------------------------------
 
 	public function __construct( IObjectService $objectService, $config = [] ) {
 
-		$this->objectService = $objectService;
+		$this->parentService = $objectService;
 
 		parent::__construct( $config );
 	}
@@ -80,30 +80,6 @@ class ModelObjectService extends ModelMapperService implements IModelObjectServi
 	// Read - Others ---
 
 	// Create -------------
-
-	public function createWithParent( $parent, $config = [] ) {
-
-		$modelClass	= static::$modelClass;
-
-		$parentId	= $config[ 'parentId' ];
-		$parentType	= $config[ 'parentType' ];
-		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_DEFAULT;
-		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
-
-		$object = $this->objectService->create( $parent, $config );
-
-		$model = new $modelClass;
-
-		$model->modelId		= $object->id;
-		$model->parentId	= $parentId;
-		$model->parentType	= $parentType;
-
-		$model->type	= $type;
-		$model->order	= $order;
-		$model->active	= true;
-
-		return parent::create( $model );
-	}
 
 	// Update -------------
 

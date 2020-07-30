@@ -11,13 +11,14 @@ namespace cmsgears\core\common\services\interfaces\mappers;
 
 // CMG Imports
 use cmsgears\core\common\services\interfaces\base\IModelMapperService;
+use cmsgears\core\common\services\interfaces\base\IFeatured;
 
 /**
  * IModelObjectService provide service methods for object mapper.
  *
  * @since 1.0.0
  */
-interface IModelObjectService extends IModelMapperService {
+interface IModelObjectService extends IModelMapperService, IFeatured {
 
 	// Data Provider ------
 

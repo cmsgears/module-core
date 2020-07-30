@@ -209,6 +209,12 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 					'default' => SORT_DESC,
 					'label' => 'Featured'
 				],
+				'popular' => [
+					'asc' => [ "$modelTable.popular" => SORT_ASC ],
+					'desc' => [ "$modelTable.popular" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Popular'
+				],
 				'admin' => [
 					'asc' => [ "$modelTable.admin" => SORT_ASC ],
 					'desc' => [ "$modelTable.admin" => SORT_DESC ],
@@ -341,7 +347,8 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 			'visibility' => "$modelTable.visibility",
 			'order' => "$modelTable.order",
 			'pinned' => "$modelTable.pinned",
-			'featured' => "$modelTable.featured"
+			'featured' => "$modelTable.featured",
+			'popular' => "$modelTable.popular"
 		];
 
 		// Result -----------

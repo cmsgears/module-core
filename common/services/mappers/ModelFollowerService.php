@@ -67,7 +67,9 @@ class ModelFollowerService extends \cmsgears\core\common\services\base\ModelMapp
 
 	// Read - Models ---
 
-	public function getByFollower( $parentId, $parentType, $type = IFollower::TYPE_FOLLOW ) {
+	public function getByFollower( $parentId, $parentType, $config = [] ) {
+
+		$type = $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
 
 		$modelClass = static::$modelClass;
 
@@ -76,47 +78,110 @@ class ModelFollowerService extends \cmsgears\core\common\services\base\ModelMapp
 		return isset( $user ) ? $modelClass::findByParentModelIdType( $parentId, $parentType, $user->id, $type ) : null;
 	}
 
+	public function getFollowing( $parentType, $config = [] ) {
+
+		$type	= $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
+		$limit	= $config[ 'limit' ] ?? null;
+
+		$modelClass = static::$modelClass;
+
+		$user = Yii::$app->core->getUser();
+
+		$query = $modelClass::find()->where( 'parentType=:ptype AND type=:type AND modelId=:mid', [
+			':ptype' => $parentType, ':type' => $type, ':mid' => $user->id
+		]);
+
+		if( isset( $limit ) ) {
+
+			$query->limit( $limit );
+		}
+
+		$query->all();
+	}
+
 	// Read - Lists ----
 
-    public function getFollowersIdList( $parentId, $parentType ) {
+    public function getFollowersIdList( $parentId, $parentType, $config = [] ) {
+
+		$type	= $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
+		$active = $config[ 'active' ] ?? true;
 
         return self::findList([
 			'column' => 'modelId',
-			'conditions' => [ 'type' => IFollower::TYPE_FOLLOW, 'active' => true, 'parentId' => $parentId, 'parentType' => $parentType ]
+			'conditions' => [ 'parentId' => $parentId, 'parentType' => $parentType, 'type' => $type, 'active' => $active ]
 		]);
     }
 
-    public function getFollowingIdList( $parentType ) {
+    public function getFollowingIdList( $parentType, $config = [] ) {
+
+		$type	= $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
+		$active = $config[ 'active' ] ?? true;
 
 		$user = Yii::$app->core->getUser();
 
         return isset( $user ) ? self::findList([
 			'column' => 'parentId',
-			'conditions' => [ 'type' => IFollower::TYPE_FOLLOW, 'active' => true, 'parentType' => $parentType, 'modelId' => $user->id ]
+			'conditions' => [ 'parentType' => $parentType, 'type' => $type, 'active' => $active, 'modelId' => $user->id ]
 		]) : [];
+    }
+
+    public function getLikeIdList( $parentType, $config = [] ) {
+
+		$config[ 'type' ] = IFollower::TYPE_LIKE;
+
+		return $this->getFollowingIdList( $parentType, $config );
+    }
+
+    public function getDisikeIdList( $parentType, $config = [] ) {
+
+		$config[ 'type' ] = IFollower::TYPE_DISLIKE;
+
+		return $this->getFollowingIdList( $parentType, $config );
+    }
+
+    public function getFollowIdList( $parentType, $config = [] ) {
+
+		$config[ 'type' ] = IFollower::TYPE_FOLLOW;
+
+		return $this->getFollowingIdList( $parentType, $config );
+    }
+
+    public function getWishlistIdList( $parentType, $config = [] ) {
+
+		$config[ 'type' ] = IFollower::TYPE_WISHLIST;
+
+		return $this->getFollowingIdList( $parentType, $config );
     }
 
 	// Read - Maps -----
 
 	// Read - Others ---
 
-	public function getFollowCount( $parentType, $type = IFollower::TYPE_FOLLOW ) {
+	public function getFollowCount( $parentType, $config = [] ) {
+
+		$type	= $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
+		$active = $config[ 'active' ] ?? true;
 
 		$modelClass = static::$modelClass;
 
 		$user = Yii::$app->core->getUser();
 
-		return isset( $user ) ? IFollower::queryByTypeParentTypeModelId( $type, $parentType, $user->id )->andWhere( [ 'active' => true ] )->count() : 0;
+		return isset( $user ) ? $modelClass::queryByTypeParentTypeModelId( $type, $parentType, $user->id )->andWhere( [ 'active' => $active ] )->count() : 0;
 	}
 
-	public function getFollowersCount( $parentId, $parentType, $type = IFollower::TYPE_FOLLOW ) {
+	public function getFollowersCount( $parentId, $parentType, $config = [] ) {
+
+		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : IFollower::TYPE_FOLLOW;
+		$active = isset( $config[ 'active' ] ) ? $config[ 'active' ] : true;
 
 		$modelClass = static::$modelClass;
 
-		return $modelClass::queryByType( $parentId, $parentType, $type )->andWhere( [ 'active' => true ] )->count();
+		return $modelClass::queryByType( $parentId, $parentType, $type )->andWhere( [ 'active' => $active ] )->count();
 	}
 
-    public function getStatusCounts( $parentId, $parentType, $type = IFollower::TYPE_FOLLOW ) {
+    public function getStatusCounts( $parentId, $parentType, $config = [] ) {
+
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : IFollower::TYPE_FOLLOW;
 
         $followerTable = $this->getModelTable();
 
@@ -145,21 +210,7 @@ class ModelFollowerService extends \cmsgears\core\common\services\base\ModelMapp
 
 	// Create -------------
 
-	public function createByParams( $params = [], $config = [] ) {
-
-		$params[ 'active' ]	= CoreGlobal::STATUS_ACTIVE;
-
-		return parent::createByParams( $params, $config );
-	}
-
 	// Update -------------
-
-	public function update( $model, $config = [] ) {
-
-		return parent::update( $model, [
-			'attributes' => [ 'active' ]
-		]);
-	}
 
 	public function updateByParams( $params = [], $config = [] ) {
 
@@ -177,27 +228,11 @@ class ModelFollowerService extends \cmsgears\core\common\services\base\ModelMapp
 
 		if( isset( $follower ) ) {
 
-			return $this->toggleStatus( $follower );
+			return $this->toggleActive( $follower );
 		}
 
 		return $this->createByParams( $params, $config );
 	}
-
-	public function toggleStatus( $model ) {
-
-		if( $model->active ) {
-
-			$model->active = false;
-		}
-		else {
-
-			$model->active = true;
-		}
-
-		return parent::update( $model, [
-			'attributes' => [ 'active' ]
-		]);
- 	}
 
 	// Delete -------------
 

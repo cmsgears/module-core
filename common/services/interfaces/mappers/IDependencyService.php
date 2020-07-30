@@ -10,14 +10,14 @@
 namespace cmsgears\core\common\services\interfaces\mappers;
 
 // CMG Imports
-use cmsgears\core\common\services\interfaces\base\IModelMapperService;
+use cmsgears\core\common\services\interfaces\base\IMapperService;
 
 /**
- * IModelGalleryService provide service methods for gallery mapper.
+ * The dependency service interface declares the dependency methods.
  *
  * @since 1.0.0
  */
-interface IModelGalleryService extends IModelMapperService {
+interface IDependencyService extends IMapperService {
 
 	// Data Provider ------
 

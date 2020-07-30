@@ -200,23 +200,43 @@ interface IModelMapperService extends IMapperService {
 
 	// Read - Lists ----
 
+	public function getActiveModelIdListByParent( $parentId, $parentType );
+
 	// Read - Maps -----
 
 	// Read - Others ---
 
+	public function getMappingsCount( $parentType, $mappingType );
+
 	// Create -------------
+
+	public function createWithParent( $parent, $config = [] );
 
 	// Update -------------
 
 	public function activate( $model );
 
-	public function activateByModelId( $parentId, $parentType, $modelId, $type = null );
-
 	public function disable( $model );
+
+	public function toggleActive( $model );
+
+	/**
+	 * It assumes that only one model exist for same parentId, parentType, modelId, and type.
+	 *
+	 * @param type $parentId
+	 * @param type $parentType
+	 * @param type $modelId
+	 * @param type $type
+	 */
+	public function activateByParentModelId( $parentId, $parentType, $modelId, $type = null );
+
+	public function disableByParentModelId( $parentId, $parentType, $modelId, $delete = false );
+
+	public function toggleByParentModelId( $parentId, $parentType, $modelId, $type = null );
 
 	public function disableByParent( $parentId, $parentType, $delete = false );
 
-	public function disableByModelId( $parentId, $parentType, $modelId, $delete = false );
+	public function bindModels( $parentId, $parentType, $config = [] );
 
 	// Delete -------------
 

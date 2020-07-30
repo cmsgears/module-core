@@ -27,9 +27,9 @@ interface IFollowerService extends IMapperService {
 
 	// Read - Models ---
 
-	public function getByFollower( $parentId, $type = IFollower::TYPE_FOLLOW ) ;
+	public function getByFollower( $parentId, $config = [] ) ;
 
-	public function getFollowing( $type = IFollower::TYPE_FOLLOW, $config = [] );
+	public function getFollowing( $config = [] );
 
 	// Read - Lists ----
 
@@ -49,17 +49,21 @@ interface IFollowerService extends IMapperService {
 
 	// Read - Others ---
 
-	public function getFollowCount( $type = IFollower::TYPE_FOLLOW );
+	public function getFollowCount( $config = []);
 
-	public function getFollowersCount( $parentId, $type = IFollower::TYPE_FOLLOW );
+	public function getFollowersCount( $parentId, $config = [] );
 
-	public function getStatusCounts( $parentId, $type = IFollower::TYPE_FOLLOW );
+	public function getStatusCounts( $parentId, $config = [] );
 
 	// Create -------------
 
 	// Update -------------
 
-	public function toggleStatus( $model );
+	public function activate( $model );
+
+	public function disable( $model );
+
+	public function toggleActive( $model );
 
 	// Delete -------------
 

@@ -11,6 +11,8 @@ namespace cmsgears\core\common\services\interfaces\resources;
 
 // CMG Imports
 use cmsgears\core\common\services\interfaces\base\IModelResourceService;
+use cmsgears\core\common\services\interfaces\base\IMultiSite;
+use cmsgears\core\common\services\interfaces\cache\IGridCacheable;
 use cmsgears\core\common\services\interfaces\resources\IData;
 use cmsgears\core\common\services\interfaces\mappers\IFile;
 
@@ -19,7 +21,7 @@ use cmsgears\core\common\services\interfaces\mappers\IFile;
  *
  * @since 1.0.0
  */
-interface IModelMessageService extends IModelResourceService, IData, IFile {
+interface IModelMessageService extends IModelResourceService, IData, IFile, IGridCacheable, IMultiSite {
 
 	// Data Provider ------
 
@@ -50,6 +52,10 @@ interface IModelMessageService extends IModelResourceService, IData, IFile {
 	public function markNew( $model );
 
 	public function markConsumed( $model );
+
+	public function markTrash( $model );
+
+	public function unTrash( $model );
 
 	// Delete -------------
 

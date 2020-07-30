@@ -12,7 +12,6 @@ namespace cmsgears\core\common\models\mappers;
 // CMG Imports
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\resources\Category;
 
 /**
@@ -29,7 +28,7 @@ use cmsgears\core\common\models\resources\Category;
  *
  * @since 1.0.0
  */
-class ModelCategory extends ModelMapper {
+class ModelCategory extends \cmsgears\core\common\models\base\ModelMapper {
 
 	// Variables ---------------------------------------------------
 

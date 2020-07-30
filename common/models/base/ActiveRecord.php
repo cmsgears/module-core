@@ -16,6 +16,9 @@ use yii\helpers\HtmlPurifier;
 /**
  * Base model of all the entities, resources and mapper.
  *
+ * @property integer $id - The id property is available to all the models except
+ * models having joint primary keys.
+ *
  * @since 1.0.0
  */
 abstract class ActiveRecord extends \yii\db\ActiveRecord {
@@ -99,7 +102,7 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord {
 	 */
 	public function getNamespace() {
 
-		$name	= get_class( $this );
+		$name = get_class( $this );
 
 		return array_slice(explode('\\', $name), 0, -1);
 	}
@@ -111,7 +114,7 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord {
 	 */
 	public function getClassname() {
 
-		$name	= get_class( $this );
+		$name = get_class( $this );
 
 		return join( '', array_slice( explode( '\\', $name ), -1 ) );
 	}
@@ -123,7 +126,7 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord {
 	 */
 	public function copyForUpdateTo( $model, $attributes = [] ) {
 
-		foreach ( $attributes as $attribute ) {
+		foreach( $attributes as $attribute ) {
 
 			$model->setAttribute( $attribute, $this->getAttribute( $attribute ) );
 		}
@@ -136,7 +139,7 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord {
 	 */
 	public function copyForUpdateFrom( $model, $attributes = [] ) {
 
-		foreach ( $attributes as $attribute ) {
+		foreach( $attributes as $attribute ) {
 
 			if( $this->hasAttribute( $attribute ) ) {
 
@@ -154,6 +157,8 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord {
 	 *
 	 * [[\cmsgears\core\common\config\CoreGlobal\CoreGlobal::TEXT_MEDIUM]] will be used by
 	 * default in case application property does not override it.
+	 *
+	 * It should not be used on the columns supporting HTML values.
 	 *
 	 * @param string $text to be cut down.
 	 * @return string the cut down text.
@@ -236,13 +241,11 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord {
 		$conditions	= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 		$filters	= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
 		$groups		= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : null;
+		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : null;
 
 		// Relations -----------
 
-		$eager	= false;
-		$join	= 'LEFT JOIN';
-
-		foreach ( $relations as $relation ) {
+		foreach( $relations as $relation ) {
 
 			if( is_array( $relation ) && isset( $relation[ 'relation' ] ) ) {
 
@@ -261,7 +264,7 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord {
 
 		if( isset( $conditions ) ) {
 
-			foreach ( $conditions as $ckey => $condition ) {
+			foreach( $conditions as $ckey => $condition ) {
 
 				if( is_numeric( $ckey ) ) {
 
@@ -284,15 +287,7 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord {
 			}
 		}
 
-		// Grouping -------------
-
-		if( isset( $groups ) ) {
-
-			foreach( $groups as $group ) {
-
-				$query = $query->groupBy( $group );
-			}
-		}
+		// Multisite ------------
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 
@@ -303,6 +298,23 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord {
 			$modelTable = static::tableName();
 
 			$query = $query->andWhere( "$modelTable.siteId=:siteId", [ ':siteId' => $siteId ] );
+		}
+
+		// Grouping -------------
+
+		if( isset( $groups ) ) {
+
+			foreach( $groups as $group ) {
+
+				$query = $query->groupBy( $group );
+			}
+		}
+
+		// Ordering -------------
+
+		if( isset( $order ) ) {
+
+			$query->orderBy( $order );
 		}
 
 		return $query;
@@ -359,4 +371,5 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord {
 
 		return static::deleteAll( 'id=:id', [ ':id' => $id ] );
 	}
+
 }

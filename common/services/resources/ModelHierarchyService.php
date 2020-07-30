@@ -92,7 +92,7 @@ class ModelHierarchyService extends \cmsgears\core\common\services\base\ModelRes
 		// Add Root
 		if( !isset( $root ) ) {
 
-			$model	= $this->getModelObject();
+			$model = $this->getModelObject();
 
 			$model->rootId		= $rootId;
 			$model->parentType	= $parentType;
@@ -125,7 +125,7 @@ class ModelHierarchyService extends \cmsgears\core\common\services\base\ModelRes
 		// Add root children if not exist in hierarchy
 		foreach( $binded as $id ) {
 
-			$child	= $modelClass::findChild( $parentId, $parentType, $id );
+			$child = $modelClass::findChild( $parentId, $parentType, $id );
 
 			if( !isset( $child ) ) {
 

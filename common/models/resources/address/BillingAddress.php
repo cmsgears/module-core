@@ -9,15 +9,12 @@
 
 namespace cmsgears\core\common\models\resources\address;
 
-// CMG Imports
-use cmsgears\core\common\models\resources\Address;
-
 /**
  * The billing address model.
  *
  * @since 1.0.0
  */
-class BillingAddress extends Address {
+class BillingAddress extends \cmsgears\core\common\models\resources\Address {
 
 	// Variables ---------------------------------------------------
 
@@ -33,7 +30,7 @@ class BillingAddress extends Address {
 
 	// Public -----------------
 
-	public $type	= self::TYPE_BILLING;
+	public $type = self::TYPE_BILLING;
 
 	// Protected --------------
 

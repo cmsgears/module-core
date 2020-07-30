@@ -21,6 +21,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\interfaces\base\IAuthor;
 use cmsgears\core\common\models\interfaces\base\IFeatured;
 use cmsgears\core\common\models\interfaces\base\IMultiSite;
+use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
 use cmsgears\core\common\models\interfaces\resources\IVisual;
@@ -31,6 +32,7 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\FeaturedTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
+use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
@@ -53,8 +55,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $title
  * @property string $name
  * @property string $email
- * @property string $phone
  * @property string $mobile
+ * @property string $phone
  * @property string $avatarUrl
  * @property string $websiteUrl
  * @property string $ip
@@ -62,7 +64,6 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $agent
  * @property integer $status
  * @property string $type
- * @property integer $fragment
  * @property integer $rate1
  * @property integer $rate2
  * @property integer $rate3
@@ -72,6 +73,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $order
  * @property boolean $pinned
  * @property boolean $featured
+ * @property boolean $popular
  * @property boolean $anonymous
  * @property datetime $createdAt
  * @property datetime $modifiedAt
@@ -85,7 +87,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @since 1.0.0
  */
 class ModelComment extends \cmsgears\core\common\models\base\ModelResource implements IAuthor,
-		IData, IFeatured, IFile, IGridCache, IMultiSite, IVisual {
+	IContent, IData, IFeatured, IFile, IGridCache, IMultiSite, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -94,7 +96,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	// Constants --------------
 
 	// Model Comments
-	const TYPE_COMMENT		=  'comment'; // quick comment
+	const TYPE_COMMENT		=  'comment'; // quick comment, discussion
 	const TYPE_REVIEW		=  'review'; // detailed review
 	// User experience specific to application
 	const TYPE_FEEDBACK		=  'feedback'; // enhancements, improvement
@@ -156,6 +158,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	// Traits ------------------------------------------------------
 
 	use AuthorTrait;
+	use ContentTrait;
 	use DataTrait;
 	use FeaturedTrait;
 	use FileTrait;
@@ -201,8 +204,8 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'siteId', 'parentId', 'parentType', 'content' ], 'required' ],
-			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'parentId', 'parentType', 'content' ], 'required' ],
+			[ [ 'id', 'content', 'gridCache' ], 'safe' ],
 			// Email
 			[ 'email', 'email' ],
 			// Text Limit
@@ -212,9 +215,9 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 			[ [ 'title', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Other
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
-			[ [ 'pinned', 'featured', 'anonymous', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'pinned', 'featured', 'popular', 'anonymous', 'gridCacheValid' ], 'boolean' ],
 			[ [ 'rate1', 'rate2', 'rate3', 'rate4', 'rate5' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'ipNum', 'status', 'fragment', 'rating', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'ipNum', 'status', 'rating', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'siteId', 'baseId', 'bannerId', 'videoId', 'parentId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'approvedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
@@ -222,7 +225,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'title', 'name', 'email', 'phone', 'mobile', 'avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'title', 'name', 'email', 'mobile', 'phone', 'avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -238,28 +241,55 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 		return [
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'baseId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
+			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ADDRESS_TYPE ),
 			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
-			'phone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
 			'mobile' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MOBILE ),
+			'phone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
 			'avatarUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
 			'websiteUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
 			'ip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP ),
 			'ipNum' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP_NUM ),
 			'agent' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AGENT_BROWSER ),
 			'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'rating' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RATING ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'pinned' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PINNED ),
 			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
+			'popular' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_POPULAR ),
 			'anonymous' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ANONYMOUS ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
 			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
 		];
+	}
+
+	// yii\db\BaseActiveRecord
+
+    /**
+     * @inheritdoc
+     */
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			if( empty( $this->order ) || $this->order <= 0 ) {
+
+				$this->order = 0;
+			}
+
+			// Default Type - Comment
+			$this->type = $this->type ?? self::TYPE_COMMENT;
+
+	        return true;
+	    }
+
+		return false;
 	}
 
 	// CMG interfaces ------------------------
@@ -362,13 +392,12 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	 *
 	 * @param integer $parentId
 	 * @param string $parentType
-	 * @param string $type
 	 * @param array $config
 	 * @return \yii\db\ActiveQuery to query by type.
 	 */
-	public static function queryByType( $parentId, $parentType, $type = ModelComment::TYPE_COMMENT, $config = [] ) {
+	public static function queryByType( $parentId, $parentType, $config = [] ) {
 
-		//$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
+		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
 		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
 
 		return self::queryByParent( $parentId, $parentType, $config )->andWhere( [ 'type' => $type, 'status' => $status ] );
@@ -421,11 +450,12 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	 *
 	 * @param integer $parentId
 	 * @param string $parentType
-	 * @param string $type
 	 * @param array $config
 	 * @return \yii\db\ActiveQuery to query by email.
 	 */
-	public static function queryL0Approved( $parentId, $parentType, $type = ModelComment::TYPE_COMMENT, $config = [] ) {
+	public static function queryL0Approved( $parentId, $parentType, $config = [] ) {
+
+		$config[ 'type' ] = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
 
 		return self::queryByType( $parentId, $parentType, $type, $config )->andWhere( [ 'baseId' => null ] );
 	}
@@ -438,10 +468,11 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param integer $userId
-	 * @param string $type
 	 * @return ModelComment
 	 */
-	public static function findByUserId( $parentId, $parentType, $userId, $type = ModelComment::TYPE_COMMENT ) {
+	public static function findByUserId( $parentId, $parentType, $userId, $config = [] ) {
+
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
 
 		return static::find()->where( 'parentId=:pid AND parentType=:ptype AND createdBy=:uid AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':uid' => $userId, ':type' => $type ] )->one();
 	}
@@ -452,10 +483,11 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param integer $userId
-	 * @param string $type
 	 * @return ModelComment
 	 */
-	public static function findAllByUser( $parentId, $parentType, $userId, $type = ModelComment::TYPE_COMMENT ) {
+	public static function findAllByUser( $parentId, $parentType, $userId, $config = [] ) {
+
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
 
 		return static::find()->where( 'parentId=:pid AND parentType=:ptype AND createdBy=:uid AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':uid' => $userId, ':type' => $type ] )->all();
 	}
@@ -466,12 +498,13 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param integer $userId
-	 * @param string $type
 	 * @return boolean
 	 */
-	public static function isExistByUserId( $parentId, $parentType, $userId, $type = ModelComment::TYPE_COMMENT ) {
+	public static function isExistByUserId( $parentId, $parentType, $userId, $config = [] ) {
 
-		$comment = static::findByUser( $parentId, $parentType, $userId, $type );
+		$config[ 'type' ] = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
+
+		$comment = static::findByUser( $parentId, $parentType, $userId, $config );
 
 		return isset( $comment );
 	}

@@ -386,7 +386,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 
 		$theme = Yii::$app->core->site->theme;
 
-		return $this->findByThemeId( $slug, $type, $theme->id );
+		return self::findByThemeId( $slug, $type, $theme->id );
 	}
 
 	/**

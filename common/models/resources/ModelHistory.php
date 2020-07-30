@@ -11,8 +11,6 @@ namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
 use Yii;
-use yii\db\Expression;
-use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -26,22 +24,17 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 
 /**
- * ModelAnalytics stores the analytics data of model.
+ * ModelHistory stores the analytics data of model.
  *
  * @property integer $id
  * @property integer $parentId
  * @property string $parentType
+ * @property string $title
  * @property string $type
- * @property integer $views
- * @property integer $referrals
- * @property integer $comments
- * @property integer $reviews
- * @property float $ratings
- * @property integer $likes
- * @property integer $wish
- * @property integer $followers
- * @property integer $rank
- * @property float $weight
+ * @property string $ip
+ * @property integer $ipNum
+ * @property string $agent
+ * @property datetime $createdAt
  * @property string $data
  * @property string $gridCache
  * @property boolean $gridCacheValid
@@ -49,7 +42,7 @@ use cmsgears\core\common\models\traits\resources\GridCacheTrait;
  *
  * @since 1.0.0
  */
-class ModelAnalytics extends \cmsgears\core\common\models\base\ModelResource implements IData, IGridCache {
+class ModelHistory extends \cmsgears\core\common\models\base\ModelResource implements IData, IGridCache {
 
 	// Variables ---------------------------------------------------
 
@@ -84,21 +77,6 @@ class ModelAnalytics extends \cmsgears\core\common\models\base\ModelResource imp
 
 	// yii\base\Component -----
 
-	/**
-	 * @inheritdoc
-	 */
-	public function behaviors() {
-
-		return [
-			'timestampBehavior' => [
-				'class' => TimestampBehavior::class,
-				'createdAtAttribute' => 'createdAt',
-				'updatedAtAttribute' => 'modifiedAt',
-				'value' => new Expression('NOW()')
-			]
-		];
-	}
-
 	// yii\base\Model ---------
 
 	/**
@@ -112,13 +90,13 @@ class ModelAnalytics extends \cmsgears\core\common\models\base\ModelResource imp
 			[ [ 'parentId', 'parentType' ], 'required' ],
 			[ [ 'id', 'gridCache' ], 'safe' ],
 			// Text Limit
-			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'parentType', 'type', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'agent', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'title', 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Other
-			[ [ 'views', 'referrals', 'comments', 'reviews', 'likes', 'wish', 'followers', 'rank' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'ratings', 'weight' ], 'number', 'min' => 0 ],
 			[ 'gridCacheValid', 'boolean' ],
-			[ 'parentId', 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ 'gridCachedAt', 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+			[ 'ipNum', 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'createdAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
 		return $rules;
@@ -132,17 +110,11 @@ class ModelAnalytics extends \cmsgears\core\common\models\base\ModelResource imp
 		return [
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'views' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_COUNT ),
-			'referrals' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_REFERRAL_COUNT ),
-			'comments' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COMMENTS ),
-			'reviews' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_REVIEWS ),
-			'ratings' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RATINGS ),
-			'likes' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LIKE_COUNT ),
-			'wish' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WISH_COUNT ),
-			'followers' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FOLLOWERS ),
-			'rank' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RANK ),
-			'weight' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEIGHT ),
+			'ip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP ),
+			'ipNum' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP_NUM ),
+			'agent' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AGENT_BROWSER ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
 			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
 		];
@@ -172,7 +144,7 @@ class ModelAnalytics extends \cmsgears\core\common\models\base\ModelResource imp
 
 	// Validators ----------------------------
 
-	// ModelAnalytics ------------------------
+	// ModelHistory ------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -185,12 +157,12 @@ class ModelAnalytics extends \cmsgears\core\common\models\base\ModelResource imp
 	 */
 	public static function tableName() {
 
-		return CoreTables::getTableName( CoreTables::TABLE_MODEL_ANALYTICS );
+		return CoreTables::getTableName( CoreTables::TABLE_MODEL_HISTORY );
 	}
 
 	// CMG parent classes --------------------
 
-	// ModelAnalytics ------------------------
+	// ModelHistory ------------------------
 
 	// Read - Query -----------
 

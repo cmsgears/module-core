@@ -20,7 +20,6 @@ use cmsgears\core\common\models\interfaces\base\IFollower;
 use cmsgears\core\common\models\interfaces\resources\IData;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\entities\User;
 
 use cmsgears\core\common\models\traits\base\FeaturedTrait;
@@ -39,11 +38,12 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  * @property boolean $active
  * @property boolean $pinned
  * @property boolean $featured
+ * @property boolean $popular
  * @property int $createdAt
  * @property int $modifiedAt
  * @property string $data
  */
-class ModelFollower extends ModelMapper implements IData, IFeatured, IFollower {
+class ModelFollower extends \cmsgears\core\common\models\base\ModelMapper implements IData, IFeatured, IFollower {
 
 	// Variables ---------------------------------------------------
 
@@ -103,7 +103,7 @@ class ModelFollower extends ModelMapper implements IData, IFeatured, IFollower {
 
 		$rules = parent::rules();
 
-		$rules[] = [ [ 'pinned', 'featured' ], 'boolean' ];
+		$rules[] = [ [ 'pinned', 'featured', 'popular' ], 'boolean' ];
 		$rules[] = [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ];
 
 		return $rules;
@@ -157,7 +157,9 @@ class ModelFollower extends ModelMapper implements IData, IFeatured, IFollower {
 	 */
 	public static function queryByTypeParentTypeModelId( $type, $parentType, $modelId ) {
 
-		return self::find()->where( 'type=:type AND parentType=:ptype AND modelId=:mid', [ ':type' => $type, ':parentType' => $parentType, ':mid' => $modelId ] );
+		return self::find()->where( 'type=:type AND parentType=:ptype AND modelId=:mid', [
+			':type' => $type, ':parentType' => $parentType, ':mid' => $modelId
+		]);
 	}
 
 	// Read - Find ------------

@@ -40,33 +40,27 @@ interface IMetaService extends IResourceService {
 
 	// Read - Maps -----
 
-	public function getNameValueMapByModelId( $modelId );
+	public function getNameValueMapByModelId( $modelId, $config = [] );
 
-	public function getNameValueMapByType( $modelId, $type );
+	public function getNameValueMapByType( $modelId, $type, $config = [] );
 
-	public function getIdMetaMapByModelId( $modelId );
+	public function getIdMetaMapByModelId( $modelId, $config = [] );
 
-	public function getIdMetaMapByType( $modelId, $type );
+	public function getIdMetaMapByType( $modelId, $type, $config = [] );
 
-	public function getNameMetaMapByType( $modelId, $type );
+	public function getNameMetaMapByType( $modelId, $type, $config = [] );
 
 	// Read - Others ---
 
 	// Create -------------
 
-	/**
-	 * It creates or update the $metas for given $parent.
-	 * It also disable existing metas before updating in case type is provided.
-	 *
-	 * @param \cmsgears\core\common\models\base\ActiveRecord $parent
-	 * @param array $metas
-	 * @param array $config
-	 */
-	public function creatOrUpdateByParent( $parent, $metas, $config = [] );
-
 	// Update -------------
 
-	public function toggle( $model );
+	public function creatOrUpdateByParent( $parent, $metas, $config = [] );
+
+	public function toggleActive( $model );
+
+	public function toggleValue( $model );
 
 	public function disableByType( $parent, $type );
 

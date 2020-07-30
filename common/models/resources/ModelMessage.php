@@ -20,6 +20,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\interfaces\base\IAuthor;
 use cmsgears\core\common\models\interfaces\base\IMultiSite;
+use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
 use cmsgears\core\common\models\interfaces\resources\IVisual;
@@ -29,6 +30,7 @@ use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
+use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
@@ -54,6 +56,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $ipNum
  * @property string $agent
  * @property boolean $consumed
+ * @property boolean $trash
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $content
@@ -65,7 +68,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @since 1.0.0
  */
 class ModelMessage extends \cmsgears\core\common\models\base\ModelResource implements IAuthor,
-		IData, IFile, IGridCache, IMultiSite, IVisual {
+	IContent, IData, IFile, IGridCache, IMultiSite, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -92,6 +95,7 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 	// Traits ------------------------------------------------------
 
 	use AuthorTrait;
+	use ContentTrait;
 	use DataTrait;
 	use FileTrait;
 	use GridCacheTrait;
@@ -137,14 +141,14 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 		$rules = [
 			// Required, Safe
 			[ [ 'siteId', 'parentId', 'parentType', 'content' ], 'required' ],
-			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'content', 'gridCache' ], 'safe' ],
 			// Text Limit
 			[ [ 'parentType', 'type', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'agent', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			[ 'title', 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'content', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
-			[ [ 'consumed', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'consumed', 'trash', 'gridCacheValid' ], 'boolean' ],
 			[ 'ipNum', 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'siteId', 'baseId', 'bannerId', 'videoId', 'parentId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -169,6 +173,8 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 		return [
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'baseId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
+			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
 			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
@@ -177,10 +183,29 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 			'ipNum' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP_NUM ),
 			'agent' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AGENT_BROWSER ),
 			'consumed' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONSUMED ),
+			'trash' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TRASH ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
 			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
 		];
+	}
+
+	// yii\db\BaseActiveRecord
+
+    /**
+     * @inheritdoc
+     */
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			// Default Type - Message
+			$this->type = $this->type ?? self::TYPE_MESSAGE;
+
+	        return true;
+	    }
+
+		return false;
 	}
 
 	// CMG interfaces ------------------------
@@ -221,9 +246,19 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 		return $this->consumed;
 	}
 
+	public function isTrash() {
+
+		return $this->trash;
+	}
+
 	public function getConsumedStr() {
 
 		return Yii::$app->formatter->asBoolean( $this->consumed );
+	}
+
+	public function getTrashStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->trash );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -263,15 +298,14 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 	 *
 	 * @param integer $parentId
 	 * @param string $parentType
-	 * @param string $type
 	 * @param array $config
 	 * @return \yii\db\ActiveQuery to query by type.
 	 */
-	public static function queryByType( $parentId, $parentType, $type = ModelMessage::TYPE_MESSAGE, $config = [] ) {
+	public static function queryByType( $parentId, $parentType, $config = [] ) {
 
-		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_MESSAGE;
 
-		return self::queryByParent( $parentId, $parentType, $config )->andWhere( [ 'type' => $type, 'status' => $status ] );
+		return self::queryByParent( $parentId, $parentType, $config )->andWhere( [ 'type' => $type ] );
 	}
 
 	/**
@@ -279,11 +313,12 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 	 *
 	 * @param integer $parentId
 	 * @param string $parentType
-	 * @param string $type
 	 * @param array $config
 	 * @return \yii\db\ActiveQuery to query by type.
 	 */
-	public static function queryL0ByType( $parentId, $parentType, $type = ModelMessage::TYPE_MESSAGE, $config = [] ) {
+	public static function queryL0ByType( $parentId, $parentType, $config = [] ) {
+
+		$config[ 'type' ] = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_MESSAGE;
 
 		return self::queryByType( $parentId, $parentType, $type, $config )->andWhere( [ 'baseId' => null ] );
 	}
@@ -294,11 +329,12 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param integer $userId
-	 * @param string $type
 	 * @param array $config
 	 * @return \yii\db\ActiveQuery to query by type.
 	 */
-	public static function queryByUserIdType( $parentId, $parentType, $userId, $type = ModelMessage::TYPE_MESSAGE, $config = [] ) {
+	public static function queryByUserIdType( $parentId, $parentType, $userId, $config = [] ) {
+
+		$config[ 'type' ] = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_MESSAGE;
 
 		return self::queryByType( $parentId, $parentType, $type, $config )->andWhere( [ 'createdBy' => $userId ] );
 	}
@@ -309,11 +345,12 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param integer $userId
-	 * @param string $type
 	 * @param array $config
 	 * @return \yii\db\ActiveQuery to query by type.
 	 */
-	public static function queryL0ByUserIdType( $parentId, $parentType, $userId, $type = ModelMessage::TYPE_MESSAGE, $config = [] ) {
+	public static function queryL0ByUserIdType( $parentId, $parentType, $userId, $config = [] ) {
+
+		$config[ 'type' ] = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_MESSAGE;
 
 		return self::queryByType( $parentId, $parentType, $type, $config )->andWhere( [ 'baseId' => null, 'createdBy' => $userId ] );
 	}
@@ -322,11 +359,12 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 	 * Return query to find the child messages.
 	 *
 	 * @param integer $baseId
-	 * @param string $type
 	 * @param array $config
 	 * @return \yii\db\ActiveQuery to query child messages.
 	 */
-	public static function queryByBaseIdType( $baseId, $type = ModelMessage::TYPE_MESSAGE, $config = [] ) {
+	public static function queryByBaseIdType( $baseId, $config = [] ) {
+
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_MESSAGE;
 
 		return self::find()->where( [ 'baseId' => $baseId, 'type' => $type ] );
 	}
@@ -339,12 +377,13 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param integer $userId
-	 * @param string $type
 	 * @return ModelMessage
 	 */
-	public static function findByUserId( $parentId, $parentType, $userId, $type = ModelMessage::TYPE_MESSAGE, $config = [] ) {
+	public static function findByUserId( $parentId, $parentType, $userId, $config = [] ) {
 
-		return self::queryByUserIdType( $parentId, $parentType, $userId, $type, $config )->all();
+		$config[ 'type' ] = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_MESSAGE;
+
+		return self::queryByUserIdType( $parentId, $parentType, $userId, $config )->all();
 	}
 
 	/**
@@ -353,12 +392,13 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param integer $userId
-	 * @param string $type
 	 * @return ModelMessage
 	 */
-	public static function findL0ByUserId( $parentId, $parentType, $userId, $type = ModelMessage::TYPE_MESSAGE, $config = [] ) {
+	public static function findL0ByUserId( $parentId, $parentType, $userId, $config = [] ) {
 
-		return self::queryL0ByUserIdType( $parentId, $parentType, $userId, $type, $config )->all();
+		$config[ 'type' ] = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_MESSAGE;
+
+		return self::queryL0ByUserIdType( $parentId, $parentType, $userId, $config )->all();
 	}
 
 	// Create -----------------

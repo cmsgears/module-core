@@ -9,20 +9,19 @@
 
 namespace cmsgears\core\common\services\mappers;
 
-//Yii Imports
+// Yii Imports
 use Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\core\common\services\interfaces\resources\ILocationService;
-use cmsgears\core\common\services\interfaces\mappers\IModelLocationService;
+use cmsgears\core\common\services\interfaces\mappers\IDependencyService;
 
 /**
- * ModelLocationService provide service methods of address mapper.
+ * DependencyService provide service methods of file mapper.
  *
  * @since 1.0.0
  */
-class ModelLocationService extends \cmsgears\core\common\services\base\ModelMapperService implements IModelLocationService {
+class DependencyService extends \cmsgears\core\common\services\base\MapperService implements IDependencyService {
 
 	// Variables ---------------------------------------------------
 
@@ -32,7 +31,7 @@ class ModelLocationService extends \cmsgears\core\common\services\base\ModelMapp
 
 	// Public -----------------
 
-	public static $modelClass = '\cmsgears\core\common\models\mappers\ModelLocation';
+	public static $modelClass = '\cmsgears\core\common\models\mappers\Dependency';
 
 	// Protected --------------
 
@@ -48,13 +47,6 @@ class ModelLocationService extends \cmsgears\core\common\services\base\ModelMapp
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( ILocationService $locationService, $config = [] ) {
-
-		$this->parentService = $locationService;
-
-		parent::__construct( $config );
-	}
-
 	// Instance methods --------------------------------------------
 
 	// Yii parent classes --------------------
@@ -65,7 +57,7 @@ class ModelLocationService extends \cmsgears\core\common\services\base\ModelMapp
 
 	// CMG parent classes --------------------
 
-	// ModelLocationService ------------------
+	// DependencyService ---------------------
 
 	// Data Provider ------
 
@@ -74,73 +66,55 @@ class ModelLocationService extends \cmsgears\core\common\services\base\ModelMapp
 		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
 		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
 
-		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'sid' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
-
-		$locationTable = $this->parentService->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
-				'id' => [
-					'asc' => [ "$modelTable.id" => SORT_ASC ],
-					'desc' => [ "$modelTable.id" => SORT_DESC ],
+				'sid' => [
+					'asc' => [ "$modelTable.sourceId" => SORT_ASC ],
+					'desc' => [ "$modelTable.sourceId" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'Id'
+					'label' => 'Source Id'
 				],
-				'title' => [
-					'asc' => [ "$locationTable.title" => SORT_ASC ],
-					'desc' => [ "$locationTable.title" => SORT_DESC ],
+				'stype' => [
+					'asc' => [ "$modelTable.sourceType" => SORT_ASC ],
+					'desc' => [ "$modelTable.sourceType" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'Title',
+					'label' => 'Source Type'
 				],
-				'country' => [
-					'asc' => [ "$locationTable.countryName" => SORT_ASC ],
-					'desc' => [ "$locationTable.countryName" => SORT_DESC ],
+				'tid' => [
+					'asc' => [ "$modelTable.targetId" => SORT_ASC ],
+					'desc' => [ "$modelTable.targetId" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'Country',
+					'label' => 'Target Id'
 				],
-				'province' => [
-					'asc' => [ "$locationTable.provinceName" => SORT_ASC ],
-					'desc' => [ "$locationTable.provinceName" => SORT_DESC ],
+				'ttype' => [
+					'asc' => [ "$modelTable.targetType" => SORT_ASC ],
+					'desc' => [ "$modelTable.targetType" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => Yii::$app->core->provinceLabel,
-				],
-				'region' => [
-					'asc' => [ "$locationTable.regionName" => SORT_ASC ],
-					'desc' => [ "$locationTable.regionName" => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => Yii::$app->core->regionLabel,
-				],
-				'city' => [
-					'asc' => [ "$locationTable.cityName" => SORT_ASC ],
-					'desc' => [ "$locationTable.cityName" => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'City',
-				],
-	            'type' => [
-	                'asc' => [ "$modelTable.type" => SORT_ASC ],
-	                'desc' => [ "$modelTable.type" => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'Type'
-	            ],
-				'order' => [
-					'asc' => [ "$modelTable.order" => SORT_ASC ],
-					'desc' => [ "$modelTable.order" => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'Order'
+					'label' => 'Target Type'
 				],
 				'active' => [
 					'asc' => [ "$modelTable.active" => SORT_ASC ],
 					'desc' => [ "$modelTable.active" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Active'
+				],
+				'order' => [
+					'asc' => [ "$modelTable.order" => SORT_ASC ],
+					'desc' => [ "$modelTable.order" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Order'
 				]
 			],
-			'defaultOrder' => $defaultSort
+			'defaultOrder' => [
+				'id' => SORT_DESC
+			]
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -158,14 +132,7 @@ class ModelLocationService extends \cmsgears\core\common\services\base\ModelMapp
 		// Filters ----------
 
 		// Params
-		$type	= Yii::$app->request->getQueryParam( 'type' );
-		$filter	= Yii::$app->request->getQueryParam( 'model' );
-
-		// Filter - Type
-		if( isset( $type ) ) {
-
-			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
-		}
+		$filter = Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Model
 		if( isset( $filter ) ) {
@@ -189,28 +156,25 @@ class ModelLocationService extends \cmsgears\core\common\services\base\ModelMapp
 
 		// Searching --------
 
-		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
-		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
-
-		$search = [
-			'title' => "$locationTable.title"
-		];
+		$searchCol = Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
-		}
-		else if( isset( $keywordsCol ) ) {
+			$search = [
+				'stype' => "$modelTable.sourceType",
+				'ttype' => "$modelTable.targetType"
+			];
 
-			$config[ 'search-col' ] = $search;
+			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
 
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'title' => "$locationTable.title",
-			'order' => "$modelTable.order",
-			'active' => "$modelTable.active"
+			'stype' => "$modelTable.sourceType",
+			'ttype' => "$modelTable.targetType",
+			'active' => "$modelTable.active",
+			'order' => "$modelTable.order"
 		];
 
 		// Result -----------
@@ -246,7 +210,7 @@ class ModelLocationService extends \cmsgears\core\common\services\base\ModelMapp
 
 	// CMG parent classes --------------------
 
-	// ModelLocationService ------------------
+	// DependencyService ---------------------
 
 	// Data Provider ------
 

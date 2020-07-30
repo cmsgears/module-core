@@ -17,7 +17,7 @@ use cmsgears\core\common\services\interfaces\base\IModelResourceService;
  *
  * @since 1.0.0
  */
-interface IModelHierarchyService extends  IModelResourceService {
+interface IModelHierarchyService extends IModelResourceService {
 
 	// Data Provider ------
 

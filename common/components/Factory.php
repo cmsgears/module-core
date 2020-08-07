@@ -128,7 +128,7 @@ class Factory extends \cmsgears\core\common\base\Component {
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IThemeService', 'cmsgears\core\common\services\entities\ThemeService' );
 
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ITemplateService', 'cmsgears\core\common\services\entities\TemplateService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IObjectService', 'cmsgears\core\common\services\entities\ObjectDataService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IObjectDataService', 'cmsgears\core\common\services\entities\ObjectDataService' );
 
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IPermissionService', 'cmsgears\core\common\services\entities\PermissionService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IRoleService', 'cmsgears\core\common\services\entities\RoleService' );
@@ -210,7 +210,7 @@ class Factory extends \cmsgears\core\common\base\Component {
 		$factory->set( 'themeService', 'cmsgears\core\common\services\entities\ThemeService' );
 
 		$factory->set( 'templateService', 'cmsgears\core\common\services\entities\TemplateService' );
-		$factory->set( 'objectService', 'cmsgears\core\common\services\entities\ObjectDataService' );
+		$factory->set( 'ObjectDataService', 'cmsgears\core\common\services\entities\ObjectDataService' );
 
 		$factory->set( 'permissionService', 'cmsgears\core\common\services\entities\PermissionService' );
 		$factory->set( 'roleService', 'cmsgears\core\common\services\entities\RoleService' );

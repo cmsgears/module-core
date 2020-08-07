@@ -11,7 +11,6 @@ namespace cmsgears\core\common\behaviors;
 
 // Yii Imports
 use Yii;
-use yii\base\Behavior;
 use yii\web\Controller;
 
 /**
@@ -20,7 +19,7 @@ use yii\web\Controller;
  *
  * @since 1.0.0
  */
-class ActivityBehavior extends Behavior {
+class ActivityBehavior extends \yii\base\Behavior {
 
 	public $admin = false;
 

@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
  * ProvinceController provides actions specific to province model.
  *
  * @since 1.0.0
  */
-class CityController extends Controller {
+class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -50,9 +48,9 @@ class CityController extends Controller {
 		$this->apixBase = 'core/city';
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'cityService' );
+		$this->modelService = Yii::$app->factory->get( 'cityService' );
 
-		$this->provinceService	= Yii::$app->factory->get( 'provinceService' );
+		$this->provinceService = Yii::$app->factory->get( 'provinceService' );
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-core', 'child' => 'country' ];

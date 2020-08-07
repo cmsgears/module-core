@@ -18,14 +18,12 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
  * FieldController provides actions specific to form field model.
  *
  * @since 1.0.0
  */
-class FieldController extends Controller {
+class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -83,16 +81,16 @@ class FieldController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'all'  => [ 'permission' => $this->crudPermission ],
-					'create'  => [ 'permission' => $this->crudPermission ],
-					'update'  => [ 'permission' => $this->crudPermission ],
-					'delete'  => [ 'permission' => $this->crudPermission ]
+					'all' => [ 'permission' => $this->crudPermission ],
+					'create' => [ 'permission' => $this->crudPermission ],
+					'update' => [ 'permission' => $this->crudPermission ],
+					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
-					'all'	=> [ 'get' ],
+					'all' => [ 'get' ],
 					'create' => [ 'get', 'post' ],
 					'update' => [ 'get', 'post' ],
 					'delete' => [ 'get', 'post' ]
@@ -109,26 +107,28 @@ class FieldController extends Controller {
 
 	// FieldController -----------------------
 
-	public function actionAll( $fid ) {
+	public function actionAll( $pid ) {
 
 		Url::remember( Yii::$app->request->getUrl(), 'form-fields' );
 
 		$modelClass = $this->modelService->getModelClass();
 
-		$dataProvider = $this->modelService->getPageByFormId( $fid );
+		$dataProvider = $this->modelService->getPageByFormId( $pid );
 
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
-			'formId' => $fid,
+			'formId' => $pid,
 			'typeMap' => $modelClass::$typeMap
 		]);
 	}
 
-	public function actionCreate( $fid ) {
+	public function actionCreate( $pid ) {
 
-		$modelClass		= $this->modelService->getModelClass();
-		$model			= new $modelClass;
-		$model->formId	= $fid;
+		$modelClass = $this->modelService->getModelClass();
+
+		$model = new $modelClass;
+
+		$model->formId = $pid;
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
@@ -139,7 +139,7 @@ class FieldController extends Controller {
 
 		return $this->render( 'create', [
 			'model' => $model,
-			'formId' => $fid,
+			'formId' => $pid,
 			'typeMap' => $modelClass::$typeMap
 		]);
 	}
@@ -147,8 +147,9 @@ class FieldController extends Controller {
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$modelClass	= $this->modelService->getModelClass();
-		$model		= $this->modelService->getById( $id );
+		$modelClass = $this->modelService->getModelClass();
+
+		$model = $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
@@ -174,8 +175,9 @@ class FieldController extends Controller {
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$modelClass	= $this->modelService->getModelClass();
-		$model		= $this->modelService->getById( $id );
+		$modelClass = $this->modelService->getModelClass();
+
+		$model = $this->modelService->getById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
@@ -197,4 +199,5 @@ class FieldController extends Controller {
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

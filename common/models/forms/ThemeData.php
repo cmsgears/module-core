@@ -15,7 +15,6 @@ use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\common\models\forms\BaseForm;
 
 /**
  * It collect the additional CSS added on top of theme CSS to further customize the

@@ -1,5 +1,8 @@
 <?php
-$siteDesc = Yii::$app->core->site->description;
+// Yii Imports
+use yii\helpers\Html;
+
+$siteDesc = Html::encode( Yii::$app->core->site->description );
 ?>
 <table cellspacing="0" cellpadding="0" border="0" margin="0" padding="0" width="80%" align="center" style="background-color: #2A3744;" class="ctmax">
 	<tr>

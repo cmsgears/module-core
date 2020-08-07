@@ -35,7 +35,7 @@ interface IFile {
 	/**
 	 * Attach the file to the given model.
 	 */
-	public function attachFile( $model, $file, $fileType );
+	public function attachFile( $model, $file, $fileType, $type = null );
 
 	// Delete -------------
 

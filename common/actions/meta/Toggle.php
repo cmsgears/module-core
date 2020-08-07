@@ -75,9 +75,10 @@ class Toggle extends \cmsgears\core\common\actions\base\ModelAction {
 
 		if( isset( $parent ) ) {
 
-			$metaClass	= $this->metaService->getModelClass();
-			$meta		= new $metaClass;
-			$label		= Yii::$app->request->post( 'label' );
+			$metaClass = $this->metaService->getModelClass();
+
+			$meta	= new $metaClass;
+			$label	= Yii::$app->request->post( 'label' );
 
 			if( $meta->hasAttribute( 'modelId' ) ) {
 

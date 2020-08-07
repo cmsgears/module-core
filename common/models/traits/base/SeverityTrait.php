@@ -25,6 +25,13 @@ trait SeverityTrait {
 
 	// Globals ----------------
 
+	public static $severityList = [
+		ISeverity::SEVERITY_DEFAULT,
+		ISeverity::SEVERITY_LOW,
+		ISeverity::SEVERITY_MEDIUM,
+		ISeverity::SEVERITY_HIGH
+	];
+
 	public static $severityMap = [
 		ISeverity::SEVERITY_DEFAULT => 'Undefined',
 		ISeverity::SEVERITY_LOW => 'Low',
@@ -37,6 +44,20 @@ trait SeverityTrait {
 		'Low' => ISeverity::SEVERITY_LOW,
 		'Medium' => ISeverity::SEVERITY_MEDIUM,
 		'High' => ISeverity::SEVERITY_HIGH
+	];
+
+	public static $urlRevSeverityMap = [
+		'undefined' => ISeverity::SEVERITY_DEFAULT,
+		'low' => ISeverity::SEVERITY_LOW,
+		'medium' => ISeverity::SEVERITY_MEDIUM,
+		'high' => ISeverity::SEVERITY_HIGH
+	];
+
+	public static $filterSeverityMap = [
+		'undefined' => 'Undefined',
+		'low' => 'Low',
+		'medium' => 'Medium',
+		'high' => 'High'
 	];
 
 	// Public -----------------

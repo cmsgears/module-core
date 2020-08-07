@@ -23,7 +23,7 @@ if( $user->isPermitted( CoreGlobal::PERM_ADMIN ) ) {
 	$siteUrl = Html::encode( $coreProperties->getAdminUrl() );
 }
 
-$loginLink	= "$siteUrl/login";
+$loginLink = "$siteUrl/login";
 ?>
 <?php include "$defaultIncludes/header.php"; ?>
 <table cellspacing="0" cellpadding="0" border="0" margin="0" padding="0" width="80%" align="center" class="ctmax">

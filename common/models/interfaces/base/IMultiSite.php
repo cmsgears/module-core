@@ -16,4 +16,6 @@ namespace cmsgears\core\common\models\interfaces\base;
  */
 interface IMultiSite {
 
+	public function getSite();
+
 }

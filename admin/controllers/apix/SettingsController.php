@@ -25,7 +25,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class SettingsController extends \cmsgears\core\admin\controllers\base\Controller {
+class SettingsController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -96,10 +96,10 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 		$form		= new GenericForm( [ 'fields' => $fieldsMap ] );
 
 		$htmlContent = $this->renderPartial( '@cmsgears/module-core/admin/views/settings/info', [
-							'fieldsMap' => $fieldsMap,
-							'type' => $type,
-							'form' => $form
-						]);
+			'fieldsMap' => $fieldsMap,
+			'type' => $type,
+			'form' => $form
+		]);
 
 		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $htmlContent );
 	}

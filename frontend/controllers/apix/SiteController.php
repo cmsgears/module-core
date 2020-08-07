@@ -29,7 +29,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class SiteController extends \cmsgears\core\frontend\controllers\base\Controller {
+class SiteController extends \cmsgears\core\frontend\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -193,7 +193,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		if( $model->load( Yii::$app->request->post(), 'Login' )	 && $model->login() ) {
 
 			$siteId		= Yii::$app->core->getSiteId();
-			$user		= Yii::$app->user->getIdentity();
+			$user		= Yii::$app->core->getUser();
 			$role		= $user->role;
 			$storedLink	= Url::previous( CoreGlobal::REDIRECT_LOGIN );
 

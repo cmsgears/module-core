@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\mapper;
 
 // Yii Imports
@@ -60,7 +68,7 @@ class Assign extends \cmsgears\core\common\actions\base\ModelAction {
 
 			$mappingType = isset( $post[ 'ctype' ] ) ? $post[ 'ctype' ] : null;
 
-			$modelMapper = $this->modelMapperService->activateByModelId( $this->model->id, $this->parentType, $post[ 'itemId' ], $mappingType );
+			$modelMapper = $this->modelMapperService->activateByParentModelId( $this->model->id, $this->parentType, $post[ 'itemId' ], $mappingType );
 
 			$data = [ 'cid' => $modelMapper->id, 'name' => $modelMapper->model->name ];
 

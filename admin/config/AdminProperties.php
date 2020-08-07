@@ -12,32 +12,30 @@ namespace cmsgears\core\admin\config;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\config\Properties;
-
 /**
  * AdminProperties provide methods to access the properties specific to admin.
  *
  * @since 1.0.0
  */
-class AdminProperties extends Properties {
+class AdminProperties extends \cmsgears\core\common\config\Properties {
 
 	// Variables ---------------------------------------------------
 
 	// Global -----------------
 
-	const PROP_CMG_POWERED		= 'cmg_powered';
+	const PROP_CMG_POWERED = 'cmg_powered';
 
-	const PROP_AVATAR_DEFAULT	= 'default_avatar';
+	const PROP_AVATAR_DEFAULT = 'default_avatar';
 
-	const PROP_AVATAR_USER		= 'user_avatar';
+	const PROP_AVATAR_USER = 'user_avatar';
 
-	const PROP_AVATAR_MAIL		= 'mail_avatar';
+	const PROP_AVATAR_MAIL = 'mail_avatar';
 
-	const PROP_BANNER_DEFAULT	= 'default_banner';
+	const PROP_BANNER_DEFAULT = 'default_banner';
 
-	const PROP_BANNER_PAGE		= 'page_banner';
+	const PROP_BANNER_PAGE = 'page_banner';
 
-	const PROP_BANNER_MAIL		= 'mail_banner';
+	const PROP_BANNER_MAIL = 'mail_banner';
 
 	// Public -----------------
 

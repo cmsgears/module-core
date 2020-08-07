@@ -1,5 +1,5 @@
-Below mentioned documentation convention can be used to follow CMG. Though it's not 
-mandatory or necessary to follow it, but we highly recommend it for CMG modules, 
+Below mentioned documentation convention can be used to follow CMG. Though it's not
+mandatory or necessary to follow it, but we highly recommend it for CMG modules,
 plugins, widgets and themes development.
 
 We follow the standard annotations specified by [phpDocumentor](https://docs.phpdoc.org).
@@ -29,7 +29,7 @@ Documentation
  * Summary goes here.
  *
  * Detail goes here.
- * 
+ *
  * @author author <author@email.com>
  * @since version
  */
@@ -42,6 +42,8 @@ Class Name - Fully Qualified class name or aliase
 Primitives - string, int, float, bool, array, resource, null, callable
 
 PHPDoc Keywords - mixed, void, object, false, true, self, static $this
+
+Additional - number, boolean, date, datetime, timestamp
 
 * Variables - Static
 
@@ -62,8 +64,8 @@ PHPDoc Keywords - mixed, void, object, false, true, self, static $this
 * Variables - Array
 
 ```php
-/** 
- * @var string[] An array of string objects. 
+/**
+ * @var string[] An array of string objects.
  */
 ```
 

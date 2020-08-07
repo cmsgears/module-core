@@ -13,15 +13,12 @@ namespace cmsgears\core\common\widgets;
 use Yii;
 use yii\helpers\ArrayHelper;
 
-// CMG Imports
-use cmsgears\core\common\base\Widget;
-
 /**
  * The base editor calls the editor configured for application.
  *
  * @since 1.0.0
  */
-class Editor extends Widget {
+class Editor extends \cmsgears\core\common\base\Widget {
 
 	// Variables ---------------------------------------------------
 

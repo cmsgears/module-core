@@ -56,7 +56,8 @@ trait FormTrait {
 		$modelFormTable = ModelForm::tableName();
 
 		return $this->hasMany( ModelForm::class, [ 'parentId' => 'id' ] )
-			->where( "$modelFormTable.parentType='$this->modelType'" );
+			->where( "$modelFormTable.parentType=:ptype", [ ':ptype' => $this->modelType ] )
+			->orderBy( [ "$modelFormTable.order" => SORT_DESC, "$modelFormTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -67,7 +68,8 @@ trait FormTrait {
 		$modelFormTable = ModelForm::tableName();
 
 		return $this->hasMany( ModelForm::class, [ 'parentId' => 'id' ] )
-			->where( "$modelFormTable.parentType='$this->modelType' AND $modelFormTable.active=1" );
+			->where( "$modelFormTable.parentType=:ptype AND $modelFormTable.active=1", [ ':ptype' => $this->modelType ] )
+			->orderBy( [ "$modelFormTable.order" => SORT_DESC, "$modelFormTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -77,8 +79,16 @@ trait FormTrait {
 
 		$modelFormTable = ModelForm::tableName();
 
-		return $this->hasOne( ModelForm::class, [ 'parentId' => 'id' ] )
-			->where( "$modelFormTable.parentType=:ptype AND $modelFormTable.type=:type AND $modelFormTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
+		if( $active ) {
+
+			return $this->hasMany( ModelForm::class, [ 'parentId' => 'id' ] )
+				->where( "$modelFormTable.parentType=:ptype AND $modelFormTable.type=:type AND $modelFormTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+				->orderBy( [ "$modelFormTable.order" => SORT_DESC, "$modelFormTable.id" => SORT_DESC ] );
+		}
+
+		return $this->hasMany( ModelForm::class, [ 'parentId' => 'id' ] )
+			->where( "$modelFormTable.parentType=:ptype AND $modelFormTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] )
+			->orderBy( [ "$modelFormTable.order" => SORT_DESC, "$modelFormTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -86,15 +96,14 @@ trait FormTrait {
 	 */
 	public function getForms() {
 
-		$modelFormTable = ModelForm::tableName();
+		$formTable		= Form::tableName();
+		$modelFormTable	= ModelForm::tableName();
 
-		return $this->hasMany( Form::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelFormTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelFormTable ) {
-
-					$query->onCondition( [ "$modelFormTable.parentType" => $this->modelType ] );
-				}
-			);
+		return Form::find()
+			->leftJoin( $modelFormTable, "$modelFormTable.modelId=$formTable.id" )
+			->where( "$modelFormTable.parentId=:pid AND $modelFormTable.parentType=:ptype", [ ':pid' => $this->id, ':ptype' => $this->modelType ] )
+			->orderBy( [ "$modelFormTable.order" => SORT_DESC, "$modelFormTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**
@@ -102,15 +111,14 @@ trait FormTrait {
 	 */
 	public function getActiveForms() {
 
-		$modelFormTable = ModelForm::tableName();
+		$formTable		= Form::tableName();
+		$modelFormTable	= ModelForm::tableName();
 
-		return $this->hasMany( Form::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelFormTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelFormTable ) {
-
-					$query->onCondition( [ "$modelFormTable.parentType" => $this->modelType, "$modelFormTable.active" => true ] );
-				}
-			);
+		return Form::find()
+			->leftJoin( $modelFormTable, "$modelFormTable.modelId=$formTable.id" )
+			->where( "$modelFormTable.parentId=:pid AND $modelFormTable.parentType=:ptype AND $modelFormTable.active=1", [ ':pid' => $this->id, ':ptype' => $this->modelType ] )
+			->orderBy( [ "$modelFormTable.order" => SORT_DESC, "$modelFormTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**
@@ -118,15 +126,23 @@ trait FormTrait {
 	 */
 	public function getFormsByType( $type, $active = true ) {
 
-		$modelFormTable = ModelForm::tableName();
+		$formTable		= Form::tableName();
+		$modelFormTable	= ModelForm::tableName();
 
-		return $this->hasMany( Form::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelFormTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$type, &$active, &$modelFormTable ) {
+		if( $active ) {
 
-					$query->onCondition( [ "$modelFormTable.parentType" => $this->modelType, "$modelFormTable.type" => $type, "$modelFormTable.active" => $active ] );
-				}
-			)->all();
+			return Form::find()
+				->leftJoin( $modelFormTable, "$modelFormTable.modelId=$formTable.id" )
+				->where( "$modelFormTable.parentId=:pid AND $modelFormTable.parentType=:ptype AND $modelFormTable.type=:type AND $modelFormTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+				->orderBy( [ "$modelFormTable.order" => SORT_DESC, "$modelFormTable.id" => SORT_DESC ] )
+				->all();
+		}
+
+		return Form::find()
+			->leftJoin( $modelFormTable, "$modelFormTable.modelId=$formTable.id" )
+			->where( "$modelFormTable.parentId=:pid AND $modelFormTable.parentType=:ptype AND $modelFormTable.type=:type", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type ] )
+			->orderBy( [ "$modelFormTable.order" => SORT_DESC, "$modelFormTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	// Static Methods ----------------------------------------------

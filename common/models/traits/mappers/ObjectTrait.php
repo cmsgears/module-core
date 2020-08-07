@@ -51,7 +51,7 @@ trait ObjectTrait {
 
 		return $this->hasMany( ModelObject::class, [ 'parentId' => 'id' ] )
 			->where( "$modelObjectTable.parentType='$this->modelType'" )
-			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -63,7 +63,7 @@ trait ObjectTrait {
 
 		return $this->hasMany( ModelObject::class, [ 'parentId' => 'id' ] )
 			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.active=1" )
-			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -73,9 +73,16 @@ trait ObjectTrait {
 
 		$modelObjectTable = ModelObject::tableName();
 
-		return $this->hasOne( ModelObject::class, [ 'parentId' => 'id' ] )
-			->where( "$modelObjectTable.parentType=:ptype AND $modelObjectTable.type=:type AND $modelObjectTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
-			->orderBy( [ 'order' => SORT_DESC, 'id' => SORT_ASC ] )->all();
+		if( $active ) {
+
+			return $this->hasMany( ModelObject::class, [ 'parentId' => 'id' ] )
+				->where( "$modelObjectTable.parentType=:ptype AND $modelObjectTable.type=:type AND $modelObjectTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+				->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_DESC ] );
+		}
+
+		return $this->hasMany( ModelObject::class, [ 'parentId' => 'id' ] )
+			->where( "$modelObjectTable.parentType=:ptype AND $modelObjectTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -83,15 +90,14 @@ trait ObjectTrait {
 	 */
 	public function getObjects() {
 
-		$modelObjectTable = ModelObject::tableName();
+		$objectTable		= ObjectData::tableName();
+		$modelObjectTable	= ModelObject::tableName();
 
-		return $this->hasMany( ObjectData::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelObjectTable ) {
-
-					$query->onCondition( [ "$modelObjectTable.parentType" => $this->modelType ] );
-				}
-			);
+		return ObjectData::find()
+			->leftJoin( $modelObjectTable, "$modelObjectTable.modelId=$objectTable.id" )
+			->where( "$modelObjectTable.parentId=:pid AND $modelObjectTable.parentType=:ptype", [ ':pid' => $this->id, ':ptype' => $this->modelType ] )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**
@@ -99,15 +105,14 @@ trait ObjectTrait {
 	 */
 	public function getActiveObjects() {
 
-		$modelObjectTable = ModelObject::tableName();
+		$objectTable		= ObjectData::tableName();
+		$modelObjectTable	= ModelObject::tableName();
 
-		return $this->hasMany( ObjectData::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelObjectTable ) {
-
-					$query->onCondition( [ "$modelObjectTable.parentType" => $this->modelType, "$modelObjectTable.active" => true ] );
-				}
-			);
+		return ObjectData::find()
+			->leftJoin( $modelObjectTable, "$modelObjectTable.modelId=$objectTable.id" )
+			->where( "$modelObjectTable.parentId=:pid AND $modelObjectTable.parentType=:ptype AND $modelObjectTable.active=1", [ ':pid' => $this->id, ':ptype' => $this->modelType ] )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**
@@ -115,15 +120,23 @@ trait ObjectTrait {
 	 */
 	public function getObjectsByType( $type, $active = true ) {
 
-		$modelObjectTable = ModelObject::tableName();
+		$objectTable		= ObjectData::tableName();
+		$modelObjectTable	= ModelObject::tableName();
 
-		return $this->hasMany( ObjectData::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$type, &$active, &$modelObjectTable ) {
+		if( $active ) {
 
-					$query->onCondition( [ "$modelObjectTable.parentType" => $this->modelType, "$modelObjectTable.type" => $type, "$modelObjectTable.active" => $active ] );
-				}
-			)->all();
+			return ObjectData::find()
+				->leftJoin( $modelObjectTable, "$modelObjectTable.modelId=$objectTable.id" )
+				->where( "$modelObjectTable.parentId=:pid AND $modelObjectTable.parentType=:ptype AND $modelObjectTable.type=:type AND $modelObjectTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+				->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_DESC ] )
+				->all();
+		}
+
+		return ObjectData::find()
+			->leftJoin( $modelObjectTable, "$modelObjectTable.modelId=$objectTable.id" )
+			->where( "$modelObjectTable.parentId=:pid AND $modelObjectTable.parentType=:ptype AND $modelObjectTable.type=:type", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type ] )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	// Static Methods ----------------------------------------------

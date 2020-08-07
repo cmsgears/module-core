@@ -21,7 +21,7 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * @since 1.0.0
  */
-class ObjectDataController extends \cmsgears\core\admin\controllers\base\Controller {
+class ObjectDataController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -40,10 +40,10 @@ class ObjectDataController extends \cmsgears\core\admin\controllers\base\Control
 		parent::init();
 
 		// Permission
-		$this->crudPermission = CoreGlobal::PERM_ADMIN;
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Services
-		$this->modelService = Yii::$app->factory->get( 'objectService' );
+		$this->modelService = Yii::$app->factory->get( 'objectDataService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -60,14 +60,23 @@ class ObjectDataController extends \cmsgears\core\admin\controllers\base\Control
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					// Protected actions
+					'auto-search' => [ 'permission' => CoreGlobal::PERM_ADMIN ], // Available for all admin users
+					'bulk' => [ 'permission' => $this->crudPermission ],
+					'generic' => [ 'permission' => $this->crudPermission ],
+					'create' => [ 'permission' => $this->crudPermission ],
+					'update' => [ 'permission' => $this->crudPermission ],
+					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
-					// Searching
-					'auto-search' => [ 'post' ]
+					'auto-search' => [ 'post' ],
+					'bulk' => [ 'post' ],
+					'generic' => [ 'post' ],
+					'create' => [ 'post' ],
+					'update' => [ 'post' ],
+					'delete' => [ 'post' ]
 				]
 			]
 		];
@@ -78,8 +87,12 @@ class ObjectDataController extends \cmsgears\core\admin\controllers\base\Control
 	public function actions() {
 
 		return [
-			// Searching
-			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ]
+			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
+			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
+			'create' => [ 'class' => 'cmsgears\core\common\actions\grid\Create' ],
+			'update' => [ 'class' => 'cmsgears\core\common\actions\grid\Update' ],
+			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
 	}
 

@@ -17,10 +17,11 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 
 /**
- * Discover Filter is an RBAC filter and works as child filter of RBAC filter. It finds and set
- * the primary model using primary service of controller. In all other cases, it ignore the action
- * and throws ForbiddenHttpException exception. It must be the first filter in case an action is
- * configured for multiple filters. The subsequent filters can use the primary model identified by it.
+ * Discover Filter is an RBAC filter and works as child filter of RBAC filter. It
+ * finds and set the primary model using primary service of controller. In all other
+ * cases, it ignore the action and throws ForbiddenHttpException exception. It must
+ * be the first filter in case an action is configured for multiple filters. The
+ * subsequent filters can use the primary model identified by it.
  *
  * Ex:
  *	public function behaviors() {

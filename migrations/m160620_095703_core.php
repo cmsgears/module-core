@@ -247,7 +247,8 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
 			'popular' => $this->boolean()->notNull()->defaultValue( false ),
-			'admin' => $this->boolean()->notNull()->defaultValue( false ), // Admin Object
+			'backend' => $this->boolean()->notNull()->defaultValue( false ), // Admin Object
+			'frontend' => $this->boolean()->notNull()->defaultValue( false ), // User Object
 			'shared' => $this->boolean()->notNull()->defaultValue( false ), // Shared Object
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
@@ -537,7 +538,6 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'lastLoginAt' => $this->dateTime(),
 			'lastActivityAt' => $this->dateTime(),
 			'authKey' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
-			// Otp -> Remove the OTP columns from user table after confirmation
 			'otp' => $this->integer( 10 )->defaultValue( null ),
 			'otpValidTill' => $this->dateTime()->defaultValue( null ),
 			// Access Token
@@ -725,7 +725,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'createdBy' => $this->bigInteger( 20 ),
 			'modifiedBy' => $this->bigInteger( 20 ),
 			'name' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
-			'tag' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
+			'code' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'title' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'extension' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
@@ -745,7 +745,9 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'caption' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'altText' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'link' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
-			'shared' => $this->boolean()->notNull()->defaultValue( false ),
+			'backend' => $this->boolean()->notNull()->defaultValue( false ), // Admin File
+			'frontend' => $this->boolean()->notNull()->defaultValue( false ), // User File
+			'shared' => $this->boolean()->notNull()->defaultValue( false ), // Shared File
 			'srcset' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'sizes' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'createdAt' => $this->dateTime()->notNull(),
@@ -777,6 +779,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'title' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
+			'code' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'status' => $this->smallInteger( 6 ),
 			'visibility' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),

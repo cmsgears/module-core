@@ -29,7 +29,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class Create extends \cmsgears\core\common\actions\base\ModelAction {
+abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -98,7 +98,6 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 			$modelComment	= new $modelClass;
 			$commentForm	= new Comment();
 
-			$modelComment->siteId		= Yii::$app->core->getSiteId();
 			$modelComment->parentId		= $this->model->id;
 			$modelComment->parentType	= $this->parentType;
 
@@ -119,7 +118,11 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 			if( $commentForm->load( Yii::$app->request->post(), $commentForm->getClassName() ) && $commentForm->validate() ) {
 
-				$modelComment->copyForUpdateFrom( $commentForm, [ 'baseId', 'bannerId', 'videoId', 'avatarUrl', 'websiteUrl', 'rating', 'anonymous', 'content' ] );
+				$modelComment->copyForUpdateFrom( $commentForm, [
+					'baseId', 'bannerId', 'videoId', 'title', 'avatarUrl', 'websiteUrl',
+					'rate1', 'rate2', 'rate3', 'rate4', 'rate5', 'rating',
+					'anonymous', 'content'
+				]);
 
 				if( !$this->setUser || !isset( $user ) ) {
 
@@ -150,7 +153,7 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 							foreach( $files as $file ) {
 
-								$modelCommentService->attachMedia( $modelComment, $file, $this->mediaType, ModelComment::TYPE_COMMENT );
+								$modelCommentService->attachFile( $modelComment, $file, $this->mediaType, ModelComment::TYPE_COMMENT );
 							}
 						}
 					}

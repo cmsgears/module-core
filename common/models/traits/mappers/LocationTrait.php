@@ -51,7 +51,7 @@ trait LocationTrait {
 
 		return $this->hasMany( ModelLocation::class, [ 'parentId' => 'id' ] )
 			->where( "$modelLocationTable.parentType=:ptype", [ ':ptype' => $this->modelType ] )
-			->orderBy( "$modelLocationTable.id DESC" );
+			->orderBy( [ "$modelLocationTable.order" => SORT_DESC, "$modelLocationTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -63,7 +63,7 @@ trait LocationTrait {
 
 		return $this->hasMany( ModelLocation::class, [ 'parentId' => 'id' ] )
 			->where( "$modelLocationTable.parentType=:ptype AND $modelLocationTable.active=:active", [ ':ptype' => $this->modelType, ':active' => true ] )
-			->orderBy( "$modelLocationTable.id DESC" );
+			->orderBy( [ "$modelLocationTable.order" => SORT_DESC, "$modelLocationTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -73,9 +73,16 @@ trait LocationTrait {
 
 		$modelLocationTable = ModelLocation::tableName();
 
+		if( $active ) {
+
+			return $this->hasMany( ModelLocation::class, [ 'parentId' => 'id' ] )
+				->where( "$modelLocationTable.parentType=:ptype AND $modelLocationTable.type=:type AND $modelLocationTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+				->orderBy( [ "$modelLocationTable.order" => SORT_DESC, "$modelLocationTable.id" => SORT_DESC ] );
+		}
+
 		return $this->hasMany( ModelLocation::class, [ 'parentId' => 'id' ] )
-			->where( "$modelLocationTable.parentType=:ptype AND $modelLocationTable.type=:type AND $modelLocationTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
-			->orderBy( "$modelLocationTable.id DESC" );
+			->where( "$modelLocationTable.parentType=:ptype AND $modelLocationTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] )
+			->orderBy( [ "$modelLocationTable.order" => SORT_DESC, "$modelLocationTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -116,9 +123,18 @@ trait LocationTrait {
 		$locationTable		= Location::tableName();
 		$modelLocationTable	= ModelLocation::tableName();
 
+		if( $active ) {
+
+			return Location::find()
+				->leftJoin( $modelLocationTable, "$modelLocationTable.modelId=$locationTable.id" )
+				->where( "$modelLocationTable.parentId=:pid AND $modelLocationTable.parentType=:ptype AND $modelLocationTable.type=:type AND $modelLocationTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+				->orderBy( [ "$modelLocationTable.order" => SORT_DESC, "$modelLocationTable.id" => SORT_DESC ] )
+				->all();
+		}
+
 		return Location::find()
 			->leftJoin( $modelLocationTable, "$modelLocationTable.modelId=$locationTable.id" )
-			->where( "$modelLocationTable.parentId=:pid AND $modelLocationTable.parentType=:ptype AND $modelLocationTable.type=:type AND $modelLocationTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+			->where( "$modelLocationTable.parentId=:pid AND $modelLocationTable.parentType=:ptype AND $modelLocationTable.type=:type", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type ] )
 			->orderBy( [ "$modelLocationTable.order" => SORT_DESC, "$modelLocationTable.id" => SORT_DESC ] )
 			->all();
 	}

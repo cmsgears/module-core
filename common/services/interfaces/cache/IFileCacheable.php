@@ -17,5 +17,8 @@ namespace cmsgears\core\common\services\interfaces\cache;
  */
 interface IFileCacheable {
 
+	public function prepareFileCache( $model, $config = [] );
+
 	public function cacheFile( $model, $config = [] );
+
 }

@@ -16,14 +16,12 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
  * CategoryController provides actions specific to category models.
  *
  * @since 1.0.0
  */
-class CategoryController extends Controller {
+class CategoryController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -96,7 +94,7 @@ class CategoryController extends Controller {
 			// Searching
 			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
 			// Model
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'create' => [ 'class' => 'cmsgears\core\common\actions\grid\Create' ],
 			'update' => [ 'class' => 'cmsgears\core\common\actions\grid\Update' ],

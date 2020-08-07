@@ -19,7 +19,7 @@ use cmsgears\core\frontend\config\SiteProperties;
  *
  * @since 1.0.0
  */
-abstract class Controller extends \cmsgears\core\common\controllers\base\Controller {
+abstract class Controller extends \cmsgears\core\common\controllers\apix\Controller {
 
 	// Variables ---------------------------------------------------
 

@@ -23,8 +23,9 @@ use cmsgears\core\common\models\resources\FormField;
 // TODO: Use php templates to render the html.
 
 /**
- * Default form designer component to generate html for form elements using form and form fields.
- * It supports CMGTools UI, JS and IconLib by default, but can be overriden to support other ui libraries.
+ * Default form designer component to generate HTML for form elements using form
+ * and form fields. It supports CMGTools UI, JS and IconLib by default, but can be
+ * overridden to support other UI libraries.
  *
  * @since 1.0.0
  */
@@ -319,14 +320,14 @@ class FormDesigner extends \yii\base\Component {
 
 			if( $value > 0 && $value == $i ) {
 
-				$icon	= "<span star=\"$i\" class=\"star selected\"></span>";
+				$icon = "<span star=\"$i\" class=\"star selected\"></span>";
 			}
 			else {
 
-				$icon	= "<span star=\"$i\" class=\"star\"></span>";
+				$icon = "<span star=\"$i\" class=\"star\"></span>";
 			}
 
-			$ratingHtml	  .= $icon;
+			$ratingHtml .= $icon;
 		}
 
 		$ratingHtml .= '</span>';
@@ -339,14 +340,14 @@ class FormDesigner extends \yii\base\Component {
 
 			if( $value > 0 && $value == $i ) {
 
-				$icon	= "<span star-message=\"$i\" class=\"star-message selected\">$message</span>";
+				$icon = "<span star-message=\"$i\" class=\"star-message selected\">$message</span>";
 			}
 			else {
 
-				$icon	= "<span star-message=\"$i\" class=\"star-message\">$message</span>";
+				$icon = "<span star-message=\"$i\" class=\"star-message\">$message</span>";
 			}
 
-			$ratingHtml	  .= $icon;
+			$ratingHtml .= $icon;
 		}
 
 		$ratingHtml .= '</span>';
@@ -508,7 +509,7 @@ class FormDesigner extends \yii\base\Component {
 			$fieldHtml = "$fieldHtml<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 
-		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
 
 		return $fieldHtml;
 	}
@@ -536,7 +537,7 @@ class FormDesigner extends \yii\base\Component {
 							<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 
-		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
 
 		return $fieldHtml;
 	}
@@ -557,12 +558,14 @@ class FormDesigner extends \yii\base\Component {
 			$fieldOptions[ 'class' ] = 'cmt-toggle cmt-toggle-round';
 		}
 
-		$modelName				= $config[ 'modelName' ];
-		$id						= $modelName . "_$field->name";
-		$fieldOptions[ 'id' ]	= $id;
-		$modelField				= $modelName . "[$field->name]";
-		$fieldHtml				= Html::hiddenInput( $modelName . "[$field->name]", $value );
-		$checkboxHtml			= Html::checkbox( "$field->name", $value, $fieldOptions );
+		$modelName	= $config[ 'modelName' ];
+		$id			= $modelName . "_$field->name";
+
+		$fieldOptions[ 'id' ] = $id;
+
+		$modelField		= $modelName . "[$field->name]";
+		$fieldHtml		= Html::hiddenInput( $modelName . "[$field->name]", $value );
+		$checkboxHtml	= Html::checkbox( "$field->name", $value, $fieldOptions );
 
 		if( $config[ 'label' ] ) {
 
@@ -576,7 +579,7 @@ class FormDesigner extends \yii\base\Component {
 							<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 
-		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
 
 		return $fieldHtml;
 	}
@@ -613,7 +616,7 @@ class FormDesigner extends \yii\base\Component {
 			$fieldHtml = "{$message}{$fieldHtml}<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 
-		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
 
 		return $fieldHtml;
 	}
@@ -627,13 +630,13 @@ class FormDesigner extends \yii\base\Component {
 
 		if( isset( $value ) && ( $value || strcmp( $value, 'Yes' ) == 0 ) ){
 
-			$value	= true;
+			$value = true;
 
 			$fieldOptions[ 'value' ] = $value;
 		}
 		else {
 
-			$value	= false;
+			$value = false;
 		}
 
 		$modelName	= $config[ 'modelName' ];
@@ -648,7 +651,7 @@ class FormDesigner extends \yii\base\Component {
 			$fieldHtml = "$fieldHtml<span class='error' cmt-error='$field->name'></span>";
 		}
 
-		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
 
 		return $fieldHtml;
 	}
@@ -674,7 +677,7 @@ class FormDesigner extends \yii\base\Component {
 			$fieldHtml = "$fieldHtml<span class='error' cmt-error='$field->name'></span>";
 		}
 
-		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
 
 		return $fieldHtml;
 	}
@@ -689,7 +692,7 @@ class FormDesigner extends \yii\base\Component {
 
 		if( isset( $value ) ) {
 
-			$value	= preg_split( "/,/", $value );
+			$value = preg_split( "/,/", $value );
 		}
 
 		if( isset( $field->categoryId ) ) {
@@ -709,7 +712,7 @@ class FormDesigner extends \yii\base\Component {
 			$fieldHtml = "$fieldHtml<span class='error' cmt-error='$field->name'></span>";
 		}
 
-		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
 
 		return $fieldHtml;
 	}
@@ -757,14 +760,14 @@ class FormDesigner extends \yii\base\Component {
 
 			if( $value > 0 && $value == $i ) {
 
-				$icon	= "<span star=\"$i\" class=\"star selected\"></span>";
+				$icon = "<span star=\"$i\" class=\"star selected\"></span>";
 			}
 			else {
 
-				$icon	= "<span star=\"$i\" class=\"star\"></span>";
+				$icon = "<span star=\"$i\" class=\"star\"></span>";
 			}
 
-			$ratingHtml	  .= $icon;
+			$ratingHtml .= $icon;
 		}
 
 		$ratingHtml .= '</span>';
@@ -777,14 +780,14 @@ class FormDesigner extends \yii\base\Component {
 
 			if( $value > 0 && $value == $i ) {
 
-				$icon	= "<span star-message=\"$i\" class=\"star-message selected\">$message</span>";
+				$icon = "<span star-message=\"$i\" class=\"star-message selected\">$message</span>";
 			}
 			else {
 
-				$icon	= "<span star-message=\"$i\" class=\"star-message\">$message</span>";
+				$icon = "<span star-message=\"$i\" class=\"star-message\">$message</span>";
 			}
 
-			$ratingHtml	  .= $icon;
+			$ratingHtml .= $icon;
 		}
 
 		$ratingHtml .= '</span>';

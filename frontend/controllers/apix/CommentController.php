@@ -25,7 +25,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-abstract class CommentController extends \cmsgears\core\frontend\controllers\base\Controller {
+abstract class CommentController extends \cmsgears\core\frontend\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -122,7 +122,7 @@ abstract class CommentController extends \cmsgears\core\frontend\controllers\bas
 
 			$parentType = $this->parentService->getParentType();
 
-			$adminLink	= "{$this->baseUrl}/update?id={$model->id}";
+			$adminLink = "{$this->baseUrl}/update?id={$model->id}";
 
 			$this->modelService->spamRequest( $model, $parent, [ 'parentType' => $parentType, 'adminLink' => $adminLink ] );
 

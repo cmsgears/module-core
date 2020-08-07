@@ -44,7 +44,7 @@ class TemplateManager extends \yii\base\Component {
 
 		parent::init();
 
-		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+		$this->templateService = Yii::$app->factory->get( 'templateService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -276,7 +276,7 @@ class TemplateManager extends \yii\base\Component {
 	 */
 	public function renderViewCategory( $template, $data, $config = [] ) {
 
-		return $this->renderViewGeneric( $template, $data, CoreGlobal::TPL_VIEW_CATEGRY, $config );
+		return $this->renderViewGeneric( $template, $data, CoreGlobal::TPL_VIEW_CATEGORY, $config );
 	}
 
 	/**

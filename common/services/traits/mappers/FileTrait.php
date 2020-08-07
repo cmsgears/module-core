@@ -61,7 +61,9 @@ trait FileTrait {
 	/**
 	 * @inheritdoc
 	 */
-	public function attachFile( $model, $file, $fileType ) {
+	public function attachFile( $model, $file, $fileType, $type = null ) {
+
+		$parentType	= static::$parentType;
 
 		$fileService		= Yii::$app->factory->get( 'fileService' );
 		$modelFileService	= Yii::$app->factory->get( 'modelFileService' );
@@ -98,7 +100,9 @@ trait FileTrait {
 		// Create Model File
 		if( $file->id > 0 ) {
 
-			$modelFileService->createByParams( [ 'modelId' => $file->id, 'parentId' => $model->id, 'parentType' => $this->modelType ] );
+			$modelFileService->createByParams([
+				'modelId' => $file->id, 'parentId' => $model->id, 'parentType' => $parentType
+			]);
 		}
 
 		return $file;

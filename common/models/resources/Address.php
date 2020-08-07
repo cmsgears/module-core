@@ -72,6 +72,24 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 
 	// Public -----------------
 
+	public static $typeList = [
+		self::TYPE_DEFAULT,
+		self::TYPE_PRIMARY,
+		self::TYPE_RESIDENTIAL,
+		self::TYPE_SHIPPING,
+		self::TYPE_BILLING,
+		self::TYPE_OFFICE,
+		self::TYPE_MAILING,
+		self::TYPE_BRANCH
+	];
+
+	public static $minTypeList = [
+		self::TYPE_PRIMARY,
+		self::TYPE_SHIPPING,
+		self::TYPE_BILLING,
+		self::TYPE_MAILING
+	];
+
 	public static $typeMap = [
 		self::TYPE_DEFAULT => 'Default',
 		self::TYPE_PRIMARY => 'Primary',

@@ -58,6 +58,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
+ * @property string $code
  * @property string $slug
  * @property string $type
  * @property string $icon
@@ -166,10 +167,11 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IApp
 			[ [ 'name' ], 'required' ],
 			[ [ 'id', 'content', 'gridCache' ], 'safe' ],
 			// Unique
+			[ 'code', 'unique' ],
 			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'code', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'slug', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			[ 'title', 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
@@ -202,6 +204,7 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IApp
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'code' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CODE ),
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),

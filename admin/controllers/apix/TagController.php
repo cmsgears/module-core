@@ -14,14 +14,14 @@ use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
-use cmsgears\core\admin\controllers\base\Controller;
+use cmsgears\core\common\config\CoreGlobal;
 
 /**
  * TagController provides actions specific to tag model.
  *
  * @since 1.0.0
  */
-class TagController extends Controller {
+class TagController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -38,6 +38,9 @@ class TagController extends Controller {
 	public function init() {
 
 		parent::init();
+
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'tagService' );
@@ -78,7 +81,7 @@ class TagController extends Controller {
 	public function actions() {
 
 		return [
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

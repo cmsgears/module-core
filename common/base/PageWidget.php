@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\base;
 
 // Yii Imports
@@ -15,7 +23,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 /**
- * The class PageWidget can be used by widgets which need pagination support via either pagination links or user scroll.
+ * The class PageWidget can be used by widgets which need pagination support via
+ * either pagination links or user scroll.
  */
 abstract class PageWidget extends Widget {
 

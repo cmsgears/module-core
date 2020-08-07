@@ -51,7 +51,7 @@ trait AddressTrait {
 
 		return $this->hasMany( ModelAddress::class, [ 'parentId' => 'id' ] )
 			->where( "$modelAddressTable.parentType=:ptype", [ ':ptype' => $this->modelType ] )
-			->orderBy( "$modelAddressTable.id DESC" );
+			->orderBy( [ "$modelAddressTable.order" => SORT_DESC, "$modelAddressTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -63,7 +63,7 @@ trait AddressTrait {
 
 		return $this->hasMany( ModelAddress::class, [ 'parentId' => 'id' ] )
 			->where( "$modelAddressTable.parentType=:ptype AND $modelAddressTable.active=:active", [ ':ptype' => $this->modelType, ':active' => true ] )
-			->orderBy( "$modelAddressTable.id DESC" );
+			->orderBy( [ "$modelAddressTable.order" => SORT_DESC, "$modelAddressTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -73,9 +73,16 @@ trait AddressTrait {
 
 		$modelAddressTable = ModelAddress::tableName();
 
+		if( $active ) {
+
+			return $this->hasMany( ModelAddress::class, [ 'parentId' => 'id' ] )
+				->where( "$modelAddressTable.parentType=:ptype AND $modelAddressTable.type=:type AND $modelAddressTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+				->orderBy( [ "$modelAddressTable.order" => SORT_DESC, "$modelAddressTable.id" => SORT_DESC ] );
+		}
+
 		return $this->hasMany( ModelAddress::class, [ 'parentId' => 'id' ] )
-			->where( "$modelAddressTable.parentType=:ptype AND $modelAddressTable.type=:type AND $modelAddressTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
-			->orderBy( "$modelAddressTable.id DESC" );
+			->where( "$modelAddressTable.parentType=:ptype AND $modelAddressTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] )
+			->orderBy( [ "$modelAddressTable.order" => SORT_DESC, "$modelAddressTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -116,9 +123,18 @@ trait AddressTrait {
 		$addressTable		= Address::tableName();
 		$modelAddressTable	= ModelAddress::tableName();
 
+		if( $active ) {
+
+			return Address::find()
+				->leftJoin( $modelAddressTable, "$modelAddressTable.modelId=$addressTable.id" )
+				->where( "$modelAddressTable.parentId=:pid AND $modelAddressTable.parentType=:ptype AND $modelAddressTable.type=:type AND $modelAddressTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+				->orderBy( [ "$modelAddressTable.order" => SORT_DESC, "$modelAddressTable.id" => SORT_DESC ] )
+				->all();
+		}
+
 		return Address::find()
 			->leftJoin( $modelAddressTable, "$modelAddressTable.modelId=$addressTable.id" )
-			->where( "$modelAddressTable.parentId=:pid AND $modelAddressTable.parentType=:ptype AND $modelAddressTable.type=:type AND $modelAddressTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+			->where( "$modelAddressTable.parentId=:pid AND $modelAddressTable.parentType=:ptype AND $modelAddressTable.type=:type", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type ] )
 			->orderBy( [ "$modelAddressTable.order" => SORT_DESC, "$modelAddressTable.id" => SORT_DESC ] )
 			->all();
 	}

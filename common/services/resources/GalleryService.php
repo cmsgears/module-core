@@ -364,7 +364,7 @@ class GalleryService extends \cmsgears\core\common\services\base\ResourceService
 		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'templateId', 'name', 'slug', 'icon', 'title',
+			'templateId', 'name', 'code', 'slug', 'icon', 'title',
 			'description', 'visibility', 'content'
 		];
 

@@ -70,10 +70,10 @@ class Assign extends \cmsgears\core\common\actions\base\ModelAction {
 
 			if( $this->modelService->updateVideo( $this->model, $video ) ) {
 
-				$response = [ 'fileUrl' => $video->getFileUrl() ];
+				$data = [ 'fileUrl' => $video->getFileUrl() ];
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 			}
 
 			// Trigger Ajax Failure

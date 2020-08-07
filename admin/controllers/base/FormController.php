@@ -73,21 +73,21 @@ abstract class FormController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'index'	 => [ 'permission' => $this->crudPermission ],
-					'all'  => [ 'permission' => $this->crudPermission ],
-					'create'  => [ 'permission' => $this->crudPermission ],
-					'update'  => [ 'permission' => $this->crudPermission ],
-					'delete'  => [ 'permission' => $this->crudPermission ]
+					'index' => [ 'permission' => $this->crudPermission ],
+					'all' => [ 'permission' => $this->crudPermission ],
+					'create' => [ 'permission' => $this->crudPermission ],
+					'update' => [ 'permission' => $this->crudPermission ],
+					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
 					'index' => [ 'get', 'post' ],
-					'all'  => [ 'get' ],
-					'create'  => [ 'get', 'post' ],
-					'update'  => [ 'get', 'post' ],
-					'delete'  => [ 'get', 'post' ]
+					'all' => [ 'get' ],
+					'create' => [ 'get', 'post' ],
+					'update' => [ 'get', 'post' ],
+					'delete' => [ 'get', 'post' ]
 				]
 			]
 		];
@@ -122,7 +122,6 @@ abstract class FormController extends Controller {
 		$model = new $modelClass;
 
 		$model->type		= $this->type;
-		$model->siteId		= Yii::$app->core->siteId;
 		$model->visibility	= $modelClass::VISIBILITY_PUBLIC;
 		$model->captcha		= false;
 

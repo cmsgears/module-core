@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\CrudController;
-
 /**
  * CountryController provides actions specific to country model.
  *
  * @since 1.0.0
  */
-class CountryController extends CrudController {
+class CountryController extends \cmsgears\core\admin\controllers\base\CrudController {
 
 	// Variables ---------------------------------------------------
 

@@ -54,10 +54,10 @@ trait OwnerTrait {
 
 		if( !isset( $user ) && !$strict ) {
 
-			$user = Yii::$app->user->getIdentity();
+			$user = Yii::$app->core->getUser();
 		}
 
-		if( isset( $user ) ) {
+		if( isset( $user ) && isset( $this->createdBy ) ) {
 
 			return $user->id == $this->createdBy;
 		}

@@ -58,8 +58,8 @@ interface IApproval {
 	/**
 	 * Placeholder constants to support approvalNotificationMap in ApprovalTrait.
 	 */
-	const STATUS_APPROVED	= 15001;
-	const STATUS_CHANGED	= 15005;
+	const STATUS_APPROVED	= 15005;
+	const STATUS_CHANGED	= 15010;
 
 	/**
 	 * Approver activate the model. The active models will have full access to all the

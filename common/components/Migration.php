@@ -1,11 +1,12 @@
 <?php
 /**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
  * @link https://www.cmsgears.org/
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
- * @license https://www.cmsgears.org/license/
- * @package module
- * @subpackage core
  */
+
 namespace cmsgears\core\common\components;
 
 // CMG Imports
@@ -16,7 +17,6 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * It defines the default prefix for CMSGears and Application specific database tables.
  *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
 class Migration extends \yii\base\Component {
@@ -28,23 +28,23 @@ class Migration extends \yii\base\Component {
 	// Public -----------------
 
 	// Table prefix
-	public $cmgPrefix		= 'cmg_'; // Used for CMSGears tables
-	public $sitePrefix		= 'site_'; // Used for project tables
+	public $cmgPrefix	= 'cmg_'; // Used for CMSGears tables
+	public $sitePrefix	= 'site_'; // Used for project tables
 
-	public $fk				= true;
+	public $fk = true;
 
-	public $tableOptions	= null;
+	public $tableOptions = null;
 
-	public $siteName		= 'CMSGears';
-	public $siteTitle		= 'CMSGears Demo';
+	public $siteName	= 'CMSGears';
+	public $siteTitle	= 'CMSGears Demo';
 
-	public $primaryDomain	= 'cmsgears.org';
+	public $primaryDomain = 'cmsgears.org';
 
 	public $defaultSite		= 'http://www.cmsgears.org';
 	public $defaultAdmin	= 'http://www.cmsgears.org/admin/';
 
-	public $uploadsDir		= null;
-	public $uploadsUrl		= 'http://www.cmsgears.org/uploads/';
+	public $uploadsDir	= null;
+	public $uploadsUrl	= 'http://www.cmsgears.org/uploads/';
 
 	public $testAccounts	= true;
 
@@ -54,7 +54,7 @@ class Migration extends \yii\base\Component {
 	public $siteInfo		= 'demoinfo';
 
 	// Timezone examples: Asia/Kolkata, Asia/Vladivostok, Asia/Bangkok, America/Toronto, America/Chicago, America/Los_Angeles, Europe/London, Australia/Sydney
-	public $timezone		= 'UTC';
+	public $timezone = 'UTC';
 
 	// Protected --------------
 
@@ -148,4 +148,5 @@ class Migration extends \yii\base\Component {
 
 		return $this->timezone;
 	}
+
 }

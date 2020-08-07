@@ -196,6 +196,13 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 		return parent::getPage( $config );
 	}
 
+	public function getPageByCategoryId( $categoryId, $config = [] ) {
+
+		$config[ 'conditions' ][ 'categoryId' ] = $categoryId;
+
+		return $this->getPage( $config );
+	}
+
 	// Read ---------------
 
 	// Read - Models ---

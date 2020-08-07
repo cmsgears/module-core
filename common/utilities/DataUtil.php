@@ -11,8 +11,6 @@ namespace cmsgears\core\common\utilities;
 
 class DataUtil {
 
-	// Static Methods ----------------------------------------------
-
 	public static function generateNumMap( $min, $max, $interval = 1, $text = false ) {
 
 		$map = [];

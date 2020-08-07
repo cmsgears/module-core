@@ -86,8 +86,7 @@ abstract class TagController extends CrudController {
 
 		$model = $this->modelService->getModelObject();
 
-		$model->siteId	= Yii::$app->core->siteId;
-		$model->type	= $this->type;
+		$model->type = $this->type;
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 

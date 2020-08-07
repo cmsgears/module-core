@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\comment;
 
 // Yii Imports
@@ -30,7 +38,7 @@ class DeleteRequest extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $parent 	= true;
+	public $parent = true;
 
 	// Protected --------------
 
@@ -54,11 +62,11 @@ class DeleteRequest extends \cmsgears\core\common\actions\base\ModelAction {
 
 	public function run( $cid ) {
 
-		$modelCommentService	= Yii::$app->factory->get( 'modelCommentService' );
+		$modelCommentService = Yii::$app->factory->get( 'modelCommentService' );
 
-		$modelComment	= $modelCommentService->getById( $cid );
+		$modelComment = $modelCommentService->getById( $cid );
 
-		if( isset( $modelComment ) && $modelComment->checkParent( $this->model->id, $this->parentType ) ) {
+		if( isset( $modelComment ) && $modelComment->isParentValid( $this->model->id, $this->parentType ) ) {
 
 			if( $modelCommentService->updateDeleteRequest( $modelComment ) ) {
 
@@ -77,4 +85,5 @@ class DeleteRequest extends \cmsgears\core\common\actions\base\ModelAction {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

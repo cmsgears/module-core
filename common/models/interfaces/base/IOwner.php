@@ -25,4 +25,5 @@ interface IOwner {
 	 * @param boolean $strict
 	 */
 	public function isOwner( $user = null, $strict = false );
+
 }

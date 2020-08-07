@@ -84,7 +84,8 @@ class AjaxUtil {
 		$response[ 'result' ]	= 0;
 		$response[ 'message' ]	= $message;
 		$response[ 'errors' ]	= empty( $errors ) ? [] : $errors;
-		$response[ 'data' ]		= $data;
+
+		$response[ 'data' ] = $data;
 
 		Yii::$app->response->format = 'json';
 
@@ -137,9 +138,10 @@ class AjaxUtil {
 		}
 		else {
 
-			$errors			= $source->getErrors();
-			$modelClass		= isset( $modelClass ) ? $modelClass : $source->getClassName();
-			$modelErrors	= [];
+			$errors		= $source->getErrors();
+			$modelClass	= isset( $modelClass ) ? $modelClass : $source->getClassName();
+
+			$modelErrors = [];
 
 			foreach( $errors as $key => $value ) {
 
@@ -149,4 +151,5 @@ class AjaxUtil {
 
 		return $modelErrors;
 	}
+
 }

@@ -9,9 +9,6 @@
 
 namespace cmsgears\core\common\models\forms;
 
-// Yii Imports
-use yii\base\Model;
-
 /**
  * The base class for form models which need to process and store the submitted form
  * data in JSON format.
@@ -23,7 +20,7 @@ use yii\base\Model;
  *
  * @since 1.0.0
  */
-class DataModel extends Model {
+class DataModel extends \yii\base\Model {
 
 	// Variables ---------------------------------------------------
 

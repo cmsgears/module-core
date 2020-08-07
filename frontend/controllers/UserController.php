@@ -19,6 +19,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\CoreGlobalWeb;
 
 use cmsgears\core\common\models\forms\ResetPassword;
+use cmsgears\core\common\models\resources\Address;
 use cmsgears\core\common\models\resources\File;
 
 /**
@@ -156,7 +157,9 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 			return $this->refresh();
 		}
 
-		$genderMap = $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [ 'prepend' => [ [ 'id' => '0', 'name' => 'Choose Gender' ] ] ] );
+		$genderMap = $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [
+			'prepend' => [ [ 'id' => '0', 'name' => 'Choose Gender' ] ]
+		]);
 
 		return $this->render( CoreGlobalWeb::PAGE_PROFILE, [
 			'user' => $user,
@@ -214,11 +217,12 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 	 */
 	public function actionAddress( $ctype ) {
 
-		$user		= Yii::$app->core->getUser();
-		$address	= null;
+		$user = Yii::$app->core->getUser();
+
+		$address = null;
 
 		// Accept only selected type for a user
-		if( !in_array( $ctype, [ Address::TYPE_PRIMARY, Address::TYPE_BILLING, Address::TYPE_MAILING, Address::TYPE_SHIPPING ] ) ) {
+		if( !in_array( $ctype, Address::$minTypeList ) ) {
 
 			throw new InvalidArgumentException( 'Address type not allowed.' );
 		}
@@ -294,9 +298,9 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 		$user = Yii::$app->core->getUser();
 
 		// Load key settings
-		$privacy		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
-		$notification	= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
-		$reminder		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
+		$privacy		= $this->modelService->getMetaNameMetaMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
+		$notification	= $this->modelService->getMetaNameMetaMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
+		$reminder		= $this->modelService->getMetaNameMetaMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
 
 		// NOTE: Rest of the settings can be loaded in view if required.
 

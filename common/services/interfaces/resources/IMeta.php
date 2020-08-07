@@ -26,11 +26,11 @@ interface IMeta {
 
 	// Read - Maps -----
 
-	public function getIdMetaMap( $model );
+	public function getMetaIdMetaMap( $model );
 
-	public function getMetaMapByMetaType( $model, $type );
+	public function getMetaNameMetaMapByType( $model, $type );
 
-	public function getMetaNameValueMapByMetaType( $model, $type );
+	public function getMetaNameValueMapByType( $model, $type );
 
 	// Read - Others ---
 

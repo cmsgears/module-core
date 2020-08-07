@@ -11,11 +11,10 @@ namespace cmsgears\core\common\actions\meta;
 
 // Yii Imports
 use Yii;
+use yii\helpers\HtmlPurifier;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\common\actions\base\ModelAction;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
@@ -24,7 +23,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class Delete extends ModelAction {
+class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -54,7 +53,7 @@ class Delete extends ModelAction {
 
 		parent::init();
 
-		$this->metaService	= $this->controller->metaService;
+		$this->metaService = $this->controller->metaService;
 	}
 
 	// Instance methods --------------------------------------------
@@ -78,14 +77,16 @@ class Delete extends ModelAction {
 
 		if( isset( $parent ) ) {
 
-			$meta		= $this->metaService->getById( $cid );
-			$belongsTo	= $meta->hasAttribute( 'modelId' ) ? $meta->belongsTo( $parent ) : $meta->belongsTo( $parent, $this->modelService->getParentType() );
+			$meta	= $this->metaService->getById( $cid );
+			$valid	= $meta->hasAttribute( 'modelId' ) ? $meta->belongsTo( $parent ) : $meta->belongsTo( $parent, $this->modelService->getParentType() );
 
-			if( isset( $meta ) && $belongsTo ) {
+			if( isset( $meta ) && $valid ) {
 
 				$this->metaService->delete( $meta );
 
-				$data	= [ 'id' => $meta->id, 'name' => $meta->name, 'value' => $meta->value ];
+				$value = $this->purifyContent ? HtmlPurifier::process( $meta->value ) : $meta->value;
+
+				$data = [ 'id' => $meta->id, 'name' => $meta->name, 'value' => $value ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\comment;
 
 // Yii Imports
@@ -31,7 +39,7 @@ class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $parent 	= true;
+	public $parent = true;
 
 	// Protected --------------
 
@@ -59,9 +67,9 @@ class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
 			$modelCommentService = Yii::$app->factory->get( 'modelCommentService' );
 
-			$modelComment	= $modelCommentService->getById( $cid );
+			$modelComment = $modelCommentService->getById( $cid );
 
-			if( isset( $modelComment ) && $modelComment->checkParent( $this->model->id, $this->parentType ) ) {
+			if( isset( $modelComment ) && $modelComment->isParentValid( $this->model->id, $this->parentType ) ) {
 
 				if( $modelCommentService->delete( $modelComment ) ) {
 

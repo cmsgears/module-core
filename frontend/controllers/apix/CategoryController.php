@@ -17,11 +17,11 @@ use yii\filters\VerbFilter;
 use cmsgears\core\common\config\CoreGlobal;
 
 /**
- * CategoryController handles the ajax requests specific to Category Model.
+ * CategoryController handles the AJAX requests specific to Category Model.
  *
  * @since 1.0.0
  */
-class CategoryController extends \cmsgears\core\frontend\controllers\base\Controller {
+class CategoryController extends \cmsgears\core\frontend\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 

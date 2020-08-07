@@ -153,7 +153,7 @@ trait SlugTypeTrait {
 	 */
 	public static function isExistBySlugType( $slug, $type, $config = [] ) {
 
-		$model	= static::findBySlugType( $slug, $type, $config );
+		$model = static::findBySlugType( $slug, $type, $config );
 
 		return isset( $model );
 	}

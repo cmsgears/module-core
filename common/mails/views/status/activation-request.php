@@ -14,7 +14,7 @@ $siteBkg	= "$siteUrl/images/" . $siteProperties->getMailBanner();
 
 $adminUrl	= $coreProperties->getAdminUrl();
 
-$user		= $model->holder ?? $model->creator;
+$user		= $model->owner ?? $model->creator;
 $name		= Html::encode( $user->getName() );
 $email		= Html::encode( $user->email );
 $modelName	= Html::encode( $model->getDisplayName() );

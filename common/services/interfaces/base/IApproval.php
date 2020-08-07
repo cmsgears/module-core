@@ -40,6 +40,8 @@ interface IApproval {
 
 	// Read - Others ---
 
+	public function getApprovalNotificationMap();
+
 	public function getCountsByOwnerId( $ownerId, $config = [] );
 
 	public function getCountsByAuthorityId( $id, $config = [] );

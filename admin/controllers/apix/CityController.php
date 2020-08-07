@@ -21,7 +21,7 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * @since 1.0.0
  */
-class CityController extends \cmsgears\core\admin\controllers\base\Controller {
+class CityController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -83,7 +83,7 @@ class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		return [
 			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\location\CitySearch' ],
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

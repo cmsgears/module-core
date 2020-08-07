@@ -18,8 +18,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\config\CoreProperties;
 
 /**
- * ContentUtil generates the meta data for models. The generated data
- * can be used for SEO purpose.
+ * ContentUtil generates the meta data for models. The generated data can be used
+ * for SEO purpose.
  *
  * @since 1.0.0
  */
@@ -39,14 +39,15 @@ class ContentUtil {
 		if( isset( $model ) ) {
 
 			$coreProperties = CoreProperties::getInstance();
-			$seoData		= $model->getDataPluginMeta( CoreGlobal::DATA_SEO );
+
+			$seoData = $model->getDataPluginMeta( CoreGlobal::DATA_SEO );
 
 			// Model
 			$view->params[ 'model' ]	= $model;
 			$view->params[ 'seo' ]		= $seoData;
 
 			// SEO H1 - Page Summary
-			$view->params[ 'summary' ]	= isset( $seoData ) && !empty( $seoData->summary ) ? $seoData->summary : ( isset( $model->summary ) && !empty( $model->summary ) ? $model->summary : $model->description );
+			$view->params[ 'summary' ] = isset( $seoData ) && !empty( $seoData->summary ) ? $seoData->summary : ( isset( $model->summary ) && !empty( $model->summary ) ? $model->summary : $model->description );
 
 			// SEO Meta Tags - Description, Keywords, Robot Text
 			$view->params[ 'desc' ]		= isset( $seoData ) && !empty( $seoData->description ) ? $seoData->description : $model->description;
@@ -54,8 +55,8 @@ class ContentUtil {
 			$view->params[ 'robot' ]	= isset( $seoData ) && !empty( $seoData->robot ) ? $seoData->robot : null;
 
 			// SEO - Page Title
-			$siteTitle		= $coreProperties->getSiteTitle();
-			$seoName		= isset( $seoData ) && !empty( $seoData->name ) ? $seoData->name : $model->name;
+			$siteTitle	= $coreProperties->getSiteTitle();
+			$seoName	= isset( $seoData ) && !empty( $seoData->name ) ? $seoData->name : $model->name;
 
 			$view->title = "$seoName | $siteTitle";
 		}

@@ -55,10 +55,11 @@ class UpdateMultiple extends \cmsgears\core\common\actions\base\ModelAction {
 
 		parent::init();
 
-		$this->metaService	= $this->controller->metaService;
+		$this->metaService = $this->controller->metaService;
 
 		$metaClass	= $this->metaService->getModelClass();
-		$metaTest	= new $metaClass;
+
+		$metaTest = new $metaClass;
 
 		if( !$metaTest->hasAttribute( 'modelId' ) ) {
 

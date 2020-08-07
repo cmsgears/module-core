@@ -41,6 +41,8 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
+	public $purifyContent = true;
+
 	// Protected --------------
 
 	protected $metaService;
@@ -55,7 +57,7 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 		parent::init();
 
-		$this->metaService	= $this->controller->metaService;
+		$this->metaService = $this->controller->metaService;
 	}
 
 	// Instance methods --------------------------------------------
@@ -79,7 +81,7 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 		if( isset( $parent ) ) {
 
-			$metaClass	= $this->metaService->getModelClass();
+			$metaClass = $this->metaService->getModelClass();
 
 			$meta = new $metaClass;
 
@@ -93,26 +95,18 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 				$meta->parentType	= $this->modelService->getParentType();
 			}
 
-			if( empty( $meta->active ) ) {
+			$meta->active	= $meta->active ?? true;
+			$meta->type		= $meta->type ?? CoreGlobal::TYPE_DEFAULT;
 
-				$meta->active = true;
-			}
-
-			if( empty( $meta->type ) ) {
-
-				$meta->type = CoreGlobal::TYPE_DEFAULT;
-			}
-
-			if( empty( $meta->valueType ) ) {
-
-				$meta->valueType = IMeta::VALUE_TYPE_TEXT;
-			}
+			$meta->valueType = $meta->valueType ?? IMeta::VALUE_TYPE_TEXT;
 
 			if( $meta->load( Yii::$app->request->post(), $meta->getClassName() ) && $meta->validate() ) {
 
 				$this->metaService->create( $meta );
 
-				$data = [ 'id' => $meta->id, 'name' => $meta->name, 'value' => HtmlPurifier::process( $meta->value ) ];
+				$value = $this->purifyContent ? HtmlPurifier::process( $meta->value ) : $meta->value;
+
+				$data = [ 'id' => $meta->id, 'name' => $meta->name, 'value' => $value ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

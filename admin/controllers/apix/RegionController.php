@@ -16,7 +16,7 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class RegionController extends \cmsgears\core\admin\controllers\base\Controller {
+class RegionController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 

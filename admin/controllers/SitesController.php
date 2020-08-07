@@ -103,7 +103,8 @@ class SitesController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 	public function actionCreate( $config = [] ) {
 
-		$model	= $this->modelService->getModelObject();
+		$model = $this->modelService->getModelObject();
+
 		$avatar	= File::loadFile( $model->avatar, 'Avatar' );
 		$banner	= File::loadFile( $model->banner, 'Banner' );
 
@@ -111,7 +112,9 @@ class SitesController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->model = $this->modelService->create( $model, [ 'admin' => true, 'avatar' => $avatar, 'banner' => $banner ] );
+			$this->model = $this->modelService->create( $model, [
+				'admin' => true, 'avatar' => $avatar, 'banner' => $banner
+			]);
 
 			return $this->redirect( 'all' );
 		}

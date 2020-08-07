@@ -22,6 +22,8 @@ interface IOptionService extends IResourceService, IData {
 
 	// Data Provider ------
 
+	public function getPageByCategoryId( $categoryId, $config = [] );
+
 	// Read ---------------
 
 	// Read - Models ---

@@ -11,7 +11,6 @@ namespace cmsgears\core\admin\components;
 
 // Yii Imports
 use Yii;
-use yii\base\Component;
 
 /**
  * Dashboard component forms the dashboard for admin by merging the dashboard html for the
@@ -20,7 +19,7 @@ use yii\base\Component;
  *
  * @since 1.0.0
  */
-class Dashboard extends Component {
+class Dashboard extends \yii\base\Component {
 
 	// Variables ---------------------------------------------------
 
@@ -53,11 +52,12 @@ class Dashboard extends Component {
 
 		// TODO: Use caching
 
-		$sidebarHtml	= "";
-		$modules		= $this->modules;
+		$dashboardHtml = "";
+
+		$modules = $this->modules;
 
 		// Collect sidebar html from all the modules
-		foreach ( $modules as $module ) {
+		foreach( $modules as $module ) {
 
 			$module	= Yii::$app->getModule( $module );
 			$html	= $module->getDashboardHtml();
@@ -69,12 +69,12 @@ class Dashboard extends Component {
 				include( $html );
 			}
 
-			$sidebarHtml .= ob_get_contents();
+			$dashboardHtml .= ob_get_contents();
 
 			ob_get_clean();
 		}
 
-		return $sidebarHtml;
+		return $dashboardHtml;
 	}
 
 	/**

@@ -1,6 +1,6 @@
 {
 	"name": "cmsgears/module-core",
-	"description": "The core module for CMSGears based projects. It's required for all the projects using CMSGears.",
+	"description": "The core module is required by all the projects using CMSGears.",
 	"homepage": "http://www.cmsgears.org",
 	"type": "package",
 	"keywords": [ "yii2", "cmsgears", "module", "core" ],

@@ -52,6 +52,8 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 		// Config
 		$this->layout = CoreGlobalWeb::LAYOUT_PUBLIC;
 
+		$this->admin = false;
+
 		// Services
 		$this->siteMemberService = Yii::$app->factory->get( 'siteMemberService' );
 	}
@@ -125,11 +127,6 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 	public function actionMaintenance() {
 
 		return $this->render( CoreGlobalWeb::PAGE_MAINTENANCE );
-	}
-
-	public function actionLogin( $admin = false ) {
-
-		return parent::actionLogin( false );
 	}
 
 	public function actionRegister() {

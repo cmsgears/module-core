@@ -54,12 +54,12 @@ trait UserOwnerTrait {
 	 */
 	public function isOwner( $user = null, $strict = false ) {
 
-		if( !isset( $user ) && !$strict ) {
+		if( empty( $user ) && !$strict ) {
 
 			$user = Yii::$app->core->getUser();
 		}
 
-		if( isset( $user ) ) {
+		if( isset( $user ) && isset( $this->userId ) ) {
 
 			return $this->userId == $user->id;
 		}

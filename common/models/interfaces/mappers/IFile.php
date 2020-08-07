@@ -64,11 +64,11 @@ interface IFile {
 	public function getFilesByType( $type, $active = true );
 
 	/**
-	 * Return file associated with the parent for given tag.
+	 * Return file associated with the parent for given code.
 	 *
-	 * @param string $tag
+	 * @param string $code
 	 * @return \cmsgears\core\common\models\resources\File
 	 */
-	public function getFileByTag( $tag );
+	public function getFileByCode( $code );
 
 }

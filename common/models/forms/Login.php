@@ -15,7 +15,7 @@ use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\common\models\forms\BaseForm;
+
 use cmsgears\core\common\utilities\DateUtil;
 
 /**
@@ -67,9 +67,11 @@ class Login extends BaseForm {
 
 	public function __construct( $admin = false, $config = [] )	 {
 
-		$this->admin		= $admin;
-		$this->user			= null;
-		$this->userService	= Yii::$app->factory->get( 'userService' );
+		$this->admin = $admin;
+
+		$this->user = null;
+
+		$this->userService = Yii::$app->factory->get( 'userService' );
 
 		$this->interval = 3600 * 24 * 30;
 
@@ -236,4 +238,5 @@ class Login extends BaseForm {
 
 		return false;
 	}
+
 }

@@ -57,11 +57,12 @@ class Form extends \cmsgears\core\common\base\Action {
 
 	public function run( $id ) {
 
-		$modelService = $this->controller->modelService;
+		$modelService		= $this->controller->modelService;
+		$templateService	= Yii::$app->factory->get( 'templateService' );
 
 		// Find Model
 		$model		= $modelService->getById( $id );
-		$template	= isset( $model->template ) ? $model->template : Yii::$app->factory->get( 'templateService' )->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $modelService->getParentType() );
+		$template	= isset( $model->template ) ? $model->template : $templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $modelService->getParentType() );
 
 		// Update/Render if exist
 		if( isset( $model ) && isset( $template ) ) {

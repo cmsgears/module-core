@@ -33,6 +33,8 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 
 	protected $userService;
 
+	protected $admin;
+
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -350,7 +352,7 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 	/**
 	 * The method checks whether user is logged in and send to home.
 	 */
-	public function actionLogin( $admin = false ) {
+	public function actionLogin() {
 
 		// Send user to home if already logged in
 		$this->checkHome();
@@ -358,7 +360,7 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 		// Create Form Model
 		$model = new Login();
 
-		$model->admin = $admin;
+		$model->admin = $this->admin;
 
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post(), 'Login' ) && $model->login() ) {

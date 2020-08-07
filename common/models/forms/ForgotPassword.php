@@ -15,7 +15,6 @@ use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\common\models\forms\BaseForm;
 
 /**
  * Form submitted by users in case they forget their account password. It does not

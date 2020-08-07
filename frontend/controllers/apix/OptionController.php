@@ -23,7 +23,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class OptionController extends \cmsgears\core\frontend\controllers\base\Controller {
+class OptionController extends \cmsgears\core\frontend\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -83,18 +83,9 @@ class OptionController extends \cmsgears\core\frontend\controllers\base\Controll
 	public function actionAutoSearch() {
 
 		$name	= Yii::$app->request->post( 'name' );
-		$type	= Yii::$app->request->post( 'type' );
-		$data	= [];
+		$catId	= Yii::$app->request->post( 'categoryId' );
 
-		// For models having type columns
-		if( isset( $type ) ) {
-
-			$data = $this->modelService->searchByNameCategoryId( $name, $type );
-		}
-		else {
-
-			$data = $this->modelService->searchByName( $name );
-		}
+		$data = $this->modelService->searchByNameCategoryId( $name, $catId );
 
 		// Trigger Ajax Success
 		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

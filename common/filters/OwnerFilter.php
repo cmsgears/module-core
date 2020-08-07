@@ -17,13 +17,14 @@ use yii\web\ForbiddenHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 
 /**
- * Ownership Filter is an RBAC filter and works as child filter of RBAC filter. It is an additional
- * level of security and allows to execute controller action only if the context resource i.e. model
- * is owned by the currently logged in user. In all other cases, it ignore the action and throws
- * ForbiddenHttpException exception. The model must implement IOwner interface or provide isOwner method.
+ * Ownership Filter is an RBAC filter and works as child filter of RBAC filter. It
+ * is an additional level of security and allows to execute controller action only
+ * if the context resource i.e. model is owned by the currently logged in user. In
+ * all other cases, it ignore the action and throws ForbiddenHttpException exception.
+ * The model must implement IOwner interface or provide isOwner method.
  *
  * It's independent of Discover Filter.
- * 
+ *
  * Ex:
  *	public function behaviors() {
  *
@@ -61,7 +62,7 @@ class OwnerFilter {
 		$typed = isset( $args[ 'typed' ] ) ? $args[ 'typed' ] : false;
 
 		$user	= Yii::$app->core->getUser();
-		$model	= Yii::$app->controller->model; // Check whether model is already discoverd
+		$model	= Yii::$app->controller->model; // Check whether model is already discovered
 
 		// Find Service
 		$modelService = null;

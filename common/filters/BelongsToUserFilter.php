@@ -18,10 +18,9 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 
 /**
- * BelongsToUserFilter Filter can be used to verify the user ownership of entity or resource.
- *
- * It's simplified version of the OwnerFilter and need the model to declare belongsToUser
- * method to test the ownership.
+ * BelongsToUserFilter Filter can be used to verify the user ownership of entity
+ * or resource. It's simplified version of the OwnerFilter and need the model to
+ * declare belongsToUser method to test the ownership.
  *
  * It requires Discover Filter to identify model in action.
  *

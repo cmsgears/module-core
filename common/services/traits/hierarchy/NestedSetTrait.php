@@ -96,9 +96,10 @@ trait NestedSetTrait {
 
 		$parent		= isset( $config[ 'parent' ] ) ? $config[ 'parent' ] : true;
 		$categories = self::findSubLevelList( $parentId, $rootId, $config );
-		$ids		= [];
 
-		foreach ( $categories as $key => $value ) {
+		$ids = [];
+
+		foreach( $categories as $key => $value ) {
 
 			$id	= $value[ 'id' ];
 

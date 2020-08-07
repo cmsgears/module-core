@@ -19,7 +19,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\mappers\ModelObject;
 
-use cmsgears\core\common\services\interfaces\entities\IObjectService;
+use cmsgears\core\common\services\interfaces\entities\IObjectDataService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\core\common\services\interfaces\mappers\IModelFileService;
 
@@ -27,6 +27,7 @@ use cmsgears\core\common\services\traits\base\ApprovalTrait;
 use cmsgears\core\common\services\traits\base\FeaturedTrait;
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
+use cmsgears\core\common\services\traits\base\SharedTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
 use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
@@ -37,7 +38,7 @@ use cmsgears\core\common\services\traits\resources\VisualTrait;
  *
  * @since 1.0.0
  */
-class ObjectDataService extends \cmsgears\core\common\services\base\EntityService implements IObjectService {
+class ObjectDataService extends \cmsgears\core\common\services\base\EntityService implements IObjectDataService {
 
 	// Variables ---------------------------------------------------
 
@@ -68,18 +69,15 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Traits ------------------------------------------------------
 
+	use ApprovalTrait;
 	use DataTrait;
 	use FeaturedTrait;
 	use GridCacheTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
+	use SharedTrait;
 	use SlugTypeTrait;
 	use VisualTrait;
-
-	use ApprovalTrait {
-
-		getPageByOwnerId as baseGetPageByOwnerId;
-	}
 
 	// Constructor and Initialisation ------------------------------
 
@@ -215,11 +213,17 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 					'default' => SORT_DESC,
 					'label' => 'Popular'
 				],
-				'admin' => [
-					'asc' => [ "$modelTable.admin" => SORT_ASC ],
-					'desc' => [ "$modelTable.admin" => SORT_DESC ],
+				'backend' => [
+					'asc' => [ "$modelTable.backend" => SORT_ASC ],
+					'desc' => [ "$modelTable.backend" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'Admin'
+					'label' => 'Backend'
+				],
+				'frontend' => [
+					'asc' => [ "$modelTable.frontend" => SORT_ASC ],
+					'desc' => [ "$modelTable.frontend" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Frontend'
 				],
 				'shared' => [
 					'asc' => [ "$modelTable.shared" => SORT_ASC ],
@@ -300,9 +304,15 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 					break;
 				}
-				case 'admin': {
+				case 'backend': {
 
-					$config[ 'conditions' ][ "$modelTable.admin" ] = true;
+					$config[ 'conditions' ][ "$modelTable.backend" ] = true;
+
+					break;
+				}
+				case 'frontend': {
+
+					$config[ 'conditions' ][ "$modelTable.frontend" ] = true;
 
 					break;
 				}
@@ -357,6 +367,18 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 	}
 
 	/**
+	 * Returns the collection made by the user.
+	 */
+	public function getSharedPageByOwnerId( $ownerId, $config = [] ) {
+
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.shared" ] = true;
+
+		return $this->getPageByOwnerId( $ownerId, $config );
+	}
+
+	/**
 	 * Returns the child objects.
 	 */
 	public function getPageByParentId( $parentId, $config = [] ) {
@@ -369,25 +391,9 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 	}
 
 	/**
-	 * Returns the collection made by the user.
-	 */
-	public function getPageByOwnerId( $ownerId, $config = [] ) {
-
-		$modelTable	= $this->getModelTable();
-
-		$config[ 'conditions' ][ "$modelTable.admin" ] = false;
-		$config[ 'conditions' ][ "$modelTable.shared" ] = true;
-
-		return $this->baseGetPageByOwnerId( $ownerId, $config );
-	}
-
-	/**
 	 * Returns the collection made for the parent i.e. directly mapped models.
 	 */
 	public function getPageByTypeParent( $type, $parentId, $parentType, $config = [] ) {
-
-		$admin	= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false; // Returns frontend mappings
-		$shared	= isset( $config[ 'shared' ] ) ? $config[ 'shared' ] : false; // Returns direct mappings
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -399,9 +405,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		$query->leftJoin( $modelObjectTable, "$modelObjectTable.modelId=$modelTable.id" );
 		$query->where( "$modelObjectTable.parentId=$parentId AND $modelObjectTable.parentType='$parentType' AND $modelObjectTable.type='$type'" );
 
-		$config[ 'conditions' ][ "$modelTable.type" ]	= $type;
-		$config[ 'conditions' ][ "$modelTable.admin" ]	= $admin;
-		$config[ 'conditions' ][ "$modelTable.shared" ]	= $shared;
+		$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 
 		$config[ 'query' ] = $query;
 
@@ -461,7 +465,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 	/**
 	 * Returns the top level active models using the given type.
 	 */
-	public static function getL0ByType( $type, $config = [] ) {
+	public function getL0ByType( $type, $config = [] ) {
 
 		$modelClass = static::$modelClass;
 
@@ -471,7 +475,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 	/**
 	 * Returns the active models using the given parent id.
 	 */
-	public static function getByParentId( $parentId, $config = [] ) {
+	public function getByParentId( $parentId, $config = [] ) {
 
 		$modelClass = static::$modelClass;
 
@@ -666,7 +670,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 				$this->fileService->deleteMultiple( [ $model->avatar, $model->banner, $model->video ] );
 				$this->fileService->deleteMultiple( $model->files );
 
-				// Delete File Mappings - Shared Files
+				// Delete File Mappings of Shared Files
 				$this->modelFileService->deleteMultiple( $model->modelFiles );
 
 				// Delete mappings

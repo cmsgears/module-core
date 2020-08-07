@@ -35,6 +35,7 @@ trait ApprovalTrait {
 		IApproval::STATUS_REJECTED => 'Rejected',
 		IApproval::STATUS_RE_SUBMIT => 'Re Submitted',
 		IApproval::STATUS_CONFIRMED => 'Confirmed',
+		IApproval::STATUS_APPROVED => 'Approved',
 		IApproval::STATUS_ACTIVE => 'Active',
 		IApproval::STATUS_FROJEN => 'Frozen',
 		IApproval::STATUS_UPLIFT_FREEZE => 'Uplift Frozen',
@@ -64,6 +65,7 @@ trait ApprovalTrait {
 		'Rejected' => IApproval::STATUS_REJECTED,
 		'Re Submitted' => IApproval::STATUS_RE_SUBMIT,
 		'Confirmed' => IApproval::STATUS_CONFIRMED,
+		'Approved' => IApproval::STATUS_APPROVED,
 		'Active' => IApproval::STATUS_ACTIVE,
 		'Frozen' => IApproval::STATUS_FROJEN,
 		'Uplift Frozen' => IApproval::STATUS_UPLIFT_FREEZE,
@@ -80,6 +82,7 @@ trait ApprovalTrait {
 		'rejected' => IApproval::STATUS_REJECTED,
 		're-submitted' => IApproval::STATUS_RE_SUBMIT,
 		'confirmed' => IApproval::STATUS_CONFIRMED,
+		'approved' => IApproval::STATUS_APPROVED,
 		'active' => IApproval::STATUS_ACTIVE,
 		'frozen' => IApproval::STATUS_FROJEN,
 		'uplift-freeze' => IApproval::STATUS_UPLIFT_FREEZE,
@@ -399,7 +402,10 @@ trait ApprovalTrait {
 	 */
 	public function isEditable() {
 
-		$editable = [ IApproval::STATUS_SUBMITTED, IApproval::STATUS_RE_SUBMIT, IApproval::STATUS_UPLIFT_FREEZE, IApproval::STATUS_UPLIFT_BLOCK ];
+		$editable = [
+			IApproval::STATUS_SUBMITTED, IApproval::STATUS_RE_SUBMIT,
+			IApproval::STATUS_UPLIFT_FREEZE, IApproval::STATUS_UPLIFT_BLOCK
+		];
 
 		return !in_array( $this->status, $editable );
 	}
@@ -464,11 +470,11 @@ trait ApprovalTrait {
 
 		if( $this->isFrojen() ) {
 
-			$text	= 'freeze';
+			$text = 'freeze';
 		}
 		else if( $this->isBlocked() ) {
 
-			$text	= 'block';
+			$text = 'block';
 		}
 
 		if( isset( $reason ) && strlen( $reason ) > 0 ) {

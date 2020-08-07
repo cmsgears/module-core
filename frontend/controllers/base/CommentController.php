@@ -18,7 +18,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\ModelComment;
 
-abstract class CommentController extends \cmsgears\cms\frontend\controllers\base\Controller {
+abstract class CommentController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -88,8 +88,6 @@ abstract class CommentController extends \cmsgears\cms\frontend\controllers\base
 	public function actionAll( $slug ) {
 
 		$modelClass	= $this->modelService->getModelClass();
-
-        $commentTable = $this->modelService->getModelTable();
 
 		$parent = $this->parentService->getBySlugType( $slug, $this->parentType );
 

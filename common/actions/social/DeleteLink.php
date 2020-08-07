@@ -17,8 +17,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\forms\SocialLink;
 
-use cmsgears\core\common\actions\base\ModelAction;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -26,7 +24,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class DeleteLink extends ModelAction {
+class DeleteLink extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -64,15 +62,15 @@ class DeleteLink extends ModelAction {
 
 	public function run() {
 
-		$parent	= $this->model;
+		$model	= $this->model;
 
-		if( isset( $parent ) ) {
+		if( isset( $model ) ) {
 
 			$link = new SocialLink();
 
 			if( $link->load( Yii::$app->request->post(), 'SocialLink' ) && $link->validate() ) {
 
-				$this->modelService->deleteSocialLink( $parent, $link );
+				$this->modelService->deleteSocialLink( $model, $link );
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );

@@ -221,7 +221,7 @@ trait NameTypeTrait {
 	 */
 	public static function isExistByNameType( $name, $type, $config = [] ) {
 
-		$model	= self::findByNameType( $name, $type, $config );
+		$model = self::findByNameType( $name, $type, $config );
 
 		return isset( $model );
 	}

@@ -23,7 +23,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-abstract class ModelObjectController extends \cmsgears\core\admin\controllers\base\Controller {
+abstract class ModelObjectController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -35,7 +35,7 @@ abstract class ModelObjectController extends \cmsgears\core\admin\controllers\ba
 
 	protected $parentService;
 
-	protected $objectService;
+	protected $objectDataService;
 
 	// Private ----------------
 
@@ -50,7 +50,7 @@ abstract class ModelObjectController extends \cmsgears\core\admin\controllers\ba
 
 		$this->modelService = Yii::$app->factory->get( 'modelObjectService' );
 
-		$this->objectService = Yii::$app->factory->get( 'objectService' );
+		$this->objectDataService = Yii::$app->factory->get( 'objectDataService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -121,23 +121,23 @@ abstract class ModelObjectController extends \cmsgears\core\admin\controllers\ba
 
 		return [
 			// Avatar
-			'assign-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Assign', 'modelService' => $this->objectService ],
-			'clear-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Clear', 'modelService' => $this->objectService ],
+			'assign-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Assign', 'modelService' => $this->objectDataService ],
+			'clear-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Clear', 'modelService' => $this->objectDataService ],
 			// Banner
-			'assign-banner' => [ 'class' => 'cmsgears\core\common\actions\content\banner\Assign', 'modelService' => $this->objectService ],
-			'clear-banner' => [ 'class' => 'cmsgears\core\common\actions\content\banner\Clear', 'modelService' => $this->objectService ],
+			'assign-banner' => [ 'class' => 'cmsgears\core\common\actions\content\banner\Assign', 'modelService' => $this->objectDataService ],
+			'clear-banner' => [ 'class' => 'cmsgears\core\common\actions\content\banner\Clear', 'modelService' => $this->objectDataService ],
 			// Video
-			'assign-video' => [ 'class' => 'cmsgears\core\common\actions\content\video\Assign', 'modelService' => $this->objectService ],
-			'clear-video' => [ 'class' => 'cmsgears\core\common\actions\content\video\Clear', 'modelService' => $this->objectService ],
+			'assign-video' => [ 'class' => 'cmsgears\core\common\actions\content\video\Assign', 'modelService' => $this->objectDataService ],
+			'clear-video' => [ 'class' => 'cmsgears\core\common\actions\content\video\Clear', 'modelService' => $this->objectDataService ],
 			// Files
-			'assign-file' => [ 'class' => 'cmsgears\core\common\actions\file\Assign', 'modelService' => $this->objectService ],
-			'clear-file' => [ 'class' => 'cmsgears\core\common\actions\file\Clear', 'modelService' => $this->objectService ],
+			'assign-file' => [ 'class' => 'cmsgears\core\common\actions\file\Assign', 'modelService' => $this->objectDataService ],
+			'clear-file' => [ 'class' => 'cmsgears\core\common\actions\file\Clear', 'modelService' => $this->objectDataService ],
 			// Gallery
-			'update-gallery' => [ 'class' => 'cmsgears\core\common\actions\gallery\Update', 'modelService' => $this->objectService ],
-			'get-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Read', 'modelService' => $this->objectService ],
-			'add-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Create', 'modelService' => $this->objectService ],
-			'update-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Update', 'modelService' => $this->objectService ],
-			'delete-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Delete', 'modelService' => $this->objectService ]
+			'update-gallery' => [ 'class' => 'cmsgears\core\common\actions\gallery\Update', 'modelService' => $this->objectDataService ],
+			'get-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Read', 'modelService' => $this->objectDataService ],
+			'add-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Create', 'modelService' => $this->objectDataService ],
+			'update-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Update', 'modelService' => $this->objectDataService ],
+			'delete-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Delete', 'modelService' => $this->objectDataService ]
 		];
 	}
 
@@ -155,10 +155,10 @@ abstract class ModelObjectController extends \cmsgears\core\admin\controllers\ba
 
 		if( isset( $model ) && isset( $parent ) && $model->isParentValid( $parent->id, $parentType ) ) {
 
-			$object = $this->objectService->getById( $model->modelId );
+			$object = $this->objectDataService->getById( $model->modelId );
 
 			// Delete Object and Mappings
-			$this->objectService->delete( $object, [ 'admin' => true ] );
+			$this->objectDataService->delete( $object, [ 'admin' => true ] );
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );

@@ -100,7 +100,7 @@ trait SlugTrait {
 	 */
 	public static function isExistBySlug( $slug, $config = [] ) {
 
-		$model	= static::findBySlug( $slug, $config );
+		$model = static::findBySlug( $slug, $config );
 
 		return isset( $model );
 	}

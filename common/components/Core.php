@@ -42,52 +42,52 @@ class Core extends \cmsgears\core\common\base\Config {
 	/**
 	 * @var int The main site id to load configurations in case sub sites are not configured.
 	 */
-	public $mainSiteId			= 1;
+	public $mainSiteId = 1;
 
 	/**
 	 * @var string The main site slug to load configurations in case sub sites are not configured.
 	 */
-	public $mainSiteSlug		= 'main';
+	public $mainSiteSlug = 'main';
 
 	/**
 	 * @var string string Used to debug multi-site.
 	 */
-	public $defaultSiteSlug		= 'main';
+	public $defaultSiteSlug = 'main';
 
 	/**
 	 * @var int Identifies the currently active site based on the url request.
 	 */
-	public $siteId				= 1;
+	public $siteId = 1;
 
 	/**
 	 * @var string Identifies the currently active site based on the url request.
 	 */
-	public $siteSlug			= 'main';
+	public $siteSlug = 'main';
 
 	/**
 	 * @var \cmsgears\core\common\models\entities\Site The currently active site based on the url request.
 	 */
-	public $site				= null;
+	public $site = null;
 
 	/**
 	 * @var boolean Identifies whether all the site config need to be loaded at once or by type i.e. module or plugin.
 	 */
-	public $siteConfigAll 		= false;
+	public $siteConfigAll = false;
 
 	/**
 	 * @var boolean Check whether the web app is multi-site.
 	 */
-	public $multiSite			= false;
+	public $multiSite = false;
 
 	/**
 	 * @var boolean Check whether the user can join a child site without admin approval.
 	 */
-	public $autoSiteMember		= false;
+	public $autoSiteMember = false;
 
 	/**
 	 * @var boolean Check whether the web app is sub domain or sub directory based in case $multiSite is set to true.
 	 */
-	public $subDirectory		= true;
+	public $subDirectory = true;
 
 	public $testHosts = [ 'localhost' ];
 
@@ -110,53 +110,53 @@ class Core extends \cmsgears\core\common\base\Config {
 	/**
 	 * It can be used in case user approval from admin is required.
 	 */
-	public $userApproval		= false;
+	public $userApproval = false;
 
 	/**
 	 * It can be used to test otp validity in milliseconds.
 	 */
-	public $otpValidity			= 600000; // 10 minues by default
+	public $otpValidity = 600000; // 10 minues by default
 
 	/**
 	 * It can be used to test token validity in milliseconds.
 	 */
-	public $tokenValidity		= 600000; // 10 minues by default
+	public $tokenValidity = 600000; // 10 minues by default
 
 	/**
 	 * @var default redirect path to be used for post login. It will be used by login action of
 	 * Site Controller to redirect users after successful login in case user role home url is not set.
 	 */
-	public $loginRedirectPage		= '/';
+	public $loginRedirectPage = '/';
 
 	/**
 	 * @var Redirect path to be used when user is newly registered and not active. $userApproval
 	 * must be true for it.
 	 */
-	public $confirmRedirectPage		= '/';
+	public $confirmRedirectPage = '/';
 
 	/**
 	 * @var Redirect path to be used for post logout.
 	 */
-	public $logoutRedirectPage		= '/login';
+	public $logoutRedirectPage = '/login';
 
 	/**
 	 * @var The indicator whether CMG RBAC has to be used for the project. All the admin sites must
 	 * set this to true. Though it's optional for front end sites. The front end sites can use either
 	 * CMG RBAC or Yii's RBAC system or no RBAC system based on project needs.
 	 */
-	public $rbac				= true;
+	public $rbac = true;
 
 	/**
 	 * @var The default filter class available for CMG RBAC system. A different filter can be used
 	 * based on project needs.
 	 */
-	public $rbacFilterClass		= 'cmsgears\core\common\\filters\RbacFilter';
+	public $rbacFilterClass = 'cmsgears\core\common\\filters\RbacFilter';
 
 	/**
 	 * @var It store the list of filters available for the Rbac Filter and works only when rbac is enabled.
 	 * A Controller can define filters to be performed for each action while checking the permission.
 	 */
-	public $rbacFilters			= [];
+	public $rbacFilters = [];
 
 	/**
 	 * It can be used to check whether APIS are enabled for the application. APIS are provided
@@ -169,7 +169,7 @@ class Core extends \cmsgears\core\common\base\Config {
 	 *
 	 * @var boolean
 	 */
-	public $apis				= false;
+	public $apis = false;
 
 	/**
 	 * APIS validity in days will be used to check whether the date when access token is generated is
@@ -177,7 +177,7 @@ class Core extends \cmsgears\core\common\base\Config {
 	 *
 	 * @var int
 	 */
-	public $apisValidity		= 7;
+	public $apisValidity = 7;
 
 	/**
 	 * @var The WYSIWYG editor config to edit the html content.
@@ -187,7 +187,7 @@ class Core extends \cmsgears\core\common\base\Config {
 	/**
 	 * @var It can be used by model classes to determine the fields for trim filter.
 	 */
-	public $trimFieldValue		= true;
+	public $trimFieldValue = true;
 
 	// Different Text Sizes - These can be overriden using config if required
 	public $microText			= CoreGlobal::TEXT_MICRO;
@@ -205,24 +205,24 @@ class Core extends \cmsgears\core\common\base\Config {
 	 * @var Switch for notification feature. If it's set to true, either Notify Module
 	 * must be installed or eventManager component must be configured.
 	 */
-	public $notifications		= false;
+	public $notifications = false;
 
 	/**
 	 * @var Switch for activities feature. If it's set to true, either Notify Module must
 	 * be installed or eventManager component must be configured.
 	 */
-	public $activities			= false;
+	public $activities = false;
 
 	/**
 	 * @var Update selective allows services to update selected columns.
 	 */
-	public $updateSelective		= true;
+	public $updateSelective = true;
 
 	/**
 	 *
 	 * @var boolean Check whether soft delete is enabled.
 	 */
-	public $softDelete			= true;
+	public $softDelete = true;
 
 	// Locations
 	public $provinceLabel	= 'Province';

@@ -52,7 +52,7 @@ trait FileTrait {
 
 		return $this->hasMany( ModelFile::class, [ 'parentId' => 'id' ] )
 			->where( "$modelFileTable.parentType=:ptype", [ ':ptype' => $this->modelType ] )
-			->orderBy( "$modelFileTable.id DESC" );
+			->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -64,7 +64,7 @@ trait FileTrait {
 
 		return $this->hasMany( ModelFile::class, [ 'parentId' => 'id' ] )
 			->where( "$modelFileTable.parentType=:ptype AND $modelFileTable.active=:active", [ ':ptype' => $this->modelType, ':active' => true ] )
-			->orderBy( "$modelFileTable.id DESC" );
+			->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -72,12 +72,18 @@ trait FileTrait {
 	 */
 	public function getModelFilesByType( $type, $active = true ) {
 
-		$modelFileTable = ModelFile::tableName();
+		$modelFileTable = ModelGallery::tableName();
+
+		if( $active ) {
+
+			return $this->hasMany( ModelFile::class, [ 'parentId' => 'id' ] )
+				->where( "$modelFileTable.parentType=:ptype AND $modelFileTable.type=:type AND $modelFileTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+				->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] );
+		}
 
 		return $this->hasMany( ModelFile::class, [ 'parentId' => 'id' ] )
-			->where( "$modelFileTable.parentType=:ptype AND $modelFileTable.type=:type AND $modelFileTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
-			->orderBy( "$modelFileTable.id DESC" )
-			->all();
+			->where( "$modelFileTable.parentType=:ptype AND $modelFileTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] )
+			->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -118,9 +124,18 @@ trait FileTrait {
 		$fileTable		= File::tableName();
 		$modelFileTable	= ModelFile::tableName();
 
+		if( $active ) {
+
+			return File::find()
+				->leftJoin( $modelFileTable, "$modelFileTable.modelId=$fileTable.id" )
+				->where( "$modelFileTable.parentId=:pid AND $modelFileTable.parentType=:ptype AND $modelFileTable.type=:type AND $modelFileTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+				->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] )
+				->all();
+		}
+
 		return File::find()
 			->leftJoin( $modelFileTable, "$modelFileTable.modelId=$fileTable.id" )
-			->where( "$modelFileTable.parentId=:pid AND $modelFileTable.parentType=:ptype AND $modelFileTable.type=:type AND $modelFileTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+			->where( "$modelFileTable.parentId=:pid AND $modelFileTable.parentType=:ptype AND $modelFileTable.type=:type", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type ] )
 			->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] )
 			->all();
 	}
@@ -128,15 +143,14 @@ trait FileTrait {
 	/**
 	 * @inheritdoc
 	 */
-	public function getFileByTag( $tag ) {
+	public function getFileByCode( $code ) {
 
 		$fileTable		= File::tableName();
 		$modelFileTable	= ModelFile::tableName();
 
 		return File::find()
 			->leftJoin( $modelFileTable, "$modelFileTable.modelId=$fileTable.id" )
-			->where( "$modelFileTable.parentId=:pid AND $modelFileTable.parentType=:ptype AND $modelFileTable.tag=:tag", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':tag' => $tag ] )
-			->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] )
+			->where( "$modelFileTable.parentId=:pid AND $modelFileTable.parentType=:ptype AND $modelFileTable.code=:code", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':code' => $code ] )
 			->one();
 	}
 

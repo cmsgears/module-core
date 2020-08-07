@@ -36,7 +36,7 @@ class CommentProperties extends Properties {
 
 	const PROP_COMMENTS_EMAIL_USER	= 'comments_email_user';
 
-	const PROP_COMMENTS_AUTO		= 'comments_auto';
+	const PROP_COMMENTS_AUTO = 'comments_auto';
 
 	const PROP_COMMENTS_BLACKLIST	= 'comments_blacklist';
 

@@ -64,13 +64,12 @@ interface IGallery {
 	public function getGalleriesByType( $type, $active = true );
 
 	/**
-	 * Return gallery associated with the parent for given title. It's useful only in cases
-	 * where unique title is allowed.
+	 * Return gallery associated with the parent for given code.
 	 *
-	 * @param string $title
+	 * @param string $code
 	 * @return \cmsgears\core\common\models\resources\Gallery
 	 */
-	public function getGalleryByTitle( $title );
+	public function getGalleryByCode( $code );
 
 	// Useful for models having single gallery mapped via $galleryId.
 
@@ -87,4 +86,5 @@ interface IGallery {
 	 * @return \cmsgears\core\common\models\resources\Gallery
 	 */
 	public function getGallery();
+
 }

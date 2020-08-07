@@ -9,12 +9,7 @@
 
 namespace cmsgears\core\common\models\forms;
 
-// Yii Imports
-use yii\base\Model;
-
-// CMG Imports
-
-class BaseForm extends Model {
+class BaseForm extends \yii\base\Model {
 
 	// Variables ---------------------------------------------------
 
@@ -63,7 +58,7 @@ class BaseForm extends Model {
 	 */
 	public function getClassname() {
 
-		$name	= get_class( $this );
+		$name = get_class( $this );
 
 		return join( '', array_slice( explode( '\\', $name ), -1 ) );
 	}

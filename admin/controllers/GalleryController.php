@@ -120,8 +120,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 		$model = $this->modelService->getModelObject();
 
-		$model->type	= $this->type;
-		$model->siteId	= Yii::$app->core->siteId;
+		$model->type = $this->type;
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 

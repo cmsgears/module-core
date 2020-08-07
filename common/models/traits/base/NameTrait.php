@@ -117,7 +117,7 @@ trait NameTrait {
 	 */
 	public static function isExistByName( $name, $config = [] ) {
 
-		$model	= static::findFirstByName( $name, $config );
+		$model = static::findFirstByName( $name, $config );
 
 		return isset( $model );
 	}

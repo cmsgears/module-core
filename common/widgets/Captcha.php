@@ -1,14 +1,21 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\widgets;
 
 // Yii Imports
 use yii\helpers\Json;
-use yii\captcha\Captcha as BaseCaptcha;
 
 // CMG Imports
 use cmsgears\assets\yii\CaptchaAsset;
 
-class Captcha extends BaseCaptcha {
+class Captcha extends \yii\captcha\Captcha {
 
 	// Variables ---------------------------------------------------
 

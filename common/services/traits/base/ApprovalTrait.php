@@ -52,12 +52,13 @@ trait ApprovalTrait {
 	 */
 	public function getPageByOwnerId( $ownerId, $config = [] ) {
 
-		$owner		= $config[ 'owner' ] ?? false;
+		$owner = $config[ 'owner' ] ?? false;
+
 		$modelTable	= $this->getModelTable();
 
 		if( $owner ) {
 
-			$config[ 'conditions' ][ "$modelTable.holderId" ] = $ownerId;
+			$config[ 'conditions' ][ "$modelTable.ownerId" ] = $ownerId;
 		}
 		else {
 
@@ -81,17 +82,18 @@ trait ApprovalTrait {
 	 */
 	public function getPageByAuthorityId( $id, $config = [] ) {
 
+		$owner = $config[ 'owner' ] ?? false;
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
-		$query		= null;
 
-		$owner = $config[ 'owner' ] ?? false;
+		$query = null;
 
 		if( $owner ) {
 
 			$query = $modelClass::queryWithOwnerAuthor();
 
-			$query->andWhere( "$modelTable.holderId =:oid OR ($modelTable.holderId IS NULL AND $modelTable.createdBy =:cid )", [ ':oid' => $id, ':cid' => $id ] );
+			$query->andWhere( "$modelTable.ownerId =:oid OR ($modelTable.ownerId IS NULL AND $modelTable.createdBy =:cid )", [ ':oid' => $id, ':cid' => $id ] );
 		}
 		else {
 
@@ -184,11 +186,11 @@ trait ApprovalTrait {
 		$query = new Query();
 
 		$query->select( [ 'status', 'count(id) as total' ] )
-				->from( $modelTable );
+			->from( $modelTable );
 
 		if( $owner ) {
 
-			$query->where( "$modelTable.holderId=$ownerId" )->groupBy( 'status' );
+			$query->where( "$modelTable.ownerId=$ownerId" )->groupBy( 'status' );
 		}
 		else {
 
@@ -233,11 +235,11 @@ trait ApprovalTrait {
 
 		if( $owner ) {
 
-			$query->where( "$modelTable.holderId=$id" )->groupBy( 'status' );
+			$query->where( "$modelTable.ownerId=$id" )->groupBy( 'status' );
 		}
 		else {
 
-			$query->where( "($modelTable.holderId IS NULL AND $modelTable.createdBy=$id) OR $modelTable.holderId=$id" );
+			$query->where( "($modelTable.ownerId IS NULL AND $modelTable.createdBy=$id) OR $modelTable.ownerId=$id" );
 		}
 
 		$query->groupBy( 'status' );

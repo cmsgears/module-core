@@ -98,7 +98,9 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $order
  * @property boolean $pinned
  * @property boolean $featured
- * @property boolean $admin
+ * @property boolean $popular
+ * @property boolean $backend
+ * @property boolean $frontend
  * @property boolean $shared
  * @property datetime $createdAt
  * @property datetime $modifiedAt
@@ -227,7 +229,7 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 			[ [ 'title', 'classPath', 'viewPath', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
-			[ [ 'pinned', 'featured', 'admin', 'shared', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'pinned', 'featured', 'popular', 'backend', 'frontend', 'shared', 'gridCacheValid' ], 'boolean' ],
 			[ [ 'visibility', 'status', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'themeId', 'templateId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'siteId', 'avatarId', 'bannerId', 'videoId', 'galleryId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
@@ -273,7 +275,8 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'pinned' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PINNED ),
 			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
-			'admin' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ADMIN ),
+			'backend' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BACKEND ),
+			'frontend' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FRONTEND ),
 			'shared' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SHARED ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'summary' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SUMMARY ),
@@ -379,13 +382,23 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	}
 
 	/**
-	 * Returns string representation of [[$admin]].
+	 * Returns string representation of [[$backend]].
 	 *
 	 * @return boolean
 	 */
-	public function getAdminStr() {
+	public function getBackendStr() {
 
-		return Yii::$app->formatter->asBoolean( $this->admin );
+		return Yii::$app->formatter->asBoolean( $this->backend );
+	}
+
+	/**
+	 * Returns string representation of [[$frontend]].
+	 *
+	 * @return boolean
+	 */
+	public function getFrontendStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->frontend );
 	}
 
 	/**

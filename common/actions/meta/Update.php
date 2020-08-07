@@ -16,8 +16,6 @@ use yii\helpers\HtmlPurifier;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\actions\base\ModelAction;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -25,7 +23,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class Update extends ModelAction {
+class Update extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -55,7 +53,7 @@ class Update extends ModelAction {
 
 		parent::init();
 
-		$this->metaService	= $this->controller->metaService;
+		$this->metaService = $this->controller->metaService;
 	}
 
 	// Instance methods --------------------------------------------
@@ -79,10 +77,10 @@ class Update extends ModelAction {
 
 		if( isset( $parent ) ) {
 
-			$meta		= $this->metaService->getById( $cid );
-			$belongsTo	= $meta->hasAttribute( 'modelId' ) ? $meta->belongsTo( $parent ) : $meta->belongsTo( $parent, $this->modelService->getParentType() );
+			$meta	= $this->metaService->getById( $cid );
+			$valid	= $meta->hasAttribute( 'modelId' ) ? $meta->belongsTo( $parent ) : $meta->belongsTo( $parent, $this->modelService->getParentType() );
 
-			if( isset( $meta ) && $belongsTo ) {
+			if( isset( $meta ) && $valid ) {
 
 				if( $meta->load( Yii::$app->request->post(), $meta->getClassName() ) && $meta->validate() ) {
 
@@ -90,7 +88,9 @@ class Update extends ModelAction {
 
 					$meta->refresh();
 
-					$data = [ 'id' => $meta->id, 'name' => $meta->name, 'value' => HtmlPurifier::process( $meta->value ) ];
+					$value = $this->purifyContent ? HtmlPurifier::process( $meta->value ) : $meta->value;
+
+					$data = [ 'id' => $meta->id, 'name' => $meta->name, 'value' => $value ];
 
 					// Trigger Ajax Success
 					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

@@ -12,7 +12,7 @@ namespace cmsgears\core\common\models\traits\mappers;
 // CMG Imports
 use cmsgears\core\common\models\interfaces\base\IFollower;
 
-use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\entities\User;
 
 /**
  * FollowerTrait can be used to add like, dislike, follow, wish features to relevant models.
@@ -54,19 +54,14 @@ trait FollowerTrait {
 	 */
 	public function getFollowers() {
 
-		$userTable		= CoreTables::getTableName( CoreTables::TABLE_USER );
+		$userTable		= User::tableName();
 		$followerClass	= $this->followerClass;
 		$followerTable	= $followerClass::tableName();
-
-		/*
-		return $this->hasMany( User::class, [ 'id' => 'modelId' ] )
-			->viaTable( $followerTable, [ 'modelId' => 'id' ] );
-		*/
 
 		return $followerClass::find()
 			->leftJoin( $userTable, "$followerTable.modelId=$userTable.id" )
 			->where( "$followerTable.parentId=$this->id" )
-			->orderBy( [ "$followerTable.order" => SORT_DESC, "$followerTable.id" => SORT_ASC ] )
+			->orderBy( [ "$followerTable.order" => SORT_DESC, "$followerTable.id" => SORT_DESC ] )
 			->all();
 	}
 
@@ -75,23 +70,14 @@ trait FollowerTrait {
 	 */
 	public function getActiveFollowers() {
 
-		$userTable		= CoreTables::getTableName( CoreTables::TABLE_USER );
+		$userTable		= User::tableName();
 		$followerClass	= $this->followerClass;
 		$followerTable	= $followerClass::tableName();
-
-		/*
-		return $this->hasMany( User::class, [ 'id' => 'modelId' ] )
-			->viaTable( $followerTable, [ 'modelId' => 'id' ],
-				function( $query ) use( $followerTable ) {
-					$query->onCondition( [ "$followerTable.active" => true ] );
-				}
-			);
-		*/
 
 		return $followerClass::find()
 			->leftJoin( $userTable, "$followerTable.modelId=$userTable.id" )
 			->where( "$followerTable.parentId=$this->id AND $followerTable.active=1" )
-			->orderBy( [ "$followerTable.order" => SORT_DESC, "$followerTable.id" => SORT_ASC ] )
+			->orderBy( [ "$followerTable.order" => SORT_DESC, "$followerTable.id" => SORT_DESC ] )
 			->all();
 	}
 
@@ -100,23 +86,23 @@ trait FollowerTrait {
 	 */
 	public function getFollowersByType( $type, $active = true ) {
 
-		$userTable		= CoreTables::getTableName( CoreTables::TABLE_USER );
+		$userTable		= User::tableName();
 		$followerClass	= $this->followerClass;
 		$followerTable	= $followerClass::tableName();
 
-		/*
-		return $this->hasMany( User::class, [ 'id' => 'modelId' ] )
-			->viaTable( $followerTable, [ 'modelId' => 'id' ],
-				function( $query ) use( $followerTable, $type, $active ) {
-					$query->onCondition( [ "$followerTable.type" => $type, "$followerTable.active" => $active ] );
-				}
-			)->all();
-		*/
+		if( $active ) {
+
+			return $followerClass::find()
+				->leftJoin( $userTable, "$followerTable.modelId=$userTable.id" )
+				->where( "$followerTable.parentId=$this->id AND $followerTable.type='$type' AND $followerTable.active=$active" )
+				->orderBy( [ "$followerTable.order" => SORT_DESC, "$followerTable.id" => SORT_DESC ] )
+				->all();
+		}
 
 		return $followerClass::find()
 			->leftJoin( $userTable, "$followerTable.modelId=$userTable.id" )
-			->where( "$followerTable.parentId=$this->id AND $followerTable.type='$type' AND $followerTable.active=$active" )
-			->orderBy( [ "$followerTable.order" => SORT_DESC, "$followerTable.id" => SORT_ASC ] )
+			->where( "$followerTable.parentId=$this->id AND $followerTable.type='$type'" )
+			->orderBy( [ "$followerTable.order" => SORT_DESC, "$followerTable.id" => SORT_DESC ] )
 			->all();
 	}
 
@@ -218,8 +204,12 @@ trait FollowerTrait {
 		$followerClass = $this->followerClass;
 		$followerTable = $followerClass::tableName();
 
-		$user		= Yii::$app->core->getUser();
-		$returnArr	= [ IFollower::TYPE_LIKE => false, IFollower::TYPE_DISLIKE => false, IFollower::TYPE_FOLLOW => false, IFollower::TYPE_WISHLIST => false ];
+		$user = Yii::$app->core->getUser();
+
+		$returnArr = [
+			IFollower::TYPE_LIKE => false, IFollower::TYPE_DISLIKE => false,
+			IFollower::TYPE_FOLLOW => false, IFollower::TYPE_WISHLIST => false
+		];
 
 		if( isset( $user ) ) {
 

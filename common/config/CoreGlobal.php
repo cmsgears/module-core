@@ -18,7 +18,7 @@ class CoreGlobal {
 
 	// System Sites ---------------------------------------------------
 
-	const SITE_MAIN		= 'main';
+	const SITE_MAIN = 'main';
 
 	const APP_ADMIN		= 'app-admin';
 	const APP_FRONTEND	= 'app-site';
@@ -51,49 +51,49 @@ class CoreGlobal {
 
 	// Standard Redirects ----------------------------------------------
 
-	const REDIRECT_LOGIN		= 'loginRedirectLink';
+	const REDIRECT_LOGIN = 'loginRedirectLink';
 
 	// Grouping by type ------------------------------------------------
 
 	// Generic
-	const TYPE_DEFAULT			= 'default';
-	const TYPE_CORE				= 'core';
-	const TYPE_SYSTEM			= 'system';
+	const TYPE_DEFAULT	= 'default';
+	const TYPE_CORE		= 'core';
+	const TYPE_SYSTEM	= 'system';
 
 	// Entities
-	const TYPE_CITY				= 'city';
-	const TYPE_REGION			= 'region';
-	const TYPE_COUNTRY			= 'country';
-	const TYPE_LOCALE			= 'locale';
-	const TYPE_OBJECT			= 'object';
-	const TYPE_PERMISSION		= 'permission';
-	const TYPE_PROVINCE			= 'province';
-	const TYPE_ROLE				= 'role';
-	const TYPE_SITE				= 'site';
-	const TYPE_APP				= 'app';
-	const TYPE_TEMPLATE			= 'template';
-	const TYPE_THEME			= 'theme';
-	const TYPE_USER				= 'user';
+	const TYPE_CITY			= 'city';
+	const TYPE_REGION		= 'region';
+	const TYPE_COUNTRY		= 'country';
+	const TYPE_LOCALE		= 'locale';
+	const TYPE_OBJECT		= 'object';
+	const TYPE_PERMISSION	= 'permission';
+	const TYPE_PROVINCE		= 'province';
+	const TYPE_ROLE			= 'role';
+	const TYPE_SITE			= 'site';
+	const TYPE_APP			= 'app';
+	const TYPE_TEMPLATE		= 'template';
+	const TYPE_THEME		= 'theme';
+	const TYPE_USER			= 'user';
 
 	// Resources
-	const TYPE_ACTIVITY			= 'activity';
-	const TYPE_ADDRESS			= 'address';
-	const TYPE_LOCATION			= 'location';
-	const TYPE_CATEGORY			= 'category';
-	const TYPE_COMMENT			= 'comment';
-	const TYPE_MESSAGE			= 'message';
-	const TYPE_FILE				= 'file';
-	const TYPE_FORM				= 'form';
-	const TYPE_FORM_FIELD		= 'form-field';
-	const TYPE_GALLERY			= 'gallery';
-	const TYPE_OPTION			= 'option';
-	const TYPE_TAG				= 'tag';
+	const TYPE_ACTIVITY		= 'activity';
+	const TYPE_ADDRESS		= 'address';
+	const TYPE_LOCATION		= 'location';
+	const TYPE_CATEGORY		= 'category';
+	const TYPE_COMMENT		= 'comment';
+	const TYPE_MESSAGE		= 'message';
+	const TYPE_FILE			= 'file';
+	const TYPE_FORM			= 'form';
+	const TYPE_FORM_FIELD	= 'form-field';
+	const TYPE_GALLERY		= 'gallery';
+	const TYPE_OPTION		= 'option';
+	const TYPE_TAG			= 'tag';
 
 	// Additional
-	const TYPE_ADMIN			= 'admin';
-	const TYPE_REVIEW			= 'review';
-	const TYPE_TESTIMONIAL		= 'testimonial';
-	const TYPE_OPTION_GROUP		= 'option-group';
+	const TYPE_ADMIN		= 'admin';
+	const TYPE_REVIEW		= 'review';
+	const TYPE_TESTIMONIAL	= 'testimonial';
+	const TYPE_OPTION_GROUP	= 'option-group';
 
 	// Templates -------------------------------------------------------
 
@@ -119,7 +119,7 @@ class CoreGlobal {
 	const TPL_NOTIFY_STATUS_TERMINATE	= 'status-terminate';
 	const TPL_NOTIFY_STATUS_DELETE		= 'status-delete';
 
-	const TPL_NOTIFY_STATUS_CHANGE		= 'status-change';
+	const TPL_NOTIFY_STATUS_CHANGE = 'status-change';
 
 	// Comment - Status Templates
     const TPL_COMMENT_STATUS_NEW		= 'comment-new';
@@ -137,7 +137,7 @@ class CoreGlobal {
 	const TPL_VIEW_PRIVATE		= 'private';
 	const TPL_VIEW_PUBLIC		= 'public';
 	const TPL_VIEW_SEARCH		= 'search';
-	const TPL_VIEW_CATEGRY		= 'category';
+	const TPL_VIEW_CATEGORY		= 'category';
 	const TPL_VIEW_TAG			= 'tag';
 	const TPL_VIEW_ARCHIVE		= 'archive';
 	const TPL_VIEW_AUTHOR		= 'author';
@@ -146,7 +146,7 @@ class CoreGlobal {
 
 	// Categories Slug -------------------------------------------------
 
-	const CATEGORY_GENDER	= 'gender';
+	const CATEGORY_GENDER = 'gender';
 
 	// Text Limits - Ideal for string validators -----------------------
 
@@ -210,10 +210,15 @@ class CoreGlobal {
 
 	// Model Attributes ------------------------------------------------
 
-	// data attributes
-	const DATA_CONFIG	= 'config'; // Configuration(no default) stored on data column
-	const DATA_SETTINGS	= 'settings'; // Settings(preference with default/alternate) stored on data column
-	const DATA_SEO		= 'seo';
+	// Data Attributes
+	const DATA_ATTRIBUTES	= 'attributes'; // Attributes stored on data column
+	const DATA_CONFIG		= 'config'; // Configuration(no default) stored on data column
+	const DATA_DATA			= 'data'; // Data stored on data column
+	const DATA_SETTINGS		= 'settings'; // Settings(preference with default/alternate) stored on data column
+	const DATA_PLUGINS		= 'plugins'; // Plugins configurations stored on the data column
+
+	// Model SEO
+	const DATA_SEO = 'seo'; // SEO data stored on the data column
 
 	// Approval Process
 	const DATA_REJECT_REASON	= 'rejectReason';
@@ -228,6 +233,7 @@ class CoreGlobal {
 	const DATA_SIDEBAR_MICRO	= 'microSidebar'; // Used to show micro or full view of sidebar.
 
 	// Model attributes
+	const META_TYPE_DEFAULT	= 'default';
 	const META_TYPE_USER	= 'user';
 	const META_TYPE_CONFIG	= 'config'; // Configuration(no default) stored in meta table
 	const META_TYPE_SETTING	= 'setting'; // Settings(preference with default/alternate) stored in meta table
@@ -444,6 +450,9 @@ class CoreGlobal {
 
 	const FIELD_USER		= 'userField';
 	const FIELD_ADMIN		= 'adminField';
+	const FIELD_FRONTEND	= 'frontendField';
+	const FIELD_BACKEND		= 'backendField';
+	const FIELD_WEBSITE		= 'websiteField';
 	const FIELD_AUTHOR		= 'authorField';
 	const FIELD_MEMBER		= 'memberField';
 	const FIELD_OWNER		= 'ownerField';
@@ -453,8 +462,6 @@ class CoreGlobal {
 	const FIELD_PROFILE		= 'profileField';
 	const FIELD_SHARED		= 'sharedField';
 
-	const FIELD_WEBSITE		= 'websiteField';
-	const FIELD_FRONTEND	= 'frontendField';
 	const FIELD_AVATAR		= 'avatarField';
 	const FIELD_AVATAR_URL	= 'avatarUrlField';
 	const FIELD_BANNER		= 'bannerField';
@@ -488,37 +495,37 @@ class CoreGlobal {
 	const FIELD_HOME_URL	= 'homeUrlField';
 
 	// Address Fields
-	const FIELD_LINE1				= 'line1Field';
-	const FIELD_LINE2				= 'line2Field';
-	const FIELD_LINE3				= 'line3Field';
-	const FIELD_CITY				= 'cityField';
-	const FIELD_ZIP					= 'zipField';
-	const FIELD_ZIP_SUB				= 'subZipField';
-	const FIELD_MOBILE				= 'mobileField';
-	const FIELD_PHONE				= 'phoneField';
-	const FIELD_FAX					= 'faxField';
-	const FIELD_LONGITUDE			= 'longitudeField';
-	const FIELD_LATITUDE			= 'latitudeField';
-	const FIELD_ZOOM				= 'zoomField';
-	const FIELD_ADDRESS				= 'addressField';
-	const FIELD_ADDRESS_TYPE		= 'addressTypeField';
-	const FIELD_ZONE				= 'zoneField';
-	const FIELD_REGIONS				= 'regionsField';
-	const FIELD_ZIP_CODES			= 'zipCodesField';
-	const FIELD_LANDMARK			= 'landmarkField';
-	const FIELD_LOCATION			= 'locationField';
+	const FIELD_LINE1			= 'line1Field';
+	const FIELD_LINE2			= 'line2Field';
+	const FIELD_LINE3			= 'line3Field';
+	const FIELD_CITY			= 'cityField';
+	const FIELD_ZIP				= 'zipField';
+	const FIELD_ZIP_SUB			= 'subZipField';
+	const FIELD_MOBILE			= 'mobileField';
+	const FIELD_PHONE			= 'phoneField';
+	const FIELD_FAX				= 'faxField';
+	const FIELD_LONGITUDE		= 'longitudeField';
+	const FIELD_LATITUDE		= 'latitudeField';
+	const FIELD_ZOOM			= 'zoomField';
+	const FIELD_ADDRESS			= 'addressField';
+	const FIELD_ADDRESS_TYPE	= 'addressTypeField';
+	const FIELD_ZONE			= 'zoneField';
+	const FIELD_REGIONS			= 'regionsField';
+	const FIELD_ZIP_CODES		= 'zipCodesField';
+	const FIELD_LANDMARK		= 'landmarkField';
+	const FIELD_LOCATION		= 'locationField';
 
 	// User Fields
-	const FIELD_EMAIL				= 'emailField';
-	const FIELD_USERNAME			= 'usernameField';
-	const FIELD_PASSWORD			= 'passwordField';
-	const FIELD_PASSWORD_REPEAT		= 'passwordRepeatField';
-	const FIELD_PASSWORD_OLD		= 'passwordOldField';
-	const FIELD_FIRSTNAME			= 'firstNameField';
-	const FIELD_MIDDLENAME			= 'middleNameField';
-	const FIELD_LASTNAME			= 'lastNameField';
-	const FIELD_DOB					= 'dobField';
-	const FIELD_TERMS				= 'termsField';
+	const FIELD_EMAIL			= 'emailField';
+	const FIELD_USERNAME		= 'usernameField';
+	const FIELD_PASSWORD		= 'passwordField';
+	const FIELD_PASSWORD_REPEAT	= 'passwordRepeatField';
+	const FIELD_PASSWORD_OLD	= 'passwordOldField';
+	const FIELD_FIRSTNAME		= 'firstNameField';
+	const FIELD_MIDDLENAME		= 'middleNameField';
+	const FIELD_LASTNAME		= 'lastNameField';
+	const FIELD_DOB				= 'dobField';
+	const FIELD_TERMS			= 'termsField';
 
 	// Verification Fields
 	const FIELD_MOBILE_VERIFIED	= 'mobileVerifiedField';
@@ -528,25 +535,25 @@ class CoreGlobal {
 	const FIELD_OTP_VALIDITY = 'otpValidityField';
 
 	// File Fields
-	const FIELD_EXTENSION			= 'extensionField';
-	const FIELD_DIRECTORY			= 'directoryField';
-	const FIELD_SIZE				= 'sizeField';
-	const FIELD_URL					= 'urlField';
-	const FIELD_LINK				= 'linkField';
+	const FIELD_EXTENSION	= 'extensionField';
+	const FIELD_DIRECTORY	= 'directoryField';
+	const FIELD_SIZE		= 'sizeField';
+	const FIELD_URL			= 'urlField';
+	const FIELD_LINK		= 'linkField';
 
 	// Notification/Reminder/Message Fields
-	const FIELD_NOTIFIER		= 'notifierField';
-	const FIELD_SENDER			= 'senderField';
-	const FIELD_PUBLISHER		= 'publisherField';
-	const FIELD_RECIPIENT		= 'recipientField';
+	const FIELD_NOTIFIER	= 'notifierField';
+	const FIELD_SENDER		= 'senderField';
+	const FIELD_PUBLISHER	= 'publisherField';
+	const FIELD_RECIPIENT	= 'recipientField';
 
 	// Site/Site Member Fields
-	const FIELD_SITE			= 'siteField';
+	const FIELD_SITE = 'siteField';
 
 	// Content Fields
-	const FIELD_SUMMARY			= 'summaryField';
-	const FIELD_HELP			= 'helpField';
-	const FIELD_CONTENT			= 'contentField';
+	const FIELD_SUMMARY	= 'summaryField';
+	const FIELD_HELP	= 'helpField';
+	const FIELD_CONTENT	= 'contentField';
 
 	// Views
 	const FIELD_LAYOUT			= 'layoutField';
@@ -574,8 +581,8 @@ class CoreGlobal {
 	const FIELD_RATING			= 'ratingField';
 
 	// Visibility
-	const FIELD_PRIVATE			= 'privateField';
-	const FIELD_PUBLIC			= 'publicField';
+	const FIELD_PRIVATE	= 'privateField';
+	const FIELD_PUBLIC	= 'publicField';
 
 	// Dependency - Generic Mapper
 	const FIELD_SOURCE		= 'sourceField';
@@ -584,9 +591,9 @@ class CoreGlobal {
 	const FIELD_TARGET_TYPE	= 'targetTypeField';
 
 	// SEO
-	const FIELD_SEO_NAME			= 'seoNameField';
-	const FIELD_SEO_DESCRIPTION		= 'seoDescriptionField';
-	const FIELD_SEO_KEYWORDS		= 'seoKeywordsField';
-	const FIELD_SEO_ROBOT			= 'seoRobotField';
+	const FIELD_SEO_NAME		= 'seoNameField';
+	const FIELD_SEO_DESCRIPTION	= 'seoDescriptionField';
+	const FIELD_SEO_KEYWORDS	= 'seoKeywordsField';
+	const FIELD_SEO_ROBOT		= 'seoRobotField';
 
 }

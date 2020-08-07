@@ -16,7 +16,7 @@ use Yii;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\config\CommentProperties;
 
-use cmsgears\core\common\models\forms\Comment as CommentForm;
+use cmsgears\core\common\models\forms\Comment;
 use cmsgears\core\common\models\resources\ModelComment;
 
 use cmsgears\core\common\utilities\AjaxUtil;
@@ -44,7 +44,7 @@ class Comment extends Create {
 
 	public $modelType = ModelComment::TYPE_COMMENT;
 
-	public $scenario = CommentForm::SCENARIO_IDENTITY;
+	public $scenario = Comment::SCENARIO_IDENTITY;
 
 	// Protected --------------
 

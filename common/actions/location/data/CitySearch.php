@@ -69,6 +69,7 @@ class CitySearch extends \cmsgears\core\common\base\Action {
 
 	public function run() {
 
+		$countryId	= Yii::$app->request->post( 'countryId' );
 		$provinceId	= Yii::$app->request->post( 'provinceId' );
 		$regionId	= Yii::$app->request->post( 'regionId' );
 		$name		= Yii::$app->request->post( 'name' );
@@ -80,6 +81,11 @@ class CitySearch extends \cmsgears\core\common\base\Action {
 		$autoCache	= isset( $autoCache ) ? $autoCache : false;
 
 		$conditions = [];
+
+		if( !empty( $countryId && $countryId > 0 ) ) {
+
+			$conditions[ 'countryId' ] = $countryId;
+		}
 
 		if( !empty( $provinceId && $provinceId > 0 ) ) {
 

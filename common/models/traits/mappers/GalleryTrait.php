@@ -50,7 +50,8 @@ trait GalleryTrait {
 		$modelGalleryTable = ModelGallery::tableName();
 
 		return $this->hasMany( ModelGallery::class, [ 'parentId' => 'id' ] )
-			->where( "$modelGalleryTable.parentType='$this->modelType'" );
+			->where( "$modelGalleryTable.parentType='$this->modelType'" )
+			->orderBy( [ "$modelGalleryTable.order" => SORT_DESC, "$modelGalleryTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -61,7 +62,8 @@ trait GalleryTrait {
 		$modelGalleryTable = ModelGallery::tableName();
 
 		return $this->hasMany( ModelGallery::class, [ 'parentId' => 'id' ] )
-			->where( "$modelGalleryTable.parentType='$this->modelType' AND $modelGalleryTable.active=1" );
+			->where( "$modelGalleryTable.parentType='$this->modelType' AND $modelGalleryTable.active=1" )
+			->orderBy( [ "$modelGalleryTable.order" => SORT_DESC, "$modelGalleryTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -71,8 +73,16 @@ trait GalleryTrait {
 
 		$modelGalleryTable = ModelGallery::tableName();
 
-		return $this->hasOne( ModelGallery::class, [ 'parentId' => 'id' ] )
-			->where( "$modelGalleryTable.parentType=:ptype AND $modelGalleryTable.type=:type AND $modelGalleryTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
+		if( $active ) {
+
+			return $this->hasMany( ModelGallery::class, [ 'parentId' => 'id' ] )
+				->where( "$modelGalleryTable.parentType=:ptype AND $modelGalleryTable.type=:type AND $modelGalleryTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+				->orderBy( [ "$modelGalleryTable.order" => SORT_DESC, "$modelGalleryTable.id" => SORT_DESC ] );
+		}
+
+		return $this->hasMany( ModelGallery::class, [ 'parentId' => 'id' ] )
+			->where( "$modelGalleryTable.parentType=:ptype AND $modelGalleryTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] )
+			->orderBy( [ "$modelGalleryTable.order" => SORT_DESC, "$modelGalleryTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -80,15 +90,14 @@ trait GalleryTrait {
 	 */
 	public function getGalleries() {
 
-		$modelGalleryTable = ModelGallery::tableName();
+		$galleryTable		= Gallery::tableName();
+		$modelGalleryTable	= ModelGallery::tableName();
 
-		return $this->hasMany( Gallery::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelGalleryTable ) {
-
-					$query->onCondition( [ "$modelGalleryTable.parentType" => $this->modelType ] );
-				}
-			);
+		return Gallery::find()
+			->leftJoin( $modelGalleryTable, "$modelGalleryTable.modelId=$galleryTable.id" )
+			->where( "$modelGalleryTable.parentId=:pid AND $modelGalleryTable.parentType=:ptype", [ ':pid' => $this->id, ':ptype' => $this->modelType ] )
+			->orderBy( [ "$modelGalleryTable.order" => SORT_DESC, "$modelGalleryTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**
@@ -96,15 +105,14 @@ trait GalleryTrait {
 	 */
 	public function getActiveGalleries() {
 
-		$modelGalleryTable = ModelGallery::tableName();
+		$galleryTable		= Gallery::tableName();
+		$modelGalleryTable	= ModelGallery::tableName();
 
-		return $this->hasMany( Gallery::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelGalleryTable ) {
-
-					$query->onCondition( [ "$modelGalleryTable.parentType" => $this->modelType, "$modelGalleryTable.active" => true ] );
-				}
-			);
+		return Gallery::find()
+			->leftJoin( $modelGalleryTable, "$modelGalleryTable.modelId=$galleryTable.id" )
+			->where( "$modelGalleryTable.parentId=:pid AND $modelGalleryTable.parentType=:ptype AND $modelGalleryTable.active=1", [ ':pid' => $this->id, ':ptype' => $this->modelType ] )
+			->orderBy( [ "$modelGalleryTable.order" => SORT_DESC, "$modelGalleryTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**
@@ -112,32 +120,37 @@ trait GalleryTrait {
 	 */
 	public function getGalleriesByType( $type, $active = true ) {
 
-		$modelGalleryTable = ModelGallery::tableName();
+		$galleryTable		= Gallery::tableName();
+		$modelGalleryTable	= ModelGallery::tableName();
 
-		return $this->hasMany( Gallery::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$type, &$active, &$modelGalleryTable ) {
+		if( $active ) {
 
-					$query->onCondition( [ "$modelGalleryTable.parentType" => $this->modelType, "$modelGalleryTable.type" => $type, "$modelGalleryTable.active" => $active ] );
-				}
-			)->all();
+			return Gallery::find()
+				->leftJoin( $modelGalleryTable, "$modelGalleryTable.modelId=$galleryTable.id" )
+				->where( "$modelGalleryTable.parentId=:pid AND $modelGalleryTable.parentType=:ptype AND $modelGalleryTable.type=:type AND $modelGalleryTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+				->orderBy( [ "$modelGalleryTable.order" => SORT_DESC, "$modelGalleryTable.id" => SORT_DESC ] )
+				->all();
+		}
+
+		return Gallery::find()
+			->leftJoin( $modelGalleryTable, "$modelGalleryTable.modelId=$galleryTable.id" )
+			->where( "$modelGalleryTable.parentId=:pid AND $modelGalleryTable.parentType=:ptype AND $modelGalleryTable.type=:type", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type ] )
+			->orderBy( [ "$modelGalleryTable.order" => SORT_DESC, "$modelGalleryTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function getGalleryByTitle( $title ) {
+	public function getGalleryByCode( $code ) {
 
 		$galleryTable		= Gallery::tableName();
 		$modelGalleryTable	= ModelGallery::tableName();
 
-		return $this->hasOne( Gallery::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelGalleryTable ) {
-
-					$query->onCondition( "$modelGalleryTable.parentType=:type", [ ':type' => $this->modelType ] );
-				}
-			)->where( "$galleryTable.title=:title", [ ':title' => $title ] )->one();
+		return File::find()
+			->leftJoin( $modelGalleryTable, "$modelGalleryTable.modelId=$galleryTable.id" )
+			->where( "$modelGalleryTable.parentId=:pid AND $modelGalleryTable.parentType=:ptype AND $modelGalleryTable.code=:code", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':code' => $code ] )
+			->one();
 	}
 
 	// Useful for models having single gallery mapped via $galleryId.

@@ -1,32 +1,34 @@
 <?php
 /**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
  * @link https://www.cmsgears.org/
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
- * @license https://www.cmsgears.org/license/
- * @package module
- * @subpackage core
  */
+
 namespace cmsgears\core\common\base;
 
 // Yii Imports
 use Yii;
-use yii\web\Application as BaseApplication;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreProperties;
 
-use cmsgears\core\common\services\entities\SiteService;
+use cmsgears\core\common\models\entities\Site;
 
 /**
  * The Application extends yii web Application and adds multi-site routing support.
  *
- * It read core properties and configure application's date, time format and initialise time-zone.
+ * It read core properties and configure application's date, time format and
+ * initialize time-zone.
  *
- * It alter the request and read child site name in case application supports multi-site either at sub-domain or sub-directory level.
+ * It alter the request and read child site name in case application supports
+ * multi-site either at sub-domain or sub-directory level.
  *
  * @since 1.0.0
  */
-class Application extends BaseApplication {
+class Application extends \yii\web\Application {
 
 	// Variables ---------------------------------------------------
 
@@ -90,12 +92,12 @@ class Application extends BaseApplication {
 					list( $site, $siteRoute ) = explode( '/', $route, 2 );
 
 					// Find Site
-					$site = SiteService::findBySlug( $site );
+					$site = Site::findBySlug( $site );
 
 					// Use main Site
 					if( empty( $site ) ) {
 
-						$site = SiteService::findBySlug( 'main' );
+						$site = Site::findBySlug( 'main' );
 
 						$siteRoute = $route;
 					}
@@ -137,7 +139,7 @@ class Application extends BaseApplication {
 					}
 				}
 
-				$site = SiteService::findBySlug( $siteName );
+				$site = Site::findBySlug( $siteName );
 
 				// Site Found
 				if( isset( $site ) ) {
@@ -158,7 +160,7 @@ class Application extends BaseApplication {
 
 			$siteSlug = Yii::$app->core->siteSlug;
 
-			$site = SiteService::findBySlug( $siteSlug );
+			$site = Site::findBySlug( $siteSlug );
 
 			// Site Found
 			if( isset( $site ) ) {

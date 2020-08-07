@@ -1,8 +1,16 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\utilities;
 
-use \DateTime;
-use \DateInterval;
+use DateTime;
+use DateInterval;
 
 /**
  * DateUtil provide several utility methods related to date and time.
@@ -133,8 +141,8 @@ class DateUtil {
 	// Hrs/Mins ----------------------------------------------------
 
 	// hours in 12 and 24 hours format
-	public static $hrs12	= [ '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12' ];
-	public static $hrs24	= [ '00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23' ];
+	public static $hrs12 = [ '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12' ];
+	public static $hrs24 = [ '00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23' ];
 
 	// minutes with different interval
 	public static $mins15	= [ '00', '15', '30', '45' ];
@@ -227,7 +235,7 @@ class DateUtil {
 	 */
 	public static function getDateFromDateTime( $date ) {
 
-		$date	= preg_split( "/ /", $date );
+		$date = preg_split( "/ /", $date );
 
 		return $date[ 0 ];
 	}
@@ -237,7 +245,7 @@ class DateUtil {
 	 */
 	public static function getTimeFromDateTime( $date ) {
 
-		$date	= preg_split( "/ /", $date );
+		$date = preg_split( "/ /", $date );
 
 		return $date[ 1 ];
 	}
@@ -252,7 +260,7 @@ class DateUtil {
 			$format	= 'H:i:s';
 		}
 
-		$date	= preg_split( "/-/", $date );
+		$date = preg_split( "/-/", $date );
 
 		return $date[ 2 ];
 	}
@@ -316,16 +324,16 @@ class DateUtil {
 
 	    $date = strtotime( "+" . $secs ." second", $date );
 
-	    return  date( "Y-m-d H:i:s", $date );
+	    return date( "Y-m-d H:i:s", $date );
 	}
 
 	public static function addDays( $date, $days ) {
 
-		$date 	= is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
+		$date = is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
 
-	    $date 	= strtotime( "+" . $days ." days", $date );
+	    $date = strtotime( "+" . $days ." days", $date );
 
-	    return  date( "Y-m-d", $date );
+	    return date( "Y-m-d", $date );
 	}
 
 	public static function getDayDifference( $startDate, $endDate ) {
@@ -430,7 +438,8 @@ class DateUtil {
 	public static function getWeekDates( $monday ) {
 
 		$currentDay = is_string( $monday ) ? strtotime( $monday ) : $monday->getTimestamp();
-		$dates		= [];
+
+		$dates = [];
 
 		if( !isset( $format ) ) {
 
@@ -439,7 +448,7 @@ class DateUtil {
 
 		for ( $i = 0 ; $i < 7 ; $i++ ) {
 
-			$dates[]	= date( $format, $currentDay );
+			$dates[] = date( $format, $currentDay );
 
 			$currentDay += 24 * 3600;
 		}
@@ -453,7 +462,8 @@ class DateUtil {
 	public static function getCurrentWeekDates( $format = null ) {
 
 		$currentDay = strtotime( 'last sunday' );
-		$dates		= [];
+
+		$dates = [];
 
 		if( !isset( $format ) ) {
 
@@ -462,7 +472,7 @@ class DateUtil {
 
 		for ( $i = 0 ; $i < 7 ; $i++ ) {
 
-			$dates[]	= date( $format, $currentDay );
+			$dates[] = date( $format, $currentDay );
 
 			$currentDay += 24 * 3600;
 		}
@@ -476,7 +486,8 @@ class DateUtil {
 	public static function getLastWeekDates( $format = null ) {
 
 		$currentDay = strtotime( 'last sunday' ) - 7*24*3600;
-		$dates		= [];
+
+		$dates = [];
 
 		if( !isset( $format ) ) {
 
@@ -485,7 +496,7 @@ class DateUtil {
 
 		for ( $i = 0 ; $i < 7 ; $i++ ) {
 
-			$dates[]	= date( $format, $currentDay );
+			$dates[] = date( $format, $currentDay );
 
 			$currentDay += 24 * 3600;
 		}
@@ -502,7 +513,8 @@ class DateUtil {
 		$lastDay	= date( 'Y-m-t' );
 		$daysCount	= ( strtotime( $lastDay ) - strtotime( $currentDay ) ) / 3600 / 24;
 		$currentDay	= strtotime( $currentDay );
-		$dates		= [];
+
+		$dates = [];
 
 		if( !isset( $format ) ) {
 
@@ -511,7 +523,7 @@ class DateUtil {
 
 		for ( $i = 0 ; $i <= $daysCount ; $i++ ) {
 
-			$dates[]	= date( $format, $currentDay );
+			$dates[] = date( $format, $currentDay );
 
 			$currentDay += 24 * 3600;
 		}
@@ -531,7 +543,8 @@ class DateUtil {
 		$lastDay	= $lastDay->format( 'Y-m-d' );
 		$daysCount	= ( strtotime( $lastDay ) - strtotime( $currentDay ) ) / 3600 / 24;
 		$currentDay	= strtotime( $currentDay );
-		$dates		= [];
+
+		$dates = [];
 
 		if( !isset( $format ) ) {
 
@@ -540,7 +553,7 @@ class DateUtil {
 
 		for ( $i = 0 ; $i <= $daysCount ; $i++ ) {
 
-			$dates[]	= date( $format, $currentDay );
+			$dates[] = date( $format, $currentDay );
 
 			$currentDay += 24 * 3600;
 		}
@@ -557,18 +570,18 @@ class DateUtil {
 
 		for( $slot = 1; $slot <= 97; $slot++ ) {
 
-			$houri	= $hour;
+			$houri = $hour;
 
 			if( $hour < 10 ) {
 
-				$houri	= "0$hour";
+				$houri = "0$hour";
 			}
 
 			$minutei = $minute;
 
 			if( $minute < 10 ) {
 
-				$minutei	= "0$minute";
+				$minutei = "0$minute";
 			}
 
 			$interval[]	= $houri . ':' . $minutei . ':00';
@@ -578,11 +591,12 @@ class DateUtil {
 			if( $slot % 4 == 0 ) {
 
 				 $hour++;
-				 $minute	= 0;
+
+				 $minute = 0;
 
 				 if( $hour == 24 ) {
 
-					$hour	= 0;
+					$hour = 0;
 				 }
 			}
 
@@ -605,40 +619,42 @@ class DateUtil {
 
 		for( $slot = 1; $slot <= 97; $slot++ ) {
 
-			$houri	= $hour;
+			$houri = $hour;
 
 			if( $hour < 10 ) {
 
-				$houri	= "0$hour";
+				$houri = "0$hour";
 			}
 
 			$minutei = $minute;
 
 			if( $minute < 10 ) {
 
-				$minutei	= "0$minute";
+				$minutei = "0$minute";
 			}
 
-			$time				= $houri . ':' . $minutei . ':00';
-			$interval[ $time ]	= $time;
+			$time = $houri . ':' . $minutei . ':00';
+
+			$interval[ $time ] = $time;
 
 			$minute += $minInterval;
 
 			if( $slot % 4 == 0 ) {
 
-				 $hour++;
-				 $minute	= 0;
+				$hour++;
 
-				 if( $hour == 24 ) {
+				$minute = 0;
 
-					$hour	= 0;
-				 }
+				if( $hour == 24 ) {
+
+					$hour = 0;
+				}
 			}
 
 			if( $slot == 97 ) {
 
-				 $hour		= 0;
-				 $minute	= 0;
+				$hour	= 0;
+				$minute	= 0;
 			}
 		}
 
@@ -731,7 +747,7 @@ class DateUtil {
 			$offset_prefix		= $offset < 0 ? '-' : '+';
 			$offset_formatted 	= gmdate( 'H:i', abs($offset) );
 
-			$pretty_offset 		= "UTC${offset_prefix}${offset_formatted}";
+			$pretty_offset = "UTC${offset_prefix}${offset_formatted}";
 
 			$timezone_list[$timezone] = "(${pretty_offset}) $timezone";
 		}
@@ -742,7 +758,7 @@ class DateUtil {
     // Dates list from 1 to 31
     public static function getDatesList() {
 
-        $list   = [];
+        $list = [];
 
         for( $i = 1; $i <= 31; $i++ ) {
 
@@ -751,4 +767,5 @@ class DateUtil {
 
         return $list;
     }
+
 }

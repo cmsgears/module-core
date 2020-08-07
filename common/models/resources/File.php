@@ -47,7 +47,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
- * @property string $tag
+ * @property string $code
  * @property string $title
  * @property string $description
  * @property string $extension
@@ -67,6 +67,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $caption
  * @property string $altText
  * @property string $link
+ * @property boolean $backend
+ * @property boolean $frontend
  * @property boolean $shared
  * @property string $srcset
  * @property string $sizes
@@ -178,10 +180,10 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 			[ 'changed', 'required', 'on' => 'upload', 'message' => 'Please provide a valid file.' ],
 			[ [ 'id', 'content', 'gridCache' ], 'safe' ],
 			// Unique
-			[ 'tag', 'unique', 'on' => 'tag' ],
+			[ 'code', 'unique' ],
 			// Text Limit
 			[ [ 'extension', 'type', 'storage', 'srcset' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'tag', 'sizes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'code', 'sizes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ [ 'directory', 'altText' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ [ 'name', 'url', 'medium', 'small', 'thumb', 'placeholder', 'smallPlaceholder', 'ogg', 'webm', 'caption' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			[ [ 'title', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
@@ -189,7 +191,7 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 			// Other
 			[ [ 'visibility', 'width', 'height', 'mwidth', 'mheight', 'swidth', 'sheight', 'twidth', 'theight' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ 'size', 'number', 'min' => 0 ],
-			[ [ 'shared', 'changed', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'backend', 'frontend', 'shared', 'changed', 'gridCacheValid' ], 'boolean' ],
 			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
@@ -215,7 +217,7 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'createdBy' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'tag' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TAG ),
+			'code' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CODE ),
 			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'extension' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EXTENSION ),
@@ -230,6 +232,8 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 			'link' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINK ),
 			'srcset' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IMG_SRCSET ),
 			'sizes' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IMG_SIZES ),
+			'backend' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BACKEND ),
+			'frontend' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FRONTEND ),
 			'shared' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SHARED ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
@@ -271,6 +275,26 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 	public function getTypeStr() {
 
 		return self::$typeMap[ $this->type ];
+	}
+
+	/**
+	 * Returns string representation of [[$backend]].
+	 *
+	 * @return boolean
+	 */
+	public function getBackendStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->backend );
+	}
+
+	/**
+	 * Returns string representation of [[$frontend]].
+	 *
+	 * @return boolean
+	 */
+	public function getFrontendStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->frontend );
 	}
 
 	/**

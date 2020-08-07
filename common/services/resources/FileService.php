@@ -12,7 +12,6 @@ namespace cmsgears\core\common\services\resources;
 // Yii Imports
 use Yii;
 use yii\data\Sort;
-use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -22,6 +21,7 @@ use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
+use cmsgears\core\common\services\traits\base\SharedTrait;
 use cmsgears\core\common\services\traits\base\VisibilityTrait;
 use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
@@ -60,6 +60,7 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 	use DataTrait;
 	use GridCacheTrait;
 	use MultiSiteTrait;
+	use SharedTrait;
 	use VisibilityTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -152,6 +153,18 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 					'default' => SORT_DESC,
 					'label' => 'Path'
 				],
+				'backend' => [
+					'asc' => [ "$modelTable.backend" => SORT_ASC ],
+					'desc' => [ "$modelTable.backend" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Backend'
+				],
+				'frontend' => [
+					'asc' => [ "$modelTable.frontend" => SORT_ASC ],
+					'desc' => [ "$modelTable.frontend" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Frontend'
+				],
 				'shared' => [
 					'asc' => [ "$modelTable.shared" => SORT_ASC ],
 					'desc' => [ "$modelTable.shared" => SORT_DESC ],
@@ -191,6 +204,7 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 		// Params
 		$type		= Yii::$app->request->getQueryParam( 'type' );
 		$visibility	= Yii::$app->request->getQueryParam( 'visibility' );
+		$filter		= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Type
 		if( isset( $type ) ) {
@@ -202,6 +216,32 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 		if( isset( $visibility ) && isset( $modelClass::$urlRevVisibilityMap[ $visibility ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.visibility" ]	= $modelClass::$urlRevVisibilityMap[ $visibility ];
+		}
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'backend': {
+
+					$config[ 'conditions' ][ "$modelTable.backend" ] = true;
+
+					break;
+				}
+				case 'frontend': {
+
+					$config[ 'conditions' ][ "$modelTable.frontend" ] = true;
+
+					break;
+				}
+				case 'shared': {
+
+					$config[ 'conditions' ][ "$modelTable.shared" ] = true;
+
+					break;
+				}
+			}
 		}
 
 		// Searching --------
@@ -242,20 +282,6 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 		return parent::getPage( $config );
 	}
 
-	public function getSharedPage( $config = [] ) {
-
-		$config[ 'conditions' ][ 'shared' ] = true;
-
-		return $this->getPage( $config );
-	}
-
-	public function getDirectPage( $config = [] ) {
-
-		$config[ 'conditions' ][ 'shared' ] = false;
-
-		return $this->getPage( $config );
-	}
-
 	// Read ---------------
 
 	// Read - Models ---
@@ -283,12 +309,6 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 			$model->visibility = File::VISIBILITY_PUBLIC;
 		}
 
-		// Default Sharing
-		if( !isset( $model->shared ) ) {
-
-			$model->shared = false;
-		}
-
 		// Create File
 		$model->save();
 
@@ -300,18 +320,11 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 
 	public function update( $model, $config = [] ) {
 
-		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		//$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'title', 'description', 'caption', 'altText', 'link', 'type', 'content'
+			'code', 'title', 'description', 'caption', 'altText', 'link', 'type', 'content'
 		];
-
-		if( $admin ) {
-
-			$attributes	= ArrayHelper::merge( $attributes, [
-				'shared'
-			]);
-		}
 
 		if( $model->changed ) {
 
@@ -556,8 +569,10 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 
 		if( isset( $model ) ) {
 
-			// Only admin is authorised to delete a shared file using file browser.
-			if( $admin || !$model->shared ) {
+			// Admin can delete all the files
+			// Users can delete frontend and shared files
+			// Non-Shared files can be deleted with the model
+			if( $admin || ( $model->frontend && $model->shared ) || !$model->shared ) {
 
 				// Delete mappings
 				Yii::$app->factory->get( 'modelFileService' )->deleteByModelId( $model->id );

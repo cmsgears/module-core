@@ -1,5 +1,6 @@
 <?php
-use yii\widgets\ActiveForm;
+// CMG Imports
+use cmsgears\core\common\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= $coreProperties->getSiteTitle() . ' | Activate Account';
@@ -32,4 +33,3 @@ $this->title	= $coreProperties->getSiteTitle() . ' | Activate Account';
 <?php
 		ActiveForm::end();
 	}
-?>

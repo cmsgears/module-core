@@ -5,8 +5,6 @@ namespace cmsgears\core\common\models\hierarchy;
 use Yii;
 
 // CMG Imports
-use cmsgears\core\common\models\base\ActiveRecord;
-
 use cmsgears\core\common\config\CoreGlobal;
 
 /**
@@ -17,7 +15,7 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * @since 1.0.0
  */
-abstract class HierarchicalModel extends ActiveRecord {
+abstract class HierarchicalModel extends \cmsgears\core\common\models\base\ActiveRecord {
 
 	// Variables ---------------------------------------------------
 

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\base;
 
 // Yii Imports
@@ -23,9 +31,9 @@ abstract class TableWidget extends GridWidget {
 
 	// Public -----------------
 
-	public $template	= 'table';
+	public $template = 'table';
 
-	public $provider 	= false; // Models will be used instead of data provider
+	public $provider = false; // Models will be used instead of data provider
 
 	// Widget Sections - Disabled by default
 

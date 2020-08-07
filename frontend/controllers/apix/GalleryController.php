@@ -21,7 +21,7 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * @since 1.0.0
  */
-class GalleryController extends \cmsgears\core\frontend\controllers\base\Controller {
+class GalleryController extends \cmsgears\core\frontend\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -60,10 +60,10 @@ class GalleryController extends \cmsgears\core\frontend\controllers\base\Control
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'get-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ],
-					'add-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ],
-					'update-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ],
-					'delete-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ]
+					'get-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'add-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'update-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ],
+					'delete-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' ] ]
 				]
 			],
 			'verbs' => [
@@ -83,10 +83,10 @@ class GalleryController extends \cmsgears\core\frontend\controllers\base\Control
 	public function actions() {
 
 		return [
-			'get-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\ReadItem' ],
-			'add-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\CreateItem' ],
-			'update-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\UpdateItem' ],
-			'delete-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\DeleteItem' ]
+			'get-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Read' ],
+			'add-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Create' ],
+			'update-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Update' ],
+			'delete-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Delete' ]
 		];
 	}
 

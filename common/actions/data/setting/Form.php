@@ -66,8 +66,9 @@ class Form extends \cmsgears\core\common\base\Action {
 		// Update/Render if exist
 		if( isset( $model ) && isset( $template ) ) {
 
-			$settingsClass	= $template->settingsPath;
-			$settings		= new $settingsClass( $model->getDataMeta( 'settings' ) );
+			$settingsClass = $template->settingsPath;
+
+			$settings = new $settingsClass( $model->getDataMeta( 'settings' ) );
 
 			$this->controller->setViewPath( $template->settingsForm );
 

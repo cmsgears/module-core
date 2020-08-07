@@ -60,8 +60,9 @@ class FileHandler extends \cmsgears\core\common\base\Action {
 
 	public function run( $directory, $type, $gen = false ) {
 
-		$data	= Yii::$app->fileManager->handleFileUpload( $directory, $type, $gen );
-		$keys	= array_keys( $data );
+		$data = Yii::$app->fileManager->handleFileUpload( $directory, $type, $gen );
+
+		$keys = array_keys( $data );
 
 		if( !in_array( 'error', array_keys( $data ) ) ) {
 

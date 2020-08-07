@@ -16,14 +16,12 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
  * SitesController provides actions specific to site model.
  *
  * @since 1.0.0
  */
-class SitesController extends Controller {
+class SitesController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -104,7 +102,7 @@ class SitesController extends Controller {
 			'assign-banner' => [ 'class' => 'cmsgears\core\common\actions\content\banner\Assign' ],
 			'clear-banner' => [ 'class' => 'cmsgears\core\common\actions\content\banner\Clear' ],
 			// Model
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

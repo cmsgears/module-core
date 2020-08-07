@@ -20,7 +20,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\resources\File;
 
 /**
- * ModelObjectController provides actions specific to model objects.
+ * ModelObjectController provides actions specific to object mapper.
  *
  * @since 1.0.0
  */
@@ -152,8 +152,7 @@ abstract class ModelObjectController extends Controller {
 			$object	= new $objectClass;
 			$model	= $this->modelService->getModelObject();
 
-			$object->siteId	= Yii::$app->core->siteId;
-			$object->type	= $this->type;
+			$object->type = $this->type;
 
 			$avatar	= File::loadFile( null, 'Avatar' );
 			$banner	= File::loadFile( null, 'Banner' );

@@ -44,13 +44,13 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 		// Config
 		$this->type		= CoreGlobal::TYPE_GALLERY;
-		$this->apixBase = 'core/template';
+		$this->apixBase = 'core/gallery/template';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-file', 'child' => 'gallery-template' ];
 
 		// Return Url
-		$this->returnUrl = Url::previous( 'templates' );
+		$this->returnUrl = Url::previous( 'gallery-templates' );
 		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/gallery/template/all' ], true );
 
 		// Breadcrumbs
@@ -87,7 +87,7 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 	public function actionAll( $config = [] ) {
 
-		Url::remember( Yii::$app->request->getUrl(), 'templates' );
+		Url::remember( Yii::$app->request->getUrl(), 'gallery-templates' );
 
 		return parent::actionAll( $config );
 	}

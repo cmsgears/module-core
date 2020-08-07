@@ -16,7 +16,7 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class ProvinceController extends \cmsgears\core\admin\controllers\base\Controller {
+class ProvinceController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -77,7 +77,7 @@ class ProvinceController extends \cmsgears\core\admin\controllers\base\Controlle
 	public function actions() {
 
 		return [
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ],
 			'options-list' => [ 'class' => 'cmsgears\core\common\actions\location\data\ProvinceOptions' ]

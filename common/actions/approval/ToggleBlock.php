@@ -69,7 +69,7 @@ class ToggleBlock extends \cmsgears\core\common\base\Action {
 
 	public function run( $id ) {
 
-		$model	= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		if( isset( $model ) ) {
 

@@ -77,7 +77,7 @@ class ObjectSearch extends AutoSearch {
 		$config[ 'query' ]		= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
 		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name" ];
 		$config[ 'array' ]		= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
-		$config[ 'siteId' ]		= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : ($modelClass::isMultiSite() ? Yii::$app->core->siteId : null );
+		$config[ 'siteId' ]		= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : ( $modelClass::isMultiSite() ? Yii::$app->core->siteId : null );
 		$config[ 'sort' ]		= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : [ 'name' => SORT_ASC ];
 
 		$config[ 'query' ]->andWhere( "$modelTable.`admin`=:admin AND $modelTable.`shared`=1 AND $modelTable.`name` like :name", [ ':admin' => $this->admin, ':name' => "$name%" ] );

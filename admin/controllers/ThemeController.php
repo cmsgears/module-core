@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\CrudController;
-
 /**
  * ThemeController provides actions specific to theme model.
  *
  * @since 1.0.0
  */
-class ThemeController extends CrudController {
+class ThemeController extends \cmsgears\core\admin\controllers\base\CrudController {
 
 	// Variables ---------------------------------------------------
 

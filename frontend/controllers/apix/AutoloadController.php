@@ -18,7 +18,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class AutoloadController extends \cmsgears\core\admin\controllers\base\Controller {
+class AutoloadController extends \cmsgears\core\frontend\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -46,6 +46,7 @@ class AutoloadController extends \cmsgears\core\admin\controllers\base\Controlle
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					// Secure actions
 				]
 			],
 			'verbs' => [
@@ -69,12 +70,12 @@ class AutoloadController extends \cmsgears\core\admin\controllers\base\Controlle
 
 		$request = Yii::$app->request->post();
 
-		$id		= $request[ 'widgetId' ];
-		$widget = $request[ 'widgetClass' ];
+		$wid	= $request[ 'widgetId' ];
+		$wclass	= $request[ 'widgetClass' ];
 
-		$widgetHtml = $widget::widget( [ 'wrap' => false, 'autoload' => false ] );
+		$widgetHtml = $wclass::widget( [ 'wrap' => false, 'autoload' => false ] );
 
-		$data = [ 'widgetId' => $id, 'widgetHtml' => $widgetHtml ];
+		$data = [ 'widgetId' => $wid, 'widgetHtml' => $widgetHtml ];
 
 		// Trigger Ajax Success
 		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

@@ -105,13 +105,6 @@ abstract class CrudController extends Controller {
 
 		$model = new $modelClass();
 
-		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
-
-		if( $modelClass::isMultiSite() && !$ignoreSite ) {
-
-			$model->siteId = isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
-		}
-
 		if( isset( $this->scenario ) ) {
 
 			call_user_func_array( [ $model, 'setScenario' ], [ $this->scenario ] );

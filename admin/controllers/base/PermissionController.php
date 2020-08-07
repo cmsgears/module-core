@@ -132,7 +132,7 @@ abstract class PermissionController extends CrudController {
 	public function actionUpdate( $id, $config = [] ) {
 
 		// Find Model
-		$model		= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {

@@ -38,26 +38,4 @@ interface IAuthor {
 	 */
 	public function isCreator( $user = null, $strict = false );
 
-	/**
-	 * Generate and return the query by having appropriate join of [[$createdBy]] with [[\cmsgears\core\common\models\entities\User]].
-	 *
-	 * @param array $config
-	 * @return \yii\db\ActiveQuery to query with roles.
-	 */
-	public static function queryWithCreator( $config = [] );
-
-	/**
-	 * Generate and return the query by having appropriate join of [[$modifiedBy]] with [[\cmsgears\core\common\models\entities\User]].
-	 *
-	 * @param array $config
-	 * @return \yii\db\ActiveQuery to query with roles.
-	 */
-	public static function queryWithModifier( $config = [] );
-
-	/**
-	 * Generate and return the query by matching the given user id with [[$createdBy]].
-	 *
-	 * @param integer $userId
-	 */
-	public static function queryByCreatorId( $userId );
 }

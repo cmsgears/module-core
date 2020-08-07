@@ -11,13 +11,11 @@ namespace cmsgears\core\common\utilities;
 
 class FileUtil {
 
-	// Static Methods ----------------------------------------------
+	public static function createDirs( $path, $permissions = '0755' ) {
 
-	public static function createDirs( $uploadDir ) {
+		if( !file_exists( $path ) ) {
 
-		if( !file_exists( $uploadDir ) ) {
-
-			mkdir( $uploadDir, 0777, true );
+			mkdir( $path, $permissions, true );
 		}
 	}
 

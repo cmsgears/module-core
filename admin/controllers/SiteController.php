@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
@@ -30,13 +38,16 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 		parent::init();
 
+		// Config
+		$this->admin = true;
+
 		// Permissions
-		$this->crudPermission	= CoreGlobal::PERM_ADMIN;
+		$this->crudPermission = CoreGlobal::PERM_ADMIN;
 
 		// Check Layout for Public and Private pages
-		if ( Yii::$app->user->isGuest ) {
+		if( Yii::$app->user->isGuest ) {
 
-			$this->layout	= AdminGlobalCore::LAYOUT_PUBLIC;
+			$this->layout = AdminGlobalCore::LAYOUT_PUBLIC;
 		}
 
 		// Breadcrumbs
@@ -59,11 +70,11 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 		$behaviours	= parent::behaviors();
 
-		$behaviours[ 'rbac' ][ 'actions' ][ 'index' ]		= [ 'permission' => $this->crudPermission ];
-		$behaviours[ 'rbac' ][ 'actions' ][ 'dashboard' ]	= [ 'permission' => $this->crudPermission ];
+		$behaviours[ 'rbac' ][ 'actions' ][ 'index' ] = [ 'permission' => $this->crudPermission ];
+		$behaviours[ 'rbac' ][ 'actions' ][ 'dashboard' ] = [ 'permission' => $this->crudPermission ];
 
-		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ]		= [ 'get' ];
-		$behaviours[ 'verbs' ][ 'actions' ][ 'dashboard' ]	= [ 'get' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ] = [ 'get' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'dashboard' ] = [ 'get' ];
 
 		return $behaviours;
 	}
@@ -90,6 +101,16 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 	// SiteController ------------------------
 
+	public function getSiteProperties() {
+
+		if( !isset( $this->siteProperties ) ) {
+
+			$this->siteProperties = AdminProperties::getInstance();
+		}
+
+		return $this->siteProperties;
+	}
+
 	/**
 	 * The method redirect user to dashboard page.
 	 */
@@ -109,19 +130,4 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 		return $this->render( 'index' );
 	}
 
-	public function actionLogin( $admin = false ) {
-
-		return parent::actionLogin( true );
-	}
-
-	//Site Properties
-	public function getSiteProperties() {
-
-		if( !isset( $this->siteProperties ) ) {
-
-			$this->siteProperties = AdminProperties::getInstance();
-		}
-
-		return $this->siteProperties;
-	}
 }

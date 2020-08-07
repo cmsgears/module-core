@@ -159,9 +159,9 @@ class AdminController extends \cmsgears\core\admin\controllers\base\Controller {
 		$this->sidebar = [];
 
 		// Load key settings
-		$privacy		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
-		$notification	= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
-		$reminder		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
+		$privacy		= $this->modelService->getMetaNameMetaMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
+		$notification	= $this->modelService->getMetaNameMetaMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
+		$reminder		= $this->modelService->getMetaNameMetaMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
 
 		return $this->render( 'settings', [
 			'user' => $user,

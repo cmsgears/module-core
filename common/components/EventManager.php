@@ -9,9 +9,6 @@
 
 namespace cmsgears\core\common\components;
 
-// CMG Imports
-use cmsgears\core\common\base\Component;
-
 /**
  * The Event Manager component provides messages and counts for notifications, reminders
  * and activities.
@@ -25,7 +22,7 @@ use cmsgears\core\common\base\Component;
  *
  * @since 1.0.0
  */
-class EventManager extends Component {
+class EventManager extends \cmsgears\core\common\base\Component {
 
 	// TODO: Add mechanism to cache stats results for specified duration
 
@@ -65,9 +62,9 @@ class EventManager extends Component {
 
 		return [
 			// Messages
-			'notifications' => [], 'reminders' => [], 'activities' => [],
+			'notifications' => [], 'reminders' => [], 'activities' => [], 'announcements' => [],
 			// Counters - New
-			'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0
+			'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0, 'announcementCount' => 0
 		];
 	}
 

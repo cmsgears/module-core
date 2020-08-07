@@ -79,8 +79,10 @@ class Like extends \cmsgears\core\common\actions\base\ModelAction {
 
 			$follower	= null;
 			$counts		= null;
-			$data		= null;
 
+			$data = null;
+
+			// Follower
 			if( $this->direct ) {
 
 				$follower	= $this->followerService->updateByParams( [ 'parentId' => $parent->id, 'type' => IFollower::TYPE_LIKE ] );
@@ -89,6 +91,7 @@ class Like extends \cmsgears\core\common\actions\base\ModelAction {
 
 				$data = [ 'follower' => $follower->getAttributeArray( [ 'modelId', 'parentId', 'active' ] ), 'likeCounts' => $lcounts, 'dislikeCounts' => $dlcounts ];
 			}
+			// Model Follower
 			else {
 
 				$follower	= $this->followerService->updateByParams( [ 'parentId' => $parent->id, 'parentType' => $this->parentType, 'type' => IFollower::TYPE_LIKE ] );

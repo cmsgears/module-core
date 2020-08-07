@@ -1,6 +1,9 @@
 <?php
+// Yii Imports
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+
+// CMG Imports
+use cmsgears\core\common\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= $coreProperties->getSiteTitle() . ' | Login';

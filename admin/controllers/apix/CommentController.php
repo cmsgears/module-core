@@ -1,11 +1,22 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
 use Yii;
 use yii\filters\VerbFilter;
 
-class CommentController extends \cmsgears\core\admin\controllers\base\Controller {
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+class CommentController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -23,6 +34,9 @@ class CommentController extends \cmsgears\core\admin\controllers\base\Controller
 	public function init() {
 
 		parent::init();
+
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'modelCommentService' );
@@ -63,7 +77,7 @@ class CommentController extends \cmsgears\core\admin\controllers\base\Controller
 	public function actions() {
 
 		return [
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

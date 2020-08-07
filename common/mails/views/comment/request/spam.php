@@ -26,7 +26,7 @@ $adminUrl = Html::encode( $coreProperties->getAdminUrl() );
 	<tr><td height="20"></td></tr>
 	<tr>
 		<td>
-			<font face="Roboto, Arial, sans-serif">Spam Comment Request received. <a href="<?= "$adminUrl/$updatePath?id=$comment->id" ?>">Click</a> here to review.</font>
+			<font face="Roboto, Arial, sans-serif">Spam Comment Request received. <a href="<?= "$adminUrl/$updatePath?id=$comment->id" ?>">Click Here</a> to review.</font>
 		</td>
 	</tr>
 	<tr><td height="40"></td></tr>

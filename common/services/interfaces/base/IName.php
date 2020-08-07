@@ -22,7 +22,7 @@ interface IName {
 
 	// Read - Models ---
 
-	public function getByName( $name );
+	public function getByName( $name, $config = [] );
 
 	public function searchByName( $name, $config = [] );
 

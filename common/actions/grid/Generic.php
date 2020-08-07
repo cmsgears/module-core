@@ -72,7 +72,8 @@ class Generic extends \cmsgears\core\common\base\Action {
 	public function run( $id ) {
 
 		$action	= Yii::$app->request->post( 'action' );
-		$model	= $this->modelService->getById( $id );
+
+		$model = $this->modelService->getById( $id );
 
 		if( isset( $action ) && isset( $model ) ) {
 
@@ -94,4 +95,5 @@ class Generic extends \cmsgears\core\common\base\Action {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
+
 }

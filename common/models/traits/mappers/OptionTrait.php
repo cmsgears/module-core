@@ -50,7 +50,8 @@ trait OptionTrait {
 		$modelOptionTable = ModelOption::tableName();
 
 		return $this->hasMany( ModelOption::class, [ 'parentId' => 'id' ] )
-			->where( "$modelOptionTable.parentType='$this->modelType'" );
+			->where( "$modelOptionTable.parentType='$this->modelType'" )
+			->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$modelOptionTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -61,7 +62,8 @@ trait OptionTrait {
 		$modelOptionTable = ModelOption::tableName();
 
 		return $this->hasMany( ModelOption::class, [ 'parentId' => 'id' ] )
-			->where( "$modelOptionTable.parentType='$this->modelType' AND $modelOptionTable.active=1" );
+			->where( "$modelOptionTable.parentType='$this->modelType' AND $modelOptionTable.active=1" )
+			->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$modelOptionTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -71,8 +73,16 @@ trait OptionTrait {
 
 		$modelOptionTable = ModelOption::tableName();
 
-		return $this->hasOne( ModelOption::class, [ 'parentId' => 'id' ] )
-			->where( "$modelOptionTable.parentType=:ptype AND $modelOptionTable.type=:type AND $modelOptionTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
+		if( $active ) {
+
+			return $this->hasMany( ModelOption::class, [ 'parentId' => 'id' ] )
+				->where( "$modelOptionTable.parentType=:ptype AND $modelOptionTable.type=:type AND $modelOptionTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+				->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$modelOptionTable.id" => SORT_DESC ] );
+		}
+
+		return $this->hasMany( ModelOption::class, [ 'parentId' => 'id' ] )
+			->where( "$modelOptionTable.parentType=:ptype AND $modelOptionTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] )
+			->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$modelOptionTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -80,15 +90,14 @@ trait OptionTrait {
 	 */
 	public function getOptions() {
 
-		$modelOptionTable = ModelOption::tableName();
+		$optionTable		= Option::tableName();
+		$modelOptionTable	= ModelOption::tableName();
 
-		return $this->hasMany( Option::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelOptionTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelOptionTable ) {
-
-					$query->onCondition( [ "$modelOptionTable.parentType" => $this->modelType ] );
-				}
-			);
+		return Option::find()
+			->leftJoin( $modelOptionTable, "$modelOptionTable.modelId=$optionTable.id" )
+			->where( "$modelOptionTable.parentId=:pid AND $modelOptionTable.parentType=:ptype", [ ':pid' => $this->id, ':ptype' => $this->modelType ] )
+			->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$optionTable.name" => SORT_ASC, "$modelOptionTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**
@@ -96,15 +105,14 @@ trait OptionTrait {
 	 */
 	public function getActiveOptions() {
 
-		$modelOptionTable = ModelOption::tableName();
+		$optionTable		= Option::tableName();
+		$modelOptionTable	= ModelOption::tableName();
 
-		return $this->hasMany( Option::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelOptionTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelOptionTable ) {
-
-					$query->onCondition( [ "$modelOptionTable.parentType" => $this->modelType, "$modelOptionTable.active" => true ] );
-				}
-			);
+		return Option::find()
+			->leftJoin( $modelOptionTable, "$modelOptionTable.modelId=$optionTable.id" )
+			->where( "$modelOptionTable.parentId=:pid AND $modelOptionTable.parentType=:ptype AND $modelOptionTable.active=1", [ ':pid' => $this->id, ':ptype' => $this->modelType ] )
+			->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$optionTable.name" => SORT_ASC, "$modelOptionTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**
@@ -112,15 +120,23 @@ trait OptionTrait {
 	 */
 	public function getOptionsByType( $type, $active = true ) {
 
-		$modelOptionTable = ModelOption::tableName();
+		$optionTable		= Option::tableName();
+		$modelOptionTable	= ModelOption::tableName();
 
-		return $this->hasMany( Option::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelOptionTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$type, &$active, &$modelOptionTable ) {
+		if( $active ) {
 
-					$query->onCondition( [ "$modelOptionTable.parentType" => $this->modelType, "$modelOptionTable.type" => $type, "$modelOptionTable.active" => $active ] );
-				}
-			)->all();
+			return Option::find()
+				->leftJoin( $modelOptionTable, "$modelOptionTable.modelId=$optionTable.id" )
+				->where( "$modelOptionTable.parentId=:pid AND $modelOptionTable.parentType=:ptype AND $modelOptionTable.type=:type AND $modelOptionTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+				->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$optionTable.name" => SORT_ASC, "$modelOptionTable.id" => SORT_DESC ] )
+				->all();
+		}
+
+		return Option::find()
+			->leftJoin( $modelOptionTable, "$modelOptionTable.modelId=$optionTable.id" )
+			->where( "$modelOptionTable.parentId=:pid AND $modelOptionTable.parentType=:ptype AND $modelOptionTable.type=:type", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type ] )
+			->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$optionTable.name" => SORT_ASC, "$modelOptionTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	// Category specific methods
@@ -130,19 +146,27 @@ trait OptionTrait {
 	 */
 	public function getOptionIdListByCategoryId( $categoryId, $active = true ) {
 
-		$optionTable	= Option::tableName();
-
-		$options		= null;
-		$optionsList	= [];
+		$optionTable		= Option::tableName();
+		$modelOptionTable	= ModelOption::tableName();
 
 		if( $active ) {
 
-			$options = $this->getActiveOptions()->where( [ "$optionTable.categoryId" => $categoryId ] )->all();
+			$options = Option::find()
+				->leftJoin( $modelOptionTable, "$modelOptionTable.modelId=$optionTable.id" )
+				->where( "$modelOptionTable.parentId=:pid AND $modelOptionTable.parentType=:ptype AND $optionTable.categoryId=:cid AND $modelOptionTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':cid' => $categoryId, ':active' => $active ] )
+				->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$optionTable.name" => SORT_ASC, "$modelOptionTable.id" => SORT_DESC ] )
+				->all();
 		}
 		else {
 
-			$options = $this->getOptions()->where( [ "$optionTable.categoryId" => $categoryId ] )->all();
+			$options = Option::find()
+				->leftJoin( $modelOptionTable, "$modelOptionTable.modelId=$optionTable.id" )
+				->where( "$modelOptionTable.parentId=:pid AND $modelOptionTable.parentType=:ptype AND $optionTable.categoryId=:cid", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':cid' => $categoryId ] )
+				->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$optionTable.name" => SORT_ASC, "$modelOptionTable.id" => SORT_DESC ] )
+				->all();
 		}
+
+		$optionsList = [];
 
 		foreach( $options as $option ) {
 
@@ -157,21 +181,29 @@ trait OptionTrait {
 	 */
 	public function getOptionsCsvByCategoryId( $categoryId, $active = true ) {
 
-		$optionTable	= Option::tableName();
-
-		$options		= null;
-		$optionsCsv		= [];
+		$optionTable		= Option::tableName();
+		$modelOptionTable	= ModelOption::tableName();
 
 		if( $active ) {
 
-			$options = $this->getActiveOptions()->where( [ "$optionTable.categoryId" => $categoryId ] )->all();
+			$options = Option::find()
+				->leftJoin( $modelOptionTable, "$modelOptionTable.modelId=$optionTable.id" )
+				->where( "$modelOptionTable.parentId=:pid AND $modelOptionTable.parentType=:ptype AND $optionTable.categoryId=:cid AND $modelOptionTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':cid' => $categoryId, ':active' => $active ] )
+				->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$optionTable.name" => SORT_ASC, "$modelOptionTable.id" => SORT_DESC ] )
+				->all();
 		}
 		else {
 
-			$options = $this->getOptions()->where( [ "$optionTable.categoryId" => $categoryId ] )->all();
+			$options = Option::find()
+				->leftJoin( $modelOptionTable, "$modelOptionTable.modelId=$optionTable.id" )
+				->where( "$modelOptionTable.parentId=:pid AND $modelOptionTable.parentType=:ptype AND $optionTable.categoryId=:cid", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':cid' => $categoryId ] )
+				->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$optionTable.name" => SORT_ASC, "$modelOptionTable.id" => SORT_DESC ] )
+				->all();
 		}
 
-		foreach ( $options as $option ) {
+		$optionsCsv = [];
+
+		foreach( $options as $option ) {
 
 			$optionsCsv[] = $option->name;
 		}
@@ -184,19 +216,23 @@ trait OptionTrait {
 	 */
 	public function getModelOptionsByCategoryId( $categoryId, $active = true ) {
 
-		$optionTable	= Option::tableName();
-		$mOptionTable	= ModelOption::tableName();
-
-		$query = ModelOption::find()
-			->leftJoin( $optionTable, "$mOptionTable.modelId=$optionTable.id" )
-			->where( "$mOptionTable.parentId=$this->id AND $mOptionTable.parentType='$this->modelType' AND $optionTable.categoryId=$categoryId" );
+		$optionTable		= Option::tableName();
+		$modelOptionTable	= ModelOption::tableName();
 
 		if( $active ) {
 
-			$query->andWhere( "$mOptionTable.active=1" );
+			$query = ModelOption::find()
+				->leftJoin( $optionTable, "$modelOptionTable.modelId=$optionTable.id" )
+				->where( "$modelOptionTable.parentId=:pid AND $modelOptionTable.parentType=:ptype AND $optionTable.categoryId=:cid AND $modelOptionTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':cid' => $categoryId, ':active' => $active ] )
+				->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$optionTable.name" => SORT_ASC, "$modelOptionTable.id" => SORT_DESC ] );
 		}
+		else {
 
-		$query->orderBy( [ "$mOptionTable.order" => SORT_DESC, "$mOptionTable.id" => SORT_ASC ] );
+			$query = ModelOption::find()
+				->leftJoin( $optionTable, "$modelOptionTable.modelId=$optionTable.id" )
+				->where( "$modelOptionTable.parentId=:pid AND $modelOptionTable.parentType=:ptype AND $optionTable.categoryId=:cid", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':cid' => $categoryId ] )
+				->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$optionTable.name" => SORT_ASC, "$modelOptionTable.id" => SORT_DESC ] );
+		}
 
 		return $query->all();
 	}
@@ -206,20 +242,23 @@ trait OptionTrait {
 	 */
 	public function getOptionsByCategoryId( $categoryId, $active = true ) {
 
-		$optionTable = Option::tableName();
-
-		$options = null;
+		$optionTable		= Option::tableName();
+		$modelOptionTable	= ModelOption::tableName();
 
 		if( $active ) {
 
-			$options = $this->getActiveOptions()->where( [ "$optionTable.categoryId" => $categoryId ] )->all();
+			return Option::find()
+				->leftJoin( $modelOptionTable, "$modelOptionTable.modelId=$optionTable.id" )
+				->where( "$modelOptionTable.parentId=:pid AND $modelOptionTable.parentType=:ptype AND $optionTable.categoryId=:cid AND $modelOptionTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':cid' => $categoryId, ':active' => $active ] )
+				->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$optionTable.name" => SORT_ASC, "$modelOptionTable.id" => SORT_DESC ] )
+				->all();
 		}
-		else {
 
-			$options = $this->getOptions()->where( [ "$optionTable.categoryId" => $categoryId ] )->all();
-		}
-
-		return $options;
+		return Option::find()
+			->leftJoin( $modelOptionTable, "$modelOptionTable.modelId=$optionTable.id" )
+			->where( "$modelOptionTable.parentId=:pid AND $modelOptionTable.parentType=:ptype AND $optionTable.categoryId=:cid", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':cid' => $categoryId ] )
+			->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$optionTable.name" => SORT_ASC, "$modelOptionTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	// Static Methods ----------------------------------------------

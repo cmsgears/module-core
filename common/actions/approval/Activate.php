@@ -65,11 +65,11 @@ class Activate extends \cmsgears\core\common\base\Action {
 
 	// CMG parent classes --------------------
 
-	// Approve -------------------------------
+	// Activate ------------------------------
 
 	public function run( $id ) {
 
-		$model	= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		if( isset( $model ) ) {
 

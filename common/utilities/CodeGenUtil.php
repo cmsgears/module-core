@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\utilities;
 
 // Yii Imports
@@ -35,7 +43,7 @@ class CodeGenUtil {
 
 		if( $currentSize < $currentDisplay ) {
 
-			$end	= $start + $currentSize;
+			$end = $start + $currentSize;
 		}
 
 		if( $end > 0 ) {
@@ -45,7 +53,7 @@ class CodeGenUtil {
 
 		if( $currentSize == $page_size ) {
 
-			$end	+= 1;
+			$end += 1;
 		}
 
 		return "Showing $start to $end out of $total entries";
@@ -53,14 +61,14 @@ class CodeGenUtil {
 
 	public static function getPaginationOptions( $limits = [], $pageLimit = null ) {
 
-		$pageLimits		= count( $limits ) > 0 ? $limits : [ '5' => 5, '10' => 10, '15' => 15, '20' => 20 ];
+		$pageLimits = count( $limits ) > 0 ? $limits : [ '5' => 5, '10' => 10, '15' => 15, '20' => 20 ];
 
-		$pageLimit		= Yii::$app->request->get( 'per-page' );
-		$pageLimit		= isset( $pageLimit ) && in_array( $pageLimit, $pageLimits ) ? $pageLimit : $pageLimit;
+		$pageLimit	= Yii::$app->request->get( 'per-page' );
+		$pageLimit	= isset( $pageLimit ) && in_array( $pageLimit, $pageLimits ) ? $pageLimit : $pageLimit;
 
-		$pageLimitIdx	= array_search( $pageLimit, $pageLimits );
+		$pageLimitIdx = array_search( $pageLimit, $pageLimits );
 
-		$options		= self::generateSelectOptionsFromArray( $pageLimits, $pageLimitIdx );
+		$options = self::generateSelectOptionsFromArray( $pageLimits, $pageLimitIdx );
 
 		return $options;
 	}
@@ -70,9 +78,9 @@ class CodeGenUtil {
 	 */
 	public static function generateLinksFromMap( $baseUrl, $map, $csv = true, $absolute = true ) {
 
-		$html	= [];
+		$html = [];
 
-		foreach ( $map as $key => $value ) {
+		foreach( $map as $key => $value ) {
 
 			if( $absolute ) {
 
@@ -102,10 +110,11 @@ class CodeGenUtil {
 		$html	= [];
 		$length	= count( $list );
 
-		for ( $i = 0; $i < $length; $i++ ) {
+		for( $i = 0; $i < $length; $i++ ) {
 
-			$element	= $list[ $i ];
-			$html[]		= Html::a( $element, Url::to( $baseUrl . $element, true ) );
+			$element = $list[ $i ];
+
+			$html[] = Html::a( $element, Url::to( $baseUrl . $element, true ) );
 		}
 
 		if( $csv ) {
@@ -139,7 +148,7 @@ class CodeGenUtil {
 	 */
 	public static function generateAssociativeArray( $data, $key1, $key2 ) {
 
-		$options	= array();
+		$options = [];
 
 		if( isset( $data ) ) {
 
@@ -171,9 +180,9 @@ class CodeGenUtil {
 
 		if( isset( $data ) ) {
 
-			if( isset($selected) ) {
+			if( isset( $selected ) ) {
 
-				foreach ( $data as $key => $value ) {
+				foreach( $data as $key => $value ) {
 
 					$val	= $value[ $key1 ];
 					$option = $value[ $key2 ];
@@ -183,13 +192,14 @@ class CodeGenUtil {
 						$options .= "<option value='$val' selected>$option</option>";
 					}
 					else {
+
 						$options .= "<option value='$val'>$option</option>";
 					}
 				}
 			}
 			else {
 
-				foreach ( $data as $key => $value ) {
+				foreach( $data as $key => $value ) {
 
 					$val	= $value[ $key1 ];
 					$option = $value[ $key2 ];
@@ -213,7 +223,7 @@ class CodeGenUtil {
 
 			if( isset( $selected ) ) {
 
-				foreach ( $data as $key => $value ) {
+				foreach( $data as $key => $value ) {
 
 					$oKey = isset( $keyPrefix ) ? $keyPrefix . $key : $key;
 
@@ -222,13 +232,14 @@ class CodeGenUtil {
 						$options .= "<option value='$oKey' selected>$value</option>";
 					}
 					else {
+
 						$options .= "<option value='$oKey'>$value</option>";
 					}
 				}
 			}
 			else {
 
-				foreach ( $data as $key => $value ) {
+				foreach( $data as $key => $value ) {
 
 					$oKey = isset( $keyPrefix ) ? $keyPrefix . $key : $key;
 
@@ -251,7 +262,7 @@ class CodeGenUtil {
 
 		if( isset( $data ) ) {
 
-			foreach ( $data as $key => $value ) {
+			foreach( $data as $key => $value ) {
 
 				$val	= $value[ $key1 ];
 				$item	= $value[ $key2 ];
@@ -286,6 +297,7 @@ class CodeGenUtil {
 				$options .= "<option value='$i' selected>$i</option>";
 			}
 			else {
+
 				$options .= "<option value='$i'>$i</option>";
 			}
 		}
@@ -562,7 +574,7 @@ class CodeGenUtil {
 
 		include( $filePath );
 
-		$content	= ob_get_clean();
+		$content = ob_get_clean();
 
 		return $content;
 	}
@@ -571,14 +583,14 @@ class CodeGenUtil {
 
 		if( !isset( $end ) ) {
 
-			$end	= date( "Y" );
+			$end = date( "Y" );
 		}
 
-		$options	= null;
+		$options = null;
 
 		for( $i = $end; $i >= $start; $i-- ) {
 
-			$options	.= "<option value='$i'>$i</option>";
+			$options .= "<option value='$i'>$i</option>";
 		}
 
 		return $options;
@@ -588,7 +600,7 @@ class CodeGenUtil {
 
 		if( strlen( $content ) > $limit ) {
 
-			$content	= "$content ...";
+			$content = "$content ...";
 
 			return substr( $content, 0, $limit );
 		}
@@ -600,10 +612,10 @@ class CodeGenUtil {
 
 		if( $alias ) {
 
-			return $path[0] === '@';
+			return $path[ 0 ] === '@';
 		}
 
-		return $path[1] === ':' || $path[0] === '/';
+		return $path[ 1 ] === ':' || $path[ 0 ] === '/';
 	}
 
 	public static function compressStyles( $styles ) {
@@ -620,7 +632,8 @@ class CodeGenUtil {
 	public static function generateRandomString( $length = 8, $uc = true, $num = true, $special = false ) {
 
 		$source = 'abcdefghijklmnopqrstuvwxyz';
-		$str	= '';
+
+		$str = '';
 
 		if( $uc ) {
 
@@ -1012,4 +1025,5 @@ class CodeGenUtil {
 
 		return $output;
 	}
+
 }

@@ -70,10 +70,13 @@ class Assign extends \cmsgears\core\common\actions\base\ModelAction {
 
 			if( $this->modelService->updateMobileBanner( $this->model, $banner ) ) {
 
-				$response = [ 'fileUrl' => $banner->getFileUrl(), 'mediumUrl' => $banner->getMediumUrl(), 'thumbUrl' => $banner->getThumbUrl() ];
+				$data = [
+					'fileUrl' => $banner->getFileUrl(), 'mediumUrl' => $banner->getMediumUrl(),
+					'thumbUrl' => $banner->getThumbUrl()
+				];
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 			}
 
 			// Trigger Ajax Failure

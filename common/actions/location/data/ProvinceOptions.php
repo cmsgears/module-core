@@ -75,7 +75,7 @@ class ProvinceOptions extends \cmsgears\core\common\base\Action {
 
 		if( isset( $countryId ) && $countryId > 0 ) {
 
-			$provinces = $this->modelService->getMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
+			$provinces = $this->modelService->getIdNameMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
 
 			$data = !empty( $provinceId ) ? CodeGenUtil::generateSelectOptionsFromArray( $provinces, intval( $provinceId ) ) : CodeGenUtil::generateSelectOptionsFromArray( $provinces );
 

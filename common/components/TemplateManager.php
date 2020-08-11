@@ -80,7 +80,7 @@ class TemplateManager extends \yii\base\Component {
 
 			if( isset( $theme ) ) {
 
-				return "$theme->basePath/$template->viewPath";
+				return "$theme->basePath/views/templates/$template->viewPath";
 			}
 		}
 
@@ -88,6 +88,12 @@ class TemplateManager extends \yii\base\Component {
 	}
 
 	protected function renderView( $template, $data, $config ) {
+
+		// Silent return without any content
+		if( !$template->active ) {
+
+			return;
+		}
 
 		$page			= isset( $config[ 'page' ] ) ? $config[ 'page' ] : false;
 		$layout			= isset( $config[ 'layout' ] ) ? $config[ 'layout' ] : true;
@@ -104,7 +110,7 @@ class TemplateManager extends \yii\base\Component {
 		// Render from file
 		if( $fileRender ) {
 
-			$theme	= Yii::$app->core->site->theme;
+			$theme = Yii::$app->core->site->theme;
 
 			// Default Rendering using php view file
 			if( isset( $theme ) && isset( $renderEngine ) && strcmp( $renderEngine, 'default' ) == 0 ) {
@@ -161,8 +167,9 @@ class TemplateManager extends \yii\base\Component {
 
 				case 'twig': {
 
-					$tplName	= uniqid( 'string_template_', true );
-					$twig		= new \Twig_Environment( new \Twig_Loader_Array( [ $tplName => $template->content ] ) );
+					$tplName = uniqid( 'string_template_', true );
+
+					$twig = new \Twig_Environment( new \Twig_Loader_Array( [ $tplName => $template->content ] ) );
 
 					$content = $twig->render( $tplName, $data );
 
@@ -223,8 +230,9 @@ class TemplateManager extends \yii\base\Component {
 
 	public function renderViewGeneric( $template, $data, $viewFile, $config = [] ) {
 
-		$config[ 'viewFile' ]	= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : $viewFile;
-		$config[ 'page' ]		= isset( $config[ 'page' ] ) ? $config[ 'page' ] : true;
+		$config[ 'viewFile' ] = isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : $viewFile;
+
+		$config[ 'page' ] = isset( $config[ 'page' ] ) ? $config[ 'page' ] : true;
 
 		return $this->renderView( $template, $data, $config );
 	}

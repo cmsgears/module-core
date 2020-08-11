@@ -19,7 +19,7 @@ use cmsgears\core\admin\config\AdminProperties;
  *
  * @since 1.0.0
  */
-abstract class Controller extends \cmsgears\core\common\controllers\apix\Controller {
+abstract class Controller extends \cmsgears\core\common\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 

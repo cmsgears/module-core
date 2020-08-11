@@ -15,7 +15,7 @@ $renderers		= Yii::$app->templateManager->renderers;
 Editor::widget();
 ?>
 <div class="box-crud-wrap row">
-	<div class="box-crud-wrap-main colf colf3x2">
+	<div class="box-crud-wrap-main">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-template', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
 			<div class="box-header">
@@ -47,39 +47,15 @@ Editor::widget();
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active', [ 'disabled' => true ] ) ?>
 						</div>
 						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'frontend', [ 'disabled' => true ] ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
 							<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
 						</div>
-					</div>
-					<div class="row">
 						<div class="col col2">
-							<?= $form->field( $model, 'dataPath' )->textInput( [ 'readonly' => 'true' ] ) ?>
-						</div>
-						<div class="col col2">
-							<?= $form->field( $model, 'dataForm' )->textInput( [ 'readonly' => 'true' ] ) ?>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col col2">
-							<?= $form->field( $model, 'attributesPath' )->textInput( [ 'readonly' => 'true' ] ) ?>
-						</div>
-						<div class="col col2">
-							<?= $form->field( $model, 'attributesForm' )->textInput( [ 'readonly' => 'true' ] ) ?>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col col2">
-							<?= $form->field( $model, 'configPath' )->textInput( [ 'readonly' => 'true' ] ) ?>
-						</div>
-						<div class="col col2">
-							<?= $form->field( $model, 'configForm' )->textInput( [ 'readonly' => 'true' ] ) ?>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col col2">
-							<?= $form->field( $model, 'settingsPath' )->textInput( [ 'readonly' => 'true' ] ) ?>
-						</div>
-						<div class="col col2">
-							<?= $form->field( $model, 'settingsForm' )->textInput( [ 'readonly' => 'true' ] ) ?>
+							<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
 					<div class="row">
@@ -87,12 +63,39 @@ Editor::widget();
 							<?= $form->field( $model, 'classPath' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'fileRender', [ 'class' => 'cmt-checkbox cmt-choice template-file', 'disabled' => true ] ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'fileRender', [ 'class' => 'cmt-checkbox cmt-choice cmt-field-group', 'disabled' => true, 'group-target' => 'render-file', 'group-alt' => 'render-content' ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row render-file">
 						<div class="col col2">
-							<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => 'true' ] ) ?>
+							<?= $form->field( $model, 'dataPath' )->textInput( [ 'readonly' => 'true' ] ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'dataForm' )->textInput( [ 'readonly' => 'true' ] ) ?>
+						</div>
+					</div>
+					<div class="row render-file">
+						<div class="col col2">
+							<?= $form->field( $model, 'attributesPath' )->textInput( [ 'readonly' => 'true' ] ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'attributesForm' )->textInput( [ 'readonly' => 'true' ] ) ?>
+						</div>
+					</div>
+					<div class="row render-file">
+						<div class="col col2">
+							<?= $form->field( $model, 'configPath' )->textInput( [ 'readonly' => 'true' ] ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'configForm' )->textInput( [ 'readonly' => 'true' ] ) ?>
+						</div>
+					</div>
+					<div class="row render-file">
+						<div class="col col2">
+							<?= $form->field( $model, 'settingsPath' )->textInput( [ 'readonly' => 'true' ] ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'settingsForm' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
 					<div class="row render-file">
@@ -114,10 +117,8 @@ Editor::widget();
 				</div>
 			</div>
 		</div>
-
 		<div class="filler-height filler-height-medium"></div>
-
-		<div class="box box-crud">
+		<div class="box box-crud render-content">
 			<div class="box-header">
 				<div class="box-header-title">Content</div>
 			</div>
@@ -127,18 +128,12 @@ Editor::widget();
 				</div>
 			</div>
 		</div>
-
 		<div class="filler-height filler-height-medium"></div>
-
 		<div class="align align-right">
 			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
-			<input class="element-medium" type="submit" value="Delete" />
+			<input class="frm-element-medium" type="submit" value="Delete" />
 		</div>
-
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
-	</div>
-	<div class="box-crud-wrap-sidebar colf colf3">
-
 	</div>
 </div>

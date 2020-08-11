@@ -75,7 +75,7 @@ class RegionOptions extends \cmsgears\core\common\base\Action {
 
 		if( isset( $provinceId ) && $provinceId > 0 ) {
 
-			$regions = $this->modelService->getMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
+			$regions = $this->modelService->getIdNameMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
 
 			$data = !empty( $regionId ) ? CodeGenUtil::generateSelectOptionsFromArray( $regions, intval( $regionId ) ) : CodeGenUtil::generateSelectOptionsFromArray( $regions );
 

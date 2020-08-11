@@ -16,38 +16,57 @@ $themeTemplates		= '@themes/admin/views/templates';
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => "create?pid=$parent->id", 'data' => [ 'parent' => $parent ],
 	'title' => 'Templates', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'title' => 'Title', 'desc' => 'Description', 'extension' => 'Extension', 'directory' => 'Directory' ],
+	'searchColumns' => [
+		'title' => 'Title', 'desc' => 'Description',
+		'caption' => 'Caption', 'extension' => 'Extension', 'directory' => 'Directory'
+	],
 	'sortColumns' => [
-		'title' => 'Title', 'extension' => 'Extension', 'directory' => 'Directory',
-		'size' => 'Size', 'url' => 'Path', 'visibility' => 'Visibility',
-		'cdate' => 'Created At', 'udate' => 'Updated At'
+		'name' => 'Name', 'title' => 'Title',
+		'directory' => 'Directory', 'extension' => 'Extension',
+		'ftype' => 'File Type', 'active' => 'Active',
+		'visibility' => 'Visibility', 'url' => 'Embed Url'
 	],
 	'filters' => [
-		'ftype' => [ 'image' => 'Image', 'audio' => 'Audio', 'video' => 'Video', 'document' => 'Document' ],
-		'visibility' => [ 'public' => 'Public', 'protected' => 'Protected', 'private' => 'Private' ]
+		'ftype' => $typeMap,
+		'visibility' => $visibilityMap,
+		'model' => [
+			'active' => 'Active', 'disabled' => 'Disabled',
+			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular'
+		]
 	],
 	'reportColumns' => [
 		'title' => [ 'title' => 'Title', 'type' => 'text' ],
 		'desc' => [ 'title' => 'Description', 'type' => 'text' ],
+		'caption' => [ 'title' => 'Caption', 'type' => 'text' ],
 		'extension' => [ 'title' => 'Extension', 'type' => 'text' ],
 		'directory' => [ 'title' => 'Directory', 'type' => 'text' ],
 		'visibility' => [ 'title' => 'Visibility', 'type' => 'select', 'options' => $visibilityMap ],
-		'type' => [ 'title' => 'Type', 'type' => 'select', 'options' => $typeMap ]
+		'type' => [ 'title' => 'Type', 'type' => 'select', 'options' => $typeMap ],
+		'order' => [ 'title' => 'Order', 'type' => 'range' ],
+		'active' => [ 'title' => 'Active', 'type' => 'flag' ],
+		'pinned' => [ 'title' => 'Pinned', 'type' => 'flag' ],
+		'featured' => [ 'title' => 'Featured', 'type' => 'flag' ],
+		'popular' => [ 'title' => 'Popular', 'type' => 'flag' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk',
 	'bulkActions' => [
 		//'visibility' => [ 'public' => 'Public', 'protected' => 'Protected', 'private' => 'Private' ],
-		//'model' => [ 'delete' => 'Delete' ]
+		'model' => [
+			'activate' => 'Activate', 'disable' => 'Disable',
+			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular',
+			'delete' => 'Delete'
+		]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x2', null, null, null, null, 'x2', 'x4', null ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x2', null, null, null, null, null, 'x2', 'x4', null ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'name' => [ 'title' => 'Name', 'generate' => function( $model ) { return $model->model->name; } ],
 		'title' => [ 'title' => 'Title', 'generate' => function( $model ) { return $model->model->title; } ],
 		'directory' => [ 'title' => 'Directory', 'generate' => function( $model ) { return $model->model->directory; } ],
 		'extension' => [ 'title' => 'Extension', 'generate' => function( $model ) { return $model->model->extension; } ],
-		'type' => [ 'title' => 'Type', 'generate' => function( $model ) { return $model->model->type; } ],
+		'ftype' => [ 'title' => 'Type', 'generate' => function( $model ) { return $model->model->type; } ],
+		'active' => [ 'title' => 'Active', 'generate' => function( $model ) { return $model->getActiveStr(); } ],
 		'visibility' => [ 'title' => 'Visibility', 'generate' => function( $model ) { return $model->model->getVisibilityStr(); } ],
 		'embed' => [ 'title' => 'Embed Url', 'generate' => function( $model ) { return $model->model->getFileUrl(); } ],
 		'code' => [ 'title' => 'Embed Code', 'generate' => function( $model ) {

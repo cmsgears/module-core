@@ -288,7 +288,6 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 		$config[ 'report-col' ]	= [
 			'name' => "$modelTable.name",
-			'type' => "$modelTable.type",
 			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
 			'active' => "$modelTable.active",

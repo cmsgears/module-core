@@ -74,7 +74,11 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\CrudContro
 			'create' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'items' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+			'items' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ],
+			'data' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'attributes' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
+			'config' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
+			'settings' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 
@@ -91,13 +95,33 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\CrudContro
 		$behaviors	= parent::behaviors();
 
 		$behaviors[ 'rbac' ][ 'actions' ][ 'items' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'data' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'attributes' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'config' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'settings' ] = [ 'permission' => $this->crudPermission ];
 
 		$behaviors[ 'verbs' ][ 'actions' ][ 'items' ] = [ 'get' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'data' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'attributes' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'config' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
 
 		return $behaviors;
 	}
 
 	// yii\base\Controller ----
+
+	public function actions() {
+
+		$actions = parent::actions();
+
+		$actions[ 'data' ] = [ 'class' => 'cmsgears\core\common\actions\data\data\Form' ];
+		$actions[ 'attributes' ] = [ 'class' => 'cmsgears\core\common\actions\data\attributes\Form' ];
+		$actions[ 'config' ] = [ 'class' => 'cmsgears\core\common\actions\data\config\Form' ];
+		$actions[ 'settings' ] = [ 'class' => 'cmsgears\core\common\actions\data\setting\Form' ];
+
+		return $actions;
+	}
 
 	// CMG interfaces ------------------------
 

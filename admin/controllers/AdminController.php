@@ -135,9 +135,9 @@ class AdminController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		$countryMap		= Yii::$app->factory->get( 'countryService' )->getIdNameMap();
 		$countryId		= isset( $address->country ) ? $address->country->id : array_keys( $countryMap )[ 0 ];
-		$provinceMap	= Yii::$app->factory->get( 'provinceService' )->getMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
+		$provinceMap	= Yii::$app->factory->get( 'provinceService' )->getIdNameMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
 		$provinceId		= isset( $address->province ) ? $address->province->id : array_keys( $provinceMap )[ 0 ];
-		$regionMap		= Yii::$app->factory->get( 'regionService' )->getMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
+		$regionMap		= Yii::$app->factory->get( 'regionService' )->getIdNameMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
 
 		return $this->render( 'profile', [
 			'model' => $model,

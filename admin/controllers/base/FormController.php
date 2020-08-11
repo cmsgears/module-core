@@ -17,6 +17,8 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\behaviors\ActivityBehavior;
+
 /**
  * FormController provides actions specific to form model.
  *
@@ -89,6 +91,13 @@ abstract class FormController extends Controller {
 					'update' => [ 'get', 'post' ],
 					'delete' => [ 'get', 'post' ]
 				]
+			],
+			'activity' => [
+				'class' => ActivityBehavior::class,
+				'admin' => true,
+				'create' => [ 'create' ],
+				'update' => [ 'update' ],
+				'delete' => [ 'delete' ]
 			]
 		];
 	}

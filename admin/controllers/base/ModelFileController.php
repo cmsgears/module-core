@@ -49,7 +49,7 @@ abstract class ModelFileController extends Controller {
 		parent::init();
 
 		// Views
-		$this->setViewPath( '@cmsgears/module-core/admin/views/mfile' );
+		$this->setViewPath( '@cmsgears/module-core/admin/views/model-file' );
 
 		// Permission
 		$this->crudPermission = CoreGlobal::PERM_CORE;
@@ -129,23 +129,32 @@ abstract class ModelFileController extends Controller {
 
 		if( isset( $parent ) ) {
 
+			$modelClass = $this->modelService->getModelClass();
 			$fileClass	= $this->fileService->getModelClass();
 			$parentType	= $this->parentService->getParentType();
 
-			$file = new $fileClass;
+			$model	= new $modelClass;
+			$file	= new $fileClass;
 
 			$file->backend	= true;
 			$file->frontend	= false;
 			$file->shared	= false;
 
-			if( $file->load( Yii::$app->request->post(), $file->getClassName() ) && $file->validate() ) {
+			$model->active = true;
 
-				$this->model = $this->modelService->createWithParent( $file, [ 'parentId' => $parent->id, 'parentType' => $parentType ] );
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) &&
+				$file->load( Yii::$app->request->post(), $file->getClassName() ) && $file->validate() ) {
+
+				$this->model = $this->modelService->createWithParent( $file, [
+					'parentId' => $parent->id, 'parentType' => $parentType,
+					'model' => $model
+				]);
 
 				return $this->redirect( $this->returnUrl );
 			}
 
 			return $this->render( 'create', [
+				'model' => $model,
 				'file' => $file,
 				'parent' => $parent,
 				'visibilityMap' => File::$visibilityMap
@@ -166,7 +175,11 @@ abstract class ModelFileController extends Controller {
 
 			$file = $this->fileService->getById( $model->modelId );
 
-			if( $file->load( Yii::$app->request->post(), $file->getClassName() ) && $file->validate() ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) &&
+				$file->load( Yii::$app->request->post(), $file->getClassName() ) &&
+				$model->validate() && $file->validate() ) {
+
+				$model->type = $file->type;
 
 				$this->fileService->saveFile( $file, [ 'admin' => true ] );
 
@@ -176,8 +189,8 @@ abstract class ModelFileController extends Controller {
 			}
 
 			return $this->render( 'update', [
-				'file' => $file,
 				'model' => $model,
+				'file' => $file,
 				'parent' => $parent,
 				'visibilityMap' => File::$visibilityMap
 			]);
@@ -197,7 +210,9 @@ abstract class ModelFileController extends Controller {
 
 			$file = $this->fileService->getById( $model->modelId );
 
-			if( $file->load( Yii::$app->request->post(), $file->getClassName() ) && $file->validate() ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) &&
+				$file->load( Yii::$app->request->post(), $file->getClassName() ) &&
+				$model->validate() && $file->validate() ) {
 
 				$this->model = $model;
 
@@ -208,8 +223,8 @@ abstract class ModelFileController extends Controller {
 			}
 
 			return $this->render( 'delete', [
-				'file' => $file,
 				'model' => $model,
+				'file' => $file,
 				'parent' => $parent,
 				'visibilityMap' => File::$visibilityMap
 			]);

@@ -337,7 +337,7 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 
 		$parentId	= $config[ 'parentId' ];
 		$parentType	= $config[ 'parentType' ];
-		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : $parentType;
+		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_DEFAULT;
 		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
 		$parent = $this->parentService->create( $parent, $config );
@@ -359,11 +359,15 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'order', 'active' ];
+		//$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
-        $config[ 'attributes' ] = $attributes;
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'type', 'order', 'active'
+		];
 
-		return parent::update( $model, $config );
+		return parent::update( $model, [
+			'attributes' => $attributes
+		]);
 	}
 
 	public function activate( $model ) {

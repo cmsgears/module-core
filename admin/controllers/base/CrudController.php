@@ -18,6 +18,8 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\behaviors\ActivityBehavior;
+
 /**
  * CrudController provide generic actions to perform CRUD operations.
  *
@@ -73,6 +75,13 @@ abstract class CrudController extends Controller {
 					'import' => [ 'post' ],
 					'export' => [ 'get' ]
 				]
+			],
+			'activity' => [
+				'class' => ActivityBehavior::class,
+				'admin' => true,
+				'create' => [ 'create' ],
+				'update' => [ 'update' ],
+				'delete' => [ 'delete' ]
 			]
 		];
 	}

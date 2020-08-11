@@ -309,11 +309,7 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 			$model->visibility = File::VISIBILITY_PUBLIC;
 		}
 
-		// Create File
-		$model->save();
-
-		// Return File
-		return $model;
+		return parent::create( $model );
 	}
 
 	// Update -------------

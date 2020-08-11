@@ -27,7 +27,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class UserController extends \cmsgears\core\common\controllers\apix\Controller {
+class UserController extends \cmsgears\core\common\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -55,7 +55,7 @@ class UserController extends \cmsgears\core\common\controllers\apix\Controller {
 		$this->modelService			= Yii::$app->factory->get( 'userService' );
 		$this->addressService		= Yii::$app->factory->get( 'addressService' );
 		$this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );
-		$this->metaService			= Yii::$app->factory->get( 'modelMetaService' );
+		$this->metaService			= Yii::$app->factory->get( 'userMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -306,8 +306,9 @@ class UserController extends \cmsgears\core\common\controllers\apix\Controller {
 
 	public function actionAddress( $ctype ) {
 
-		$user		= Yii::$app->core->getUser();
-		$address	= null;
+		$user = Yii::$app->core->getUser();
+
+		$address = null;
 
 		// Accept only selected type for a user
 		if( !in_array( $ctype, [ Address::TYPE_PRIMARY, Address::TYPE_BILLING, Address::TYPE_MAILING, Address::TYPE_SHIPPING ] ) ) {
@@ -354,7 +355,7 @@ class UserController extends \cmsgears\core\common\controllers\apix\Controller {
 			$address = $this->addressService->createOrUpdate( $address );
 
 			// Create Mapping
-			$modelAddress = $this->modelAddressService->activateByModelId( $user->id, CoreGlobal::TYPE_USER, $address->id, $ctype );
+			$modelAddress = $this->modelAddressService->activateByParentModelId( $user->id, CoreGlobal::TYPE_USER, $address->id, $ctype );
 
 			$data = [
 				'line1' => $address->line1, 'line2' => $address->line2,

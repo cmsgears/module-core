@@ -16,6 +16,8 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\behaviors\ActivityBehavior;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -67,19 +69,36 @@ abstract class ModelFileController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					'bulk' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
+					'bulk' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
+			],
+			'activity' => [
+				'class' => ActivityBehavior::class,
+				'admin' => true,
+				'delete' => [ 'delete' ]
 			]
 		];
 	}
 
 	// yii\base\Controller ----
+
+	public function actions() {
+
+		return [
+			'bulk' => [
+				'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true,
+				'config' => [ 'admin' => true ]
+			]
+		];
+	}
 
 	// CMG interfaces ------------------------
 

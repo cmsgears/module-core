@@ -90,7 +90,7 @@ class Toggle extends \cmsgears\core\common\actions\base\ModelAction {
 				}
 				else {
 
-					$this->metaService->toggle( $meta );
+					$this->metaService->toggleValue( $meta );
 				}
 			}
 			else {
@@ -105,7 +105,7 @@ class Toggle extends \cmsgears\core\common\actions\base\ModelAction {
 				}
 				else {
 
-					$this->metaService->toggle( $meta );
+					$this->metaService->toggleValue( $meta );
 				}
 			}
 

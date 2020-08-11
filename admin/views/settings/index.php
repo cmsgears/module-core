@@ -2,7 +2,7 @@
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= 'Settings | ' . $coreProperties->getSiteTitle();
 
-$themeIncludes	= Yii::getAlias( '@themes/admin/views/includes' );
+$themeTemplates	= Yii::getAlias( '@themes/admin/views/templates' );
 
 $settings = Yii::$app->sidebar->getConfig();
 ?>
@@ -26,7 +26,7 @@ $settings = Yii::$app->sidebar->getConfig();
 							?>
 								<div class="popout-setting popout-setting-<?= $setting ?> col col4" cmt-app="core" cmt-controller="settings" cmt-action="getContent" action="settings/index?type=<?= $setting ?>">
 									<span class="cmt-click"><?= $settingTitle ?></span>
-									<?php include "$themeIncludes/components/spinners/element.php"; ?>
+									<?php include "$themeTemplates/components/spinners/element.php"; ?>
 								</div>
 							<?php
 								}
@@ -37,7 +37,7 @@ $settings = Yii::$app->sidebar->getConfig();
 			</div>
 			<div class="data-crud-form">
 				<div class="align align-center">
-					<?php include "$themeIncludes/components/spinners/default.php"; ?>
+					<?php include "$themeTemplates/components/spinners/default.php"; ?>
 				</div>
 			</div>
 		</div>

@@ -12,6 +12,7 @@ namespace cmsgears\core\common\services\mappers;
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\services\interfaces\resources\IFileService;
@@ -98,11 +99,11 @@ class ModelFileService extends \cmsgears\core\common\services\base\ModelMapperSe
 					'default' => SORT_DESC,
 					'label' => 'Name'
 				],
-				'tag' => [
-					'asc' => [ "$fileTable.tag" => SORT_ASC ],
-					'desc' => [ "$fileTable.tag" => SORT_DESC ],
+				'code' => [
+					'asc' => [ "$fileTable.code" => SORT_ASC ],
+					'desc' => [ "$fileTable.code" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'Tag'
+					'label' => 'Code'
 				],
 				'title' => [
 					'asc' => [ "$fileTable.title" => SORT_ASC ],
@@ -317,6 +318,8 @@ class ModelFileService extends \cmsgears\core\common\services\base\ModelMapperSe
 			'extension' => "$fileTable.extension",
 			'directory' => "$fileTable.directory",
 			'visibility' => "$fileTable.visibility",
+			'ftype' => "$fileTable.type",
+			'type' => "$modelTable.type",
 			'order' => "$modelTable.order",
 			'active' => "$modelTable.active",
 			'pinned' => "$modelTable.pinned",
@@ -377,7 +380,7 @@ class ModelFileService extends \cmsgears\core\common\services\base\ModelMapperSe
 
 		$parentId	= $config[ 'parentId' ];
 		$parentType	= $config[ 'parentType' ];
-		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : $parentType;
+		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_DEFAULT;
 		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
 		$file = null;
@@ -386,31 +389,58 @@ class ModelFileService extends \cmsgears\core\common\services\base\ModelMapperSe
 
 			case 'image': {
 
-				$file = $this->fileService->saveImage( $parent );
+				$file = $this->parentService->saveImage( $parent );
 			}
 			// TODO: Add case to save cross-browser compatible videos
 			default: {
 
-				$file = $this->fileService->saveFile( $parent );
+				$file = $this->parentService->saveFile( $parent );
 			}
 		}
 
-		$model = new $modelClass;
+		$model = isset( $config[ 'model' ] ) ? $config[ 'model' ] : new $modelClass;
 
 		$model->modelId		= $file->id;
 		$model->parentId	= $parentId;
 		$model->parentType	= $parentType;
 
-		$model->type	= $type;
+		$model->type	= $file->type;
 		$model->order	= $order;
-		$model->active	= true;
+		$model->active	= isset( $model->active ) ? $model->active : true;
 
 		return parent::create( $model );
 	}
 
 	// Update -------------
 
+	public function update( $model, $config = [] ) {
+
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'type', 'order', 'active'
+		];
+
+		if( $admin ) {
+
+			$attributes	= ArrayHelper::merge( $attributes, [
+				'pinned', 'featured', 'popular'
+			]);
+		}
+
+		return parent::update( $model, [
+			'attributes' => $attributes
+		]);
+	}
+
 	// Delete -------------
+
+	public function deleteWithParent( $model, $config = [] ) {
+
+		$parent = $this->parentService->getById( $model->modelId );
+
+		$this->parentService->delete( $parent, $config );
+	}
 
 	// Bulk ---------------
 
@@ -464,7 +494,7 @@ class ModelFileService extends \cmsgears\core\common\services\base\ModelMapperSe
 					}
 					case 'delete': {
 
-						$this->delete( $model );
+						$this->deleteWithParent( $model, $config );
 
 						break;
 					}

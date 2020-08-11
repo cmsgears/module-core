@@ -16,31 +16,44 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 $themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
-	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
+	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [],
 	'title' => "$title Templates", 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'content' => 'Content' ],
 	'sortColumns' => [
-		'name' => 'Name', 'slug' => 'Slug', 'title' => 'Title', 'active' => 'Active', 'renderer' => 'Renderer',
-		'frender' => 'File Render', 'layout' => 'Layout', 'lgroup' => 'Layout Group', 'vpath' => 'View Path',
+		'name' => 'Name', 'title' => 'Title', 'renderer' => 'Renderer',
+		'frender' => 'File Render', 'layout' => 'Layout', 'lgroup' => 'Layout Group',
+		'active' => 'Active', 'frontend' => 'Frontend',
 		'cdate' => 'Created At', 'udate' => 'Updated At'
+		// 'slug' => 'Slug', 'vpath' => 'View Path'
 	],
-	'filters' => [ 'model' => [ 'active' => 'Active', 'frender' => 'File Render', 'lgroup' => 'Group Layout' ] ],
+	'filters' => [
+		'model' => [
+			'active' => 'Active', 'disabled' => 'Disabled', 'frontend' => 'Frontend',
+			'frender' => 'File Render', 'lgroup' => 'Group Layout'
+		]
+	],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
 		'title' => [ 'title' => 'Title', 'type' => 'text' ],
 		'desc' => [ 'title' => 'Description', 'type' => 'text' ],
-		'content' => [ 'title' => 'Content', 'type' => 'text' ],
+		'active' => [ 'title' => 'Active', 'type' => 'flag' ],
+		'frontend' => [ 'title' => 'Frontend', 'type' => 'flag' ],
 		'renderer' => [ 'title' => 'Renderer', 'type' => 'select', 'options' => Yii::$app->templateManager->renderers ],
 		'frender' => [ 'title' => 'File Render', 'type' => 'flag' ],
 		'layout' => [ 'title' => 'Layout', 'type' => 'text' ],
 		'lgroup' => [ 'title' => 'Layout Group', 'type' => 'flag' ],
-		'active' => [ 'title' => 'Active', 'type' => 'flag' ],
+		'content' => [ 'title' => 'Content', 'type' => 'text' ],
 		'cdate' => [ 'title' => 'Created At', 'type' => 'date' ],
 		'udate' => [ 'title' => 'Updated At', 'type' => 'date' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk',
 	'bulkActions' => [
-		'model' => [ 'active' => 'Activate', 'inactive' => 'Disable', 'frender' => 'File Render', 'crender' => 'Content Render', 'group' => 'Layout Group', 'single' => 'Single Layout', 'delete' => 'Delete' ]
+		'model' => [
+			'activate' => 'Activate', 'disable' => 'Disable', 'frontend' => 'Frontend',
+			'frender' => 'File Render', 'crender' => 'Content Render',
+			'group' => 'Layout Group', 'single' => 'Single Layout',
+			'delete' => 'Delete'
+		]
 	],
 	'header' => false, 'footer' => true,
 	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x2', 'x2', null, null, null, null, null, null, 'x2', 'x2' ] ],

@@ -91,7 +91,7 @@ class SettingsController extends \cmsgears\core\admin\controllers\apix\base\Cont
 
 	public function actionIndex( $type ) {
 
-		$settings	= $this->modelService->getMetaMapByMetaType( Yii::$app->core->site, $type );
+		$settings	= $this->modelService->getMetaNameMetaMapByType( Yii::$app->core->site, $type );
 		$fieldsMap	= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
 		$form		= new GenericForm( [ 'fields' => $fieldsMap ] );
 
@@ -106,7 +106,7 @@ class SettingsController extends \cmsgears\core\admin\controllers\apix\base\Cont
 
 	public function actionUpdate( $type ) {
 
-		$settings = $this->modelService->getMetaMapByMetaType( Yii::$app->core->site, $type );
+		$settings = $this->modelService->getMetaNameMetaMapByType( Yii::$app->core->site, $type );
 
 		if( count( $settings ) > 0 ) {
 
@@ -146,10 +146,11 @@ class SettingsController extends \cmsgears\core\admin\controllers\apix\base\Cont
 
  			foreach( $settings as $key => $value ) {
 
-				$model				= new $this->metaService->modelClass;
-				$model->modelId		= $siteId;
-				$model->name		= $key;
-				$model->value		= $value;
+				$model = new $this->metaService->modelClass;
+
+				$model->modelId	= $siteId;
+				$model->name	= $key;
+				$model->value	= $value;
 
 				if( $value == '1' ) {
 
@@ -171,7 +172,7 @@ class SettingsController extends \cmsgears\core\admin\controllers\apix\base\Cont
 				}
 			}
 
-			foreach ( $models as $key => $value ) {
+			foreach( $models as $key => $value ) {
 
 				$data[]	= $value->getFieldInfo();
 			}

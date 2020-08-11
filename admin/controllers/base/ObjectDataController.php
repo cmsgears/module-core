@@ -18,8 +18,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\File;
 
-use cmsgears\core\common\behaviors\ActivityBehavior;
-
 /**
  * ObjectDataController provides actions specific to object model.
  *
@@ -90,14 +88,6 @@ abstract class ObjectDataController extends CrudController {
 		$behaviors[ 'verbs' ][ 'actions' ][ 'attributes' ] = [ 'get', 'post' ];
 		$behaviors[ 'verbs' ][ 'actions' ][ 'config' ] = [ 'get', 'post' ];
 		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
-
-		$behaviors[ 'activity' ] = [
-			'class' => ActivityBehavior::class,
-			'admin' => true,
-			'create' => [ 'create' ],
-			'update' => [ 'update' ],
-			'delete' => [ 'delete' ]
-		];
 
 		return $behaviors;
 	}

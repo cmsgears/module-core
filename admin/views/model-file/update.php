@@ -7,7 +7,7 @@ use cmsgears\core\common\widgets\ActiveForm;
 use cmsgears\files\widgets\SharedUploader;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Add File | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'Update File | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
 <div class="box-crud-wrap">
@@ -44,13 +44,27 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $file, 'altText' ) ?>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col col4">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active' ) ?>
+						</div>
+						<div class="col col4">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'pinned' ) ?>
+						</div>
+						<div class="col col4">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured' ) ?>
+						</div>
+						<div class="col col4">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'popular' ) ?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="filler-height filler-height-medium"></div>
 		<div class="align align-right">
-			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
-			<input class="frm-element-medium" type="submit" value="Create" />
+			<?= Html::a( 'View All', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
+			<input class="frm-element-medium" type="submit" value="Update" />
 		</div>
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>

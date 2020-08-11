@@ -147,6 +147,9 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 			// If valid user found
 			if( isset( $user ) ) {
 
+				// Load User Permissions
+				$user->loadPermissions();
+
 				// Activate User
 				if( $this->userService->reset( $user, $token, $model, true ) ) {
 

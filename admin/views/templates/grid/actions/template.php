@@ -6,6 +6,9 @@ use yii\helpers\Html;
 <span class="action"><?= Html::a( "<i class=\"cmti cmti-edit\" title=\"Update\"></i>", [ "update?id=$model->id" ] ) ?></span>
 
 <?php if( isset( $model ) ) { ?>
+	<?php if( !empty( $model->attributesForm ) ) { ?>
+		<span title="Attributes"><?= Html::a( "", [ "attributes?id=$model->id" ], [ 'class' => 'cmti cmti cmti-tag-o' ] ) ?></span>
+	<?php } ?>
 	<?php if( !empty( $model->dataForm ) ) { ?>
 		<span title="Data"><?= Html::a( "", [ "data?id=$model->id" ], [ 'class' => 'cmti cmti-briefcase' ] ) ?></span>
 	<?php } ?>

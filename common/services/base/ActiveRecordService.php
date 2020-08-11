@@ -599,7 +599,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	public function softDelete( $model, $softDeleteStatus ) {
 
 		// Delete if not deleted yet
-		if( !$model->status == $softDeleteStatus ) {
+		if( $model->status != $softDeleteStatus ) {
 
 			$model->status = $softDeleteStatus;
 
@@ -613,7 +613,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	public function deleteMultiple( $models, $config = [] ) {
 
-		if( isset( $models ) ){
+		if( isset( $models ) ) {
 
 			foreach( $models as $model ) {
 
@@ -973,7 +973,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		// Searching ----------
 
-		$searchTerms	= Yii::$app->request->getQueryParam( $searchParam );
+		$searchTerms = Yii::$app->request->getQueryParam( $searchParam );
 
 		if( isset( $searchTerms ) && strlen( $searchTerms ) > 0 && !empty( $searchCol ) ) {
 
@@ -986,9 +986,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		if( isset( $filters ) ) {
 
-			foreach ( $filters as $filter ) {
+			foreach( $filters as $filter ) {
 
-				$query	= $query->andFilterWhere( $filter );
+				$query = $query->andFilterWhere( $filter );
 			}
 		}
 
@@ -1044,6 +1044,11 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 				}
 			}
 
+			$fcount = 0;
+			$mcount = 0;
+			$scount = 0;
+			$ecount = 0;
+
 			foreach( $reportColumns as $key => $column ) {
 
 				$find	= isset( $column[ 'find' ] ) ? $column[ 'find' ] : null;
@@ -1061,19 +1066,19 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 				// Flag
 				if( isset( $flag ) ) {
 
-					$query->andWhere( "{$key}=:flag", [ ':flag' => $flag ] );
+					$query->andWhere( "{$key}=:flag{$fcount}", [ ":flag{$fcount}" => $flag ] );
 				}
 
 				// Numeric
 				if( isset( $match ) ) {
 
-					$query->andWhere( "$key=:match", [ ':match' => $match ] );
+					$query->andWhere( "$key=:match{$mcount}", [ ":match{$mcount}" => $match ] );
 				}
 
 				// Numeric - Range - Start & End
 				if( isset( $start ) && isset( $end ) ) {
 
-					$query->andWhere( "$key BETWEEN :start AND :end", [ ':start' => $start, ':end' => $end ] );
+					$query->andWhere( "$key BETWEEN :start{$scount} AND :end{$ecount}", [ ":start{$scount}" => $start, ":end{$ecount}" => $end ] );
 				}
 				// Numeric - Range - Start
 				else if( isset( $start ) ) {
@@ -1085,6 +1090,11 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 					$query->andWhere( "$key <= '$end'" );
 				}
+
+				$fcount++;
+				$mcount++;
+				$scount++;
+				$ecount++;
 			}
 		}
 
@@ -1119,7 +1129,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 			$pagination[ 'route' ] = $route;
 		}
 
-		$dataProvider	= new ActiveDataProvider([
+		$dataProvider = new ActiveDataProvider([
 			'query' => $query,
 			'sort' => $sort,
 			'pagination' => $pagination

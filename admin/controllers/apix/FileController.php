@@ -48,7 +48,7 @@ class FileController extends \cmsgears\core\admin\controllers\apix\base\Controll
 
 	public function beforeAction( $action ) {
 
-		if( $action == 'file-handler' ) {
+		if( $action->id == 'file-handler' ) {
 
 			$this->enableCsrfValidation = false;
 		}

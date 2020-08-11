@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\controllers\apix;
+namespace cmsgears\core\common\controllers\apix\base;
 
 // Yii Imports
 use Yii;

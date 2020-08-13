@@ -162,9 +162,7 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 					'label' => 'Longitude'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {

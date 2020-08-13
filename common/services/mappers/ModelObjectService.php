@@ -10,7 +10,7 @@
 namespace cmsgears\core\common\services\mappers;
 
 // CMG Imports
-use cmsgears\core\common\services\interfaces\entities\IObjectService;
+use cmsgears\core\common\services\interfaces\entities\IObjectDataService;
 use cmsgears\core\common\services\interfaces\mappers\IModelObjectService;
 
 use cmsgears\core\common\services\traits\base\FeaturedTrait;
@@ -48,7 +48,7 @@ class ModelObjectService extends \cmsgears\core\common\services\base\ModelMapper
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( IObjectService $objectService, $config = [] ) {
+	public function __construct( IObjectDataService $objectService, $config = [] ) {
 
 		$this->parentService = $objectService;
 

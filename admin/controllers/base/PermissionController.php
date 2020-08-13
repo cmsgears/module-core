@@ -99,7 +99,7 @@ abstract class PermissionController extends CrudController {
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->model = $this->modelService->create( $model );
+			$this->model = $this->modelService->create( $model, [ 'admin' => true ] );
 
 			$binder	= new Binder( [ 'binderId' => $this->model->id ] );
 
@@ -139,7 +139,7 @@ abstract class PermissionController extends CrudController {
 
 			if( $model->load( Yii::$app->request->post(), 'Permission' )  && $model->validate() ) {
 
-				$this->model = $this->modelService->update( $model );
+				$this->model = $this->modelService->update( $model, [ 'admin' => true ] );
 
 				$binder	= new Binder( [ 'binderId' => $this->model->id ] );
 
@@ -190,7 +190,7 @@ abstract class PermissionController extends CrudController {
 					$this->hierarchyService->deleteByRootId( $model->id, CoreGlobal::TYPE_PERMISSION );
 				}
 
-				$this->modelService->delete( $model );
+				$this->modelService->delete( $model, [ 'admin' => true ] );
 
 				return $this->redirect( $this->returnUrl );
 			}

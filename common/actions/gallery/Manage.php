@@ -72,7 +72,7 @@ class Manage extends \cmsgears\core\common\base\Action {
 
 	// CMG parent classes --------------------
 
-	// Create --------------------------------
+	// Manage --------------------------------
 
 	public function run( $id, $config = [] ) {
 
@@ -101,7 +101,7 @@ class Manage extends \cmsgears\core\common\base\Action {
 			}
 
 			return $this->controller->render( 'items', [
-				'model' => $model,
+				'parent' => $model,
 				'gallery' => $gallery,
 				'items' => $gallery->files
 			]);

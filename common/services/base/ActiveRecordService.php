@@ -1016,7 +1016,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 				// String search
 				if( isset( $find ) ) {
 
-					$reportColumns[ $column ][ 'find' ] = $find;
+					$reportColumns[ $column ][ 'find' ] = trim( $find );
 				}
 
 				// Flag
@@ -1069,7 +1069,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 					$query->andWhere( "{$key}=:flag{$fcount}", [ ":flag{$fcount}" => $flag ] );
 				}
 
-				// Numeric
+				// Match
 				if( isset( $match ) ) {
 
 					$query->andWhere( "$key=:match{$mcount}", [ ":match{$mcount}" => $match ] );

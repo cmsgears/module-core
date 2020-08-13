@@ -9,6 +9,8 @@ use cmsgears\files\widgets\SharedUploader;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Add File | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
+
+$fileErrors = $file->getErrors();
 ?>
 <div class="box-crud-wrap">
 	<div class="box-crud-wrap-main">
@@ -23,6 +25,9 @@ $returnUrl		= $this->context->returnUrl;
 						<div class="col col2">
 							<label>File</label>
 							<?= SharedUploader::widget( [ 'model' => $file ] ) ?>
+							<?php if( count( $fileErrors ) > 0 && isset( $fileErrors[ 'name' ] ) ) { ?>
+								<p class="error">File is required.</p>
+							<?php } ?>
 						</div>
 						<div class="col col2">
 							<?= $form->field( $file, 'description' )->textarea() ?>

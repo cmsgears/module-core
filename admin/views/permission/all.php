@@ -15,9 +15,11 @@ $themeTemplates		= '@themes/admin/views/templates';
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
 	'title' => 'Permissions', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'name' => 'Name', 'desc' => 'Description' ],
+	'searchColumns' => [
+		'name' => 'Name', 'desc' => 'Description'
+	],
 	'sortColumns' => [
-		'name' => 'Name',
+		'name' => 'Name', 'slug' => 'Slug', 'group' => 'Group',
 		'cdate' => 'Created At', 'udate' => 'Updated At'
 	],
 	'filters' => [
@@ -48,16 +50,16 @@ $themeTemplates		= '@themes/admin/views/templates';
 	//'dataView' => "$moduleTemplates/grid/data/permission",
 	//'cardView' => "$moduleTemplates/grid/cards/permission",
 	//'actionView' => "$moduleTemplates/grid/actions/permission"
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
 	'data' => [ 'model' => 'Permission', 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Delete Permission', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
 	'data' => [ 'model' => 'Permission', 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
-]) ?>
+])?>

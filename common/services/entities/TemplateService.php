@@ -17,6 +17,7 @@ use yii\data\Sort;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\entities\ITemplateService;
+use cmsgears\core\common\services\interfaces\resources\IFileService;
 
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
@@ -53,6 +54,8 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 	// Protected --------------
 
+	protected $fileService;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
@@ -64,6 +67,13 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 	use SlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
+
+	public function __construct( IFileService $fileService, $config = [] ) {
+
+		$this->fileService = $fileService;
+
+		parent::__construct( $config );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -347,11 +357,24 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 	// Create -------------
 
+	public function create( $model, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+
+		$preview = isset( $config[ 'preview' ] ) ? $config[ 'preview' ] : null;
+
+		$this->fileService->saveFiles( $model, [ 'previewId' => $preview ] );
+
+		return parent::create( $model, $config );
+	}
+
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
 
 		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$preview = isset( $config[ 'preview' ] ) ? $config[ 'preview' ] : null;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
 			'name', 'slug', 'icon', 'title', 'description', 'renderer', 'fileRender',
@@ -365,6 +388,9 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 			$attributes[] = 'active';
 			$attributes[] = 'frontend';
 		}
+
+		// Save Files
+		$this->fileService->saveFiles( $model, [ 'previewId' => $preview ] );
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -405,6 +431,15 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
  	}
 
 	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete files
+		$this->fileService->deleteMultiple( [ $model->preview ] );
+
+		// Delete model
+		return parent::delete( $model, $config );
+	}
 
 	// Bulk ---------------
 

@@ -210,7 +210,7 @@ class Factory extends \cmsgears\core\common\base\Component {
 		$factory->set( 'themeService', 'cmsgears\core\common\services\entities\ThemeService' );
 
 		$factory->set( 'templateService', 'cmsgears\core\common\services\entities\TemplateService' );
-		$factory->set( 'ObjectDataService', 'cmsgears\core\common\services\entities\ObjectDataService' );
+		$factory->set( 'objectDataService', 'cmsgears\core\common\services\entities\ObjectDataService' );
 
 		$factory->set( 'permissionService', 'cmsgears\core\common\services\entities\PermissionService' );
 		$factory->set( 'roleService', 'cmsgears\core\common\services\entities\RoleService' );

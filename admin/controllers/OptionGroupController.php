@@ -46,7 +46,7 @@ class OptionGroupController extends \cmsgears\core\admin\controllers\base\CrudCo
 
 		// Config
 		$this->type		= CoreGlobal::TYPE_OPTION_GROUP;
-		$this->apixBase	= 'core/optiongroup';
+		$this->apixBase	= 'core/option-group';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'cmsgears\core\common\services\interfaces\resources\ICategoryService' );
@@ -56,7 +56,7 @@ class OptionGroupController extends \cmsgears\core\admin\controllers\base\CrudCo
 
 		// Return Url
 		$this->returnUrl = Url::previous( 'ogroups' );
-		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/optiongroup/all' ], true );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/option-group/all' ], true );
 
 		// Breadcrumbs
 		$this->breadcrumbs = [

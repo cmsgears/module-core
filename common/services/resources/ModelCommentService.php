@@ -279,7 +279,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 			'rating' => "$modelTable.rating",
 			'pinned' => "$modelTable.pinned",
 			'featured' => "$modelTable.featured",
-			'popular' => "$modelTable.popular"
+			'popular' => "$modelTable.popular",
+			'anonymous' => "$modelTable.anonymous"
 		];
 
 		// Result -----------

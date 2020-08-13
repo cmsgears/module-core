@@ -15,27 +15,32 @@ $themeTemplates		= '@themes/admin/views/templates';
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
 	'title' => 'Shared Files', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'title' => 'Title', 'desc' => 'Description', 'extension' => 'Extension', 'directory' => 'Directory' ],
+	'searchColumns' => [
+		'title' => 'Title', 'desc' => 'Description', 'caption' => 'Caption',
+		'extension' => 'Extension', 'directory' => 'Directory'
+	],
 	'sortColumns' => [
-		'title' => 'Title', 'extension' => 'Extension', 'directory' => 'Directory',
-		'size' => 'Size', 'url' => 'Path', 'visibility' => 'Visibility',
-		'cdate' => 'Created At', 'udate' => 'Updated At'
+		'name' => 'Name', 'title' => 'Title',
+		'directory' => 'Directory', 'extension' => 'Extension',
+		'type' => 'Type', 'visibility' => 'Visibility', 'url' => 'Path',
+		'size' => 'Size', 'cdate' => 'Created At', 'udate' => 'Updated At'
 	],
 	'filters' => [
-		'type' => [ 'image' => 'Image', 'audio' => 'Audio', 'video' => 'Video', 'document' => 'Document' ],
-		'visibility' => [ 'public' => 'Public', 'protected' => 'Protected', 'private' => 'Private' ]
+		'type' => $typeMap,
+		'visibility' => $visibilityMap
 	],
 	'reportColumns' => [
 		'title' => [ 'title' => 'Title', 'type' => 'text' ],
 		'desc' => [ 'title' => 'Description', 'type' => 'text' ],
+		'caption' => [ 'title' => 'Caption', 'type' => 'text' ],
 		'extension' => [ 'title' => 'Extension', 'type' => 'text' ],
 		'directory' => [ 'title' => 'Directory', 'type' => 'text' ],
+		'type' => [ 'title' => 'Type', 'type' => 'select', 'options' => $typeMap ],
 		'visibility' => [ 'title' => 'Visibility', 'type' => 'select', 'options' => $visibilityMap ],
-		'type' => [ 'title' => 'Type', 'type' => 'select', 'options' => $typeMap ]
 	],
 	'bulkPopup' => 'popup-grid-bulk',
 	'bulkActions' => [
-		'visibility' => [ 'public' => 'Public', 'protected' => 'Protected', 'private' => 'Private' ],
+		'visibility' => $visibilityMap,
 		'model' => [ 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,

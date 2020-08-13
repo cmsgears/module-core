@@ -83,7 +83,8 @@ class OptionController extends \cmsgears\core\admin\controllers\base\Controller 
 
 		$model = $this->modelService->getModelObject();
 
-		$model->categoryId = $pid;
+		$model->categoryId	= $pid;
+		$model->active		= true;
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 

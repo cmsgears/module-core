@@ -442,6 +442,7 @@ class CoreGlobal {
 	const FIELD_EVENT		= 'eventField';
 	const FIELD_OBJECT		= 'objectField';
 	const FIELD_THEME		= 'themeField';
+	const FIELD_PREVIEW		= 'previewField';
 	const FIELD_COMMENT		= 'commentField';
 	const FIELD_COMMENTS	= 'commentsField';
 	const FIELD_REVIEWS		= 'reviewsField';

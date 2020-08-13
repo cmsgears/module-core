@@ -274,6 +274,7 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 			'caption' => "$modelTable.caption",
 			'extension' => "$modelTable.extension",
 			'directory' => "$modelTable.directory",
+			'type' => "$modelTable.type",
 			'visibility' => "$modelTable.visibility"
 		];
 
@@ -561,14 +562,15 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 	 */
 	public function delete( $model, $config = [] ) {
 
-		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$backend	= isset( $config[ 'backend' ] ) ? $config[ 'backend' ] : false;
+		$frontend	= isset( $config[ 'frontend' ] ) ? $config[ 'frontend' ] : false;
 
 		if( isset( $model ) ) {
 
 			// Admin can delete all the files
 			// Users can delete frontend and shared files
 			// Non-Shared files can be deleted with the model
-			if( $admin || ( $model->frontend && $model->shared ) || !$model->shared ) {
+			if( $backend || ( $frontend && $model->frontend && $model->shared ) || !$model->shared ) {
 
 				// Delete mappings
 				Yii::$app->factory->get( 'modelFileService' )->deleteByModelId( $model->id );

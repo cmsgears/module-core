@@ -13,9 +13,11 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 $themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
-	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
+	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [],
 	'title' => 'Countries', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'name' => 'Name', 'code' => 'Code' ],
+	'searchColumns' => [
+		'name' => 'Name', 'code' => 'Code', 'iso' => 'ISO'
+	],
 	'sortColumns' => [
 		'name' => 'Name', 'code' => 'Code', 'iso' => 'ISO'
 	],
@@ -43,16 +45,16 @@ $themeTemplates		= '@themes/admin/views/templates';
 	//'dataView' => "$moduleTemplates/grid/data/country",
 	//'cardView' => "$moduleTemplates/grid/cards/country",
 	'actionView' => "$moduleTemplates/grid/actions/country"
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
 	'data' => [ 'model' => 'Country', 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Delete Country', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
 	'data' => [ 'model' => 'Country', 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
-]) ?>
+])?>

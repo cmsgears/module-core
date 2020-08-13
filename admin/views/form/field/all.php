@@ -15,13 +15,18 @@ $themeTemplates		= '@themes/admin/views/templates';
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => "create?fid=$formId", 'data' => [ ],
 	'title' => 'Form Fields', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title' ],
-	'sortColumns' => [
+	'searchColumns' => [
 		'name' => 'Name', 'label' => 'Label',
+		'validators' => 'Validators', 'content' => 'Content'
+	],
+	'sortColumns' => [
+		'name' => 'Name', 'label' => 'Label', 'type' => 'Type',
 		'compress' => 'Compress', 'active' => 'Active', 'order' => 'Order'
 	],
 	'filters' => [
-		'status' => [ 'active' => 'Active', 'inactive' => 'Disabled', 'compress' => 'Compress' ]
+		'status' => [
+			'active' => 'Active', 'disabled' => 'Disabled', 'compress' => 'Compress'
+		]
 	],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
@@ -33,7 +38,9 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'order' => [ 'title' => 'Order', 'type' => 'text' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		'model' => [ 'active' => 'Activate', 'inactive' => 'Disable', 'compress' => 'Compress', 'delete' => 'Delete' ]
+		'model' => [
+			'activate' => 'Activate', 'disable' => 'Disable', 'compress' => 'Compress', 'delete' => 'Delete'
+		]
 	],
 	'header' => false, 'footer' => true,
 	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x3', 'x3', null, 'x3', null, null, null ] ],
@@ -55,16 +62,16 @@ $themeTemplates		= '@themes/admin/views/templates';
 	//'dataView' => "$moduleTemplates/grid/data/field",
 	//'cardView' => "$moduleTemplates/grid/cards/field",
 	//'actionView' => "$moduleTemplates/grid/actions/field"
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
 	'data' => [ 'model' => 'Form Field', 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Delete Form Field', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
 	'data' => [ 'model' => 'Form Field', 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
-]) ?>
+])?>

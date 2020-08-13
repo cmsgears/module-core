@@ -218,6 +218,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_EVENT => 'Event',
 		CoreGlobal::FIELD_OBJECT => 'Object',
 		CoreGlobal::FIELD_THEME => 'Theme',
+		CoreGlobal::FIELD_PREVIEW => 'Preview',
 		CoreGlobal::FIELD_COMMENT => 'Comment',
 		CoreGlobal::FIELD_COMMENTS => 'Comments',
 		CoreGlobal::FIELD_REVIEWS => 'Reviews',

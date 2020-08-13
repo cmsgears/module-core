@@ -84,7 +84,7 @@ class ObjectMapper extends \cmsgears\core\common\base\Widget {
 
 		parent::init();
 
-		$this->objectService = Yii::$app->factory->get( 'objectService' );
+		$this->objectService = Yii::$app->factory->get( 'objectDataService' );
 	}
 
 	// Instance methods --------------------------------------------

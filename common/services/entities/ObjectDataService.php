@@ -81,7 +81,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( IFileService $fileService, IModelFileService $modelFileService ,$config = [] ) {
+	public function __construct( IFileService $fileService, IModelFileService $modelFileService, $config = [] ) {
 
 		$this->fileService = $fileService;
 
@@ -419,7 +419,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 	/**
 	 * Returns all the models having the given name and using the parent type.
 	 */
-	public function getByName( $name ) {
+	public function getByName( $name, $config = [] ) {
 
 		return $this->getByNameType( $name, static::$parentType );
 	}
@@ -427,7 +427,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 	/**
 	 * Returns the first model having the given name and using the parent type.
 	 */
-	public function getFirstByName( $name ) {
+	public function getFirstByName( $name, $config = [] ) {
 
 		return $this->getFirstByNameType( $name, static::$parentType );
 	}

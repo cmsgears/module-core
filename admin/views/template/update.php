@@ -5,6 +5,7 @@ use yii\helpers\Html;
 // CMG Imports
 use cmsgears\core\common\widgets\ActiveForm;
 use cmsgears\core\common\widgets\Editor;
+use cmsgears\files\widgets\ImageUploader;
 use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
@@ -122,6 +123,24 @@ Editor::widget();
 				</div>
 			</div>
 		</div>
+		<?php if( $fileRender ) { ?>
+			<div class="filler-height filler-height-medium render-file"></div>
+			<div class="box box-crud render-file">
+				<div class="box-header">
+					<div class="box-header-title">Files</div>
+				</div>
+				<div class="box-content">
+					<div class="box-content">
+						<div class="row padding padding-small-v">
+							<div class="col col12x4">
+								<label>Preview</label>
+								<?= ImageUploader::widget( [ 'model' => $preview ] ) ?>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php } ?>
 		<div class="filler-height filler-height-medium"></div>
 		<div class="box box-crud render-content">
 			<div class="box-header">

@@ -21,15 +21,25 @@ $themeTemplates		= '@themes/admin/views/templates';
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => $add, 'addUrl' => $create, 'data' => [ 'apixBase' => $apixBase ],
 	'title' => "{$title}s", 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'user' => 'User', 'name' => 'Name', 'email' => 'Email', 'content' => 'Content' ],
+	'searchColumns' => [
+		'user' => 'User', 'name' => 'Name', 'email' => 'Email', 'content' => 'Content'
+	],
 	'sortColumns' => [
 		'user' => 'User', 'name' => 'Name', 'email' => 'Email',
-		'status' => 'Status', 'rating' => 'Rating', 'pinned' => 'Pinned', 'featured' => 'Featured',
+		'status' => 'Status', 'rating' => 'Rating',
+		'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular',
+		'anonymous' => 'Anonymous',
 		'cdate' => 'Created At', 'udate' => 'Updated At', 'adate' => 'Approved At'
 	],
 	'filters' => [
-		'status' => [ 'new' => 'New', 'spam' => 'Spam', 'blocked' => 'Blocked', 'approved' => 'Approved', 'trash' => 'Trash' ],
-		'model' => [ 'pinned' => 'Pinned', 'featured' => 'Featured' ]
+		'status' => [
+			'new' => 'New', 'spam' => 'Spam', 'blocked' => 'Blocked',
+			'approved' => 'Approved', 'trash' => 'Trash'
+		],
+		'model' => [
+			'pinned' => 'Pinned', 'featured' => 'Featured',
+			'popular' => 'Popular', 'anonymous' => 'Anonymous'
+		]
 	],
 	'reportColumns' => [
 		'user' => [ 'title' => 'User', 'type' => 'text' ],
@@ -39,14 +49,21 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'status' => [ 'title' => 'Status', 'type' => 'select', 'options' => $statusMap ],
 		'rating' => [ 'title' => 'Rating', 'type' => 'range' ],
 		'pinned' => [ 'title' => 'Pinned', 'type' => 'flag' ],
-		'featured' => [ 'title' => 'Featured', 'type' => 'flag' ]
+		'featured' => [ 'title' => 'Featured', 'type' => 'flag' ],
+		'popular' => [ 'title' => 'Popular', 'type' => 'flag' ],
+		'anonymous' => [ 'title' => 'Anonymous', 'type' => 'flag' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		'status' => [ 'approve' => 'Approve', 'trash' => 'Trash', 'spam' => 'Spam', 'block' => 'Block' ],
-		'model' => [ 'pinned' => 'Pinned', 'featured' => 'Featured', 'delete' => 'Delete' ]
+		'status' => [
+			'approve' => 'Approve', 'spam' => 'Spam', 'trash' => 'Trash', 'block' => 'Block'
+		],
+		'model' => [
+			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular',
+			'delete' => 'Delete'
+		]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null , 'x2', 'x2', 'x2', null, null, null, null, 'x3', null ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null , 'x2', 'x2', 'x2', null, null, null, null, null, 'x2', null ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'user' => [ 'title' => 'User', 'generate' => function( $model ) {
@@ -57,6 +74,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'status' => [ 'title' => 'Status', 'generate' => function( $model ) { return $model->getStatusStr(); } ],
 		'pinned' => [ 'title' => 'Pinned', 'generate' => function( $model ) { return $model->getPinnedStr(); } ],
 		'featured' => [ 'title' => 'Featured', 'generate' => function( $model ) { return $model->getFeaturedStr(); } ],
+		'popular' => [ 'title' => 'Popular', 'generate' => function( $model ) { return $model->getPopularStr(); } ],
 		'parent' => [ 'title' => 'Parent', 'generate' => function( $model ) use( $parentUrl ) {
 			if( !empty( $parentUrl ) ) {
 				return "<a href='". Url::toRoute( [ $parentUrl . $model->parentId ], true ). "'>View</a>";

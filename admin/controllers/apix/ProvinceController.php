@@ -57,7 +57,8 @@ class ProvinceController extends \cmsgears\core\admin\controllers\apix\base\Cont
 				'actions' => [
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'generic' => [ 'permission' => $this->crudPermission ],
-					'delete' => [ 'permission' => $this->crudPermission ]
+					'delete' => [ 'permission' => $this->crudPermission ],
+					'options-list' => [ 'permission' => CoreGlobal::PERM_ADMIN ]
 				]
 			],
 			'verbs' => [

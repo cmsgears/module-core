@@ -173,7 +173,7 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 					'default' => SORT_DESC,
 					'label' => 'Admin Mail'
 				],
-				'unsubmit' => [
+				'uqsubmit' => [
 					'asc' => [ "$modelTable.uniqueSubmit" => SORT_ASC ],
 					'desc' => [ "$modelTable.uniqueSubmit" => SORT_DESC ],
 					'default' => SORT_DESC,
@@ -307,7 +307,7 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 			'visibility' => "$modelTable.visibility",
 			'umail' => "$modelTable.userMail",
 			'amail' => "$modelTable.adminMail",
-			'unsubmit' => "$modelTable.uniqueSubmit",
+			'uqsubmit' => "$modelTable.uniqueSubmit",
 			'upsubmit' => "$modelTable.updateSubmit"
 		];
 

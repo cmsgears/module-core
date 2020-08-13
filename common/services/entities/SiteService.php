@@ -177,6 +177,12 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 					'default' => SORT_DESC,
 					'label' => 'Popular'
 				],
+				'primary' => [
+					'asc' => [ "$modelTable.primary" => SORT_ASC ],
+					'desc' => [ "$modelTable.primary" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Primary'
+				],
 				'cdate' => [
 					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
 					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],

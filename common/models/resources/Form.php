@@ -170,7 +170,7 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IApprov
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'siteId', 'name', 'captcha', 'visibility', 'status' ], 'required' ],
+			[ [ 'name', 'captcha', 'visibility', 'status' ], 'required' ],
 			[ [ 'id', 'mailTo', 'ccTo', 'bccTo', 'htmlOptions', 'content', 'gridCache' ], 'safe' ],
 			// Unique
 			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],

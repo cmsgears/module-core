@@ -17,8 +17,8 @@ $themeTemplates		= '@themes/admin/views/templates';
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => "create?pid=$parent->id", 'data' => [ 'parent' => $parent ],
 	'title' => 'Templates', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [
-		'title' => 'Title', 'desc' => 'Description',
-		'caption' => 'Caption', 'extension' => 'Extension', 'directory' => 'Directory'
+		'title' => 'Title', 'desc' => 'Description', 'caption' => 'Caption',
+		'extension' => 'Extension', 'directory' => 'Directory'
 	],
 	'sortColumns' => [
 		'name' => 'Name', 'title' => 'Title',
@@ -41,7 +41,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'extension' => [ 'title' => 'Extension', 'type' => 'text' ],
 		'directory' => [ 'title' => 'Directory', 'type' => 'text' ],
 		'visibility' => [ 'title' => 'Visibility', 'type' => 'select', 'options' => $visibilityMap ],
-		'type' => [ 'title' => 'Type', 'type' => 'select', 'options' => $typeMap ],
+		'ftype' => [ 'title' => 'File Type', 'type' => 'select', 'options' => $typeMap ],
 		'order' => [ 'title' => 'Order', 'type' => 'range' ],
 		'active' => [ 'title' => 'Active', 'type' => 'flag' ],
 		'pinned' => [ 'title' => 'Pinned', 'type' => 'flag' ],

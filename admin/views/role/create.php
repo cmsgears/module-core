@@ -23,9 +23,9 @@ $returnUrl		= $this->context->returnUrl;
 						<div class="col col2">
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
-						<div class="col col2">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'group', [ 'class' => 'cmt-checkbox cmt-choice cmt-field-group', 'group-target' => 'group-permission' ], 'cmti cmti-checkbox' ) ?>
-						</div>
+						<!--<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'group', [ 'class' => 'cmt-checkbox cmt-choice cmt-field-group', 'group-target' => 'group-role' ] ) ?>
+						</div>-->
 					</div>
 					<div class="row">
 						<div class="col col2">
@@ -55,7 +55,7 @@ $returnUrl		= $this->context->returnUrl;
 				<div class="box-content">
 					<div class="box-content">
 						<div class="row rp-map padding padding-small-v">
-						<?php foreach ( $permissions as $permission ) { ?>
+						<?php foreach( $permissions as $permission ) { ?>
 							<div class="col col4">
 								<input type="checkbox" name="Binder[binded][]" value="<?= $permission[ 'id' ] ?>" />
 								<?= $permission[ 'name' ] ?>

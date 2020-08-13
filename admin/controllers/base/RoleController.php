@@ -98,7 +98,7 @@ abstract class RoleController extends CrudController {
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->model = $this->modelService->create( $model );
+			$this->model = $this->modelService->create( $model, [ 'admin' => true ] );
 
 			$binder	= new Binder( [ 'binderId' => $this->model->id ] );
 
@@ -130,7 +130,7 @@ abstract class RoleController extends CrudController {
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
 
-				$this->modelService->update( $model );
+				$this->modelService->update( $model, [ 'admin' => true ] );
 
 				$model->refresh();
 
@@ -168,7 +168,7 @@ abstract class RoleController extends CrudController {
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
-				$this->modelService->delete( $model );
+				$this->modelService->delete( $model, [ 'admin' => true ] );
 
 				return $this->redirect( $this->returnUrl );
 			}

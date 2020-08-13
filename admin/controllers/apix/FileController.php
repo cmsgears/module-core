@@ -96,15 +96,15 @@ class FileController extends \cmsgears\core\admin\controllers\apix\base\Controll
 			'file-handler' => [ 'class' => 'cmsgears\core\common\actions\file\FileHandler' ],
 			'bulk' => [
 				'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true,
-				'config' => [ 'admin' => true ]
+				'config' => [ 'backend' => true ]
 			],
 			'generic' => [
 				'class' => 'cmsgears\core\common\actions\grid\Generic',
-				'config' => [ 'admin' => true ]
+				'config' => [ 'backend' => true ]
 			],
 			'delete' => [
 				'class' => 'cmsgears\core\common\actions\grid\Delete',
-				'config' => [ 'admin' => true ]
+				'config' => [ 'backend' => true ]
 			]
 		];
 	}

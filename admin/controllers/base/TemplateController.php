@@ -15,6 +15,8 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\resources\File;
+
 /**
  * TemplateController provide actions specific to template management.
  *
@@ -91,16 +93,48 @@ abstract class TemplateController extends CrudController {
 
 		$model->type = $this->type;
 
+		$preview = File::loadFile( null, 'Banner' );
+
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->model = $this->modelService->add( $model, [ 'admin' => true ] );
+			$this->model = $this->modelService->add( $model, [ 'admin' => true, 'preview' => $preview ] );
 
 			return $this->redirect( 'all' );
 		}
 
 		return $this->render( 'create', [
-			'model' => $model
+			'model' => $model,
+			'preview' => $preview
 		]);
+	}
+
+	public function actionUpdate( $id, $config = [] ) {
+
+		// Find Model
+		$model = $this->modelService->getById( $id );
+
+		// Update/Render if exist
+		if( isset( $model ) ) {
+
+			$preview = File::loadFile( $model->preview, 'Banner' );
+
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+
+				$this->model = $this->modelService->update( $model, [
+					'admin' => true, 'preview' => $preview
+				]);
+
+				return $this->redirect( $this->returnUrl );
+			}
+
+			return $this->render( 'update', [
+				'model' => $model,
+				'preview' => $preview
+			]);
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionData( $id ) {

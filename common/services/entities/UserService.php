@@ -262,9 +262,13 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
 
 		$search = [
-			'name' => "$modelTable.name", 'message' => "$modelTable.message", 'desc' => "$modelTable.description",
-			'username' => "$modelTable.username", 'email' => "$modelTable.email",
-			'mobile' => "$modelTable.mobile", 'phone' => "$modelTable.phone",
+			'name' => "$modelTable.name",
+			'message' => "$modelTable.message",
+			'desc' => "$modelTable.description",
+			'username' => "$modelTable.username",
+			'email' => "$modelTable.email",
+			'mobile' => "$modelTable.mobile",
+			'phone' => "$modelTable.phone",
 			'content' => "$modelTable.ontent"
 		];
 
@@ -280,12 +284,19 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'locale' => "$modelTable.localeId", 'gender' => "$modelTable.genderId",
-			'name' => "$modelTable.name", 'status' => "$modelTable.status",
-			'message' => "$modelTable.message", 'desc' => "$modelTable.description",
-			'username' => "$modelTable.username", 'email' => "$modelTable.email",
-			'mobile' => "$modelTable.mobile", 'phone' => "$modelTable.phone",
-			'tzone' => "$modelTable.timeZone", 'content' => "$modelTable.ontent",
+			'locale' => "$modelTable.localeId",
+			'gender' => "$modelTable.genderId",
+			'name' => "$modelTable.name",
+			'status' => "$modelTable.status",
+			'role' => "$roleTable.name",
+			'message' => "$modelTable.message",
+			'desc' => "$modelTable.description",
+			'username' => "$modelTable.username",
+			'email' => "$modelTable.email",
+			'mobile' => "$modelTable.mobile",
+			'phone' => "$modelTable.phone",
+			'tzone' => "$modelTable.timeZone",
+			'content' => "$modelTable.ontent"
 		];
 
 		// Result -----------

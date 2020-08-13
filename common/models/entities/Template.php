@@ -29,6 +29,7 @@ use cmsgears\core\common\models\interfaces\resources\IGridCache;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Entity;
+use cmsgears\core\common\models\resources\File;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
@@ -46,6 +47,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $id
  * @property integer $siteId
  * @property integer $themeId
+ * @property integer $previewId
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
@@ -177,7 +179,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 			// Other
 			[ [ 'active', 'frontend', 'fileRender', 'layoutGroup', 'gridCacheValid' ], 'boolean' ],
 			[ 'themeId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'siteId', 'previewId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
@@ -199,6 +201,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 
 		return [
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+			'previewId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PREVIEW ),
 			'themeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_THEME ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
@@ -265,6 +268,11 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 	public function getTheme() {
 
 		return $this->hasOne( Theme::class, [ 'id' => 'themeId' ] );
+	}
+
+	public function getPreview() {
+
+		return $this->hasOne( File::class, [ 'id' => 'previewId' ] );
 	}
 
 	/**
@@ -342,7 +350,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'theme', 'creator', 'modifier' ];
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'theme', 'preview', 'creator', 'modifier' ];
 
 		$config[ 'relations' ] = $relations;
 

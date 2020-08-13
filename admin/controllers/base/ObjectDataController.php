@@ -109,7 +109,7 @@ abstract class ObjectDataController extends CrudController {
 
 	// CMG parent classes --------------------
 
-	// ObjectDataController ----------------------
+	// ObjectDataController ------------------
 
 	public function actionAll( $config = [] ) {
 

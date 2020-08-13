@@ -13,9 +13,11 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 $themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
-	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
+	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [],
 	'title' => 'Option Groups', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'content' => 'Content' ],
+	'searchColumns' => [
+		'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'content' => 'Content'
+	],
 	'sortColumns' => [
 		'name' => 'Name', 'title' => 'Title'
 	],
@@ -46,16 +48,16 @@ $themeTemplates		= '@themes/admin/views/templates';
 	//'dataView' => "$moduleTemplates/grid/data/ogroup",
 	//'cardView' => "$moduleTemplates/grid/cards/ogroup",
 	'actionView' => "$moduleTemplates/grid/actions/ogroup"
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
 	'data' => [ 'model' => 'Option Group', 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Delete Option Group', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
 	'data' => [ 'model' => 'Option Group', 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
-]) ?>
+])?>

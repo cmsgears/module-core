@@ -188,6 +188,15 @@ class RegionService extends \cmsgears\core\common\services\base\EntityService im
 
 	// Read - Lists ----
 
+	public function getIdNameListByProvinceId( $provinceId, $config = [] ) {
+
+		$config[ 'conditions' ][] = [ 'provinceId' => $provinceId ];
+
+		$config[ 'order' ] = 'name ASC';
+
+		return self::findIdNameList( $config );
+	}
+
 	// Read - Maps -----
 
 	public function getIdNameMapByProvinceId( $provinceId, $config = [] ) {

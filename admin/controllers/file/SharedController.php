@@ -136,4 +136,5 @@ class SharedController extends \cmsgears\core\admin\controllers\base\CrudControl
 			'visibilityMap' => File::$visibilityMap
 		]);
 	}
+
 }

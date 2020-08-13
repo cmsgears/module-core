@@ -218,9 +218,9 @@ class SiteMemberService extends \cmsgears\core\common\services\base\MapperServic
 
 		$search = [
 			'name' => "$userTable.name",
+			'email' => "$userTable.email",
 			'site' => "$siteTable.name",
-			'role' => "$roleTable.name",
-			'content' => "$userTable.content"
+			'role' => "$roleTable.name"
 		];
 
 		if( isset( $searchCol ) ) {
@@ -236,10 +236,9 @@ class SiteMemberService extends \cmsgears\core\common\services\base\MapperServic
 
 		$config[ 'report-col' ]	= [
 			'name' => "$userTable.name",
+			'email' => "$userTable.email",
 			'site' => "$siteTable.name",
 			'role' => "$roleTable.name",
-			'content' => "$userTable.content",
-			'order' => "$modelTable.order",
 			'pinned' => "$modelTable.pinned",
 			'featured' => "$modelTable.featured",
 			'popular' => "$modelTable.popular"
@@ -367,6 +366,51 @@ class SiteMemberService extends \cmsgears\core\common\services\base\MapperServic
 	}
 
 	// Bulk ---------------
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'pinned': {
+
+						$model->pinned = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'featured': {
+
+						$model->featured = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'popular': {
+
+						$model->popular = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
 
 	// Notifications ------
 

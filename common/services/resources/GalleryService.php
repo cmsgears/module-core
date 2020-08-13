@@ -11,6 +11,7 @@ namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
 use Yii;
+use yii\base\Exception;
 use yii\data\Sort;
 use yii\helpers\ArrayHelper;
 
@@ -293,7 +294,8 @@ class GalleryService extends \cmsgears\core\common\services\base\ResourceService
 			'visibility' => "$modelTable.visibility",
 			'order' => "$modelTable.order",
 			'pinned' => "$modelTable.pinned",
-			'featured' => "$modelTable.featured"
+			'featured' => "$modelTable.featured",
+			'popular' => "$modelTable.popular"
 		];
 
 		// Result -----------
@@ -334,27 +336,11 @@ class GalleryService extends \cmsgears\core\common\services\base\ResourceService
 
 	public function createItem( $gallery, $item, $type = null ) {
 
-		$modelFile = Yii::$app->factory->get( 'modelFileService' )->getModelObject();
+		$config[ 'parentId' ]	= $gallery->id;
+		$config[ 'parentType' ] = static::$parentType;
+		$config[ 'type' ]		= $type;
 
-		// Save Gallery Image
-		$this->fileService->saveImage( $item, [ 'model' => $modelFile, 'attribute' => 'modelId' ] );
-
-		// Save Gallery Item
-		if( $item->id > 0 ) {
-
-			if( empty( $type ) ) {
-
-				$type = CoreGlobal::TYPE_DEFAULT;
-			}
-
-			$modelFile->parentType	= static::$parentType;
-			$modelFile->parentId	= $gallery->id;
-			$modelFile->type		= $type;
-
-			$modelFile->save();
-		}
-
-		return $modelFile;
+		return Yii::$app->factory->get( 'modelFileService' )->createWithParent( $item, $config );
 	}
 
 	// Update -------------
@@ -370,7 +356,9 @@ class GalleryService extends \cmsgears\core\common\services\base\ResourceService
 
 		if( $admin ) {
 
-			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'pinned', 'featured', 'popular' ] );
+			$attributes	= ArrayHelper::merge( $attributes, [
+				'status', 'order', 'pinned', 'featured', 'popular'
+			]);
 		}
 
 		// Copy Template
@@ -423,11 +411,33 @@ class GalleryService extends \cmsgears\core\common\services\base\ResourceService
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete Items
-		$this->fileService->deleteMultiple( $model->files );
+		$config[ 'hard' ] = $config[ 'hard' ] ?? !Yii::$app->core->isSoftDelete();
 
-		// Delete mappings
-		Yii::$app->factory->get( 'modelGalleryService' )->deleteByModelId( $model->id );
+		if( $config[ 'hard' ] ) {
+
+			$transaction = Yii::$app->db->beginTransaction();
+
+			try {
+
+				// Delete Items
+				$this->fileService->deleteMultiple( $model->files );
+
+				// Delete mappings
+				Yii::$app->factory->get( 'modelGalleryService' )->deleteByModelId( $model->id );
+
+				// Commit
+				$transaction->commit();
+
+				// Delete model
+				return parent::delete( $model, $config );
+			}
+			catch( Exception $e ) {
+
+				$transaction->rollBack();
+
+				throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY ) );
+			}
+		}
 
 		// Delete model
 		return parent::delete( $model, $config );

@@ -41,7 +41,7 @@ interface IThemeService extends IEntityService, IData, IGridCacheable, INameType
 
 	// Update -------------
 
-	public function makeDefault( Theme $model, $config = [] );
+	public function makeDefault( $model, $config = [] );
 
 	// Delete -------------
 

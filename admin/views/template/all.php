@@ -22,9 +22,8 @@ $themeTemplates		= '@themes/admin/views/templates';
 	'sortColumns' => [
 		'name' => 'Name', 'title' => 'Title', 'renderer' => 'Renderer',
 		'frender' => 'File Render', 'layout' => 'Layout', 'lgroup' => 'Layout Group',
-		'active' => 'Active', 'frontend' => 'Frontend',
+		'active' => 'Active', 'frontend' => 'Frontend', 'vpath' => 'View Path',
 		'cdate' => 'Created At', 'udate' => 'Updated At'
-		// 'slug' => 'Slug', 'vpath' => 'View Path'
 	],
 	'filters' => [
 		'model' => [

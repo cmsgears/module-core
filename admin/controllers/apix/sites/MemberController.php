@@ -49,7 +49,7 @@ class MemberController extends \cmsgears\core\admin\controllers\apix\base\Contro
 		// Services
 		$this->modelService	= Yii::$app->factory->get( 'siteMemberService' );
 
-		$this->userService	= Yii::$app->factory->get( 'userService' );
+		$this->userService = Yii::$app->factory->get( 'userService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -94,6 +94,12 @@ class MemberController extends \cmsgears\core\admin\controllers\apix\base\Contro
 		];
 	}
 
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// MemberController ----------------------
+
 	public function actionAutoSearch() {
 
 		$name	= Yii::$app->request->post( 'name' );
@@ -112,11 +118,5 @@ class MemberController extends \cmsgears\core\admin\controllers\apix\base\Contro
 		// Trigger Ajax Success
 		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 	}
-
-	// CMG interfaces ------------------------
-
-	// CMG parent classes --------------------
-
-	// CityController ------------------------
 
 }

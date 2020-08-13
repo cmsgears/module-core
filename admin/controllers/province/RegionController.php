@@ -17,11 +17,11 @@ use yii\helpers\Url;
 use cmsgears\core\common\config\CoreGlobal;
 
 /**
- * CityController provides actions specific to city model.
+ * RegionController provides actions specific to region model.
  *
  * @since 1.0.0
  */
-class CityController extends \cmsgears\core\admin\controllers\base\Controller {
+class RegionController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -45,10 +45,10 @@ class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Config
-		$this->apixBase = 'core/city';
+		$this->apixBase = 'core/region';
 
 		// Services
-		$this->modelService = Yii::$app->factory->get( 'cityService' );
+		$this->modelService = Yii::$app->factory->get( 'regionService' );
 
 		$this->provinceService = Yii::$app->factory->get( 'provinceService' );
 
@@ -56,8 +56,8 @@ class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 		$this->sidebar = [ 'parent' => 'sidebar-core', 'child' => 'country' ];
 
 		// Return Url
-		$this->returnUrl = Url::previous( 'cities' );
-		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/province/city/all' ], true );
+		$this->returnUrl = Url::previous( 'regions' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/province/region/all' ], true );
 
 		// Country Url
 		$countryUrl = Url::previous( 'countries' );
@@ -74,10 +74,10 @@ class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 				[ 'label' => 'Countries', 'url' =>  $countryUrl ],
 				[ 'label' => 'Provinces', 'url' =>  $provinceUrl ]
 			],
-			'all' => [ [ 'label' => 'Cities' ] ],
-			'create' => [ [ 'label' => 'Cities', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Cities', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Cities', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'all' => [ [ 'label' => 'Regions' ] ],
+			'create' => [ [ 'label' => 'Regions', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Regions', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Regions', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 
@@ -95,11 +95,11 @@ class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// CMG parent classes --------------------
 
-	// ProvinceController --------------------
+	// RegionController ----------------------
 
 	public function actionAll( $pid ) {
 
-		Url::remember( [ "province/city/all?pid=$pid" ], 'cities' );
+		Url::remember( [ "province/region/all?pid=$pid" ], 'regions' );
 
 		$dataProvider = $this->modelService->getPage( [ 'conditions' => [ 'provinceId' => $pid ] ] );
 
@@ -128,8 +128,7 @@ class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 			}
 
 			return $this->render( 'create', [
-				'model' => $model,
-				'province' => $province
+				'model' => $model
 			]);
 		}
 
@@ -154,8 +153,7 @@ class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 
 			// Render view
 			return $this->render( 'update', [
-				'model' => $model,
-				'province' => $model->province
+				'model' => $model
 			]);
 		}
 
@@ -189,8 +187,7 @@ class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 
 			// Render view
 			return $this->render( 'delete', [
-				'model' => $model,
-				'province' => $model->province
+				'model' => $model
 			]);
 		}
 

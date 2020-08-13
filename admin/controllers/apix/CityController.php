@@ -60,6 +60,7 @@ class CityController extends \cmsgears\core\admin\controllers\apix\base\Controll
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					'auto-search' => [ 'permission' => CoreGlobal::PERM_ADMIN ],
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'generic' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]

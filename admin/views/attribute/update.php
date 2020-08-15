@@ -17,7 +17,7 @@ Editor::widget();
 <div class="box-crud-wrap">
 	<div class="box-crud-wrap-main">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-attribute', 'options' => [ 'class' => 'form' ] ] ); ?>
-		<div class="box box-crud">
+		<div class="box box-crud layer layer-5">
 			<div class="box-header">
 				<div class="box-header-title">Basic Details</div>
 			</div>
@@ -53,8 +53,8 @@ Editor::widget();
 				</div>
 			</div>
 		</div>
-		<div class="filler-height filler-height-medium"></div>
-		<div class="box box-crud">
+		<div class="filler-height filler-height-medium layer layer-1"></div>
+		<div class="box box-crud layer layer-2">
 			<div class="box-header">
 				<div class="box-header-title">Value</div>
 			</div>

@@ -37,6 +37,13 @@ abstract class ObjectWidget extends Widget {
 	public $wrap = true;
 
 	/**
+	 * Slug to identify the model.
+	 * 
+	 * @var string
+	 */
+	public $slug;
+
+	/**
 	 * Check whether default avatar can be used in absence of model banner.
 	 *
 	 * @var boolean

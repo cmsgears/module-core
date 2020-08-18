@@ -48,6 +48,10 @@ interface IVisual {
 
 	public function clearVideo( $model );
 
+	public function updateMobileVideo( $model, $video );
+
+	public function clearMobileVideo( $model );
+
 	public function updateDocument( $model, $document );
 
 	public function clearDocument( $model );

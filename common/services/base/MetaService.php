@@ -177,16 +177,16 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 		if( isset( $searchCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
 		}
 		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search;
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'name' => "$modelTable.name",
 			'label' => "$modelTable.label",
 			'type' => "$modelTable.type",
@@ -295,7 +295,7 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 		$config[ 'conditions' ][ 'modelId' ] = $modelId;
 
-		return $this->getObjectMap( $config );
+		return $this->getModelMap( $config );
 	}
 
 	public function getIdMetaMapByType( $modelId, $type, $config = [] ) {
@@ -303,7 +303,7 @@ abstract class MetaService extends ResourceService implements IMetaService {
 		$config[ 'conditions' ][ 'modelId' ]	= $modelId;
 		$config[ 'conditions' ][ 'type' ]		= $type;
 
-		return $this->getObjectMap( $config );
+		return $this->getModelMap( $config );
 	}
 
 	public function getNameMetaMapByType( $modelId, $type, $config = [] ) {
@@ -313,7 +313,7 @@ abstract class MetaService extends ResourceService implements IMetaService {
 		$config[ 'conditions' ][ 'modelId' ]	= $modelId;
 		$config[ 'conditions' ][ 'type' ]		= $type;
 
-		return $this->getObjectMap( $config );
+		return $this->getModelMap( $config );
 	}
 
 	// Read - Others ---

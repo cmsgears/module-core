@@ -198,16 +198,16 @@ class ModelLocationService extends \cmsgears\core\common\services\base\ModelMapp
 
 		if( isset( $searchCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
 		}
 		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search;
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'title' => "$locationTable.title",
 			'order' => "$modelTable.order",
 			'active' => "$modelTable.active"

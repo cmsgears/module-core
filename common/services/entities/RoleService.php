@@ -208,16 +208,16 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 
 		if( isset( $searchCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
 		}
 		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search;
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'name' => "$modelTable.name",
 			'type' => "$modelTable.type",
 			'desc' => "$modelTable.description"

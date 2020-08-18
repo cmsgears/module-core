@@ -117,6 +117,25 @@ trait VisualTrait {
 		return isset( $this->video ) ? $this->video->getFileUrl() : null;
 	}
 
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getMobileVideo() {
+
+		$fileTable	= File::tableName();
+
+		return $this->hasOne( File::class, [ 'id' => 'mvideoId' ] )->from( "$fileTable as mvideo" );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getMobileVideoUrl() {
+
+		return isset( $this->mobileVideo ) ? $this->mobileVideo->getFileUrl() : null;
+	}
+
 	/**
 	 * @inheritdoc
 	 */

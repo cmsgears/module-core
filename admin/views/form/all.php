@@ -51,7 +51,10 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'upsubmit' => [ 'title' => 'Update Submit', 'type' => 'flag' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		'status' => [ 'block' => 'Block', 'active' => 'Activate' ],
+		'status' => [
+			'confirm' => 'Confirm', 'approve' => 'Approve', 'reject' => 'Reject',
+			'activate' => 'Activate', 'freeze' => 'Freeze', 'block' => 'Block'
+		],
 		'model' => [ 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,

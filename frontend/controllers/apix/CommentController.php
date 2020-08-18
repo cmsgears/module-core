@@ -101,7 +101,7 @@ abstract class CommentController extends \cmsgears\core\frontend\controllers\api
 
 		return [
 			// Model
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ]
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'user' => true ]
 		];
 	}
 

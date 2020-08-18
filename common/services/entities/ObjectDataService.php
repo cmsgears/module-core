@@ -339,16 +339,16 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 		if( isset( $searchCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
 		}
 		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search;
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'name' => "$modelTable.name",
 			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",

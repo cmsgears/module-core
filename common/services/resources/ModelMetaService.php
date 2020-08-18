@@ -180,16 +180,16 @@ class ModelMetaService extends \cmsgears\core\common\services\base\ModelResource
 
 		if( isset( $searchCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
 		}
 		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search;
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'name' => "$modelTable.name",
 			'label' => "$modelTable.label",
 			'type' => "$modelTable.type",
@@ -283,7 +283,7 @@ class ModelMetaService extends \cmsgears\core\common\services\base\ModelResource
 		$config[ 'conditions' ][ 'parentType' ] = $parentType;
 		$config[ 'conditions' ][ 'type' ]		= $type;
 
-		return $this->getObjectMap( $config );
+		return $this->getModelMap( $config );
 	}
 
 	public function getNameMetaMapByType( $parentId, $parentType, $type, $config = [] ) {
@@ -294,7 +294,7 @@ class ModelMetaService extends \cmsgears\core\common\services\base\ModelResource
 		$config[ 'conditions' ][ 'parentType' ] = $parentType;
 		$config[ 'conditions' ][ 'type' ]		= $type;
 
-		return $this->getObjectMap( $config );
+		return $this->getModelMap( $config );
 	}
 
 	// Read - Others ---

@@ -141,6 +141,31 @@ trait VisualTrait {
 		]);
 	}
 
+
+	public function updateMobileVideo( $model, $video ) {
+
+		$fileService = Yii::$app->factory->get( 'fileService' );
+
+		$fileService->saveFiles( $model, [ 'mvideoId' => $video ] );
+
+		return parent::update( $model, [
+			'attributes' => [ 'mvideoId' ]
+		]);
+	}
+
+	public function clearMobileVideo( $model ) {
+
+		$fileService = Yii::$app->factory->get( 'fileService' );
+
+		$fileService->delete( $model->mobileBanner );
+
+		$model->mvideoId = null;
+
+		return parent::update( $model, [
+			'attributes' => [ 'mvideoId' ]
+		]);
+	}
+
 	public function updateDocument( $model, $document ) {
 
 		$fileService = Yii::$app->factory->get( 'fileService' );

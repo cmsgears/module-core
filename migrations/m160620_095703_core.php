@@ -1177,7 +1177,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'key' => $this->string( Yii::$app->core->mediumText ),
-			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true ),
 			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
@@ -1198,7 +1198,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'key' => $this->string( Yii::$app->core->mediumText ),
-			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true )
 		], $this->options );
 
@@ -1215,7 +1215,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'key' => $this->string( Yii::$app->core->mediumText ),
-			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true )
 		], $this->options );
 
@@ -1232,7 +1232,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
 			'key' => $this->string( Yii::$app->core->mediumText ),
-			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true ),
 			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
@@ -1252,7 +1252,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
 			'key' => $this->string( Yii::$app->core->mediumText ),
-			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true ),
 			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
@@ -1271,7 +1271,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
-			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true )
 		], $this->options );
 
@@ -1287,7 +1287,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
-			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true ),
 			'nodes' => $this->text()
 		], $this->options );
@@ -1304,7 +1304,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
-			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true ),
 			'value' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null )
 		], $this->options );
@@ -1321,7 +1321,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
-			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true )
 		], $this->options );
 
@@ -1337,7 +1337,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
-			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true ),
 			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),

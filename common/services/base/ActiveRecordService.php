@@ -309,9 +309,14 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		return static::findIdNameMap( $config );
 	}
 
-	public function getObjectMap( $config = [] ) {
+	public function getModelMap( $config = [] ) {
 
-		return static::findObjectMap( $config );
+		return static::findModelMap( $config );
+	}
+
+	public function getModelMapByIds( $ids, $config = [] ) {
+
+		return static::findModelMapByIds( $ids, $config );
 	}
 
 	// Read - Others ---
@@ -1670,7 +1675,14 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		return static::generateMap( $config );
 	}
 
-	public static function findObjectMap( $config = [] ) {
+	public static function findModelMap( $config = [] ) {
+
+		return static::generateObjectMap( $config );
+	}
+
+	public static function findModelMapByIds( $ids, $config = [] ) {
+
+		$config[ 'filters' ][] = [ 'in', 'id', $ids ];
 
 		return static::generateObjectMap( $config );
 	}

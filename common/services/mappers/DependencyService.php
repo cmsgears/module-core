@@ -156,21 +156,26 @@ class DependencyService extends \cmsgears\core\common\services\base\MapperServic
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'stype' => "$modelTable.sourceType",
+			'ttype' => "$modelTable.targetType"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'stype' => "$modelTable.sourceType",
-				'ttype' => "$modelTable.targetType"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'stype' => "$modelTable.sourceType",
 			'ttype' => "$modelTable.targetType",
 			'active' => "$modelTable.active",

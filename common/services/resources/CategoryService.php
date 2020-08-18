@@ -156,6 +156,12 @@ class CategoryService extends \cmsgears\core\common\services\base\ResourceServic
 	                'default' => SORT_DESC,
 	                'label' => 'Featured'
 	            ],
+	            'popular' => [
+	                'asc' => [ "$modelTable.popular" => SORT_ASC ],
+	                'desc' => [ "$modelTable.popular" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Popular'
+	            ],
 	            'order' => [
 	                'asc' => [ "$modelTable.`order`" => SORT_ASC ],
 	                'desc' => [ "$modelTable.`order`" => SORT_DESC ],
@@ -248,16 +254,16 @@ class CategoryService extends \cmsgears\core\common\services\base\ResourceServic
 
 		if( isset( $searchCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
 		}
 		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search;
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'name' => "$modelTable.name",
 			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
@@ -350,7 +356,9 @@ class CategoryService extends \cmsgears\core\common\services\base\ResourceServic
 		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'name', 'slug', 'icon', 'texture', 'title', 'description', 'htmlOptions', 'content' ];
+			'name', 'slug', 'icon', 'texture', 'title',
+			'description', 'htmlOptions', 'content'
+		];
 
 		// Update Hierarchy
 		$this->updateInHierarchy( $model );

@@ -19,7 +19,8 @@ class ObjectSearch extends AutoSearch {
 
 	// Public -----------------
 
-	public $admin = false;
+	public $backend		= false;
+	public $frontend	= false;
 
 	// Protected --------------
 
@@ -80,7 +81,16 @@ class ObjectSearch extends AutoSearch {
 		$config[ 'siteId' ]		= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : ( $modelClass::isMultiSite() ? Yii::$app->core->siteId : null );
 		$config[ 'sort' ]		= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : [ 'name' => SORT_ASC ];
 
-		$config[ 'query' ]->andWhere( "$modelTable.`admin`=:admin AND $modelTable.`shared`=1 AND $modelTable.`name` like :name", [ ':admin' => $this->admin, ':name' => "$name%" ] );
+		if( $this->backend ) {
+
+			$config[ 'query' ]->andWhere( "$modelTable.`backend`=1 AND $modelTable.`shared`=1 AND $modelTable.`name` like :name", [ ':name' => "$name%" ] );
+		}
+		else if( $this->frontend ) {
+
+			$user = Yii::$app->core->getUser();
+
+			$config[ 'query' ]->andWhere( "$modelTable.`frontend`=1 AND $modelTable.`shared`=1 AND $modelTable.`name` like :name AND $modelTable.`createdBy`=:uid", [ ':name' => "$name%", ':uid' => $user->id ] );
+		}
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 
@@ -101,8 +111,6 @@ class ObjectSearch extends AutoSearch {
 		$modelTable	= $modelService->getModelTable();
 
 		$config[ 'conditions' ][ "$modelTable.type" ] = $type;
-
-		$config[ 'sort' ] = isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : [ 'name' => SORT_ASC, 'type' => SORT_ASC ];
 
 		return $this->searchByName( $name, $config );
 	}

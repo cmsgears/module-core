@@ -73,6 +73,20 @@ interface IVisual {
 	public function getVideoUrl();
 
 	/**
+	 * Returns the mobile video associated with model.
+	 *
+	 * @return File
+	 */
+	public function getMobileVideo();
+
+	/**
+	 * Returns the mobile video url associated with model.
+	 *
+	 * @return string
+	 */
+	public function getMobileVideoUrl();
+
+	/**
 	 * Returns the document associated with model.
 	 *
 	 * @return File

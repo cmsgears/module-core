@@ -71,7 +71,9 @@ interface IActiveRecordService {
 
 	public function getIdNameMap( $config = [] );
 
-	public function getObjectMap( $config = [] );
+	public function getModelMap( $config = [] );
+
+	public function getModelMapByIds( $ids, $config = [] );
 
 	// Read - Others ---
 

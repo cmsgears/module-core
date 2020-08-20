@@ -50,17 +50,11 @@ Editor::widget();
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active', [ 'disabled' => true ] ) ?>
 						</div>
 					</div>
-				</div>
-			</div>
-		</div>
-		<div class="filler-height filler-height-medium layer layer-1"></div>
-		<div class="box box-crud layer layer-2">
-			<div class="box-header">
-				<div class="box-header-title">Value</div>
-			</div>
-			<div class="box-content-wysiwyg">
-				<div class="box-content">
-					<?= $form->field( $model, 'value' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'value' )->textarea( [ 'rows' => 5, 'readonly'=> 'true' ] ) ?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

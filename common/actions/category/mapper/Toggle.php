@@ -64,7 +64,9 @@ class Toggle extends \cmsgears\core\common\actions\base\ModelAction {
 
 			$modelCategoryService = Yii::$app->factory->get( 'modelCategoryService' );
 
-			$modelCategoryService->toggleActive( $this->model->id, $this->parentType, $cid );
+			$mappingType = isset( $this->modelType ) ? $this->modelType : CoreGlobal::TYPE_DEFAULT;
+
+			$modelCategoryService->toggleByParentModelId( $this->model->id, $this->parentType, $cid, $mappingType );
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );

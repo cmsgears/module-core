@@ -131,6 +131,10 @@ class CoreGlobal {
 	const TPL_COMMENT_REQUEST_APPROVE	= 'comment-r-approve';
 	const TPL_COMMENT_REQUEST_DELETE	= 'comment-r-delete';
 
+	// Categories and Options
+	const TPL_NOTIFY_SUGGEST_CATEGORY	= 'suggest-category';
+	const TPL_NOTIFY_SUGGEST_OPTION		= 'suggest-option';
+
 	// Template Views --------------------------------------------------
 
 	const TPL_VIEW_ADMIN		= 'admin';

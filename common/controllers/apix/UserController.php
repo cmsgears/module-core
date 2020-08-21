@@ -87,6 +87,10 @@ class UserController extends \cmsgears\core\common\controllers\apix\base\Control
 					'add-gallery-item' => [ 'permission' => $this->crudPermission ],
 					'update-gallery-item' => [ 'permission' => $this->crudPermission ],
 					'delete-gallery-item' => [ 'permission' => $this->crudPermission ],
+					// Categories
+					'assign-category' => [ 'permission' => $this->crudPermission ],
+					'remove-category' => [ 'permission' => $this->crudPermission ],
+					'toggle-category' => [ 'permission' => $this->crudPermission ],
 					// Options
 					'assign-option' => [ 'permission' => $this->crudPermission ],
 					'remove-option' => [ 'permission' => $this->crudPermission ],
@@ -136,6 +140,10 @@ class UserController extends \cmsgears\core\common\controllers\apix\base\Control
 					'add-gallery-item' => [ 'post' ],
 					'update-gallery-item' => [ 'post' ],
 					'delete-gallery-item' => [ 'post' ],
+					// Categories
+					'assign-category' => [ 'post' ],
+					'remove-category' => [ 'post' ],
+					'toggle-category' => [ 'post' ],
 					// Options
 					'assign-option' => [ 'post' ],
 					'remove-option' => [ 'post' ],
@@ -192,6 +200,10 @@ class UserController extends \cmsgears\core\common\controllers\apix\base\Control
 			'add-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Create', 'model' => $user, 'user' => true ],
 			'update-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Update', 'model' => $user, 'user' => true ],
 			'delete-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Delete', 'model' => $user, 'user' => true ],
+			// Categories
+			'assign-category' => [ 'class' => 'cmsgears\core\common\actions\category\mapper\Assign', 'model' => $user ],
+			'remove-category' => [ 'class' => 'cmsgears\core\common\actions\category\mapper\Remove', 'model' => $user ],
+			'toggle-category' => [ 'class' => 'cmsgears\core\common\actions\category\mapper\Toggle', 'model' => $user ],
 			// Options
 			'assign-option' => [ 'class' => 'cmsgears\core\common\actions\option\mapper\Assign', 'model' => $user ],
 			'remove-option' => [ 'class' => 'cmsgears\core\common\actions\option\mapper\Remove', 'model' => $user ],

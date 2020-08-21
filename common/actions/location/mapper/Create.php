@@ -104,7 +104,7 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 					'title' => $location->title,
 					'country' => $location->countryName, 'province' => $location->provinceName,
 					'region' => $location->regionName, 'city' => $location->cityName,
-					'latitude' => $location->latitutde, 'longitude' => $location->longitude, 'zoomLevel' => $location->zoomLevel,
+					'latitude' => $location->latitude, 'longitude' => $location->longitude, 'zoomLevel' => $location->zoomLevel,
 					'zip' => $location->zip, 'value' => $location->toString()
 				];
 

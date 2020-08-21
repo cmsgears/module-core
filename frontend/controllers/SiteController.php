@@ -151,10 +151,10 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 				$this->siteMemberService->createByParams( [ 'userId' => $user->id ] );
 
 				// Default Settings
-				$metaService = Yii::$app->factory->get( 'modelMetaService' );
+				$metaService = Yii::$app->factory->get( 'userMetaService' );
 
-				$metaService->initByNameType( $user->id, CoreGlobal::TYPE_USER, 'receive_email', 'notification', ModelMeta::VALUE_TYPE_FLAG );
-				$metaService->initByNameType( $user->id, CoreGlobal::TYPE_USER, 'receive_email', 'reminder', ModelMeta::VALUE_TYPE_FLAG );
+				$metaService->initByNameType( $user->id, 'receive_email', 'notification', ModelMeta::VALUE_TYPE_FLAG );
+				$metaService->initByNameType( $user->id, 'receive_email', 'reminder', ModelMeta::VALUE_TYPE_FLAG );
 
 				// Send Register Mail
 				Yii::$app->coreMailer->sendRegisterMail( $user );

@@ -30,6 +30,7 @@ use cmsgears\core\common\models\interfaces\resources\IModelMeta;
 use cmsgears\core\common\models\interfaces\resources\ISocialLink;
 use cmsgears\core\common\models\interfaces\resources\IVisual;
 use cmsgears\core\common\models\interfaces\mappers\IAddress;
+use cmsgears\core\common\models\interfaces\mappers\ICategory;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
 use cmsgears\core\common\models\interfaces\mappers\IOption;
 
@@ -46,6 +47,7 @@ use cmsgears\core\common\models\traits\resources\ModelMetaTrait;
 use cmsgears\core\common\models\traits\resources\SocialLinkTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
 use cmsgears\core\common\models\traits\mappers\AddressTrait;
+use cmsgears\core\common\models\traits\mappers\CategoryTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
 use cmsgears\core\common\models\traits\mappers\OptionTrait;
 
@@ -107,7 +109,7 @@ use cmsgears\core\common\utilities\DateUtil;
  * @since 1.0.0
  */
 class User extends \cmsgears\core\common\models\base\Entity implements IdentityInterface, IAddress,
-	IApproval, IContent, IData, IGridCache, IFile, IModelMeta, IOption, ISocialLink, IVisual {
+	IApproval, ICategory, IContent, IData, IGridCache, IFile, IModelMeta, IOption, ISocialLink, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -144,6 +146,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	use AddressTrait;
 	use ApprovalTrait;
+	use CategoryTrait;
 	use ContentTrait;
 	use DataTrait;
 	use FileTrait;

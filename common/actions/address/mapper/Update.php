@@ -109,8 +109,8 @@ class Update extends \cmsgears\core\common\actions\base\ModelAction {
 						'title' => $address->title, 'line1' => $address->line1, 'line2' => $address->line2,
 						'country' => $address->countryName, 'province' => $address->provinceName,
 						'region' => $address->regionName, 'city' => $address->cityName,
-						'latitude' => $address->latitutde, 'longitude' => $address->longitude, 'zoomLevel' => $address->zoomLevel,
-						'zip' => $address->zip, 'value' => $address->toString()
+						'latitude' => $address->latitude, 'longitude' => $address->longitude, 'zoomLevel' => $address->zoomLevel,
+						'zip' => $address->zip, 'landmark' => $address->landmark, 'value' => $address->toString()
 					];
 
 					// Trigger Ajax Success

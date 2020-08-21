@@ -16,6 +16,8 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\utilities\AjaxUtil;
+
 /**
  * CategoryController handles the AJAX requests specific to Category Model.
  *
@@ -60,13 +62,15 @@ class CategoryController extends \cmsgears\core\frontend\controllers\apix\base\C
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'auto-search' => [ 'permission' => $this->crudPermission ]
+					'auto-search' => [ 'permission' => $this->crudPermission ],
+					'suggest' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'auto-search' => [ 'post' ]
+					'auto-search' => [ 'post' ],
+					'suggest' => [ 'post' ]
 				]
 			]
 		];
@@ -86,5 +90,29 @@ class CategoryController extends \cmsgears\core\frontend\controllers\apix\base\C
 	// CMG parent classes --------------------
 
 	// CategoryController --------------------
+
+	public function actionSuggest() {
+
+		$name	= Yii::$app->request->post( 'name' );
+		$type	= Yii::$app->request->post( 'type' );
+
+		if( empty( $name ) || empty( $type ) ) {
+
+			$errors = [ 'name' => 'Please suggest a valid category.' ];
+
+			// Trigger Ajax Success
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+		}
+
+		$user = Yii::$app->core->getUser();
+
+		Yii::$app->factory->get( 'userService' )->notifyAdmin( $user, [
+			'template' => CoreGlobal::TPL_NOTIFY_SUGGEST_CATEGORY,
+			'data' => [ 'name' => $name, 'type' => $type ]
+		]);
+
+		// Trigger Ajax Success
+		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+	}
 
 }

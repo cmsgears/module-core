@@ -62,13 +62,15 @@ class OptionController extends \cmsgears\core\frontend\controllers\apix\base\Con
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'auto-search' => [ 'permission' => $this->crudPermission ]
+					'auto-search' => [ 'permission' => $this->crudPermission ],
+					'suggest' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'auto-search' => [ 'post' ]
+					'auto-search' => [ 'post' ],
+					'suggest' => [ 'post' ]
 				]
 			]
 		];
@@ -83,12 +85,46 @@ class OptionController extends \cmsgears\core\frontend\controllers\apix\base\Con
 	public function actionAutoSearch() {
 
 		$name	= Yii::$app->request->post( 'name' );
-		$catId	= Yii::$app->request->post( 'categoryId' );
+		$catId	= Yii::$app->request->post( 'type' );
 
 		$data = $this->modelService->searchByNameCategoryId( $name, $catId );
 
 		// Trigger Ajax Success
 		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+	}
+
+	public function actionSuggest() {
+
+		$name	= Yii::$app->request->post( 'name' );
+		$cslug	= Yii::$app->request->post( 'cslug' );
+
+		if( empty( $name ) || empty( $cslug ) ) {
+
+			$errors = [ 'name' => 'Please suggest a valid option.' ];
+
+			// Trigger Ajax Success
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+		}
+
+		$category = Yii::$app->factory->get( 'categoryService' )->getBySlugType( $cslug, CoreGlobal::TYPE_OPTION_GROUP );
+
+		if( empty( $category ) ) {
+
+			$errors = [ 'name' => 'Please suggest option for valid category.' ];
+
+			// Trigger Ajax Success
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+		}
+
+		$user = Yii::$app->core->getUser();
+
+		Yii::$app->factory->get( 'userService' )->notifyAdmin( $user, [
+			'template' => CoreGlobal::TPL_NOTIFY_SUGGEST_OPTION,
+			'data' => [ 'name' => $name, 'category' => $category ]
+		]);
+
+		// Trigger Ajax Success
+		return AjaxUtil::generateSuccess( 'Thanks for submitting your valuable suggestion.' );
 	}
 
 }

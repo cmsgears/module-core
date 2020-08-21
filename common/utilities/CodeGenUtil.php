@@ -608,16 +608,6 @@ class CodeGenUtil {
 		return $content;
 	}
 
-	public static function isAbsolutePath( $path, $alias = true ) {
-
-		if( $alias ) {
-
-			return $path[ 0 ] === '@';
-		}
-
-		return $path[ 1 ] === ':' || $path[ 0 ] === '/';
-	}
-
 	public static function compressStyles( $styles ) {
 
 		$compressed = preg_replace( '!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $styles );
@@ -892,57 +882,6 @@ class CodeGenUtil {
 				return $singular.'s';
 			}
 		}
-	}
-
-	public static function normalizePath( $path ) {
-
-		$parts	= array();// Array to build a new path from the good parts
-		$path	= str_replace( '\\', '/', $path );// Replace backslashes with forwardslashes
-		$path	= preg_replace( '/\/+/', '/', $path );// Combine multiple slashes into a single slash
-
-		$segments = explode( '/', $path );// Collect path segments
-
-		$test = '';// Initialize testing variable
-
-		foreach( $segments as $segment ) {
-
-			if( $segment != '.' ) {
-
-				$test = array_pop( $parts );
-
-				if( is_null( $test ) ) {
-
-					$parts[] = $segment;
-				}
-				else if( $segment == '..' ) {
-
-					if( $test == '..' ) {
-
-						$parts[] = $test;
-					}
-
-					if( $test == '..' || $test == '' ) {
-
-						$parts[] = $segment;
-					}
-				}
-				else {
-
-					$parts[] = $test;
-					$parts[] = $segment;
-				}
-			}
-		}
-
-		return implode( '/', $parts );
-	}
-
-	public static function getSiteProtocol() {
-
-		//$protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,strpos( $_SERVER["SERVER_PROTOCOL"],'/'))).'://';
-		$protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,strpos( $_SERVER["SERVER_PROTOCOL"],'/')));
-
-		return $protocol;
 	}
 
 	// Number Format

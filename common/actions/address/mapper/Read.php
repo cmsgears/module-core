@@ -45,7 +45,7 @@ class Read extends \cmsgears\core\common\actions\base\ModelAction {
 		'id', 'countryId', 'provinceId', 'regionId', 'cityId',
 		'title', 'line1', 'line2', 'line3',
 		'countryName', 'provinceName', 'regionName', 'cityName', 'zip', 'subZip',
-		'firstName', 'lastName', 'phone', 'email', 'fax', 'website',
+		'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'landmark',
 		'latitude', 'longitude', 'zoomLevel'
 	];
 

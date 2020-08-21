@@ -470,7 +470,7 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 		// New Mapping
 		else {
 
-			$type = $type ??$parentType;
+			$type = $type ?? $parentType;
 
 			return $this->createByParams([
 				'parentId' => $parentId, 'parentType' => $parentType, 'modelId' => $modelId,

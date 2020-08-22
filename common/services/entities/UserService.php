@@ -835,7 +835,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
-		$direct = isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : true; // Trigger direct notifications
+		$direct = isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : false; // Trigger direct notifications
 		$users	= isset( $config[ 'users' ] ) ? $config[ 'users' ] : [ $model->id ]; // Trigger user notifications
 
 		switch( $column ) {

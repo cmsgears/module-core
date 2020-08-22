@@ -17,7 +17,7 @@ use yii\base\InvalidConfigException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\utilities\CodeGenUtil;
+use cmsgears\core\common\utilities\UrlUtil;
 
 /**
  * The class GridWidget can be used by widgets showing data grids.
@@ -229,7 +229,7 @@ abstract class GridWidget extends Widget {
 		$this->layout = $gridLayout;
 
 		// Views
-		$this->actionView = CodeGenUtil::isAbsolutePath( $this->actionView ) ? $this->actionView : "$this->template/$this->actionView";
+		$this->actionView = UrlUtil::isAbsolutePath( $this->actionView ) ? $this->actionView : "$this->template/$this->actionView";
 
 		$sortHtml		= $this->sort ? $this->renderSort( $config ) : null;
 
@@ -264,7 +264,7 @@ abstract class GridWidget extends Widget {
 
 		$footerHtml = $this->footer ? $this->renderFooter( $config ) : null;
 
-		$gridView = CodeGenUtil::isAbsolutePath( $this->gridView ) ? $this->gridView : "$this->template/$this->gridView";
+		$gridView = UrlUtil::isAbsolutePath( $this->gridView ) ? $this->gridView : "$this->template/$this->gridView";
 
 		$widgetHtml = $this->render( $gridView, [
 			'widget' => $this,
@@ -287,56 +287,56 @@ abstract class GridWidget extends Widget {
 
 	public function renderSort( $config = [] ) {
 
-		$sortView = CodeGenUtil::isAbsolutePath( $this->sortView ) ? $this->sortView : "$this->template/$this->sortView";
+		$sortView = UrlUtil::isAbsolutePath( $this->sortView ) ? $this->sortView : "$this->template/$this->sortView";
 
         return $this->render( $sortView, [ 'widget' => $this ] );
 	}
 
 	public function renderSearch( $config = [] ) {
 
-		$searchView = CodeGenUtil::isAbsolutePath( $this->searchView ) ? $this->searchView : "$this->template/$this->searchView";
+		$searchView = UrlUtil::isAbsolutePath( $this->searchView ) ? $this->searchView : "$this->template/$this->searchView";
 
         return $this->render( $searchView, [ 'widget' => $this ] );
 	}
 
 	public function renderFilters( $config = [] ) {
 
-		$filtersView = CodeGenUtil::isAbsolutePath( $this->filtersView ) ? $this->filtersView : "$this->template/$this->filtersView";
+		$filtersView = UrlUtil::isAbsolutePath( $this->filtersView ) ? $this->filtersView : "$this->template/$this->filtersView";
 
         return $this->render( $filtersView, [ 'widget' => $this ] );
 	}
 
 	public function renderBulk( $config = [] ) {
 
-		$bulkView = CodeGenUtil::isAbsolutePath( $this->bulkView ) ? $this->bulkView : "$this->template/$this->bulkView";
+		$bulkView = UrlUtil::isAbsolutePath( $this->bulkView ) ? $this->bulkView : "$this->template/$this->bulkView";
 
         return $this->render( $bulkView, [ 'widget' => $this ] );
 	}
 
 	public function renderImport( $config = [] ) {
 
-		$importView = CodeGenUtil::isAbsolutePath( $this->importView ) ? $this->importView : "$this->template/$this->importView";
+		$importView = UrlUtil::isAbsolutePath( $this->importView ) ? $this->importView : "$this->template/$this->importView";
 
         return $this->render( $importView, [ 'widget' => $this ] );
 	}
 
 	public function renderExport( $config = [] ) {
 
-		$exportView = CodeGenUtil::isAbsolutePath( $this->exportView ) ? $this->exportView : "$this->template/$this->exportView";
+		$exportView = UrlUtil::isAbsolutePath( $this->exportView ) ? $this->exportView : "$this->template/$this->exportView";
 
         return $this->render( $exportView, [ 'widget' => $this ] );
 	}
 
 	public function renderReport( $config = [] ) {
 
-		$reportView = CodeGenUtil::isAbsolutePath( $this->reportView ) ? $this->reportView : "$this->template/$this->reportView";
+		$reportView = UrlUtil::isAbsolutePath( $this->reportView ) ? $this->reportView : "$this->template/$this->reportView";
 
         return $this->render( $reportView, [ 'widget' => $this ] );
 	}
 
 	public function renderHead( $config = [], $html = [] ) {
 
-		$headView = CodeGenUtil::isAbsolutePath( $this->headView ) ? $this->headView : "$this->template/$this->headView";
+		$headView = UrlUtil::isAbsolutePath( $this->headView ) ? $this->headView : "$this->template/$this->headView";
 
         return $this->render( $headView, [
 			'widget' => $this, 'sortHtml' => $html[ 'sortHtml' ], 'searchHtml' => $html[ 'searchHtml' ],
@@ -346,7 +346,7 @@ abstract class GridWidget extends Widget {
 
 	public function renderOptions( $config = [], $html = [] ) {
 
-		$optionsView = CodeGenUtil::isAbsolutePath( $this->optionsView ) ? $this->optionsView : "$this->template/$this->optionsView";
+		$optionsView = UrlUtil::isAbsolutePath( $this->optionsView ) ? $this->optionsView : "$this->template/$this->optionsView";
 
         return $this->render( $optionsView, [
 			'widget' => $this, 'sortHtml' => $html[ 'sortHtml' ], 'searchHtml' => $html[ 'searchHtml' ],
@@ -356,35 +356,35 @@ abstract class GridWidget extends Widget {
 
 	public function renderHeader( $config = [] ) {
 
-		$headerView = CodeGenUtil::isAbsolutePath( $this->headerView ) ? $this->headerView : "$this->template/$this->headerView";
+		$headerView = UrlUtil::isAbsolutePath( $this->headerView ) ? $this->headerView : "$this->template/$this->headerView";
 
         return $this->render( $headerView, [ 'widget' => $this ] );
 	}
 
 	public function renderData( $config = [] ) {
 
-		$dataView = CodeGenUtil::isAbsolutePath( $this->dataView ) ? $this->dataView : "$this->template/$this->dataView";
+		$dataView = UrlUtil::isAbsolutePath( $this->dataView ) ? $this->dataView : "$this->template/$this->dataView";
 
         return $this->render( $dataView, [ 'widget' => $this ] );
 	}
 
 	public function renderList( $config = [] ) {
 
-		$listView = CodeGenUtil::isAbsolutePath( $this->listView ) ? $this->listView : "$this->template/$this->listView";
+		$listView = UrlUtil::isAbsolutePath( $this->listView ) ? $this->listView : "$this->template/$this->listView";
 
         return $this->render( $listView, [ 'widget' => $this ] );
 	}
 
 	public function renderCards( $config = [] ) {
 
-		$cardView = CodeGenUtil::isAbsolutePath( $this->cardView ) ? $this->cardView : "$this->template/$this->cardView";
+		$cardView = UrlUtil::isAbsolutePath( $this->cardView ) ? $this->cardView : "$this->template/$this->cardView";
 
         return $this->render( $cardView, [ 'widget' => $this ] );
 	}
 
 	public function renderFooter( $config = [] ) {
 
-		$footerView = CodeGenUtil::isAbsolutePath( $this->footerView ) ? $this->footerView : "$this->template/$this->footerView";
+		$footerView = UrlUtil::isAbsolutePath( $this->footerView ) ? $this->footerView : "$this->template/$this->footerView";
 
         return $this->render( $footerView, [ 'widget' => $this ] );
 	}

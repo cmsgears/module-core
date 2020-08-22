@@ -16,7 +16,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [],
 	'title' => 'Option Groups', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [
-		'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'content' => 'Content'
+		'name' => 'Name', 'title' => 'Title', 'desc' => 'Description'
 	],
 	'sortColumns' => [
 		'name' => 'Name', 'title' => 'Title'
@@ -25,8 +25,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
 		'title' => [ 'title' => 'Title', 'type' => 'text' ],
-		'desc' => [ 'title' => 'Description', 'type' => 'text' ],
-		'content' => [ 'title' => 'Content', 'type' => 'text' ],
+		'desc' => [ 'title' => 'Description', 'type' => 'text' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
 		'model' => [ 'delete' => 'Delete' ]

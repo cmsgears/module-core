@@ -16,7 +16,8 @@ $themeTemplates		= '@themes/admin/views/templates';
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ 'submits' => $submits ],
 	'title' => 'Forms', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [
-		'name' => 'Name', 'title' => 'Title', 'desc' => 'Description'
+		'name' => 'Name', 'title' => 'Title',
+		'desc' => 'Description', 'content' => 'Content'
 	],
 	'sortColumns' => [
 		'name' => 'Name', 'title' => 'Title', 'status' => 'Status',
@@ -36,7 +37,9 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'failure' => [ 'title' => 'Failure Message', 'type' => 'text' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		'status' => [ 'block' => 'Block', 'active' => 'Activate' ],
+		'status' => [
+			'activate' => 'Activate', 'block' => 'Block'
+		],
 		'model' => [ 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,

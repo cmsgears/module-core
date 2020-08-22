@@ -32,7 +32,10 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'active' => [ 'title' => 'Active', 'type' => 'flag' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		'model' => [ 'delete' => 'Delete' ]
+		'model' => [
+			'activate' => 'Activate', 'disable' => 'Disable',
+			'delete' => 'Delete'
+		]
 	],
 	'header' => false, 'footer' => true,
 	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x4', 'x6', null, null, null ] ],

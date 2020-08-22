@@ -88,7 +88,7 @@ class OptionController extends \cmsgears\core\admin\controllers\base\Controller 
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->model = $this->modelService->create( $model );
+			$this->model = $this->modelService->create( $model, [ 'admin' => true ] );
 
 			return $this->redirect( "all?pid=$pid" );
 		}
@@ -108,7 +108,7 @@ class OptionController extends \cmsgears\core\admin\controllers\base\Controller 
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->model = $this->modelService->update( $model );
+				$this->model = $this->modelService->update( $model, [ 'admin' => true ] );
 
 				return $this->redirect( $this->returnUrl );
 			}
@@ -137,7 +137,7 @@ class OptionController extends \cmsgears\core\admin\controllers\base\Controller 
 
 					$this->model = $model;
 
-					$this->modelService->delete( $model );
+					$this->modelService->delete( $model, [ 'admin' => true ] );
 
 					return $this->redirect( $this->returnUrl );
 				}

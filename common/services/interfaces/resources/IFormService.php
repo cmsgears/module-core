@@ -24,8 +24,8 @@ use cmsgears\core\common\services\interfaces\resources\IData;
  *
  * @since 1.0.0
  */
-interface IFormService extends IResourceService, IData, IGridCacheable, IMultiSite,
-	INameType, ISlugType, IVisibility {
+interface IFormService extends IResourceService, IApproval, IData, IGridCacheable,
+	IMultiSite, INameType, ISlugType, IVisibility {
 
 	// Data Provider ------
 

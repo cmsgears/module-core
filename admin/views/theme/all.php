@@ -16,7 +16,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
 	'title' => 'Themes', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [
-		'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'content' => 'Content'
+		'name' => 'Name', 'title' => 'Title', 'desc' => 'Description'
 	],
 	'sortColumns' => [
 		'name' => 'Name', 'title' => 'Title',

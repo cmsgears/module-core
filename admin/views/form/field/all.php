@@ -13,7 +13,7 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 $themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
-	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => "create?fid=$formId", 'data' => [ ],
+	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => "create?pid=$formId", 'data' => [ ],
 	'title' => 'Form Fields', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [
 		'name' => 'Name', 'label' => 'Label',

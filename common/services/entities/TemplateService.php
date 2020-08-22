@@ -377,7 +377,7 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 		$preview = isset( $config[ 'preview' ] ) ? $config[ 'preview' ] : null;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'name', 'slug', 'icon', 'title', 'description', 'renderer', 'fileRender',
+			'previewId', 'name', 'slug', 'icon', 'title', 'description', 'renderer', 'fileRender',
 			'layout', 'layoutGroup', 'viewPath', 'view', 'htmlOptions', 'help', 'message', 'content',
 			'classPath', 'dataPath', 'dataForm', 'attributesPath', 'attributesForm',
 			'configPath', 'configForm', 'settingsPath', 'settingsForm'

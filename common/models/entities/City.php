@@ -107,7 +107,7 @@ class City extends \cmsgears\core\common\models\base\Entity implements IName {
 			[ [ 'countryId', 'name' ], 'required' ],
 			[ [ 'id' ], 'safe' ],
 			// Unique
-			//[ [ 'zone', 'iso' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'name', 'zone', 'iso' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			//[ [ 'zone', 'iso' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'name', 'zone', 'iso' ] ],
 			// Text Limit
 			[ 'code', 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ [ 'type', 'postal' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],

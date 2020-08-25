@@ -165,7 +165,10 @@ abstract class ModelObjectController extends Controller {
 					'avatar' => $avatar, 'banner' => $banner, 'video' => $video
 				]);
 
-				return $this->redirect( $this->returnUrl );
+				if( $this->model ) {
+
+					return $this->redirect( $this->returnUrl );
+				}
 			}
 
 			return $this->render( 'create', [

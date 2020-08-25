@@ -91,7 +91,8 @@ abstract class TemplateController extends CrudController {
 
 		$model = $this->modelService->getModelObject();
 
-		$model->type = $this->type;
+		$model->siteId	= Yii::$app->core->siteId;
+		$model->type	= $this->type;
 
 		$preview = File::loadFile( null, 'Banner' );
 
@@ -99,7 +100,10 @@ abstract class TemplateController extends CrudController {
 
 			$this->model = $this->modelService->add( $model, [ 'admin' => true, 'preview' => $preview ] );
 
-			return $this->redirect( 'all' );
+			if( $this->model ) {
+
+				return $this->redirect( 'all' );
+			}
 		}
 
 		return $this->render( 'create', [

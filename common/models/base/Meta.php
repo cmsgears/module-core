@@ -94,7 +94,7 @@ abstract class Meta extends Resource implements IData, IMeta {
 			[ [ 'modelId', 'name' ], 'required' ],
 			[ [ 'id', 'value' ], 'safe' ],
 			// Unique
-			[ 'name', 'unique', 'targetAttribute' => [ 'modelId', 'type', 'name' ], 'comboNotUnique' => 'Attribute with the same name and type already exist.' ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'modelId', 'type', 'name' ] ],
 			// Text Limit
 			[ [ 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

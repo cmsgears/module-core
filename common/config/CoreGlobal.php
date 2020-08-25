@@ -297,6 +297,8 @@ class CoreGlobal {
 	const ERROR_SESSION_EXPIRED	= 'sessionExpiredError';
 	const ERROR_TOKEN_EXPIRED	= 'tokenExpiredError';
 	const ERROR_PARENT_CHAIN	= 'parentChainError';
+	const ERROR_NAME			= 'nameError';
+	const ERROR_SLUG			= 'slugError';
 
 	// Errors - Comments
 	const ERROR_NO_COMMENTS	= 'noCommentsError';

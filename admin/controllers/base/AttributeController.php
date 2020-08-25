@@ -132,7 +132,10 @@ abstract class AttributeController extends Controller {
 
 				$this->model = $this->modelService->create( $model );
 
-				return $this->redirect( "all?pid=$parent->id" );
+				if( $this->model ) {
+
+					return $this->redirect( "all?pid=$parent->id" );
+				}
 			}
 
 			return $this->render( 'create', [

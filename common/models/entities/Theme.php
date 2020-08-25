@@ -139,6 +139,7 @@ class Theme extends \cmsgears\core\common\models\base\Entity implements IAuthor,
 			[ [ 'id', 'content', 'gridCache' ], 'safe' ],
 			// Unique
 			[ 'name', 'unique' ],
+			[ 'slug', 'unique' ],
 			// Text Limit
 			[ [ 'type', 'renderer' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],

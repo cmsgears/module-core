@@ -127,7 +127,10 @@ class MemberController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 			$this->model = $this->modelService->create( $model, [ 'admin' => true ] );
 
-			return $this->redirect( "all?sid=$siteId" );
+			if( $this->model ) {
+
+				return $this->redirect( "all?sid=$siteId" );
+			}
 		}
 
 		$roleMap = $this->roleService->getIdNameMapByType( $this->roleType );

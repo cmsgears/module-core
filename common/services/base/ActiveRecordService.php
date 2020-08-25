@@ -12,6 +12,7 @@ namespace cmsgears\core\common\services\base;
 // Yii Imports
 use Yii;
 use yii\base\Component;
+use yii\base\Exception;
 use yii\data\Sort;
 use yii\db\Expression;
 use yii\db\Query;
@@ -343,7 +344,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		// Handle cases where proper validation is not applied
 		else if( YII_DEBUG ) {
 
-			var_dump( $model->getErrors() );
+			throw new Exception( 'Failed to create the model.' );
 		}
 
 		return false;

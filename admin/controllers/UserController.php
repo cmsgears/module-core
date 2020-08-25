@@ -210,24 +210,29 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 					'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video
 				]);
 
-				$member->userId = $this->model->id;
+				if( $this->model ) {
 
-				// Add User to current Site
-				$member = $this->memberService->create( $member );
+					$this->model->refresh();
 
-				// Default Settings
-				$this->metaService->initByNameType( $this->model->id, 'receive_email', 'notification', ModelMeta::VALUE_TYPE_FLAG );
-				$this->metaService->initByNameType( $this->model->id, 'receive_email', 'reminder', ModelMeta::VALUE_TYPE_FLAG );
+					$member->userId = $this->model->id;
 
-				if( $this->model && $member ) {
+					// Add User to current Site
+					$member = $this->memberService->create( $member );
 
-					// Load User Permissions
-					$this->model->loadPermissions();
+					// Default Settings
+					$this->metaService->initByNameType( $this->model->id, 'receive_email', 'notification', ModelMeta::VALUE_TYPE_FLAG );
+					$this->metaService->initByNameType( $this->model->id, 'receive_email', 'reminder', ModelMeta::VALUE_TYPE_FLAG );
 
-					// Send Account Mail
-					Yii::$app->coreMailer->sendCreateUserMail( $this->model );
+					if( $this->model && $member ) {
 
-					return $this->redirect( 'all' );
+						// Load User Permissions
+						$this->model->loadPermissions();
+
+						// Send Account Mail
+						Yii::$app->coreMailer->sendCreateUserMail( $this->model );
+
+						return $this->redirect( 'all' );
+					}
 				}
 			}
 		}
@@ -284,11 +289,10 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 					'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video
 				]);
 
+				$this->model->refresh();
+
 				// Update Site Member
 				$this->memberService->update( $member );
-
-				// Refresh User
-				$model->refresh();
 
 				// Check Status Change
 				$this->modelService->checkStatusChange( $model, $oldStatus, [ 'users' => [ $model->id ] ] );

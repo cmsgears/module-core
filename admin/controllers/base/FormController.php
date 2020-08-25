@@ -130,6 +130,7 @@ abstract class FormController extends Controller {
 
 		$model = new $modelClass;
 
+		$model->siteId		= Yii::$app->core->siteId;
 		$model->type		= $this->type;
 		$model->visibility	= $modelClass::VISIBILITY_PUBLIC;
 		$model->captcha		= false;
@@ -138,7 +139,10 @@ abstract class FormController extends Controller {
 
 			$this->model = $this->modelService->create( $model );
 
-			return $this->redirect( $this->returnUrl );
+			if( $this->model ) {
+
+				return $this->redirect( $this->returnUrl );
+			}
 		}
 
 		$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );

@@ -89,9 +89,9 @@ abstract class ModelMapper extends Mapper {
 			[ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
 			[ 'id', 'safe' ],
 			// Unique - Disabled to allow multiple mappings based on active and type columns
-			//[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
-			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'on' => 'single', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
-			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'on' => 'multiType', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType', 'type' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			//[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ] ],
+			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'on' => 'single', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ] ],
+			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'on' => 'multiType', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType', 'type' ] ],
 			// Text Limit
 			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			// Other

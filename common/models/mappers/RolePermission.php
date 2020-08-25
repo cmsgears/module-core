@@ -69,7 +69,7 @@ class RolePermission extends \cmsgears\core\common\models\base\Mapper {
 			// Required, Safe
 			[ [ 'roleId', 'permissionId' ], 'required' ],
 			// Unique
-			[ [ 'roleId', 'permissionId' ], 'unique', 'targetAttribute' => [ 'roleId', 'permissionId' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ [ 'roleId', 'permissionId' ], 'unique', 'targetAttribute' => [ 'roleId', 'permissionId' ] ],
 			// Other
 			[ [ 'roleId', 'permissionId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
 		];

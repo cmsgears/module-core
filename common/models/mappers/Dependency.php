@@ -73,7 +73,7 @@ class Dependency extends \cmsgears\core\common\models\base\Mapper {
 			// Required, Safe
 			[ [ 'sourceId', 'targetId', 'sourceType', 'targetType' ], 'required' ],
 			// Unique
-			[ [ 'sourceId', 'targetId', 'sourceType', 'targetType' ], 'unique', 'targetAttribute' => [ 'sourceId', 'targetId', 'sourceType', 'targetType' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ [ 'sourceId', 'targetId', 'sourceType', 'targetType' ], 'unique', 'targetAttribute' => [ 'sourceId', 'targetId', 'sourceType', 'targetType' ] ],
 			// Text Limit
 			[ [ 'sourceType', 'targetType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			// Other

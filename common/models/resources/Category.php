@@ -146,13 +146,13 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel imp
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'name' ], 'required' ],
+			[ [ 'siteId', 'name' ], 'required' ],
 			[ [ 'id', 'htmlOptions', 'content' ], 'safe' ],
 			// Unique
 			// Notes: disabled it in order to allow sub categories having same name as parent, but with different slug.
-			// It can be enable based on project needs by extending the model and service.
-			//[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
-			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'slug', 'type' ] ],
+			// It can be enabled based on project needs by extending the model and service.
+			// 'name', 'unique', 'targetAttribute' => [ 'siteId', 'name', 'type' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NAME ) ],
+			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'type', 'slug' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SLUG ) ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'icon', 'texture' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

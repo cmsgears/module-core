@@ -84,9 +84,9 @@ class Region extends \cmsgears\core\common\models\base\Entity implements IName {
 			[ [ 'countryId', 'provinceId', 'name' ], 'required' ],
 			[ [ 'id' ], 'safe' ],
 			// Unique
-			[ [ 'code' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'code' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
-			[ [ 'iso' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'iso' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
-			[ [ 'name' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ 'code', 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'code' ] ],
+			[ 'iso', 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'iso' ] ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'name' ] ],
 			// Text Limit
 			[ [ 'code', 'iso' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],

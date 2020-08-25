@@ -164,11 +164,11 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IApp
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'name' ], 'required' ],
+			[ [ 'siteId', 'name' ], 'required' ],
 			[ [ 'id', 'content', 'gridCache' ], 'safe' ],
 			// Unique
 			[ 'code', 'unique' ],
-			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
+			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'slug' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SLUG ) ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'code', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

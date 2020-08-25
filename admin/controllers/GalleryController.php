@@ -144,13 +144,17 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 		$model = $this->modelService->getModelObject();
 
-		$model->type = $this->type;
+		$model->siteId	= Yii::$app->core->siteId;
+		$model->type	= $this->type;
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
 			$this->model = $this->modelService->create( $model, [ 'admin' => true ] );
 
-			return $this->redirect( 'all' );
+			if( $this->model ) {
+
+				return $this->redirect( 'all' );
+			}
 		}
 
 		$templatesMap = $this->templateService->getIdNameMapByType( CoreGlobal::TYPE_GALLERY, [ 'default' => true ] );

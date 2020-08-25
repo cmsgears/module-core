@@ -153,6 +153,7 @@ class Site extends \cmsgears\core\common\models\base\Entity implements IAuthor, 
 			[ [ 'id', 'content', 'gridCache' ], 'safe' ],
 			// Unique
 			[ 'name', 'unique' ],
+			[ 'slug', 'unique' ],
 			// Text Limit
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],

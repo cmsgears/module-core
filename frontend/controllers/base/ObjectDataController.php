@@ -157,7 +157,8 @@ abstract class ObjectDataController extends \cmsgears\core\frontend\controllers\
 
 		$model = new $modelClass;
 
-		$model->type = $this->type;
+		$model->siteId	= Yii::$app->core->siteId;
+		$model->type	= $this->type;
 
 		$avatar	= File::loadFile( null, 'Avatar' );
 		$banner	= File::loadFile( null, 'Banner' );

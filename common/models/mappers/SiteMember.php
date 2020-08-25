@@ -105,7 +105,7 @@ class SiteMember extends \cmsgears\core\common\models\base\Mapper implements IFe
 			[ [ 'siteId', 'roleId' ], 'required' ],
 			[ 'name', 'safe' ],
 			// Unique
-			[ [ 'siteId', 'userId' ], 'unique', 'targetAttribute' => [ 'siteId', 'userId' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ 'userId', 'unique', 'targetAttribute' => [ 'siteId', 'userId' ], 'message' => 'Site Member already exists.' ],
 			// Other
 			[ [ 'pinned', 'featured', 'popular' ], 'boolean' ],
 			[ [ 'siteId', 'userId', 'roleId' ], 'number', 'integerOnly' => true, 'min' => 1 ],

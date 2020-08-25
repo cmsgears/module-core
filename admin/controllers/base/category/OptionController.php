@@ -90,7 +90,10 @@ class OptionController extends \cmsgears\core\admin\controllers\base\Controller 
 
 			$this->model = $this->modelService->create( $model, [ 'admin' => true ] );
 
-			return $this->redirect( "all?pid=$pid" );
+			if( $this->model ) {
+
+				return $this->redirect( "all?pid=$pid" );
+			}
 		}
 
 		return $this->render( 'create', [

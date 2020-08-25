@@ -165,9 +165,9 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 			[ [ 'name', 'type' ], 'required' ],
 			[ [ 'id', 'htmlOptions', 'help', 'message', 'content', 'gridCache' ], 'safe' ],
 			// Unique
-			// Need both slug and name unique
-			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'slug' ] ],
-			[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'name' ] ],
+			// Unique name and slug
+			[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'name' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NAME ) ],
+			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'slug' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SLUG ) ],
 			// Text Limit
 			[ [ 'type', 'renderer', 'layout' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'icon', 'view' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

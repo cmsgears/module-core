@@ -148,7 +148,10 @@ abstract class ModelAddressController extends Controller {
 					'parentId' => $parent->id, 'parentType' => $parentType, 'type' => $model->type
 				]);
 
-				return $this->redirect( $this->returnUrl );
+				if( $this->model ) {
+
+					return $this->redirect( $this->returnUrl );
+				}
 			}
 
 			$countriesMap	= $this->countryService->getIdNameMap( [ 'default' => true ] );

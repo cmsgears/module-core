@@ -174,13 +174,9 @@ abstract class CommentController extends Controller {
 
 			$this->model = $this->modelService->create( $model, [ 'admin' => true ] );
 
-			if( isset( $pid ) ) {
+			if( $this->model ) {
 
-				return $this->redirect( "all?pid=$pid" );
-			}
-			else {
-
-				return $this->redirect( 'all' );
+				return isset( $pid ) ? $this->redirect( "all?pid=$pid" ) : $this->redirect( 'all' );
 			}
 		}
 

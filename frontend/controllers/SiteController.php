@@ -234,9 +234,12 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 			if( !isset( $siteMember ) ) {
 
-				$this->siteMemberService->create( $user );
+				$siteMember = $this->siteMemberService->create( $user );
 
-				$this->checkHome();
+				if( $siteMember ) {
+
+					$this->checkHome();
+				}
 			}
 		}
 

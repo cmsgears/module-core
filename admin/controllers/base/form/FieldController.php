@@ -132,9 +132,12 @@ class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->modelService->create( $model );
+			$this->model = $this->modelService->create( $model );
 
-			return $this->redirect( $this->returnUrl );
+			if( $this->model ) {
+
+				return $this->redirect( $this->returnUrl );
+			}
 		}
 
 		return $this->render( 'create', [

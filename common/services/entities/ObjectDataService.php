@@ -11,6 +11,7 @@ namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
 use Yii;
+use yii\base\Exception;
 use yii\data\Sort;
 use yii\helpers\ArrayHelper;
 
@@ -536,7 +537,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	public function add( $model, $config = [] ) {
 
-		$this->register( $model, $config );
+		return $this->register( $model, $config );
 	}
 
 	public function register( $model, $config = [] ) {
@@ -559,15 +560,10 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 			$this->copyTemplate( $model, $config );
 
-			// Create Model
-			$model = $this->create( $model, $config );
-
-			// Refresh Model
-			$model->Refresh();
-
 			// Create Gallery
 			if( isset( $gallery ) ) {
 
+				$gallery->siteId	= $model->siteId;
 				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
 
@@ -576,6 +572,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 			else if( $addGallery ) {
 
 				$gallery = $galleryService->createByParams([
+					'siteId' => $model->siteId,
 					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
 					'name' => $model->name, 'title' => $model->title
 				]);
@@ -585,9 +582,10 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 			if( isset( $gallery ) ) {
 
 				$model->galleryId = $gallery->id;
-
-				$model->update();
 			}
+
+			// Create Model
+			$model = $this->create( $model, $config );
 
 			$transaction->commit();
 		}

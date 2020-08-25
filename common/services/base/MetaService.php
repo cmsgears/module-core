@@ -189,6 +189,7 @@ abstract class MetaService extends ResourceService implements IMetaService {
 		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'name' => "$modelTable.name",
 			'label' => "$modelTable.label",
+			'active' => "$modelTable.active",
 			'type' => "$modelTable.type",
 			'vtype' => "$modelTable.valueType",
 			'value' => "$modelTable.value"

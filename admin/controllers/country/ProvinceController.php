@@ -110,7 +110,10 @@ class ProvinceController extends \cmsgears\core\admin\controllers\base\Controlle
 
 			$this->model = $this->modelService->create( $model );
 
-			return $this->redirect( "all?cid=$cid" );
+			if( $this->model ) {
+
+				return $this->redirect( "all?cid=$cid" );
+			}
 		}
 
 		return $this->render( 'create', [

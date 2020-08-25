@@ -135,6 +135,7 @@ abstract class ObjectDataController extends CrudController {
 
 		$model = new $modelClass;
 
+		$model->siteId		= Yii::$app->core->siteId;
 		$model->type		= $this->type;
 		$model->backend		= $this->backend;
 		$model->frontend	= $this->frontend;
@@ -150,7 +151,10 @@ abstract class ObjectDataController extends CrudController {
 				'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video
 			]);
 
-			return $this->redirect( 'all' );
+			if( $this->model ) {
+
+				return $this->redirect( 'all' );
+			}
 		}
 
 		$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );

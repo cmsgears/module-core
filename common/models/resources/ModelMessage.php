@@ -140,7 +140,7 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'siteId', 'parentId', 'parentType', 'content' ], 'required' ],
+			[ [ 'parentId', 'parentType', 'content' ], 'required' ],
 			[ [ 'id', 'content', 'gridCache' ], 'safe' ],
 			// Text Limit
 			[ [ 'parentType', 'type', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],

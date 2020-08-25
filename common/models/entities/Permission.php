@@ -138,7 +138,8 @@ class Permission extends \cmsgears\core\common\models\base\Entity implements IAu
 			[ [ 'name' ], 'required' ],
 			[ [ 'id', 'gridCache' ], 'safe' ],
 			// Unique
-			[ 'name', 'unique', 'targetAttribute' => [ 'type', 'name' ] ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'type', 'name' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NAME ) ],
+			[ 'slug', 'unique' ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

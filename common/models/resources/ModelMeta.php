@@ -91,7 +91,7 @@ class ModelMeta extends \cmsgears\core\common\models\base\ModelResource implemen
 			[ [ 'parentId', 'parentType', 'name' ], 'required' ],
 			[ [ 'id', 'value' ], 'safe' ],
 			// Unique
-			[ 'name', 'unique', 'targetAttribute' => [ 'parentId', 'parentType', 'type', 'name' ], 'comboNotUnique' => 'Attribute with the same name and type already exist.' ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'parentId', 'parentType', 'type', 'name' ], 'message' => 'Attribute with the same name and type already exist.' ],
 			// Text Limit
 			[ [ 'parentType', 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

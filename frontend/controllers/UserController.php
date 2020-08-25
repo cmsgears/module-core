@@ -265,10 +265,13 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 			// Create/Update Address
 			$address = $this->addressService->createOrUpdate( $address );
 
-			// Create Mapping
-			$modelAddress = $this->modelAddressService->activateByModelId( $user->id, CoreGlobal::TYPE_USER, $address->id, $ctype );
+			if( $address ) {
 
-			return $this->refresh();
+				// Create Mapping
+				$this->modelAddressService->activateByModelId( $user->id, CoreGlobal::TYPE_USER, $address->id, $ctype );
+
+				return $this->refresh();
+			}
 		}
 
 		$countryMap		= Yii::$app->factory->get( 'countryService' )->getIdNameMap();

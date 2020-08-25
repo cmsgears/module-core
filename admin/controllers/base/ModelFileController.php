@@ -150,7 +150,10 @@ abstract class ModelFileController extends Controller {
 					'model' => $model
 				]);
 
-				return $this->redirect( $this->returnUrl );
+				if( $this->model ) {
+
+					return $this->redirect( $this->returnUrl );
+				}
 			}
 
 			return $this->render( 'create', [

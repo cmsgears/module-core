@@ -70,6 +70,8 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::ERROR_SESSION_EXPIRED => 'Your session expired.',
 		CoreGlobal::ERROR_TOKEN_EXPIRED => 'Your token expired.',
 		CoreGlobal::ERROR_PARENT_CHAIN => 'A model cannot be parent of itself.',
+		CoreGlobal::ERROR_NAME => 'The name {value} has already been taken.',
+		CoreGlobal::ERROR_SLUG => 'The slug {value} has already been taken.',
 
 		// Errors - Comments
 		CoreGlobal::ERROR_NO_COMMENTS => 'Comments are not allowed.',

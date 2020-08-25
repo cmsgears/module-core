@@ -116,7 +116,10 @@ class SitesController extends \cmsgears\core\admin\controllers\base\CrudControll
 				'admin' => true, 'avatar' => $avatar, 'banner' => $banner
 			]);
 
-			return $this->redirect( 'all' );
+			if( $this->model ) {
+
+				return $this->redirect( 'all' );
+			}
 		}
 
 		$themesMap = $this->themeService->getIdNameMap( [ 'default' => true ] );

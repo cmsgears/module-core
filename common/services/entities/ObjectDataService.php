@@ -680,6 +680,9 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 					Yii::$app->factory->get( 'galleryService' )->delete( $model->gallery );
 				}
 
+				// Commit
+				$transaction->commit();
+
 				// Delete model
 				return parent::delete( $model, $config );
 			}

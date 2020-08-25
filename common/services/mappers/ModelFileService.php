@@ -15,6 +15,8 @@ use yii\data\Sort;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\core\common\services\interfaces\mappers\IModelFileService;
 

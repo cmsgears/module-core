@@ -816,6 +816,9 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 				// Delete Notifications
 				Yii::$app->eventManager->deleteNotificationsByUserId( $model->id );
 
+				// Commit
+				$transaction->commit();
+
 				// Delete model
 				return parent::delete( $model, $config );
 			}

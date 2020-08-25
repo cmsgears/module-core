@@ -18,6 +18,7 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\core\common\services\interfaces\resources\IFormService;
 
 use cmsgears\core\common\services\traits\base\ApprovalTrait;
@@ -57,6 +58,8 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 
 	// Protected --------------
 
+	protected $fileService;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
@@ -70,6 +73,13 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 	use VisibilityTrait;
 
 	// Constructor and Initialisation ------------------------------
+
+	public function __construct( IFileService $fileService, $config = [] ) {
+
+		$this->fileService = $fileService;
+
+		parent::__construct( $config );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -388,6 +398,9 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 
 				// Delete Fields
 				Yii::$app->factory->get( 'formFieldService' )->deleteByFormId( $model->id );
+
+				// Commit
+				$transaction->commit();
 
 				// Delete model
 				return parent::delete( $model, $config );

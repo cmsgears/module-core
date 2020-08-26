@@ -213,6 +213,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_REGION => 'Region',
 		CoreGlobal::FIELD_COUNTRY => 'Country',
 		CoreGlobal::FIELD_CATEGORY => 'Category',
+		CoreGlobal::FIELD_OPTION_GROUP => 'Option Group',
 		CoreGlobal::FIELD_OPTION => 'Option',
 		CoreGlobal::FIELD_FILE => 'File',
 		CoreGlobal::FIELD_TAG => 'Tag',

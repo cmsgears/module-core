@@ -263,7 +263,7 @@ class FormFieldService extends \cmsgears\core\common\services\base\ResourceServi
 		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'categoryId', 'name', 'label', 'type', 'compress', 'validators',
+			'optionGroupId', 'name', 'label', 'type', 'compress', 'validators',
 			'order', 'icon', 'htmlOptions', 'content'
 		];
 

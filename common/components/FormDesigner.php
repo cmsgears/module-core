@@ -116,9 +116,17 @@ class FormDesigner extends \yii\base\Component {
 
 				return $this->getSelectHtml( $form, $model, $config, $key, $field );
 			}
-			case FormField::TYPE_RATING : {
+			case FormField::TYPE_RATING: {
 
 				return $this->getRatingHtml( $form, $model, $config, $key, $field );
+			}
+			case FormField::TYPE_INTL_TEL_MOBILE: {
+
+				return $this->getIntlTelMobileHtml( $form, $model, $config, $key, $field );
+			}
+			case FormField::TYPE_INTL_TEL_PHONE: {
+
+				return $this->getIntlTelPhoneHtml( $form, $model, $config, $key, $field );
 			}
 		}
 	}
@@ -258,9 +266,9 @@ class FormDesigner extends \yii\base\Component {
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
-		if( isset( $field->categoryId ) ) {
+		if( isset( $field->optionGroupId ) ) {
 
-			$items = $this->optionService->getActiveValueNameMapByCategoryId( $field->categoryId );
+			$items = $this->optionService->getActiveValueNameMapByCategoryId( $field->optionGroupId );
 		}
 
 		$fieldHtml = $form->field( $model, $key, $wrapperOptions )->dropDownList( $items, $fieldOptions );
@@ -359,6 +367,60 @@ class FormDesigner extends \yii\base\Component {
 		return $ratingHtml;
 	}
 
+	protected function getIntlTelMobileHtml( $form, $model, $config, $key, $field ) {
+
+		$htmlOptions	= $field->htmlOptions;
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
+		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
+		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
+
+		$value = $model->$key;
+
+		$fieldName	= StringHelper::baseName( get_class( $model ) ) . '[' . $key . ']';
+		$fieldHtml	= Html::input( 'text', 'mobile', $value, $fieldOptions );
+		$hiddenHtml	= Html::input( 'hidden', $fieldName, $value, [ 'class' => 'intl-tel-number' ] );
+
+		if( $config[ 'label' ] ) {
+
+			$fieldHtml = "<label>$field->label</label>$fieldHtml $hiddenHtml<div class=\"help-block\"></div>";
+		}
+		else {
+
+			$fieldHtml = "$fieldHtml $hiddenHtml<div class=\"help-block\"></div>";
+		}
+
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
+
+		return $fieldHtml;
+	}
+
+	protected function getIntlTelPhoneHtml( $form, $model, $config, $key, $field ) {
+
+		$htmlOptions	= $field->htmlOptions;
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
+		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
+		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
+
+		$value = $model->$key;
+
+		$fieldName	= StringHelper::baseName( get_class( $model ) ) . '[' . $key . ']';
+		$fieldHtml	= Html::input( 'text', 'phone', $value, $fieldOptions );
+		$hiddenHtml	= Html::input( 'hidden', $fieldName, $value, [ 'class' => 'intl-tel-number' ] );
+
+		if( $config[ 'label' ] ) {
+
+			$fieldHtml = "<label>$field->label</label>$fieldHtml $hiddenHtml<div class=\"help-block\"></div>";
+		}
+		else {
+
+			$fieldHtml = "$fieldHtml $hiddenHtml<div class=\"help-block\"></div>";
+		}
+
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
+
+		return $fieldHtml;
+	}
+
 	// == Apix Forms ===============
 
 	// TODO: Add icon support for apix fields
@@ -418,6 +480,14 @@ class FormDesigner extends \yii\base\Component {
 			case FormField::TYPE_DATE: {
 
 				return $this->getApixDateHtml( $config, $field, $value );
+			}
+			case FormField::TYPE_INTL_TEL_MOBILE: {
+
+				return $this->getApixIntlTelMobileHtml( $config, $field, $value );
+			}
+			case FormField::TYPE_INTL_TEL_PHONE: {
+
+				return $this->getApixIntlTelPhoneHtml( $config, $field, $value );
 			}
 		}
 	}
@@ -822,6 +892,56 @@ class FormDesigner extends \yii\base\Component {
 		}
 
 		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
+
+		return $fieldHtml;
+	}
+
+	protected function getApixIntlTelMobileHtml( $config, $field, $value ) {
+
+		$htmlOptions	= $field->htmlOptions;
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'form-group' ];
+		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
+		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
+
+		$modelName	= $config[ 'modelName' ];
+		$fieldHtml	= Html::input( 'text', 'mobile', $value, $fieldOptions );
+		$hiddenHtml	= Html::input( 'hidden', $modelName . "[$field->name]", $value, [ 'class' => 'intl-tel-number' ] );
+
+		if( $config[ 'label' ] ) {
+
+			$fieldHtml = "<label>$field->label</label>$fieldHtml $hiddenHtml<div class=\"help-block\"></div>";
+		}
+		else {
+
+			$fieldHtml = "$fieldHtml $hiddenHtml<div class=\"help-block\"></div>";
+		}
+
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
+
+		return $fieldHtml;
+	}
+
+	protected function getApixIntlTelPhoneHtml( $config, $field, $value ) {
+
+		$htmlOptions	= $field->htmlOptions;
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'form-group' ];
+		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
+		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
+
+		$modelName	= $config[ 'modelName' ];
+		$fieldHtml	= Html::input( 'text', 'phone', $value, $fieldOptions );
+		$hiddenHtml	= Html::input( 'hidden', $modelName . "[$field->name]", $value, [ 'class' => 'intl-tel-number' ] );
+
+		if( $config[ 'label' ] ) {
+
+			$fieldHtml = "<label>$field->label</label>$fieldHtml $hiddenHtml<div class=\"help-block\"></div>";
+		}
+		else {
+
+			$fieldHtml = "$fieldHtml $hiddenHtml<div class=\"help-block\"></div>";
+		}
+
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
 
 		return $fieldHtml;
 	}

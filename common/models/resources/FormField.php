@@ -29,6 +29,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  *
  * @property integer $id
  * @property integer $formId
+ * @property integer $optionGroupId
  * @property string $name
  * @property string $label
  * @property short $type
@@ -68,6 +69,8 @@ class FormField extends \cmsgears\core\common\models\base\Resource implements IC
 	const TYPE_RATING			=  90;
 	const TYPE_ICON				= 100;
 	const TYPE_DATE				= 110;
+	const TYPE_INTL_TEL_MOBILE	= 500;
+	const TYPE_INTL_TEL_PHONE	= 510;
 
 	// Public -----------------
 
@@ -84,7 +87,9 @@ class FormField extends \cmsgears\core\common\models\base\Resource implements IC
 		self::TYPE_SELECT => 'Select',
 		self::TYPE_RATING => 'Rating',
 		self::TYPE_ICON => 'Icon',
-		self::TYPE_DATE => 'Date'
+		self::TYPE_DATE => 'Date',
+		self::TYPE_INTL_TEL_MOBILE => 'Intl Tel Mobile',
+		self::TYPE_INTL_TEL_PHONE => 'Intl Tel Phone'
 	];
 
 	// Protected --------------
@@ -140,7 +145,7 @@ class FormField extends \cmsgears\core\common\models\base\Resource implements IC
 			[ 'name', 'alphanumu' ],
 			[ [ 'type', 'order' ], 'number', 'integerOnly' => true ],
 			[ [ 'compress', 'meta', 'active' ], 'boolean' ],
-			[ 'formId', 'number', 'integerOnly' => true, 'min' => 1 ]
+			[ [ 'formId', 'optionGroupId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 
 		// Trim Text
@@ -161,6 +166,7 @@ class FormField extends \cmsgears\core\common\models\base\Resource implements IC
 
 		return [
 			'formId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FORM ),
+			'optionGroupId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_OPTION_GROUP ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
@@ -193,6 +199,16 @@ class FormField extends \cmsgears\core\common\models\base\Resource implements IC
 	public function getForm() {
 
 		return $this->hasOne( Form::class, [ 'id' => 'formId' ] );
+	}
+
+	/**
+	 * Returns the option group associated with the field.
+	 *
+	 * @return Form
+	 */
+	public function getOptionGroup() {
+
+		return $this->hasOne( Category::class, [ 'id' => 'optionGroupId' ] );
 	}
 
 	/**

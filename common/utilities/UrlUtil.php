@@ -11,6 +11,11 @@ namespace cmsgears\core\common\utilities;
 
 class UrlUtil {
 
+	public static function getCurrent() {
+
+		return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+	}
+
 	public static function isAbsolutePath( $path, $alias = true ) {
 
 		if( $alias ) {

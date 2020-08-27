@@ -39,7 +39,7 @@ class UserExistFilter extends \yii\base\Behavior {
 		$action = $event->action->id;
 		$found	= false;
 
-		if(in_array( $value, $this->actions ) ) {
+		if( in_array( $action, $this->actions ) ) {
 
 			$found = true;
 		}

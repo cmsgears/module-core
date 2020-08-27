@@ -12,7 +12,7 @@ $logoUrl	= "$siteUrl/images/" . $siteProperties->getMailAvatar();
 $homeUrl	= $siteUrl;
 $siteBkg	= "$siteUrl/images/" . $siteProperties->getMailBanner();
 
-$user		= $model->owner ?? $model->creator;
+$user		= isset( $model->owner ) ? $model->owner : $model->creator;
 $name		= Html::encode( $user->getName() );
 $email		= Html::encode( $user->email );
 $modelName	= Html::encode( $model->getDisplayName() );

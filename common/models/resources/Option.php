@@ -97,7 +97,7 @@ class Option extends \cmsgears\core\common\models\base\Resource implements ICont
 			[ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'value', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
-			[ 'name', 'alphanumu' ],
+			//[ 'name', 'alphanumu' ],
 			[ [ 'active', 'input' ], 'boolean' ],
 			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ]

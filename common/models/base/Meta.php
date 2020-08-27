@@ -287,9 +287,11 @@ abstract class Meta extends Resource implements IData, IMeta {
 	 * @param integer $modelId Parent Id.
 	 * @return ModelMeta[] by parent id.
 	 */
-	public static function findByModelId( $modelId ) {
+	public static function findByModelId( $modelId, $config = [] ) {
 
-		return self::queryByModelId( $modelId )->all();
+		$order = isset( $config[ 'order' ] ) ? $config[ 'order' ] : 'id DESC';
+
+		return self::queryByModelId( $modelId )->orderBy( $order )->all();
 	}
 
 	/**
@@ -323,9 +325,11 @@ abstract class Meta extends Resource implements IData, IMeta {
 	 * @param string $type
 	 * @return ModelMeta[] by parent id and meta type.
 	 */
-	public static function findByType( $modelId, $type ) {
+	public static function findByType( $modelId, $type, $config = [] ) {
 
-		return self::queryByType( $modelId, $type )->all();
+		$order = isset( $config[ 'order' ] ) ? $config[ 'order' ] : 'id DESC';
+
+		return self::queryByType( $modelId, $type )->orderBy( $order )->all();
 	}
 
 	/**

@@ -150,7 +150,7 @@ class Site extends \cmsgears\core\common\models\base\Entity implements IAuthor, 
 		$rules = [
 			// Required, Safe
 			[ 'name', 'required' ],
-			[ [ 'id', 'content', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'content' ], 'safe' ],
 			// Unique
 			[ 'name', 'unique' ],
 			[ 'slug', 'unique' ],

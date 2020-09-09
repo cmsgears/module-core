@@ -162,7 +162,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\CrudContro
 		return $this->render( 'create', [
 			'model' => $model,
 			'visibilityMap' => Gallery::$visibilityMap,
-			'statusMap' => Gallery::$statusMap,
+			'statusMap' => Gallery::$subStatusMap,
 			'templatesMap' => $templatesMap
 		]);
 	}
@@ -191,7 +191,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\CrudContro
 			return $this->render( 'update', [
 				'model' => $model,
 				'visibilityMap' => Gallery::$visibilityMap,
-				'statusMap' => Gallery::$statusMap,
+				'statusMap' => Gallery::$subStatusMap,
 				'templatesMap' => $templatesMap
 			]);
 		}
@@ -220,7 +220,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\CrudContro
 			return $this->render( 'delete', [
 				'model' => $model,
 				'visibilityMap' => Gallery::$visibilityMap,
-				'statusMap' => Gallery::$statusMap,
+				'statusMap' => Gallery::$subStatusMap,
 				'templatesMap' => $templatesMap
 			]);
 		}

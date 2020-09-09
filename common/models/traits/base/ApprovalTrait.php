@@ -28,6 +28,9 @@ trait ApprovalTrait {
 
 	// Globals ----------------
 
+	/**
+	 * The default status map.
+	 */
 	public static $statusMap = [
 		IApproval::STATUS_NEW => 'New',
 		IApproval::STATUS_ACCEPTED => 'Accepted',
@@ -44,16 +47,41 @@ trait ApprovalTrait {
 		IApproval::STATUS_TERMINATED => 'Terminated'
 	];
 
+	/**
+	 * The sub status map.
+	 */
+	public static $subStatusMap = [
+		IApproval::STATUS_NEW => 'New',
+		IApproval::STATUS_SUBMITTED => 'Submitted',
+		IApproval::STATUS_REJECTED => 'Rejected',
+		IApproval::STATUS_RE_SUBMIT => 'Re Submitted',
+		IApproval::STATUS_APPROVED => 'Approved',
+		IApproval::STATUS_ACTIVE => 'Active',
+		IApproval::STATUS_FROJEN => 'Frozen',
+		IApproval::STATUS_UPLIFT_FREEZE => 'Uplift Frozen',
+		IApproval::STATUS_BLOCKED => 'Blocked',
+		IApproval::STATUS_UPLIFT_BLOCK => 'Uplift Block',
+		IApproval::STATUS_TERMINATED => 'Terminated'
+	];
+
+	/*
+	 * Minimum status map for App.
+	 */
 	public static $baseStatusMap = [
 		IApproval::STATUS_NEW => 'New',
 		IApproval::STATUS_ACTIVE => 'Active',
-		IApproval::STATUS_BLOCKED => 'Blocked'
+		IApproval::STATUS_BLOCKED => 'Blocked',
+		IApproval::STATUS_TERMINATED => 'Terminated'
 	];
 
+	/*
+	 * Minimum status map for Admin.
+	 */
 	public static $minStatusMap = [
 		IApproval::STATUS_NEW => 'New',
 		IApproval::STATUS_ACTIVE => 'Active',
 		IApproval::STATUS_BLOCKED => 'Blocked',
+		IApproval::STATUS_UPLIFT_BLOCK => 'Uplift Block',
 		IApproval::STATUS_TERMINATED => 'Terminated'
 	];
 
@@ -411,15 +439,55 @@ trait ApprovalTrait {
 	}
 
 	/**
-	 * The model owner can submit the model for limit removal in selected states i.e. new,
-	 * rejected, frozen or blocked. defined within this method.
+	 * The admin can accept the model in selected states defined within this method.
+	 *
+	 * @return boolean
+	 */
+	public function isAcceptable() {
+
+		return $this->status == IApproval::STATUS_NEW;
+	}
+
+	/**
+	 * The model owner can submit the model for limit removal in selected states defined within this method.
 	 *
 	 * @return boolean
 	 */
 	public function isSubmittable() {
 
-		return $this->isRegistration() || $this->status == IApproval::STATUS_REJECTED ||
-			$this->status == IApproval::STATUS_FROJEN || $this->status == IApproval::STATUS_BLOCKED;
+		return $this->isRegistration();
+	}
+
+	/**
+	 * The admin can reject the model in selected states defined within this method.
+	 *
+	 * @return boolean
+	 */
+	public function isRejectable() {
+
+		return $this->status == IApproval::STATUS_NEW ||
+			$this->status == IApproval::STATUS_SUBMITTED || $this->status == IApproval::STATUS_RE_SUBMIT;
+	}
+
+	/**
+	 * The model owner can re-submit the model for limit removal in selected states defined within this method.
+	 *
+	 * @return boolean
+	 */
+	public function isReSubmittable() {
+
+		return $this->status == IApproval::STATUS_REJECTED;
+	}
+
+	/**
+	 * The admin can confirm the model for further processing.
+	 *
+	 * @return boolean
+	 */
+	public function isConfirmable() {
+
+		return $this->status == IApproval::STATUS_NEW ||
+			$this->status == IApproval::STATUS_SUBMITTED || $this->status == IApproval::STATUS_RE_SUBMIT;
 	}
 
 	/**
@@ -431,9 +499,30 @@ trait ApprovalTrait {
 	 */
 	public function isApprovable() {
 
-		return $this->status == IApproval::STATUS_SUBMITTED || $this->status == IApproval::STATUS_FROJEN ||
-			$this->status == IApproval::STATUS_UPLIFT_FREEZE || $this->status == IApproval::STATUS_BLOCKED ||
-			$this->status == IApproval::STATUS_UPLIFT_BLOCK;
+		return $this->status == IApproval::STATUS_NEW || $this->status == IApproval::STATUS_CONFIRMED ||
+			$this->status == IApproval::STATUS_SUBMITTED || $this->status == IApproval::STATUS_RE_SUBMIT ||
+			$this->status == IApproval::STATUS_FROJEN || $this->status == IApproval::STATUS_UPLIFT_FREEZE ||
+			$this->status == IApproval::STATUS_BLOCKED || $this->status == IApproval::STATUS_UPLIFT_BLOCK;
+	}
+
+	/**
+	 * The admin can freeze the model to limit activities.
+	 *
+	 * @return boolean
+	 */
+	public function isFreezable() {
+
+		return $this->status == IApproval::STATUS_ACTIVE;
+	}
+
+	/**
+	 * The admin can block the model to restrict activities.
+	 *
+	 * @return boolean
+	 */
+	public function isBlockable() {
+
+		return $this->status == IApproval::STATUS_ACTIVE;
 	}
 
 	/**

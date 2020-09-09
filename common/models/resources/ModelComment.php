@@ -205,7 +205,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 		$rules = [
 			// Required, Safe
 			[ [ 'parentId', 'parentType', 'content' ], 'required' ],
-			[ [ 'id', 'content', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'content' ], 'safe' ],
 			// Email
 			[ 'email', 'email' ],
 			// Text Limit
@@ -286,6 +286,9 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 			// Default Type - Comment
 			$this->type = $this->type ?? self::TYPE_COMMENT;
 
+			// Generate Rating
+			$this->generateRating();
+
 	        return true;
 	    }
 
@@ -353,6 +356,22 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	public function isTrash() {
 
 		return $this->status == self::STATUS_TRASH;
+	}
+
+	public function generateRating() {
+
+		$rate1 = $this->rate1 ?? 0;
+		$rate2 = $this->rate2 ?? 0;
+		$rate3 = $this->rate3 ?? 0;
+		$rate4 = $this->rate4 ?? 0;
+		$rate5 = $this->rate5 ?? 0;
+
+		$sum = $rate1 + $rate2 + $rate3 + $rate4 + $rate5;
+
+		if( $sum > 0 ) {
+
+			$this->rating = floor( $sum/5 );
+		}
 	}
 
 	// Static Methods ----------------------------------------------

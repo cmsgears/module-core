@@ -128,6 +128,15 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	// Public -----------------
 
+	public static $userStatusMap = [
+		IApproval::STATUS_NEW => 'New',
+		self::STATUS_VERIFIED => 'Verified',
+		IApproval::STATUS_ACTIVE => 'Active',
+		IApproval::STATUS_FROJEN => 'Frozen',
+		IApproval::STATUS_BLOCKED => 'Blocked',
+		IApproval::STATUS_TERMINATED => 'Terminated'
+	];
+
 	// Protected --------------
 
 	// Variables -----------------------------
@@ -204,7 +213,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 			// Required, Safe
 			[ 'email', 'required' ],
 			[ [ 'firstName', 'email', 'username' ], 'required', 'on' => 'profile' ],
-			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'content' ], 'safe' ],
 			// Unique
 			[ 'email', 'unique' ],
 			[ 'username', 'unique' ],

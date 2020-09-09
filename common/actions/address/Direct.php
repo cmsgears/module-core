@@ -12,6 +12,7 @@ namespace cmsgears\core\common\actions\address;
 // Yii Imports
 use Yii;
 use yii\db\Expression;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
@@ -22,7 +23,7 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * @since 1.0.0
  */
-class Direct extends \cmsgears\core\common\base\Action {
+class Direct extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -42,7 +43,7 @@ class Direct extends \cmsgears\core\common\base\Action {
 
 	public $scenario = 'location';
 
-	public $returnUrl = 'all';
+	public $returnUrl;
 
 	// Protected --------------
 
@@ -119,18 +120,20 @@ class Direct extends \cmsgears\core\common\base\Action {
 					$this->addressService->update( $address );
 				}
 
-				return $this->controller->redirect( $this->returnUrl );
+				$returnUrl = Url::previous( $this->returnUrl );
+
+				return $this->controller->redirect( $returnUrl );
 			}
 
 			$countriesMap	= $this->countryService->getIdNameMap( [ 'default' => true ] );
 			$countryId		= !empty( $address->countryId ) ? $address->countryId : key( $countriesMap );
-			$provincesMap	= $this->provinceService->getMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
+			$provincesMap	= $this->provinceService->getIdNameMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
 			$provinceId		= !empty( $address->provinceId ) ? $address->provinceId : key( $provincesMap );
-			$regionsMap		= $this->regionService->getMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
+			$regionsMap		= $this->regionService->getIdNameMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
 
-			return $this->controller->render( 'address', [
-				'model' => $model,
-				'address' => $address,
+			return $this->controller->render( 'direct', [
+				'parent' => $model,
+				'model' => $address,
 				'countriesMap' => $countriesMap,
 				'provincesMap' => $provincesMap,
 				'regionsMap' => $regionsMap

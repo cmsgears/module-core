@@ -23,7 +23,7 @@ $returnUrl		= $this->context->returnUrl;
 					<div class="row">
 						<div class="col col2 margin margin-bottom-small">
 							<?= $form->field( $model, 'name' ) ?>
-							<p class="note">Attribute name must be lower case. An underscore(_) must be used to separate words.</p>
+							<p class="note">To accept values from Form submits, an underscore(_) can be used to separate words.</p>
 						</div>
 						<div class="col col2 margin margin-bottom-small">
 							<?= $form->field( $model, 'label' ) ?>

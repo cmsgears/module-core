@@ -6,14 +6,14 @@ $siteProperties = Yii::$app->controller->getSiteProperties();
 
 $defaultIncludes = Yii::getAlias( '@cmsgears' ) . '/module-core/common/mails/views/includes';
 
-$name	= Html::encode( $user->getName() );
-$email	= Html::encode( $user->email );
-
 $siteName	= Html::encode( $coreProperties->getSiteName() );
 $siteUrl	= Html::encode( $coreProperties->getSiteUrl() );
 $logoUrl	= "$siteUrl/images/" . $siteProperties->getMailAvatar();
 $homeUrl	= $siteUrl;
 $siteBkg	= "$siteUrl/images/" . $siteProperties->getMailBanner();
+
+$name	= Html::encode( $user->getName() );
+$email	= Html::encode( $user->email );
 
 $adminUrl = Html::encode( $coreProperties->getAdminUrl() );
 ?>

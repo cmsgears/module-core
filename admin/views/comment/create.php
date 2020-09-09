@@ -73,6 +73,40 @@ Editor::widget();
 		<div class="filler-height filler-height-medium layer layer-5"></div>
 		<div class="box box-crud layer layer-5">
 			<div class="box-header">
+				<div class="box-header-title">Stars</div>
+			</div>
+			<div class="box-content-wrap frm-split-40-60">
+				<div class="box-content">
+					<div class="row">
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getRatingField( [ 'model' => $model, 'stars' => $stars, 'fieldName' => 'rate1' ] ) ?>
+						</div>
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getRatingField( [ 'model' => $model, 'stars' => $stars, 'fieldName' => 'rate2' ] ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getRatingField( [ 'model' => $model, 'stars' => $stars, 'fieldName' => 'rate3' ] ) ?>
+						</div>
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getRatingField( [ 'model' => $model, 'stars' => $stars, 'fieldName' => 'rate4' ] ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getRatingField( [ 'model' => $model, 'stars' => $stars, 'fieldName' => 'rate5' ] ) ?>
+						</div>
+						<div class="col col2 margin margin-bottom-small">
+							<p class="note">If stars are set, average value of the stars will be used to set the rating.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium layer layer-5"></div>
+		<div class="box box-crud layer layer-5">
+			<div class="box-header">
 				<div class="box-header-title">Content</div>
 			</div>
 			<div class="box-content-wysiwyg">

@@ -22,7 +22,6 @@ use cmsgears\core\common\models\mappers\ModelObject;
 
 use cmsgears\core\common\services\interfaces\entities\IObjectDataService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
-use cmsgears\core\common\services\interfaces\mappers\IModelFileService;
 
 use cmsgears\core\common\services\traits\base\ApprovalTrait;
 use cmsgears\core\common\services\traits\base\FeaturedTrait;
@@ -64,7 +63,6 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 	// Protected --------------
 
 	protected $fileService;
-	protected $modelFileService;
 
 	// Private ----------------
 
@@ -82,11 +80,9 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( IFileService $fileService, IModelFileService $modelFileService, $config = [] ) {
+	public function __construct( IFileService $fileService, $config = [] ) {
 
 		$this->fileService = $fileService;
-
-		$this->modelFileService = $modelFileService;
 
 		parent::__construct( $config );
 	}
@@ -566,6 +562,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 				$gallery->siteId	= $model->siteId;
 				$gallery->type		= static::$parentType;
 				$gallery->status	= $galleryClass::STATUS_ACTIVE;
+				$gallery->name		= empty( $gallery->name ) ? $model->name : $gallery->name;
 
 				$gallery = $galleryService->create( $gallery );
 			}
@@ -658,39 +655,42 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 		$config[ 'hard' ] = $config[ 'hard' ] ?? !Yii::$app->core->isSoftDelete();
 
-		if( $config[ 'hard' ] ) {
+		if( $config[ 'hard' ] && isset( $model ) ) {
 
-			$transaction = Yii::$app->db->beginTransaction();
+			$backend	= isset( $config[ 'backend' ] ) ? $config[ 'backend' ] : false;
+			$frontend	= isset( $config[ 'frontend' ] ) ? $config[ 'frontend' ] : false;
 
-			try {
+			if( $backend || ( $frontend && $model->frontend && $model->shared ) || !$model->shared ) {
 
-				// Delete files
-				$this->fileService->deleteMultiple( [ $model->avatar, $model->banner, $model->video ] );
-				$this->fileService->deleteMultiple( $model->files );
+				$transaction = Yii::$app->db->beginTransaction();
 
-				// Delete File Mappings of Shared Files
-				$this->modelFileService->deleteMultiple( $model->modelFiles );
+				try {
 
-				// Delete mappings
-				Yii::$app->factory->get( 'modelObjectService' )->deleteByModelId( $model->id );
+					// Delete files
+					$this->fileService->deleteMultiple( [ $model->avatar, $model->banner, $model->video ] );
+					$this->fileService->deleteMultiple( $model->files );
 
-				// Delete Gallery
-				if( isset( $model->gallery ) ) {
+					// Delete File Mappings of Shared Files
+					Yii::$app->factory->get( 'modelFileService' )->deleteMultiple( $model->modelFiles );
 
-					Yii::$app->factory->get( 'galleryService' )->delete( $model->gallery );
+					// Delete mappings
+					Yii::$app->factory->get( 'modelObjectService' )->deleteByModelId( $model->id );
+
+					// Delete Gallery
+					if( isset( $model->gallery ) ) {
+
+						Yii::$app->factory->get( 'galleryService' )->delete( $model->gallery );
+					}
+
+					// Commit
+					$transaction->commit();
 				}
+				catch( Exception $e ) {
 
-				// Commit
-				$transaction->commit();
+					$transaction->rollBack();
 
-				// Delete model
-				return parent::delete( $model, $config );
-			}
-			catch( Exception $e ) {
-
-				$transaction->rollBack();
-
-				throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+					throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+				}
 			}
 		}
 
@@ -702,7 +702,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
-		$direct = isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : true; // Trigger direct notifications
+		$direct = isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : false; // Trigger direct notifications
 		$users	= isset( $config[ 'users' ] ) ? $config[ 'users' ] : []; // Trigger user notifications
 
 		switch( $column ) {
@@ -711,6 +711,12 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 				switch( $action ) {
 
+					case 'accept': {
+
+						$this->accept( $model, [ 'direct' => $direct, 'users' => $users ] );
+
+						break;
+					}
 					case 'confirm': {
 
 						$this->confirm( $model, [ 'direct' => $direct, 'users' => $users ] );
@@ -744,6 +750,12 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 					case 'block': {
 
 						$this->block( $model, [ 'direct' => $direct, 'users' => $users ] );
+
+						break;
+					}
+					case 'terminate': {
+
+						$this->terminate( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}

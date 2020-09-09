@@ -9,7 +9,7 @@
 
 namespace cmsgears\core\common\services\mappers;
 
-//Yii Imports
+// Yii Imports
 use Yii;
 use yii\data\Sort;
 
@@ -265,7 +265,51 @@ class ModelAddressService extends \cmsgears\core\common\services\base\ModelMappe
 
 	// Delete -------------
 
+	public function deleteWithParent( $model, $config = [] ) {
+
+		$parent = $this->parentService->getById( $model->modelId );
+
+		$this->parentService->delete( $parent, $config );
+	}
+
 	// Bulk ---------------
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'activate': {
+
+						$model->active = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'disable': {
+
+						$model->active = false;
+
+						$model->update();
+
+						break;
+					}
+					case 'delete': {
+
+						$this->deleteWithParent( $model, $config );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
 
 	// Notifications ------
 

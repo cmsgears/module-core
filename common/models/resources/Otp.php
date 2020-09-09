@@ -108,7 +108,7 @@ class Otp extends \cmsgears\core\common\models\base\Resource implements IData, I
 
 		return [
 			// Required, Safe
-			[ [ 'id', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id' ], 'safe' ],
 			// Email
 			[ 'email', 'email' ],
 			// Text Limit

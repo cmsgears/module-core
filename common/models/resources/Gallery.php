@@ -165,7 +165,7 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IApp
 		$rules = [
 			// Required, Safe
 			[ [ 'siteId', 'name' ], 'required' ],
-			[ [ 'id', 'content', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'content' ], 'safe' ],
 			// Unique
 			[ 'code', 'unique' ],
 			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'slug' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SLUG ) ],

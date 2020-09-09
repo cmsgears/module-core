@@ -9,6 +9,7 @@ $coreProperties = $this->context->getCoreProperties();
 $title			= $this->context->title;
 $this->title	= "{$title}s | " . $coreProperties->getSiteTitle();
 $parentUrl 		= $this->context->parentUrl;
+$parentCol 		= $this->context->parentCol;
 $apixBase		= $this->context->apixBase;
 
 $add	= isset( $parent ) ? true : false;
@@ -63,9 +64,16 @@ $themeTemplates		= '@themes/admin/views/templates';
 		]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null , 'x2', 'x2', 'x2', null, null, null, null, null, 'x2', null ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null , null, 'x2', 'x2', 'x2', 'x2', null, null, null, null, null ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
+		'parent' => [ 'title' => $parentCol, 'generate' => function( $model ) use( $parentUrl ) {
+			$name = $model->name ?? 'View';
+			if( !empty( $parentUrl ) ) {
+				return "<a href='". Url::toRoute( [ $parentUrl . $model->parentId ], true ). "'>$name</a>";
+			}
+		}],
+		'title' => 'Title',
 		'user' => [ 'title' => 'User', 'generate' => function( $model ) {
 			return isset( $model->creator ) ? $model->creator->name : null;
 		}],
@@ -75,12 +83,6 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'pinned' => [ 'title' => 'Pinned', 'generate' => function( $model ) { return $model->getPinnedStr(); } ],
 		'featured' => [ 'title' => 'Featured', 'generate' => function( $model ) { return $model->getFeaturedStr(); } ],
 		'popular' => [ 'title' => 'Popular', 'generate' => function( $model ) { return $model->getPopularStr(); } ],
-		'parent' => [ 'title' => 'Parent', 'generate' => function( $model ) use( $parentUrl ) {
-			if( !empty( $parentUrl ) ) {
-				return "<a href='". Url::toRoute( [ $parentUrl . $model->parentId ], true ). "'>View</a>";
-			}
-		}],
-		'message' => [ 'title' => 'Message', 'generate' => function( $model ) { return $model->content; } ],
 		'actions' => 'Actions'
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],

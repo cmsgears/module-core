@@ -17,15 +17,24 @@ $themeTemplates		= '@themes/admin/views/templates';
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'baseUrl' => $baseUrl, 'add' => true, 'addUrl' => "create?pid={$parent->id}", 'data' => [ 'parent' => $parent ],
 	'title' => $this->title, 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'content' => 'Content' ],
+	'searchColumns' => [
+		'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'content' => 'Content'
+	],
 	'sortColumns' => [
 		'name' => 'Name', 'title' => 'Title', 'status' => 'Status',
-		'visibility' => 'Visibility', 'order' => 'Order', 'pinned' => 'Pinned', 'featured' => 'Featured',
+		'visibility' => 'Visibility', 'order' => 'Order', 'active' => 'Active',
+		'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular',
 		'cdate' => 'Created At', 'udate' => 'Updated At'
 	],
 	'filters' => [
-		'status' => [ 'new' => 'New', 'active' => 'Active', 'blocked' => 'Blocked' ],
-		'model' => [ 'pinned' => 'Pinned', 'featured' => 'Featured' ]
+		'status' => [
+			'new' => 'New', 'active' => 'Active',
+			'blocked' => 'Blocked', 'uplift-block' => 'Uplift Block',
+			'terminated' => 'Terminated'
+		],
+		'model' => [
+			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular'
+		]
 	],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
@@ -36,14 +45,19 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'visibility' => [ 'title' => 'Visibility', 'type' => 'select', 'options' => $visibilityMap ],
 		'order' => [ 'title' => 'Order', 'type' => 'range' ],
 		'pinned' => [ 'title' => 'Pinned', 'type' => 'flag' ],
-		'featured' => [ 'title' => 'Featured', 'type' => 'flag' ]
+		'featured' => [ 'title' => 'Featured', 'type' => 'flag' ],
+		'popular' => [ 'title' => 'Popular', 'type' => 'flag' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
 		//'status' => [ 'confirm' => 'Confirm', 'approve' => 'Approve', 'reject' => 'Reject', 'activate' => 'Activate', 'freeze' => 'Freeze', 'block' => 'Block' ],
-		//'model' => [ 'pinned' => 'Pinned', 'featured' => 'Featured', 'delete' => 'Delete' ]
+		'model' => [
+			'activate' => 'Activate', 'disable' => 'Disable',
+			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular',
+			'delete' => 'Delete'
+		]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x3', 'x4', null, null, null, null, 'x2' ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x3', 'x3', null, null, null, null, null, 'x2' ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'icon' => [ 'title' => 'Icon', 'generate' => function( $model ) {
@@ -53,8 +67,9 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'title' => [ 'title' => 'Title', 'generate' => function( $model ) { return $model->model->title; } ],
 		'visibility' => [ 'title' => 'Visibility', 'generate' => function( $model ) { return $model->model->getVisibilityStr(); } ],
 		'status' => [ 'title' => 'Status', 'generate' => function( $model ) { return $model->model->getStatusStr(); } ],
-		'pinned' => [ 'title' => 'Pinned', 'generate' => function( $model ) { return $model->model->getPinnedStr(); } ],
-		'featured' => [ 'title' => 'Featured', 'generate' => function( $model ) { return $model->model->getFeaturedStr(); } ],
+		'pinned' => [ 'title' => 'Pinned', 'generate' => function( $model ) { return $model->getPinnedStr(); } ],
+		'featured' => [ 'title' => 'Featured', 'generate' => function( $model ) { return $model->getFeaturedStr(); } ],
+		'popular' => [ 'title' => 'Popular', 'generate' => function( $model ) { return $model->getPopularStr(); } ],
 		'actions' => 'Actions'
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
@@ -62,7 +77,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 	//'dataView' => "$moduleTemplates/grid/data/mobject",
 	//'cardView' => "$moduleTemplates/grid/cards/mobject",
 	'actionView' => "$moduleTemplates/grid/actions/mobject"
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',

@@ -16,13 +16,17 @@ $themeTemplates		= '@themes/admin/views/templates';
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => "create?pid={$parent->id}", 'data' => [ 'parent' => $parent ],
 	'title' => $this->title, 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'title' => 'Title', 'line1' => 'Line 1' ],
+	'searchColumns' => [
+		'title' => 'Title', 'line1' => 'Line 1'
+	],
 	'sortColumns' => [
 		'title' => 'Title', 'line1' => 'Line 1', 'country' => 'Country',
 		'province' => 'Province', 'region' => 'Region', 'city' => 'City'
 	],
 	'filters' => [
-		'model' => [ 'active' => 'Active' ]
+		'model' => [
+			'active' => 'Active', 'disabled' => 'Disabled'
+		]
 	],
 	'reportColumns' => [
 		'title' => [ 'title' => 'Title', 'type' => 'text' ],
@@ -31,7 +35,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'active' => [ 'title' => 'Active', 'type' => 'flag' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		//'model' => [ 'active' => 'Activate', 'disabled' => 'Disable', 'delete' => 'Delete' ]
+		'model' => [ 'activate' => 'Activate', 'disable' => 'Disable', 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
 	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x2', 'x2', 'x2', 'x2', null, 'x2', null, null, null ] ],
@@ -52,7 +56,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 	//'dataView' => "$moduleTemplates/grid/data/maddress",
 	//'cardView' => "$moduleTemplates/grid/cards/maddress",
 	'actionView' => "$moduleTemplates/grid/actions/maddress"
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',

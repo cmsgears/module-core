@@ -58,7 +58,7 @@ interface IApproval {
 	/**
 	 * Placeholder constants to support approvalNotificationMap in ApprovalTrait.
 	 */
-	const STATUS_APPROVED	= 15005;
+	const STATUS_APPROVED	= 15005; // The model must not be persisted in this state.
 	const STATUS_CHANGED	= 15010;
 
 	/**
@@ -261,20 +261,68 @@ interface IApproval {
 	public function isEditable();
 
 	/**
-	 * Check whether model can be submitted for limit removal in case admin have freezed
-	 * or blocked the model (see [[\cmsgears\core\common\models\traits\base\ApprovalTrait::isSubmittable()]]).
+	 * Check whether model can be accepted.
+	 * (see [[\cmsgears\core\common\models\traits\base\ApprovalTrait::isAcceptable()]]).
+	 *
+	 * @return boolean
+	 */
+	public function isAcceptable();
+
+	/**
+	 * Check whether model can be submitted for limit removal
+	 * (see [[\cmsgears\core\common\models\traits\base\ApprovalTrait::isSubmittable()]]).
 	 *
 	 * @return boolean
 	 */
 	public function isSubmittable();
 
 	/**
-	 * Check whether model can be submitted for approval in case model is frozen or blocked
-	 * by admin. It also checks whether model owner requested for approval (see [[\cmsgears\core\common\models\traits\base\ApprovalTrait::isApprovable()]]).
+	 * Check whether model can be rejected.
+	 * or blocked the model (see [[\cmsgears\core\common\models\traits\base\ApprovalTrait::isRejectable()]]).
+	 *
+	 * @return boolean
+	 */
+	public function isRejectable();
+
+	/**
+	 * Check whether model can be re-submitted for limit removal
+	 * (see [[\cmsgears\core\common\models\traits\base\ApprovalTrait::isSubmittable()]]).
+	 *
+	 * @return boolean
+	 */
+	public function isReSubmittable();
+
+	/**
+	 * Check whether model can be confirmed
+	 * (see [[\cmsgears\core\common\models\traits\base\ApprovalTrait::isConfirmable()]]).
+	 *
+	 * @return boolean
+	 */
+	public function isConfirmable();
+
+	/**
+	 * Check whether model can be activated by admin
+	 * (see [[\cmsgears\core\common\models\traits\base\ApprovalTrait::isApprovable()]]).
 	 *
 	 * @return boolean
 	 */
 	public function isApprovable();
+
+	/**
+	 * Check whether model can be frozen by admin
+	 * (see [[\cmsgears\core\common\models\traits\base\ApprovalTrait::isFreezable()]]).
+	 *
+	 * @return boolean
+	 */
+	public function isFreezable();
+
+	/**
+	 * Check whether model can be blocked by admin
+	 * (see [[\cmsgears\core\common\models\traits\base\ApprovalTrait::isBlockable()]]).
+	 *
+	 * @return boolean
+	 */
+	public function isBlockable();
 
 	/**
 	 * Check whether model is available for non owners - few of the features can be

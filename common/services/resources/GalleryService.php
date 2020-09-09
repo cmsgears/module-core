@@ -427,9 +427,6 @@ class GalleryService extends \cmsgears\core\common\services\base\ResourceService
 
 				// Commit
 				$transaction->commit();
-
-				// Delete model
-				return parent::delete( $model, $config );
 			}
 			catch( Exception $e ) {
 
@@ -447,7 +444,7 @@ class GalleryService extends \cmsgears\core\common\services\base\ResourceService
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
-		$direct = isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : true; // Trigger direct notifications
+		$direct = isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : false; // Trigger direct notifications
 		$users	= isset( $config[ 'users' ] ) ? $config[ 'users' ] : []; // Trigger user notifications
 
 		switch( $column ) {

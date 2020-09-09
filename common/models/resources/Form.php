@@ -171,7 +171,7 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IApprov
 		$rules = [
 			// Required, Safe
 			[ [ 'siteId', 'name', 'captcha', 'visibility', 'status' ], 'required' ],
-			[ [ 'id', 'mailTo', 'ccTo', 'bccTo', 'htmlOptions', 'content', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'mailTo', 'ccTo', 'bccTo', 'htmlOptions', 'content' ], 'safe' ],
 			// Unique
 			//[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'type', 'name' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NAME ) ],
 			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'slug' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SLUG ) ],

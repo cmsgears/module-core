@@ -684,7 +684,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 			// Generate Password
 			$userToUpdate->generatePassword( $resetForm->password );
 
-			// User need admin approval if not added by admin for activation
+			// User need admin approval for activation
 			if( !$activate && Yii::$app->core->isUserApproval() ) {
 
 				$userToUpdate->verify();
@@ -818,9 +818,6 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 				// Commit
 				$transaction->commit();
-
-				// Delete model
-				return parent::delete( $model, $config );
 			}
 			catch( Exception $e ) {
 
@@ -847,12 +844,6 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 				switch( $action ) {
 
-					case 'approve': {
-
-						$this->approve( $model, [ 'direct' => $direct, 'users' => $users ] );
-
-						break;
-					}
 					case 'activate': {
 
 						$this->activate( $model, [ 'direct' => $direct, 'users' => $users ] );

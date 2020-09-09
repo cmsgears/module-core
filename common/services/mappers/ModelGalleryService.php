@@ -240,7 +240,7 @@ class ModelGalleryService extends \cmsgears\core\common\services\base\ModelMappe
 		// Reporting --------
 
 		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
-			'title' => "$fileTable.title",
+			'title' => "$galleryTable.title",
 			'desc' => "$galleryTable.description",
 			'order' => "$modelTable.order",
 			'active' => "$modelTable.active",
@@ -269,6 +269,13 @@ class ModelGalleryService extends \cmsgears\core\common\services\base\ModelMappe
 	// Update -------------
 
 	// Delete -------------
+
+	public function deleteWithParent( $model, $config = [] ) {
+
+		$parent = $this->parentService->getById( $model->modelId );
+
+		$this->parentService->delete( $parent, $config );
+	}
 
 	// Bulk ---------------
 
@@ -322,7 +329,7 @@ class ModelGalleryService extends \cmsgears\core\common\services\base\ModelMappe
 					}
 					case 'delete': {
 
-						$this->delete( $model );
+						$this->deleteWithParent( $model );
 
 						break;
 					}

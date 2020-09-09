@@ -9,15 +9,15 @@ $siteProperties = Yii::$app->controller->getSiteProperties();
 
 $defaultIncludes = Yii::getAlias( '@cmsgears' ) . '/module-core/common/mails/views/includes';
 
-$name	= Html::encode( $user->getName() );
-$email	= Html::encode( $user->email );
-$token	= Html::encode( $user->verifyToken );
-
 $siteName	= Html::encode( $coreProperties->getSiteName() );
 $siteUrl	= Html::encode( $coreProperties->getSiteUrl() );
 $logoUrl	= "$siteUrl/images/" . $siteProperties->getMailAvatar();
 $homeUrl	= $siteUrl;
 $siteBkg	= "$siteUrl/images/" . $siteProperties->getMailBanner();
+
+$name	= Html::encode( $user->getName() );
+$email	= Html::encode( $user->email );
+$token	= Html::encode( $user->verifyToken );
 
 if( $user->isPermitted( CoreGlobal::PERM_ADMIN ) ) {
 

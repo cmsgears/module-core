@@ -26,7 +26,11 @@ $themeTemplates		= '@themes/admin/views/templates';
 	],
 	'filters' => [
 		'status' => [
-			'new' => 'New', 'active' => 'Active', 'blocked' => 'Blocked'
+			'new' => 'New', 'submitted' => 'Submitted', 're-submitted' => 'Re Submitted',
+			'rejected' => 'Rejected', 'active' => 'Active',
+			'frozen' => 'Frozen', 'uplift-freeze' => 'Uplift Freeze',
+			'blocked' => 'Blocked', 'uplift-block' => 'Uplift Block',
+			'terminated' => 'Terminated'
 		],
 		'model' => [
 			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular'
@@ -47,10 +51,8 @@ $themeTemplates		= '@themes/admin/views/templates';
 	'bulkPopup' => 'popup-grid-bulk',
 	'bulkActions' => [
 		'status' => [
-			'accept' => 'Accept', 'confirm' => 'Confirm',
-			'approve' => 'Approve', 'reject' => 'Reject',
-			'activate' => 'Activate', 'freeze' => 'Freeze',
-			'block' => 'Block', 'terminate' => 'Terminate'
+			'reject' => 'Reject', 'approve' => 'Approve', 'activate' => 'Activate',
+			'freeze' => 'Freeze', 'block' => 'Block', 'terminate' => 'Terminate'
 		],
 		'model' => [
 			'pinned' => 'Pinned', 'featured' => 'Featured',
@@ -81,7 +83,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 	//'dataView' => "$moduleTemplates/grid/data/gallery",
 	//'cardView' => "$moduleTemplates/grid/cards/gallery",
 	'actionView' => "$moduleTemplates/grid/actions/gallery"
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',

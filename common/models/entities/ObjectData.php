@@ -217,7 +217,7 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 		$rules = [
 			// Required, Safe
 			[ [ 'name', 'type' ], 'required' ],
-			[ [ 'id', 'htmlOptions', 'summary', 'content', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'htmlOptions', 'summary', 'content' ], 'safe' ],
 			// Unique
 			// Unique name and slug
 			//[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'name' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NAME ) ],

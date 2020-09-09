@@ -163,7 +163,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 		$rules = [
 			// Required, Safe
 			[ [ 'name', 'type' ], 'required' ],
-			[ [ 'id', 'htmlOptions', 'help', 'message', 'content', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'htmlOptions', 'help', 'message', 'content' ], 'safe' ],
 			// Unique
 			// Unique name and slug
 			[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'name' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NAME ) ],

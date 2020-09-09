@@ -78,6 +78,11 @@ $returnUrl		= $this->context->returnUrl;
 								<?= $form->field( $address, 'landmark' ) ?>
 							</div>
 						</div>
+						<div class="row max-cols-100">
+							<div class="colf colf12x5">
+								<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active' ) ?>
+							</div>
+						</div>
 					</div>
 					<div class="colf colf12"></div>
 					<div class="colf colf12x3 clearfix">

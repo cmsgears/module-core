@@ -82,7 +82,6 @@ class ModelObject extends \cmsgears\core\common\models\base\ModelMapper implemen
 
 		$rules = parent::rules();
 
-		$rules[] = [ 'nodes', 'safe' ];
 		$rules[] = [ 'key', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ];
 		$rules[] = [ [ 'pinned', 'featured', 'popular' ], 'boolean' ];
 

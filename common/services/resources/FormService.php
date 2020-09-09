@@ -401,9 +401,6 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 
 				// Commit
 				$transaction->commit();
-
-				// Delete model
-				return parent::delete( $model, $config );
 			}
 			catch( Exception $e ) {
 
@@ -421,7 +418,7 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
-		$direct = isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : true; // Trigger direct notifications
+		$direct = isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : false; // Trigger direct notifications
 		$users	= isset( $config[ 'users' ] ) ? $config[ 'users' ] : []; // Trigger user notifications
 
 		switch( $column ) {
@@ -430,6 +427,12 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 
 				switch( $action ) {
 
+					case 'accept': {
+
+						$this->accept( $model, [ 'direct' => $direct, 'users' => $users ] );
+
+						break;
+					}
 					case 'confirm': {
 
 						$this->confirm( $model, [ 'direct' => $direct, 'users' => $users ] );
@@ -463,6 +466,12 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 					case 'block': {
 
 						$this->block( $model, [ 'direct' => $direct, 'users' => $users ] );
+
+						break;
+					}
+					case 'terminate': {
+
+						$this->terminate( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}

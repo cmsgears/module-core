@@ -151,7 +151,7 @@ abstract class FormController extends Controller {
 			'model' => $model,
 			'templatesMap' => $templatesMap,
 			'visibilityMap' => $modelClass::$visibilityMap,
-			'statusMap' => $modelClass::$statusMap
+			'statusMap' => $modelClass::$subStatusMap
 		]);
 	}
 
@@ -182,7 +182,7 @@ abstract class FormController extends Controller {
 				'model' => $model,
 				'templatesMap' => $templatesMap,
 				'visibilityMap' => $modelClass::$visibilityMap,
-				'statusMap' => $modelClass::$statusMap
+				'statusMap' => $modelClass::$subStatusMap
 			]);
 		}
 
@@ -215,7 +215,7 @@ abstract class FormController extends Controller {
 				'model' => $model,
 				'templatesMap' => $templatesMap,
 				'visibilityMap' => $modelClass::$visibilityMap,
-				'statusMap' => $modelClass::$statusMap
+				'statusMap' => $modelClass::$subStatusMap
 			]);
 		}
 

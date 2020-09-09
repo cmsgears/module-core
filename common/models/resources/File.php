@@ -178,7 +178,7 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 			// Required, Safe
 			[ [ 'name', 'extension', 'directory' ], 'required' ],
 			[ 'changed', 'required', 'on' => 'upload', 'message' => 'Please provide a valid file.' ],
-			[ [ 'id', 'content', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'content' ], 'safe' ],
 			// Unique
 			[ 'code', 'unique' ],
 			// Text Limit

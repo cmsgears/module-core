@@ -62,18 +62,6 @@ class ModelCategory extends \cmsgears\core\common\models\base\ModelMapper {
 
 	// yii\base\Model ---------
 
-	/**
-	 * @inheritdoc
-	 */
-	public function rules() {
-
-		$rules = parent::rules();
-
-		$rules[] = [ 'nodes', 'safe' ];
-
-		return $rules;
-	}
-
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------

@@ -1091,6 +1091,7 @@ class FormDesigner extends \yii\base\Component {
 		$placeholder	= isset( $config[ 'placeholder' ] ) ? $config[ 'placeholder' ] : null;
 		$icon			= isset( $config[ 'icon' ] ) ? $config[ 'icon' ] : null;
 		$value			= isset( $config[ 'value' ] ) ? $config[ 'value' ] : null;
+		$inputClass		= isset( $config[ 'inputClass' ] ) ? $config[ 'inputClass' ] : null;
 
 		$app			= isset( $config[ 'app' ] ) ? $config[ 'app' ] : 'core';
 		$controller		= isset( $config[ 'controller' ] ) ? $config[ 'controller' ] : 'autoMapper';
@@ -1110,7 +1111,7 @@ class FormDesigner extends \yii\base\Component {
 		}
 
 		$label		= $model->getAttributeLabel( $field );
-		$hidden		= $form->field( $model, $field )->hiddenInput( [ 'class' => 'target' ] )->label( false );
+		$hidden		= $form->field( $model, $field )->hiddenInput( [ 'class' => "target $inputClass" ] )->label( false );
 		$autoFill	= '';
 
 		if( $disabled ) {
@@ -1118,7 +1119,7 @@ class FormDesigner extends \yii\base\Component {
 			$autoFill	= "<label>$label</label>
 							<div class=\"frm-icon-element icon-right\">
 								<span class=\"icon $icon\"></span>
-								<input type=\"text\" name=\"name\" value=\"$value\" placeholder=\"$placeholder\" autocomplete=\"off\" readonly />
+								<input class=\"{$inputClass}\" type=\"text\" name=\"name\" value=\"{$value}\" placeholder=\"$placeholder\" autocomplete=\"off\" readonly />
 							</div>";
 		}
 		else {
@@ -1343,7 +1344,7 @@ class FormDesigner extends \yii\base\Component {
 		$formField	= $modelName . "[$fieldName]";
 
 		// Get value from model
-		$selected = isset( $model ) ? $model->$fieldName : $selected;
+		$selected = isset( $model ) && !empty( $model->$fieldName ) ? $model->$fieldName : $selected;
 
 		if( $readOnly ) {
 

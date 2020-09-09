@@ -19,7 +19,6 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\models\resources\ModelMeta;
 
@@ -251,7 +250,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 			'banner' => $banner,
 			'video' => $video,
 			'roleMap' => $roleMap,
-			'statusMap' => $modelClass::$statusMap
+			'statusMap' => $modelClass::$userStatusMap
 		]);
 	}
 
@@ -320,7 +319,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 			'banner' => $banner,
 			'video' => $video,
 			'roleMap' => $roleMap,
-			'statusMap' => $modelClass::$statusMap
+			'statusMap' => $modelClass::$userStatusMap
 		]);
 	}
 
@@ -331,6 +330,8 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
+
+			$modelClass = $this->modelService->getModelClass();
 
 			$member = $model->activeSiteMember;
 
@@ -359,7 +360,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 				'banner' => $model->banner,
 				'video' => $model->video,
 				'roleMap' => $roleMap,
-				'statusMap' => User::getStatusMap()
+				'statusMap' => $modelClass::$userStatusMap
 			]);
 		}
 

@@ -34,6 +34,7 @@ abstract class CommentController extends Controller {
 	public $title;
 
 	public $parentUrl;
+	public $parentCol;
 
 	public $urlKey;
 
@@ -62,9 +63,10 @@ abstract class CommentController extends Controller {
 		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Config
-		$this->apixBase = 'core/comment';
-		$this->title	= 'Comment';
-		$this->stars	= 5;
+		$this->apixBase		= 'core/comment';
+		$this->title		= 'Comment';
+		$this->stars		= 5;
+		$this->parentCol	= 'Parent';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'modelCommentService' );

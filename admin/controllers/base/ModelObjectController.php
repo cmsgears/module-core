@@ -131,7 +131,7 @@ abstract class ModelObjectController extends Controller {
 			return $this->render( 'all', [
 				'dataProvider' => $dataProvider,
 				'parent' => $parent,
-				'statusMap' => $objectClass::$statusMap,
+				'statusMap' => $objectClass::$minStatusMap,
 				'visibilityMap' => $objectClass::$visibilityMap
 			]);
 		}
@@ -178,7 +178,7 @@ abstract class ModelObjectController extends Controller {
 				'avatar' => $avatar,
 				'banner' => $banner,
 				'video' => $video,
-				'statusMap' => $objectClass::$statusMap,
+				'statusMap' => $objectClass::$minStatusMap,
 				'visibilityMap' => $objectClass::$visibilityMap
 			]);
 		}
@@ -222,7 +222,7 @@ abstract class ModelObjectController extends Controller {
 				'avatar' => $avatar,
 				'banner' => $banner,
 				'video' => $video,
-				'statusMap' => $objectClass::$statusMap,
+				'statusMap' => $objectClass::$minStatusMap,
 				'visibilityMap' => $objectClass::$visibilityMap
 			]);
 		}
@@ -260,7 +260,7 @@ abstract class ModelObjectController extends Controller {
 				'avatar' => $object->avatar,
 				'banner' => $object->banner,
 				'video' => $object->video,
-				'statusMap' => $objectClass::$statusMap,
+				'statusMap' => $objectClass::$minStatusMap,
 				'visibilityMap' => $objectClass::$visibilityMap
 			]);
 		}

@@ -156,9 +156,9 @@ abstract class ModelAddressController extends Controller {
 
 			$countriesMap	= $this->countryService->getIdNameMap( [ 'default' => true ] );
 			$countryId		= !empty( $address->countryId ) ? $address->countryId : key( $countriesMap );
-			$provincesMap	= $this->provinceService->getMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
+			$provincesMap	= $this->provinceService->getIdNameMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
 			$provinceId		= !empty( $address->provinceId ) ? $address->provinceId : key( $provincesMap );
-			$regionsMap		= $this->regionService->getMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
+			$regionsMap		= $this->regionService->getIdNameMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
 
 			return $this->render( 'create', [
 				'address' => $address,
@@ -199,9 +199,9 @@ abstract class ModelAddressController extends Controller {
 
 			$countriesMap	= $this->countryService->getIdNameMap( [ 'default' => true ] );
 			$countryId		= !empty( $address->countryId ) ? $address->countryId : key( $countriesMap );
-			$provincesMap	= $this->provinceService->getMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
+			$provincesMap	= $this->provinceService->getIdNameMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
 			$provinceId		= !empty( $address->provinceId ) ? $address->provinceId : key( $provincesMap );
-			$regionsMap		= $this->regionService->getMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
+			$regionsMap		= $this->regionService->getIdNameMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
 
 			return $this->render( 'update', [
 				'address' => $address,
@@ -242,9 +242,9 @@ abstract class ModelAddressController extends Controller {
 
 			$countriesMap	= $this->countryService->getIdNameMap( [ 'default' => true ] );
 			$countryId		= !empty( $address->countryId ) ? $address->countryId : key( $countriesMap );
-			$provincesMap	= $this->provinceService->getMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
+			$provincesMap	= $this->provinceService->getIdNameMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
 			$provinceId		= !empty( $address->provinceId ) ? $address->provinceId : key( $provincesMap );
-			$regionsMap		= $this->regionService->getMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
+			$regionsMap		= $this->regionService->getIdNameMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
 
 			return $this->render( 'delete', [
 				'address' => $address,

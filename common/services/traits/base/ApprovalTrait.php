@@ -285,7 +285,7 @@ trait ApprovalTrait {
 
 		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
-		if( !$model->isAccepted( true ) && $model->isNew() ) {
+		if( !$model->isAccepted( true ) && $model->isAcceptable() ) {
 
 			$model = $this->updateStatus( $model, IApproval::STATUS_ACCEPTED );
 
@@ -341,7 +341,7 @@ trait ApprovalTrait {
 
 		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
-		if( !$model->isRejected( true ) ) {
+		if( !$model->isRejected( true ) && $model->isRejectable() ) {
 
 			$model = $this->updateStatus( $model, IApproval::STATUS_REJECTED );
 
@@ -370,7 +370,7 @@ trait ApprovalTrait {
 
 		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
-		if( !$model->isReSubmit( true ) ) {
+		if( !$model->isReSubmit( true ) && $model->isReSubmittable() ) {
 
 			$model = $this->updateStatus( $model, IApproval::STATUS_RE_SUBMIT );
 
@@ -398,7 +398,7 @@ trait ApprovalTrait {
 
 		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
-		if( !$model->isConfirmed( true ) ) {
+		if( !$model->isConfirmed( true ) && $model->isConfirmable() ) {
 
 			$model = $this->updateStatus( $model, IApproval::STATUS_CONFIRMED );
 
@@ -454,7 +454,7 @@ trait ApprovalTrait {
 
 		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
-		if( !$model->isActive( true ) ) {
+		if( !$model->isActive( true ) && $model->isApprovable() ) {
 
 			$oldStatus = $model->getStatusStr();
 
@@ -488,7 +488,7 @@ trait ApprovalTrait {
 
 		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
-		if( !$model->isFrojen( true ) ) {
+		if( !$model->isFrojen( true ) && $model->isFreezable() ) {
 
 			$model = $this->updateStatus( $model, IApproval::STATUS_FROJEN );
 
@@ -517,7 +517,7 @@ trait ApprovalTrait {
 
 		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
-		if( !$model->isUpliftFreeze( true ) ) {
+		if( $model->isFrojen( true ) ) {
 
 			$model = $this->updateStatus( $model, IApproval::STATUS_UPLIFT_FREEZE );
 
@@ -545,7 +545,7 @@ trait ApprovalTrait {
 
 		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
-		if( !$model->isBlocked( true ) ) {
+		if( !$model->isBlocked( true ) && $model->isBlockable() ) {
 
 			$model = $this->updateStatus( $model, IApproval::STATUS_BLOCKED );
 
@@ -574,7 +574,7 @@ trait ApprovalTrait {
 
 		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
-		if( !$model->isUpliftBlock( true ) ) {
+		if( $model->isBlocked( true ) ) {
 
 			$model = $this->updateStatus( $model, IApproval::STATUS_UPLIFT_BLOCK );
 

@@ -88,7 +88,7 @@ class ModelHistory extends \cmsgears\core\common\models\base\ModelResource imple
 		$rules = [
 			// Required, Safe
 			[ [ 'parentId', 'parentType' ], 'required' ],
-			[ [ 'id', 'gridCache' ], 'safe' ],
+			[ [ 'id' ], 'safe' ],
 			// Text Limit
 			[ [ 'parentType', 'type', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'agent', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],

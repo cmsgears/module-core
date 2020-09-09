@@ -138,7 +138,7 @@ class Role extends \cmsgears\core\common\models\base\Entity implements IAuthor, 
 		$rules = [
 			// Required, Safe
 			[ [ 'name' ], 'required' ],
-			[ [ 'id', 'gridCache' ], 'safe' ],
+			[ [ 'id' ], 'safe' ],
 			// Unique
 			[ 'name', 'unique', 'targetAttribute' => [ 'type', 'name' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NAME ) ],
 			[ 'slug', 'unique' ],

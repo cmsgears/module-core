@@ -37,6 +37,8 @@ abstract class ObjectDataController extends CrudController {
 	protected $frontend;
 	protected $shared;
 
+	protected $minStatusMap;
+
 	protected $type;
 	protected $templateType;
 
@@ -51,6 +53,7 @@ abstract class ObjectDataController extends CrudController {
 		parent::init();
 
 		// Config
+		$this->minStatusMap	= true;
 		$this->type			= CoreGlobal::TYPE_SITE;
 		$this->templateType = CoreGlobal::TYPE_SITE;
 
@@ -159,13 +162,15 @@ abstract class ObjectDataController extends CrudController {
 
 		$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
+		$statusMap = $this->minStatusMap ? $modelClass::$minStatusMap : $modelClass::$statusMap;
+
 		return $this->render( 'create', [
 			'model' => $model,
 			'avatar' => $avatar,
 			'banner' => $banner,
 			'video' => $video,
 			'visibilityMap' => $modelClass::$visibilityMap,
-			'statusMap' => $modelClass::$statusMap,
+			'statusMap' => $statusMap,
 			'templatesMap' => $templatesMap
 		]);
 	}
@@ -198,13 +203,15 @@ abstract class ObjectDataController extends CrudController {
 
 			$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
+			$statusMap = $this->minStatusMap ? $modelClass::$minStatusMap : $modelClass::$statusMap;
+
 			return $this->render( 'update', [
 				'model' => $model,
 				'avatar' => $avatar,
 				'banner' => $banner,
 				'video' => $video,
 				'visibilityMap' => $modelClass::$visibilityMap,
-				'statusMap' => $modelClass::$statusMap,
+				'statusMap' => $statusMap,
 				'templatesMap' => $templatesMap
 			]);
 		}
@@ -241,13 +248,15 @@ abstract class ObjectDataController extends CrudController {
 
 			$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
+			$statusMap = $this->minStatusMap ? $modelClass::$minStatusMap : $modelClass::$statusMap;
+
 			return $this->render( 'delete', [
 				'model' => $model,
 				'avatar' => $model->avatar,
 				'banner' => $model->banner,
 				'video' => $model->video,
 				'visibilityMap' => $modelClass::$visibilityMap,
-				'statusMap' => $modelClass::$statusMap,
+				'statusMap' => $statusMap,
 				'templatesMap' => $templatesMap
 			]);
 		}

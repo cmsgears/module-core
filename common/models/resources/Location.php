@@ -96,7 +96,7 @@ class Location extends \cmsgears\core\common\models\base\Resource implements IDa
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'id', 'notes', 'data' ], 'safe' ],
+			[ [ 'id', 'notes' ], 'safe' ],
 			[ [ 'latitude', 'longitude' ], 'required', 'on' => 'location' ],
 			// Text Limit
 			[ [ 'zip', 'subZip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],

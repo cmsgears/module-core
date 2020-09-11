@@ -341,11 +341,11 @@ class ModelFileService extends \cmsgears\core\common\services\base\ModelMapperSe
 	/**
 	 * @inheritdoc
 	 */
-	public function getByFileTag( $parentId, $parentType, $fileTag, $type = null ) {
+	public function getByFileCode( $parentId, $parentType, $fileCode, $type = null ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::findByFileTag( $parentId, $parentType, $fileTag, $type );
+		return $modelClass::findByFileCode( $parentId, $parentType, $fileCode, $type );
 	}
 
 	/**

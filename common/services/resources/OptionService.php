@@ -296,7 +296,12 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 
 		$category = Yii::$app->factory->get( 'categoryService' )->getBySlugType( $slug, $type, $config );
 
-		return $this->getIdNameMapByCategoryId( $category->id, $config );
+		if( isset( $category ) ) {
+
+			return $this->getIdNameMapByCategoryId( $category->id, $config );
+		}
+
+		return [];
 	}
 
 	public function getActiveIdNameMapByCategorySlug( $slug, $config = [] ) {
@@ -305,7 +310,12 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 
 		$category = Yii::$app->factory->get( 'categoryService' )->getBySlugType( $slug, $type, $config );
 
-		return $this->getActiveIdNameMapByCategoryId( $category->id, $config );
+		if( isset( $category ) ) {
+
+			return $this->getActiveIdNameMapByCategoryId( $category->id, $config );
+		}
+
+		return [];
 	}
 
 	public function getValueNameMapByCategorySlug( $slug, $config = [] ) {
@@ -314,9 +324,14 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 
 		$category = Yii::$app->factory->get( 'categoryService' )->getBySlugType( $slug, $type, $config );
 
-		$config[ 'defaultValue' ] = $category->name;
+		if( isset( $category ) ) {
 
-		return $this->getValueNameMapByCategoryId( $category->id, $config );
+			$config[ 'defaultValue' ] = $category->name;
+
+			return $this->getValueNameMapByCategoryId( $category->id, $config );
+		}
+
+		return [];
 	}
 
 	public function getActiveValueNameMapByCategorySlug( $slug, $config = [] ) {

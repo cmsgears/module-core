@@ -121,7 +121,7 @@ abstract class CrudController extends Controller {
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->modelService->add( $model, [ 'admin' => true ] );
+			$this->model = $this->modelService->add( $model, [ 'admin' => true ] );
 
 			if( $this->model ) {
 

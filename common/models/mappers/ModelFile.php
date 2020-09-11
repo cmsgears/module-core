@@ -146,16 +146,16 @@ class ModelFile extends \cmsgears\core\common\models\base\ModelMapper implements
 	 *
 	 * @param integer $parentId
 	 * @param string $parentType
-	 * @param string $fileTag
+	 * @param string $fileCode
 	 * @return ModelFile
 	 */
-	public static function findByFileTag( $parentId, $parentType, $fileTag, $type = null ) {
+	public static function findByFileCode( $parentId, $parentType, $fileCode, $type = null ) {
 
 		$mapTable	= static::tableName();
 		$fileTable	= CoreTables::getTableName( CoreTables::TABLE_FILE );
 		$type		= $type ?? CoreGlobal::TYPE_DEFAULT;
 
-		return self::queryByParent( $parentId, $parentType )->andWhere( "$fileTable.tag=:tag AND $mapTable.type=:type", [ ':tag' => $fileTag, ':type' => $type ] )->one();
+		return self::queryByParent( $parentId, $parentType )->andWhere( "$fileTable.code=:code AND $mapTable.type=:type", [ ':code' => $fileCode, ':type' => $type ] )->one();
 	}
 
 	/**

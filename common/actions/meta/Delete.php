@@ -39,6 +39,8 @@ class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
+	public $purifyContent = true;
+
 	// Protected --------------
 
 	protected $metaService;

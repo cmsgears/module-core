@@ -233,7 +233,7 @@ class Login extends BaseForm {
 
 			$user->save();
 
-			return Yii::$app->user->login( $user, $this->rememberMe ? $this->interval : 0 );
+			return Yii::$app->user->login( $user, $this->rememberMe ? $this->interval : 120 );
 		}
 
 		return false;

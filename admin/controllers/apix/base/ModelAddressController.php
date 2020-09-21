@@ -67,12 +67,14 @@ abstract class ModelAddressController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					'bulk' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
+					'bulk' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
 			]
@@ -80,6 +82,16 @@ abstract class ModelAddressController extends Controller {
 	}
 
 	// yii\base\Controller ----
+
+	public function actions() {
+
+		return [
+			'bulk' => [
+				'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true,
+				'config' => [ 'admin' => true ]
+			]
+		];
+	}
 
 	// CMG interfaces ------------------------
 

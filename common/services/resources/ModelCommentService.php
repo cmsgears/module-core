@@ -475,7 +475,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		if( $admin ) {
 
 			$attributes	= ArrayHelper::merge( $attributes, [
-				'status', 'order', 'pinned', 'featured', 'popular'
+				'status', 'order', 'pinned', 'featured', 'popular', 'anonymous'
 			]);
 		}
 

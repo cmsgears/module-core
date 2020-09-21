@@ -24,7 +24,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'compress' => 'Compress', 'active' => 'Active', 'order' => 'Order'
 	],
 	'filters' => [
-		'status' => [
+		'model' => [
 			'active' => 'Active', 'disabled' => 'Disabled', 'compress' => 'Compress'
 		]
 	],

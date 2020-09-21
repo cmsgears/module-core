@@ -596,7 +596,7 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 
 				switch( $action ) {
 
-					case 'public': {
+					case File::VISIBILITY_PUBLIC: {
 
 						$model->visibility = File::VISIBILITY_PUBLIC;
 
@@ -604,7 +604,7 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 
 						break;
 					}
-					case 'protected': {
+					case File::VISIBILITY_PROTECTED: {
 
 						$model->visibility = File::VISIBILITY_PROTECTED;
 
@@ -612,7 +612,7 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 
 						break;
 					}
-					case 'private': {
+					case File::VISIBILITY_PRIVATE: {
 
 						$model->visibility = File::VISIBILITY_PRIVATE;
 

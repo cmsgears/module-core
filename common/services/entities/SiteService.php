@@ -290,7 +290,8 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 			'active' => "$modelTable.active",
 			'pinned' => "$modelTable.pinned",
 			'featured' => "$modelTable.featured",
-			'popular' => "$modelTable.popular"
+			'popular' => "$modelTable.popular",
+			'primary' => "$modelTable.primary"
 		];
 
 		// Result -----------
@@ -357,7 +358,7 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 	public function delete( $model, $config = [] ) {
 
 		// Delete dependencies
-		$this->fileService->deleteFiles( [ $model->avatar, $model->banner ] );
+		$this->fileService->deleteMultiple( [ $model->avatar, $model->banner ] );
 
 		// Delete Members
 		Yii::$app->factory->get( 'siteMemberService' )->deleteBySiteId( $model->id );

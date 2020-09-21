@@ -316,7 +316,7 @@ class FormFieldService extends \cmsgears\core\common\services\base\ResourceServi
 					}
 					case 'compress': {
 
-						$model->comress = true;
+						$model->compress = true;
 
 						$model->update();
 

@@ -34,8 +34,11 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'order' => [ 'title' => 'Order', 'type' => 'range' ],
 		'active' => [ 'title' => 'Active', 'type' => 'flag' ]
 	],
-	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		'model' => [ 'activate' => 'Activate', 'disable' => 'Disable', 'delete' => 'Delete' ]
+	'bulkPopup' => 'popup-grid-bulk',
+	'bulkActions' => [
+		'model' => [
+			'activate' => 'Activate', 'disable' => 'Disable', 'delete' => 'Delete'
+		]
 	],
 	'header' => false, 'footer' => true,
 	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x2', 'x2', 'x2', 'x2', null, 'x2', null, null, null ] ],

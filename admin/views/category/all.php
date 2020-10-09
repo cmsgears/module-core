@@ -5,7 +5,7 @@ use cmsgears\widgets\popup\Popup;
 use cmsgears\widgets\grid\DataGrid;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= 'Categories | ' . $coreProperties->getSiteTitle();
+$this->title	= $this->context->title . ' Categories | ' . $coreProperties->getSiteTitle();
 $apixBase		= $this->context->apixBase;
 
 // View Templates

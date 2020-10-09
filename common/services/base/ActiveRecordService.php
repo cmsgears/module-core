@@ -803,8 +803,8 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$templateConfig[ 'direct' ]	= $config[ 'direct' ] ?? false;
 
 		$templateConfig[ 'createdBy' ]	= $config[ 'createdBy' ] ?? null;
-		$templateConfig[ 'parentId' ]	= $model->id;
-		$templateConfig[ 'parentType' ]	= static::$parentType;
+		$templateConfig[ 'parentId' ]	= $config[ 'parentId' ] ?? $model->id;
+		$templateConfig[ 'parentType' ]	= $config[ 'parentType' ] ?? static::$parentType;
 		$templateConfig[ 'link' ]		= $config[ 'link' ] ?? null;
 		$templateConfig[ 'adminLink' ]	= $config[ 'adminLink' ] ?? null;
 

@@ -8,7 +8,8 @@ use cmsgears\core\common\widgets\Editor;
 use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Update Category | ' . $coreProperties->getSiteTitle();
+$title			= $this->context->title;
+$this->title	= "Update $title Category | " . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 $parent			= isset( $model->parentId ) ? $model->parent->name : null;
 

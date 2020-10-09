@@ -1155,6 +1155,7 @@ class FormDesigner extends \yii\base\Component {
 
 		$flag		= isset( $config[ 'flag' ] ) ? $config[ 'flag' ] : false;
 		$label		= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
+		$class		= isset( $config[ 'class' ] ) ? $config[ 'class' ] : 'cmt-choice cmt-choice-inline clearfix';
 		$disabled	= isset( $config[ 'disabled' ] ) && $config[ 'disabled' ] ? $config[ 'disabled' ] : false;
 		$disabled	= $disabled ? 'disabled' : null;
 
@@ -1163,7 +1164,7 @@ class FormDesigner extends \yii\base\Component {
 			$itemlist = CoreGlobal::$yesNoMap;
 		}
 
-		$template = "<div class=\"cmt-choice cmt-choice-inline clearfix\">{label}<div class=\"radio-group\">{input}</div><div class=\"help-block\">\n{hint}\n{error}</div></div>";
+		$template = "<div class=\"<?= $class ?>\">{label}<div class=\"radio-group\">{input}</div><div class=\"help-block\">\n{hint}\n{error}</div></div>";
 
 		$field = $form->field( $model, $field, [ 'template' => $template ]	)
 			->radioList(

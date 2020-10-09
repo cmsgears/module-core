@@ -97,7 +97,7 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 				$location = $this->locationService->create( $location );
 
 				// Create Mapping
-				$modelLocation = $this->modelLocationService->activateByModelId( $this->model->id, $this->parentType, $location->id, $this->modelType );
+				$modelLocation = $this->modelLocationService->activateByParentModelId( $this->model->id, $this->parentType, $location->id, $this->modelType );
 
 				$data = [
 					'cid' => $modelLocation->id, 'ctype' => $modelLocation->type,

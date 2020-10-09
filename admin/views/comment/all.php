@@ -68,9 +68,8 @@ $themeTemplates		= '@themes/admin/views/templates';
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'parent' => [ 'title' => $parentCol, 'generate' => function( $model ) use( $parentUrl ) {
-			$name = $model->name ?? 'View';
 			if( !empty( $parentUrl ) ) {
-				return "<a href='". Url::toRoute( [ $parentUrl . $model->parentId ], true ). "'>$name</a>";
+				return "<a href='". Url::toRoute( [ $parentUrl . $model->parentId ], true ). "'>View</a>";
 			}
 		}],
 		'title' => 'Title',

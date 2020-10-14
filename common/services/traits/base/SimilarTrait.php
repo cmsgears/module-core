@@ -54,6 +54,7 @@ trait SimilarTrait {
 		$categoryTable	= Yii::$app->factory->get( 'categoryService' )->getModelTable();
 		$mtagTable		= Yii::$app->factory->get( 'modelTagService' )->getModelTable();
 		$tagTable		= Yii::$app->factory->get( 'tagService' )->getModelTable();
+		$conditions		= $config[ 'conditions' ] ?? null;
 		$filter			= null;
 
 		// Search Query
@@ -107,6 +108,21 @@ trait SimilarTrait {
 		if( isset( $config[ 'tags' ] ) && count( $config[ 'tags' ] ) > 0 && isset( $config[ 'categories' ] ) && count( $config[ 'categories' ] ) > 0 ) {
 
 			$filter	= "( $tagTable.id in( " . join( ",", $config[ 'tags' ] ). ") OR $categoryTable.id in( " . join( ",", $config[ 'categories' ] ). ") )";
+		}
+
+		if( isset( $conditions ) ) {
+
+			foreach ( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
 		}
 
 		if( isset( $filter ) ) {

@@ -100,6 +100,11 @@ class EventManager extends \cmsgears\core\common\base\Component {
 		];
 	}
 
+	public function getMostRecentAnnouncement() {
+
+		return null;
+	}
+
 	// Notification Trigger ---
 
 	public function triggerNotification( $slug, $data, $config = [] ) {

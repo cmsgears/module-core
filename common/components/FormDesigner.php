@@ -287,7 +287,7 @@ class FormDesigner extends \yii\base\Component {
 
 	protected function getRatingHtml( $form, $model, $config, $key, $field ) {
 
-		$class			= isset( $field->htmlOptions[ 'class' ] ) ? $field->htmlOptions[ 'class' ] : 'cmt-rating';
+		$class			= isset( $field->htmlOptions[ 'class' ] ) ? $field->htmlOptions[ 'class' ] : 'cmt-rating rating';
 		$readOnly		= isset( $field->htmlOptions[ 'read-only' ] ) ? $field->htmlOptions[ 'read-only' ] : false;
 		$disabled		= isset( $field->htmlOptions[ 'disabled' ] ) ? $field->htmlOptions[ 'disabled' ] : false;
 
@@ -322,7 +322,7 @@ class FormDesigner extends \yii\base\Component {
 			$ratingHtml	= "<div class=\"$class\">";
 		}
 
-		$ratingHtml .= '<span class="wrap-stars">';
+		$ratingHtml .= '<span class="stars-wrap">';
 
 		for( $i = 1; $i <= $stars; $i++ ) {
 
@@ -340,7 +340,7 @@ class FormDesigner extends \yii\base\Component {
 
 		$ratingHtml .= '</span>';
 
-		$ratingHtml .= '<span class="wrap-messages">';
+		$ratingHtml .= '<span class="message-wrap">';
 
 		for( $i = 1; $i <= $stars; $i++ ) {
 
@@ -598,12 +598,12 @@ class FormDesigner extends \yii\base\Component {
 
 		if( $config[ 'label' ] ) {
 
-			$fieldHtml = "<label>$field->label</label> <span class=\"cmt-checkbox\">$checkboxHtml $fieldHtml</span>
+			$fieldHtml = "<label>$field->label</label> <span class=\"cmt-checkbox checkbox\">$checkboxHtml $fieldHtml</span>
 							<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 		else {
 
-			$fieldHtml = "<span class=\"cmt-checkbox\">$checkboxHtml $fieldHtml</span>
+			$fieldHtml = "<span class=\"cmt-checkbox checkbox\">$checkboxHtml $fieldHtml</span>
 							<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 
@@ -621,11 +621,11 @@ class FormDesigner extends \yii\base\Component {
 
 		if( isset( $fieldOptions[ 'class' ] ) ) {
 
-			$fieldOptions[ 'class' ] .= ' cmt-toggle cmt-toggle-round';
+			$fieldOptions[ 'class' ] .= ' switch-toggle switch-toggle-round';
 		}
 		else {
 
-			$fieldOptions[ 'class' ] = 'cmt-toggle cmt-toggle-round';
+			$fieldOptions[ 'class' ] = 'switch-toggle switch-toggle-round';
 		}
 
 		$modelName	= $config[ 'modelName' ];
@@ -640,12 +640,12 @@ class FormDesigner extends \yii\base\Component {
 		if( $config[ 'label' ] ) {
 
 			$fieldHtml = "<label>$field->label</label>
-							<span class=\"cmt-switch cmt-checkbox\">$checkboxHtml <label for=\"$id\"></label> $fieldHtml</span>
+							<span class=\"cmt-checkbox switch\">$checkboxHtml <label for=\"$id\"></label> $fieldHtml</span>
 							<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 		else {
 
-			$fieldHtml = "<span class=\"cmt-switch cmt-checkbox\">$checkboxHtml <label for=\"$id\"></label> $fieldHtml</span>
+			$fieldHtml = "<span class=\"cmt-checkbox switch\">$checkboxHtml <label for=\"$id\"></label> $fieldHtml</span>
 							<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 
@@ -789,7 +789,7 @@ class FormDesigner extends \yii\base\Component {
 
 	protected function getApixRatingHtml( $config, $field, $value ) {
 
-		$class			= isset( $field->htmlOptions[ 'class' ] ) ? $field->htmlOptions[ 'class' ] : 'cmt-rating';
+		$class			= isset( $field->htmlOptions[ 'class' ] ) ? $field->htmlOptions[ 'class' ] : 'cmt-rating rating';
 		$readOnly		= isset( $field->htmlOptions[ 'read-only' ] ) ? $field->htmlOptions[ 'read-only' ] : false;
 		$disabled		= isset( $field->htmlOptions[ 'disabled' ] ) ? $field->htmlOptions[ 'disabled' ] : false;
 
@@ -824,7 +824,7 @@ class FormDesigner extends \yii\base\Component {
 			$ratingHtml	= "<div class=\"$class\">";
 		}
 
-		$ratingHtml .= '<span class="wrap-stars">';
+		$ratingHtml .= '<span class="stars-wrap">';
 
 		for( $i = 1; $i <= $stars; $i++ ) {
 
@@ -842,7 +842,7 @@ class FormDesigner extends \yii\base\Component {
 
 		$ratingHtml .= '</span>';
 
-		$ratingHtml .= '<span class="wrap-messages">';
+		$ratingHtml .= '<span class="message-wrap">';
 
 		for( $i = 1; $i <= $stars; $i++ ) {
 
@@ -1026,7 +1026,7 @@ class FormDesigner extends \yii\base\Component {
 
 		if( empty( $options[ 'class' ] ) ) {
 
-			$options[ 'class' ] = 'cmt-choice cmt-checkbox';
+			$options[ 'class' ] = 'cmt-checkbox choice';
 		}
 
 		foreach( $options as $key => $option ) {
@@ -1155,7 +1155,7 @@ class FormDesigner extends \yii\base\Component {
 
 		$flag		= isset( $config[ 'flag' ] ) ? $config[ 'flag' ] : false;
 		$label		= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
-		$class		= isset( $config[ 'class' ] ) ? $config[ 'class' ] : 'cmt-choice cmt-choice-inline clearfix';
+		$class		= isset( $config[ 'class' ] ) ? $config[ 'class' ] : 'cmt-choice choice choice-layout choice-layout-inline clearfix';
 		$disabled	= isset( $config[ 'disabled' ] ) && $config[ 'disabled' ] ? $config[ 'disabled' ] : false;
 		$disabled	= $disabled ? 'disabled' : null;
 
@@ -1284,7 +1284,7 @@ class FormDesigner extends \yii\base\Component {
 	 */
 	public function getRatingStars( $config = [] ) {
 
-		$class		= isset( $config[ 'class' ] ) && !empty( $config[ 'class' ] ) ? $config[ 'class' ] : 'cmt-rating';
+		$class		= isset( $config[ 'class' ] ) && !empty( $config[ 'class' ] ) ? $config[ 'class' ] : 'cmt-rating rating';
 		$stars		= isset( $config[ 'stars' ] ) ? $config[ 'stars' ] : 5;
 		$selected	= isset( $config[ 'selected' ] ) ? $config[ 'selected' ] : 0;
 		$disabled	= isset( $config[ 'disabled' ] ) ? $config[ 'disabled' ] : false;
@@ -1300,7 +1300,7 @@ class FormDesigner extends \yii\base\Component {
 			$class = "$class read-only";
 		}
 
-		$ratingHtml	= "<div class=\"$class\"><div class=\"wrap-stars\">";
+		$ratingHtml	= "<div class=\"$class\"><div class=\"stars-wrap\">";
 
 		for( $i = 1; $i <= $stars; $i++ ) {
 
@@ -1329,7 +1329,7 @@ class FormDesigner extends \yii\base\Component {
 	 */
 	public function getRatingField( $config = [] ) {
 
-		$class		= isset( $config[ 'class' ] ) && !empty( $config[ 'class' ] ) ? $config[ 'class' ] : 'cmt-rating';
+		$class		= isset( $config[ 'class' ] ) && !empty( $config[ 'class' ] ) ? $config[ 'class' ] : 'cmt-rating rating';
 		$stars		= isset( $config[ 'stars' ] ) ? $config[ 'stars' ] : 5;
 		$label		= isset( $config[ 'label' ] ) ? $config[ 'label' ] : null;
 		$readOnly	= isset( $config[ 'readOnly' ] ) ? $config[ 'readOnly' ] : false;
@@ -1367,7 +1367,7 @@ class FormDesigner extends \yii\base\Component {
 			$ratingHtml	= "<div class=\"$class\">";
 		}
 
-		$ratingHtml .= '<span class="wrap-stars">';
+		$ratingHtml .= '<span class="stars-wrap">';
 
 		for( $i = 1; $i <= $stars; $i++ ) {
 
@@ -1385,7 +1385,7 @@ class FormDesigner extends \yii\base\Component {
 
 		$ratingHtml .= '</span>';
 
-		$ratingHtml .= '<span class="wrap-messages">';
+		$ratingHtml .= '<span class="message-wrap">';
 
 		for( $i = 1; $i <= $stars; $i++ ) {
 
@@ -1412,14 +1412,12 @@ class FormDesigner extends \yii\base\Component {
 		return $ratingHtml;
 	}
 
-	public function getNumberElement( $min, $max, $name = null, $defaultValue = 1 ) {
+	public function getNumberRange( $min, $max, $name = null, $defaultValue = 1 ) {
 
-		$elementHtml = "<div class=\"clearfix max-cols-50 cmt-number-element\">
+		$elementHtml = "<div class=\"clearfix max-cols-50 range-number\" data-min=\"{$min}\" data-max=\"{$max}\">
 							<div class=\"col12x3\"><i class=\"btn btn-min cmti cmti-minus\"></i></div>
-							<div class=\"col12x6\"><input type=\"text\" value=\"$defaultValue\" name=\"$name\"></div>
+							<div class=\"col12x6\"><input type=\"text\" value=\"{$defaultValue}\" name=\"{$name}\"></div>
 							<div class=\"col12x3\"><i class=\"btn btn-max cmti cmti-plus\"></i></div>
-							<span class=\"hidden cmt-min\">$min</span>
-							<span class=\"hidden cmt-max\">$max</span>
 						</div>";
 
 		return $elementHtml;

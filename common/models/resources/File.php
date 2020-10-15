@@ -723,7 +723,7 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 				ob_start();
 ?>
 <!-- Simple File -->
-<div class="wrap-editor-image">
+<div class="image-wrap">
 	<img class="fluid" src="<?= $fileUrl ?>" title="<?= $title ?>" alt="<?= $alt ?>" />
 <?php if( !empty( $this->caption ) ) { ?>
 	<p class="image-caption"><?= $this->caption ?></p>
@@ -734,7 +734,7 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 </div>
 
 <!-- Responsive -->
-<div class="wrap-editor-image">
+<div class="image-wrap">
 	<img class="fluid" src="<?= $smallUrl ?>" srcset="<?= $smallUrl ?> 1x, <?= $mediumUrl ?> 1.5x, <?= $fileUrl ?> 2x" title="<?= $title ?>" sizes="(min-width: 1025px) 2x, (min-width: 481px) 1.5x, 1x" alt="<?= $alt ?>" />
 <?php if( !empty( $this->caption ) ) { ?>
 	<p class="image-caption"><?= $this->caption ?></p>
@@ -745,7 +745,7 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 </div>
 
 <!-- Responsive & Lazy -->
-<div class="wrap-editor-image">
+<div class="image-wrap">
 	<img class="fluid" src="<?= $plsUrl ?>" data-src="<?= $smallUrl ?>" data-srcset="<?= $smallUrl ?> 1x, <?= $mediumUrl ?> 1.5x, <?= $fileUrl ?> 2x" sizes="(min-width: 1025px) 2x, (min-width: 481px) 1.5x, 1x" title="<?= $title ?>" alt="<?= $alt ?>" />
 <?php if( !empty( $this->caption ) ) { ?>
 	<p class="image-caption"><?= $this->caption ?></p>

@@ -1037,8 +1037,8 @@ class FormDesigner extends \yii\base\Component {
 		$label = HtmlPurifier::process( $label );
 
 		$template = "<div $optionsStr>
-						<label>
-							<input type=\"checkbox\" $checked $disabled>
+						<label class=\"choice-option\">
+							<input type=\"checkbox\" $checked $disabled />
 							<span class=\"label\"> $label</span>
 							<input type=\"hidden\" name=\"$fieldName\" value=\"$value\" />
 						</label>
@@ -1155,7 +1155,8 @@ class FormDesigner extends \yii\base\Component {
 
 		$flag		= isset( $config[ 'flag' ] ) ? $config[ 'flag' ] : false;
 		$label		= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
-		$class		= isset( $config[ 'class' ] ) ? $config[ 'class' ] : 'cmt-choice choice choice-layout choice-layout-inline clearfix';
+		$class		= isset( $config[ 'class' ] ) ? $config[ 'class' ] : 'choice clearfix';
+		$layout		= isset( $config[ 'layout' ] ) ? $config[ 'layout' ] : 'choice-layout choice-layout-inline';
 		$disabled	= isset( $config[ 'disabled' ] ) && $config[ 'disabled' ] ? $config[ 'disabled' ] : false;
 		$disabled	= $disabled ? 'disabled' : null;
 
@@ -1164,23 +1165,23 @@ class FormDesigner extends \yii\base\Component {
 			$itemlist = CoreGlobal::$yesNoMap;
 		}
 
-		$template = "<div class=\"<?= $class ?>\">{label}<div class=\"radio-group\">{input}</div><div class=\"help-block\">\n{hint}\n{error}</div></div>";
+		$template = "<div class=\"{$class} {$layout}\">{label}<div class=\"radio-group\">{input}</div><div class=\"help-block\">\n{hint}\n{error}</div></div>";
 
-		$field = $form->field( $model, $field, [ 'template' => $template ]	)
+		$field = $form->field( $model, $field, [ 'template' => $template ] )
 			->radioList(
 				$itemlist,
 				[
 					'item' => function( $index, $label, $name, $checked, $value	) use( $disabled ) {
 
 						$slabel = strtolower( $label );
-						$html	= "<label class=\"{$slabel}\"><input ";
+						$html	= "<label class=\"choice-option {$slabel}\"><input ";
 
 						if( $checked ) {
 
 							$html .= 'checked';
 						}
 
-						$html .= " type=\"radio\" name=\"{$name}\" value=\"{$value}\" $disabled><span class=\"label pad-label\">$label</span></label>";
+						$html .= " type=\"radio\" name=\"{$name}\" value=\"{$value}\" $disabled><span class=\"label\">$label</span></label>";
 
 						return $html;
 					}
@@ -1195,37 +1196,37 @@ class FormDesigner extends \yii\base\Component {
 		return $field;
 	}
 
-	public function getCheckboxList( $form, $model, $field, $itemlist, $inline = true ) {
+	public function getCheckboxList( $form, $model, $field, $itemlist, $config = [] ) {
 
-		$setInline	= null;
+		$class		= isset( $config[ 'class' ] ) ? $config[ 'class' ] : 'choice clearfix';
+		$layout		= isset( $config[ 'layout' ] ) ? $config[ 'layout' ] : 'choice-layout choice-layout-inline';
+		$disabled	= isset( $config[ 'disabled' ] ) && $config[ 'disabled' ] ? $config[ 'disabled' ] : false;
+		$disabled	= $disabled ? 'disabled' : null;
 
-		if( $inline ) {
+		$template = "<div class=\"{$class} {$layout}\">{label}<div class=\"checkbox-group\">{input}</div><div class=\"help-block\">\n{hint}\n{error}</div></div>";
 
-			$setInline	= 'clear-none';
-		}
+		$field = $form->field( $model, "$field", [ 'template' => $template ] )
+			->checkboxList(
+				$itemlist,
+				[
+					'item' => function( $index, $label, $name, $checked, $value ) use( $disabled ) {
 
-		$template	= "<div class='cmt-choice $setInline clearfix'>{label}<div class='checkbox-group'>{input}</div><div class='help-block'>\n{hint}\n{error}</div></div>";
+						$slabel = strtolower( $label );
+						$html	= "<label class=\"choice-option {$slabel}\"><input ";
 
-		return $form->field( $model, "$field", [ 'template' => $template ] )
-					->checkboxList(
-						$itemlist,
-						[
-							'item' => function( $index, $label, $name, $checked, $value ) {
+						if( $checked ) {
 
-								$html = "<label id='$label'><input ";
-								$html = "<label class='$label'><input ";
+							$html .= 'checked';
+						}
 
-								if( $checked ) {
+						$html .= " type=\"checkbox\" name=\"{$name}\" value=\"{$value}\" $disabled><span class='label'>$label</span></label>";
 
-									$html .= 'checked';
-								}
+						return $html;
+					},
+				]
+			);
 
-								$html .= " type='checkbox' name='$name' value='$value'><span class='label pad-label'>$label</span></label>";
-
-								return $html;
-							},
-						]
-					);
+		return $field;
 	}
 
 	public function generateMultipleInputHtml( $model, $fieldName, $config = [] ) {

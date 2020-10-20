@@ -169,7 +169,7 @@ class TemplateManager extends \yii\base\Component {
 
 					$tplName = uniqid( 'string_template_', true );
 
-					$twig = new \Twig_Environment( new \Twig_Loader_Array( [ $tplName => $template->content ] ) );
+					$twig = new \Twig\Environment( new \Twig\Loader\ArrayLoader( [ $tplName => $template->content ] ) );
 
 					$content = $twig->render( $tplName, $data );
 
@@ -200,8 +200,9 @@ class TemplateManager extends \yii\base\Component {
 
 			case 'twig': {
 
-				$tplName	= uniqid( 'string_template_', true );
-				$twig		= new \Twig_Environment( new \Twig_Loader_Array( [ $tplName => $template->message ] ) );
+				$tplName = uniqid( 'string_template_', true );
+
+				$twig = new \Twig\Environment( new \Twig\Loader\ArrayLoader( [ $tplName => $template->message ] ) );
 
 				$content = $twig->render( $tplName, $data );
 

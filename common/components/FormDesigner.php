@@ -495,7 +495,7 @@ class FormDesigner extends \yii\base\Component {
 	protected function getApixTextHtml( $config, $field, $value ) {
 
 		$htmlOptions	= $field->htmlOptions;
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -520,7 +520,7 @@ class FormDesigner extends \yii\base\Component {
 	protected function getApixHiddenHtml( $config, $field, $value ) {
 
 		$htmlOptions	= $field->htmlOptions;
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -537,7 +537,7 @@ class FormDesigner extends \yii\base\Component {
 	protected function getApixPasswordHtml( $config, $field ) {
 
 		$htmlOptions	= $field->htmlOptions;
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -562,7 +562,7 @@ class FormDesigner extends \yii\base\Component {
 	protected function getApixTextareaHtml( $config, $field, $value ) {
 
 		$htmlOptions	= $field->htmlOptions;
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -587,7 +587,7 @@ class FormDesigner extends \yii\base\Component {
 	protected function getApixCheckboxHtml( $config, $field, $value ) {
 
 		$htmlOptions	= $field->htmlOptions;
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -615,7 +615,7 @@ class FormDesigner extends \yii\base\Component {
 	protected function getApixToggleHtml( $config, $field, $value ) {
 
 		$htmlOptions	= isset( $field->htmlOptions ) ? $field->htmlOptions : [];
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -659,7 +659,7 @@ class FormDesigner extends \yii\base\Component {
 		$htmlOptions	= $field->htmlOptions;
 		$message		= isset( $htmlOptions[ 'message' ] ) ? $htmlOptions[ 'message' ] : null;
 		$items			= isset( $htmlOptions[ 'items' ] ) ? $htmlOptions[ 'items' ] : [];
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -694,7 +694,7 @@ class FormDesigner extends \yii\base\Component {
 	protected function getApixRadioHtml( $config, $field, $value ) {
 
 		$htmlOptions	= isset( $field->htmlOptions ) ? $field->htmlOptions : [];
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -731,7 +731,7 @@ class FormDesigner extends \yii\base\Component {
 		$htmlOptions	= $field->htmlOptions;
 		$items			= isset( $htmlOptions[ 'items' ] ) ? $htmlOptions[ 'items' ] : [];
 		$value			= isset( $htmlOptions[ 'value' ] ) ? $htmlOptions[ 'value' ] : null;
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -756,7 +756,7 @@ class FormDesigner extends \yii\base\Component {
 
 		$htmlOptions	= $field->htmlOptions;
 		$items			= isset( $htmlOptions[ 'items' ] ) ? $htmlOptions[ 'items' ] : [];
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -872,7 +872,7 @@ class FormDesigner extends \yii\base\Component {
 	protected function getApixDateHtml( $config, $field, $value ) {
 
 		$htmlOptions	= $field->htmlOptions;
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -899,7 +899,7 @@ class FormDesigner extends \yii\base\Component {
 	protected function getApixIntlTelMobileHtml( $config, $field, $value ) {
 
 		$htmlOptions	= $field->htmlOptions;
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'form-group' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -924,7 +924,7 @@ class FormDesigner extends \yii\base\Component {
 	protected function getApixIntlTelPhoneHtml( $config, $field, $value ) {
 
 		$htmlOptions	= $field->htmlOptions;
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'form-group' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -1239,7 +1239,7 @@ class FormDesigner extends \yii\base\Component {
 
 		$fields			= $model->$fieldName;
 
-		$fieldHtml		= "<div class='multi-input'><div class='frm-field clear-none clearfix inputs'>";
+		$fieldHtml		= "<div class='multi-input'><div class='form-group clear-none clearfix inputs'>";
 
 		if( count( $fields ) == 0 && $defaultField ) {
 
@@ -1252,7 +1252,7 @@ class FormDesigner extends \yii\base\Component {
 
 			foreach( $fields as $field ) {
 
-				$fieldHtml	.= "<div class='frm-field relative clearfix'>
+				$fieldHtml	.= "<div class='form-group relative clearfix'>
 										<i class='cmti cmti-close-c icon-delete delete-field'></i>
 										<label>$label</label>
 										<input type='text' placeholder='$placeholder' name='" . $modelName . "[$fieldName][]' value='$field'>
@@ -1264,7 +1264,7 @@ class FormDesigner extends \yii\base\Component {
 		$errors = join( ",", $errors );
 
 		$fieldHtml	.= "</div><div class='help-block'>$errors</div>
-							<div class='frm-field clear-none clearfix'>
+							<div class='form-group clear-none clearfix'>
 								<div class='element-60 right'>
 									<a class='link btn-add-input' label='$label' placeholder='$placeholder' model='$modelName' field='$fieldName'>$addBtnTitle</a>
 								</div>

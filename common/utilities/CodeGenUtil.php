@@ -531,7 +531,7 @@ class CodeGenUtil {
 
 			$summary = $stripTags ? strip_tags( $params[ 'summary' ] ) : $params[ 'summary' ];
 
-			$seoH1 = "<h1 class=\"hidden\">$summary</h1>";
+			$seoH1 = "<h1>$summary</h1>";
 
 			return isset( $settings->h1Summary ) && !$settings->h1Summary ? null : $seoH1;
 		}

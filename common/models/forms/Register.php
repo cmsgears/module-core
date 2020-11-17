@@ -23,6 +23,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $password
  * @property string $password_repeat
  * @property string $username
+ * @property string $slug
  * @property string $type
  * @property integer $localeId
  * @property integer $genderId
@@ -64,6 +65,7 @@ class Register extends BaseForm {
 	public $password_repeat;
 
 	public $username;
+	public $slug;
 
 	public $type;
 
@@ -132,6 +134,7 @@ class Register extends BaseForm {
 			[ 'password', 'password' ],
 			[ 'email', 'validateEmail' ],
 			[ 'username', 'validateUsername' ],
+			[ 'slug', 'validateSlug' ],
 			[ 'mobile', 'validateMobile' ],
 			[ 'username', 'alphanumdotu' ],
 			[ [ 'mobile', 'phone' ], 'phone' ],
@@ -227,6 +230,23 @@ class Register extends BaseForm {
 			if( $this->userService->isExistByUsername( $this->username ) ) {
 
 				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
+			}
+		}
+	}
+
+	/**
+	 * Check whether the slug is available.
+	 *
+	 * @param string $attribute
+	 * @param array $params
+	 */
+	public function validateSlug( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			if( $this->userService->isExistBySlug( $this->slug ) ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SLUG_EXIST ) );
 			}
 		}
 	}

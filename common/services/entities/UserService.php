@@ -564,6 +564,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 		$user->email		= $model->email;
 		$user->username		= $model->username;
+		$user->slug			= empty( $model->slug ) ? $model->username : $model->slug;
 		$user->title		= $model->title;
 		$user->firstName	= $model->firstName;
 		$user->middleName	= $model->middleName;

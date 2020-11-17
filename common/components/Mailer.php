@@ -38,12 +38,12 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 	const MAIL_COMMENT_DELETE_REQUEST	= 'comment/request/delete';
 
 	// Status mails - Approval Process
-	const MAIL_ACCEPT		= 'status/accept';
-	const MAIL_APPROVE		= 'status/approve';
-	const MAIL_REJECT		= 'status/reject';
-	const MAIL_BLOCK		= 'status/block';
+	const MAIL_ACCEPT		= 'status/accepted';
+	const MAIL_APPROVE		= 'status/approved';
+	const MAIL_REJECT		= 'status/rejected';
+	const MAIL_BLOCK		= 'status/blocked';
 	const MAIL_FROZEN		= 'status/frozen';
-	const MAIL_ACTIVATE		= 'status/activate';
+	const MAIL_ACTIVATE		= 'status/activated';
 	const MAIL_A_REQUEST	= 'status/activation-request';
 
 	// Public -----------------

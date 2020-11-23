@@ -173,7 +173,7 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 		$this->insert( $this->prefix . 'core_site', [
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
 			'name' => 'Main', 'slug' => CoreGlobal::SITE_MAIN,
-			'order' => 0, 'active' => true,
+			'order' => 0, 'active' => true, 'primary' => true,
 			'createdAt' => DateUtil::getDateTime(),
 			'modifiedAt' => DateUtil::getDateTime()
 		]);

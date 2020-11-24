@@ -212,7 +212,8 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 			[ $this->master->id, $this->master->id, 'User', CoreGlobal::PERM_USER, CoreGlobal::TYPE_SYSTEM, NULL, 'The permission user is to distinguish between admin and app user. It is a must have permission for app users.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
 			[ $this->master->id, $this->master->id, 'Core', CoreGlobal::PERM_CORE, CoreGlobal::TYPE_SYSTEM, NULL, 'The permission core is to manage sites, themes, testimonials, countries, drop downs and settings from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
 			[ $this->master->id, $this->master->id, 'Identity', CoreGlobal::PERM_IDENTITY, CoreGlobal::TYPE_SYSTEM, NULL, 'The permission identity is to manage users from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'RBAC', CoreGlobal::PERM_RBAC, CoreGlobal::TYPE_SYSTEM, NULL, 'The permission rbac is to manage roles and permissions from admin. It also need identity permission.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'RBAC', CoreGlobal::PERM_RBAC, CoreGlobal::TYPE_SYSTEM, NULL, 'The permission rbac is to manage roles and permissions from admin. It also need identity permission.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Settings', CoreGlobal::PERM_SETTINGS, CoreGlobal::TYPE_SYSTEM, NULL, 'The permission settings is to manage settings from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
@@ -222,13 +223,14 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 		$corePerm		= Permission::findBySlugType( CoreGlobal::PERM_CORE, CoreGlobal::TYPE_SYSTEM );
 		$identityPerm	= Permission::findBySlugType( CoreGlobal::PERM_IDENTITY, CoreGlobal::TYPE_SYSTEM );
 		$rbacPerm		= Permission::findBySlugType( CoreGlobal::PERM_RBAC, CoreGlobal::TYPE_SYSTEM );
+		$settingsPerm	= Permission::findBySlugType( CoreGlobal::PERM_SETTINGS, CoreGlobal::TYPE_SYSTEM );
 
 		// RBAC Mapping
 
 		$columns = [ 'roleId', 'permissionId' ];
 
 		$mappings = [
-			[ $superAdminRole->id, $adminPerm->id ], [ $superAdminRole->id, $userPerm->id ], [ $superAdminRole->id, $corePerm->id ], [ $superAdminRole->id, $identityPerm->id ], [ $superAdminRole->id, $rbacPerm->id ],
+			[ $superAdminRole->id, $adminPerm->id ], [ $superAdminRole->id, $userPerm->id ], [ $superAdminRole->id, $corePerm->id ], [ $superAdminRole->id, $identityPerm->id ], [ $superAdminRole->id, $rbacPerm->id ], [ $superAdminRole->id, $settingsPerm->id ],
 			[ $adminRole->id, $adminPerm->id ], [ $adminRole->id, $userPerm->id ], [ $adminRole->id, $corePerm->id ], [ $adminRole->id, $identityPerm->id ],
 			[ $userRole->id, $userPerm->id ],
 			[ $userAdminRole->id, $adminPerm->id ], [ $userAdminRole->id, $userPerm->id ], [ $userAdminRole->id, $identityPerm->id ]

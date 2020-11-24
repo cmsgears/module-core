@@ -204,6 +204,9 @@ class CoreGlobal {
 	const PERM_IDENTITY	= 'identity';	// Allows admin to manage site users
 	const PERM_RBAC		= 'rbac';		// Allows admin to manage roles and permissions
 
+	// Settings
+	const PERM_SETTINGS	= 'settings';
+
 	// Gallery
 	const PERM_GALLERY_ADMIN = 'admin-galleries';
 

@@ -46,7 +46,7 @@ class SettingsController extends \cmsgears\core\admin\controllers\apix\base\Cont
 		parent::init();
 
 		// Permission
-		$this->crudPermission = CoreGlobal::PERM_CORE;
+		$this->crudPermission = CoreGlobal::PERM_SETTINGS;
 
 		// Services
 		$this->modelService	= Yii::$app->factory->get( 'siteService' );

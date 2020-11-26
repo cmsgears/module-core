@@ -313,6 +313,15 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		return $this->getPage( $config );
 	}
 
+	public function getPageByRoleId( $roleId, $config = [] ) {
+
+		$siteMemberTable = Yii::$app->factory->get( 'siteMemberService' )->getModelTable();
+
+		$config[ 'conditions' ][ "$siteMemberTable.roleId" ] = $roleId;
+
+		return $this->getPage( $config );
+	}
+
 	// Read ---------------
 
 	// Read - Models ---

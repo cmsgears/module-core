@@ -28,6 +28,8 @@ interface IUserService extends IEntityService, IApproval, IData, IGridCacheable,
 
 	public function getPageByType( $type, $config = [] );
 
+	public function getPageByRoleId( $roleId, $config = [] );
+
 	// Read ---------------
 
 	// Read - Models ---

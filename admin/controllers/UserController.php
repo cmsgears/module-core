@@ -20,7 +20,7 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\File;
-use cmsgears\core\common\models\resources\ModelMeta;
+use cmsgears\core\common\models\resources\UserMeta;
 
 use cmsgears\core\common\behaviors\ActivityBehavior;
 
@@ -219,8 +219,8 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 					$member = $this->memberService->create( $member );
 
 					// Default Settings
-					$this->metaService->initByNameType( $this->model->id, 'receive_email', 'notification', ModelMeta::VALUE_TYPE_FLAG );
-					$this->metaService->initByNameType( $this->model->id, 'receive_email', 'reminder', ModelMeta::VALUE_TYPE_FLAG );
+					$this->metaService->initByNameType( $this->model->id, 'receive_email', 'notification', UserMeta::VALUE_TYPE_FLAG );
+					$this->metaService->initByNameType( $this->model->id, 'receive_email', 'reminder', UserMeta::VALUE_TYPE_FLAG );
 
 					if( $this->model && $member ) {
 

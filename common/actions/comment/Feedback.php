@@ -10,7 +10,7 @@
 namespace cmsgears\core\common\actions\comment;
 
 // CMG Imports
-use cmsgears\core\common\models\forms\Comment;
+use cmsgears\core\common\models\forms\Comment as CommentForm;
 use cmsgears\core\common\models\resources\ModelComment;
 
 /**
@@ -36,7 +36,7 @@ class Feedback extends Create {
 
 	public $modelType = ModelComment::TYPE_FEEDBACK;
 
-	public $scenario = Comment::SCENARIO_FEEDBACK;
+	public $scenario = CommentForm::SCENARIO_FEEDBACK;
 
 	// Protected --------------
 

@@ -90,7 +90,7 @@ trait FeaturedTrait {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 
-		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 1;
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
 		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
@@ -104,7 +104,10 @@ trait FeaturedTrait {
 			$query = static::find()->where( 'pinned=:pinned', [ ':pinned' => true ] );
 		}
 
-		$query->limit( $limit );
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
 
 		return $query;
 	}
@@ -121,7 +124,7 @@ trait FeaturedTrait {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 
-		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 1;
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
 		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
@@ -135,7 +138,10 @@ trait FeaturedTrait {
 			$query = static::find()->where( 'type=:type AND pinned=:pinned', [ ':type' => $type, ':pinned' => true ] );
 		}
 
-		$query->limit( $limit );
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
 
 		return $query;
 	}
@@ -164,7 +170,10 @@ trait FeaturedTrait {
 			$query = static::find()->where( 'featured=:featured', [ ':featured' => true ] );
 		}
 
-		$query->limit( $limit );
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
 
 		return $query;
 	}
@@ -195,7 +204,10 @@ trait FeaturedTrait {
 			$query = static::find()->where( 'type=:type AND featured=:featured', [ ':type' => $type, ':featured' => true ] );
 		}
 
-		$query->limit( $limit );
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
 
 		return $query;
 	}
@@ -224,7 +236,10 @@ trait FeaturedTrait {
 			$query = static::find()->where( 'popular=:popular', [ ':popular' => true ] );
 		}
 
-		$query->limit( $limit );
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
 
 		return $query;
 	}
@@ -255,7 +270,10 @@ trait FeaturedTrait {
 			$query = static::find()->where( 'type=:type AND popular=:popular', [ ':type' => $type, ':popular' => true ] );
 		}
 
-		$query->limit( $limit );
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
 
 		return $query;
 	}

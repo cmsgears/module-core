@@ -74,16 +74,26 @@ trait NameTypeTrait {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$query	= null;
+
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'name=:name AND siteId=:siteId', [ ':name' => $name, ':siteId' => $siteId ] );
+			$query = static::find()->where( 'name=:name AND siteId=:siteId', [ ':name' => $name, ':siteId' => $siteId ] );
 		}
 		else {
 
-			return static::find()->where( 'name=:name', [ ':name' => $name ] );
+			$query = static::find()->where( 'name=:name', [ ':name' => $name ] );
 		}
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
+
+		return $query;
 	}
 
 	/**
@@ -97,16 +107,26 @@ trait NameTypeTrait {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 1;
+		$query	= null;
+
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] );
+			$query = static::find()->where( 'type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] );
 		}
 		else {
 
-			return static::find()->where( 'type=:type', [ ':type' => $type ] );
+			$query = static::find()->where( 'type=:type', [ ':type' => $type ] );
 		}
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
+
+		return $query;
 	}
 
 	/**
@@ -121,16 +141,26 @@ trait NameTypeTrait {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 1;
+		$query	= null;
+
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'name=:name AND type=:type AND siteId=:siteId', [ ':name' => $name, ':type' => $type, ':siteId' => $siteId ] );
+			$query = static::find()->where( 'name=:name AND type=:type AND siteId=:siteId', [ ':name' => $name, ':type' => $type, ':siteId' => $siteId ] );
 		}
 		else {
 
-			return static::find()->where( 'name=:name AND type=:type', [ ':name' => $name, ':type' => $type ] );
+			$query = static::find()->where( 'name=:name AND type=:type', [ ':name' => $name, ':type' => $type ] );
 		}
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
+
+		return $query;
 	}
 
 	// Read - Find ------------

@@ -371,7 +371,7 @@ class FormDesigner extends \yii\base\Component {
 
 		$htmlOptions	= $field->htmlOptions;
 		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
-		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
+		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [ 'class' => 'intl-tel-field intl-tel-field-mb' ];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
 		$value = $model->$key;
@@ -398,7 +398,7 @@ class FormDesigner extends \yii\base\Component {
 
 		$htmlOptions	= $field->htmlOptions;
 		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
-		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
+		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [ 'class' => 'intl-tel-field intl-tel-field-ph' ];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
 		$value = $model->$key;
@@ -900,7 +900,7 @@ class FormDesigner extends \yii\base\Component {
 
 		$htmlOptions	= $field->htmlOptions;
 		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
-		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
+		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [ 'class' => 'intl-tel-field intl-tel-field-mb' ];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
 		$modelName	= $config[ 'modelName' ];
@@ -925,7 +925,7 @@ class FormDesigner extends \yii\base\Component {
 
 		$htmlOptions	= $field->htmlOptions;
 		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
-		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
+		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [ 'class' => 'intl-tel-field intl-tel-field-ph' ];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
 		$modelName	= $config[ 'modelName' ];

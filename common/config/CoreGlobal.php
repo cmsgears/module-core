@@ -98,6 +98,8 @@ class CoreGlobal {
 	// Templates -------------------------------------------------------
 
 	const TEMPLATE_DEFAULT	= 'default';
+	const TEMPLATE_CATEGORY	= 'category';
+	const TEMPLATE_TAG		= 'tag';
 
 	// Notifications - User
 	const TPL_NOTIFY_USER_NEW	= 'user-new';

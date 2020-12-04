@@ -89,7 +89,7 @@ class RbacFilter extends \yii\base\Behavior {
 				$user = Yii::$app->core->getUser();
 
 				// Disallow action in case user is not permitted
-				if( !isset( $user ) || !isset( $permission ) || !$user->isPermitted( $permission ) ) {
+				if( !isset( $user ) || $user->isBlocked() || !isset( $permission ) || !$user->isPermitted( $permission ) ) {
 
 					// Ajax Request
 					if( Yii::$app->request->getIsAjax() ) {

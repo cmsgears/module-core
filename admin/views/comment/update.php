@@ -106,6 +106,37 @@ Editor::widget();
 		<div class="filler-height filler-height-medium layer layer-5"></div>
 		<div class="box box-crud layer layer-5">
 			<div class="box-header">
+				<div class="box-header-title">Additional Fields</div>
+			</div>
+			<div class="box-content-wrap frm-split-40-60">
+				<div class="box-content">
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'field1' ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'field2' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'field3' ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'field4' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'field5' ) ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium layer layer-5"></div>
+		<div class="box box-crud layer layer-5">
+			<div class="box-header">
 				<div class="box-header-title">Content</div>
 			</div>
 			<div class="box-content-wysiwyg">

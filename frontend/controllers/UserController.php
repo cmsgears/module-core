@@ -158,13 +158,18 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 		}
 
 		$genderMap = $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [
-			'prepend' => [ [ 'id' => '0', 'name' => 'Choose Gender' ] ]
+			'prepend' => [ [ 'id' => '0', 'name' => 'Gender' ] ]
+		]);
+
+		$maritalMap = $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_MARITAL, [
+			'prepend' => [ [ 'id' => '0', 'name' => 'Marital Status' ] ]
 		]);
 
 		return $this->render( CoreGlobalWeb::PAGE_PROFILE, [
 			'user' => $user,
 			'avatar' => $avatar,
-			'genderMap' => $genderMap
+			'genderMap' => $genderMap,
+			'maritalMap' => $maritalMap
 		]);
 	}
 

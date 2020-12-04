@@ -18,7 +18,7 @@ use cmsgears\core\frontend\config\SiteProperties;
 use cmsgears\core\frontend\config\CoreGlobalWeb;
 
 use cmsgears\core\common\models\forms\Register;
-use cmsgears\core\common\models\resources\ModelMeta;
+use cmsgears\core\common\models\resources\UserMeta;
 use cmsgears\core\common\models\mappers\SiteMember;
 
 /**
@@ -153,8 +153,8 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 				// Default Settings
 				$metaService = Yii::$app->factory->get( 'userMetaService' );
 
-				$metaService->initByNameType( $user->id, 'receive_email', 'notification', ModelMeta::VALUE_TYPE_FLAG );
-				$metaService->initByNameType( $user->id, 'receive_email', 'reminder', ModelMeta::VALUE_TYPE_FLAG );
+				$metaService->initByNameType( $user->id, CoreGlobal::META_RECEIVE_EMAIL, CoreGlobal::SETTINGS_NOTIFICATION, UserMeta::VALUE_TYPE_FLAG );
+				$metaService->initByNameType( $user->id, CoreGlobal::META_RECEIVE_EMAIL, CoreGlobal::SETTINGS_REMINDER, UserMeta::VALUE_TYPE_FLAG );
 
 				// Send Register Mail
 				Yii::$app->coreMailer->sendRegisterMail( $user );

@@ -131,6 +131,12 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 					'default' => SORT_DESC,
 					'label' => 'Gender'
 				],
+				'marital' => [
+					'asc' => [ "$modelTable.maritalId" => SORT_ASC ],
+					'desc' => [ "$modelTable.maritalId" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Marital Status'
+				],
 				'role' => [
 					'asc' => [ "$roleTable.name" => SORT_ASC ],
 					'desc' => [ "$roleTable.name" => SORT_DESC ],
@@ -286,6 +292,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'locale' => "$modelTable.localeId",
 			'gender' => "$modelTable.genderId",
+			'marital' => "$modelTable.maritalId",
 			'name' => "$modelTable.name",
 			'status' => "$modelTable.status",
 			'role' => "$roleTable.name",
@@ -609,7 +616,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'localeId', 'genderId', 'avatarId', 'bannerId', 'videoId', 'templateId',
+			'localeId', 'genderId', 'maritalId', 'avatarId', 'bannerId', 'videoId', 'templateId',
 			'email', 'username', 'slug', 'title', 'firstName', 'middleName', 'lastName', 'message',
 			'description', 'dob', 'mobile', 'phone', 'timeZone', 'avatarUrl', 'websiteUrl', 'content'
 		];

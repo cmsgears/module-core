@@ -75,6 +75,11 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property boolean $featured
  * @property boolean $popular
  * @property boolean $anonymous
+ * @property string $field1
+ * @property string $field2
+ * @property string $field3
+ * @property string $field4
+ * @property string $field5
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property datetime $approvedAt
@@ -211,6 +216,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 			// Text Limit
 			[ [ 'phone', 'mobile' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ [ 'parentType', 'type', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'field1', 'field2', 'field3', 'field4', 'field5' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'name', 'email', 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			[ [ 'title', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Other

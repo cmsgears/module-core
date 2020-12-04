@@ -469,7 +469,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
 			'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content',
-			'rate1', 'rate2', 'rate3', 'rate4', 'rate5'
+			'rate1', 'rate2', 'rate3', 'rate4', 'rate5',
+			'field1', 'field2', 'field3', 'field4', 'field5'
 		];
 
 		if( $admin ) {

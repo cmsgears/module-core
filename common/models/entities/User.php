@@ -59,6 +59,7 @@ use cmsgears\core\common\utilities\DateUtil;
  * @property integer $id
  * @property integer $localeId
  * @property integer $genderId
+ * @property integer $maritalId
  * @property integer $avatarId
  * @property integer $bannerId
  * @property integer $videoId
@@ -246,7 +247,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 			[ [ 'name', 'message' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
-			[ [ 'localeId', 'genderId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'localeId', 'genderId', 'maritalId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'status', 'timeZone', 'otp' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'avatarId', 'bannerId', 'videoId', 'galleryId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
@@ -274,6 +275,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 		return [
 			'localeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LOCALE ),
 			'genderId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GENDER ),
+			'maritalId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MARITAL ),
 			'avatarId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
 			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
 			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),

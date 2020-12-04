@@ -219,8 +219,8 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 					$member = $this->memberService->create( $member );
 
 					// Default Settings
-					$this->metaService->initByNameType( $this->model->id, 'receive_email', 'notification', UserMeta::VALUE_TYPE_FLAG );
-					$this->metaService->initByNameType( $this->model->id, 'receive_email', 'reminder', UserMeta::VALUE_TYPE_FLAG );
+					$this->metaService->initByNameType( $user->id, CoreGlobal::META_RECEIVE_EMAIL, CoreGlobal::SETTINGS_NOTIFICATION, UserMeta::VALUE_TYPE_FLAG );
+					$this->metaService->initByNameType( $user->id, CoreGlobal::META_RECEIVE_EMAIL, CoreGlobal::SETTINGS_REMINDER, UserMeta::VALUE_TYPE_FLAG );
 
 					if( $this->model && $member ) {
 

@@ -665,7 +665,7 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 		$this->insert( $this->prefix . 'core_category', [
 			'siteId' => $this->site->id,
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-			'name' => 'Gender', 'slug' => 'gender',
+			'name' => 'Gender', 'slug' => CoreGlobal::CATEGORY_GENDER,
 			'type' => CoreGlobal::TYPE_OPTION_GROUP, 'icon' => null,
 			'description' => 'Gender category with available options.',
 			'featured' => false,
@@ -674,14 +674,30 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$category = Category::findBySlugType( 'gender', CoreGlobal::TYPE_OPTION_GROUP );
+		$this->insert( $this->prefix . 'core_category', [
+			'siteId' => $this->site->id,
+			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
+			'name' => 'Marital Status', 'slug' => CoreGlobal::CATEGORY_MARITAL,
+			'type' => CoreGlobal::TYPE_OPTION_GROUP, 'icon' => null,
+			'description' => 'Marital Status category with available options.',
+			'featured' => false,
+			'lValue' => 1, 'rValue' => 2,
+			'createdAt' => DateUtil::getDateTime(),
+			'modifiedAt' => DateUtil::getDateTime()
+		]);
+
+		$genderCategory		= Category::findBySlugType( CoreGlobal::CATEGORY_GENDER, CoreGlobal::TYPE_OPTION_GROUP );
+		$maritalCategory	= Category::findBySlugType( CoreGlobal::CATEGORY_MARITAL, CoreGlobal::TYPE_OPTION_GROUP );
 
 		$columns = [ 'categoryId', 'name', 'value', 'icon' ];
 
-		$options	= [
-			[ $category->id, 'Male', 'male', null ],
-			[ $category->id, 'Female', 'female', null ],
-			[ $category->id, 'Other', 'other', null ]
+		$options = [
+			[ $genderCategory->id, 'Male', 'male', null ],
+			[ $genderCategory->id, 'Female', 'female', null ],
+			[ $genderCategory->id, 'Other', 'other', null ],
+			[ $maritalCategory->id, 'Married', 'married', null ],
+			[ $maritalCategory->id, 'Unmarried', 'unmarried', null ],
+			[ $maritalCategory->id, 'Other', 'other', null ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_option', $columns, $options );

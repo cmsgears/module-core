@@ -505,6 +505,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'id' => $this->bigPrimaryKey( 20 ),
 			'localeId' => $this->bigInteger( 20 ),
 			'genderId' => $this->bigInteger( 20 ),
+			'maritalId' => $this->bigInteger( 20 ),
 			'avatarId' => $this->bigInteger( 20 ),
 			'bannerId' => $this->bigInteger( 20 ),
 			'videoId' => $this->bigInteger( 20 ),
@@ -558,6 +559,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		// Index for columns locale, gender and avatar
 		$this->createIndex( 'idx_' . $this->prefix . 'user_locale', $this->prefix . 'core_user', 'localeId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'user_marital', $this->prefix . 'core_user', 'maritalId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'user_gender', $this->prefix . 'core_user', 'genderId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'user_avatar', $this->prefix . 'core_user', 'avatarId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'user_banner', $this->prefix . 'core_user', 'bannerId' );
@@ -1081,6 +1083,11 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
 			'popular' => $this->boolean()->notNull()->defaultValue( false ),
 			'anonymous' => $this->boolean()->notNull()->defaultValue( false ),
+			'field1' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
+			'field2' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
+			'field3' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
+			'field4' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
+			'field5' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'approvedAt' => $this->dateTime(),
@@ -1420,6 +1427,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		// User
 		$this->addForeignKey( 'fk_' . $this->prefix . 'user_locale', $this->prefix . 'core_user', 'localeId', $this->prefix . 'core_locale', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'user_gender', $this->prefix . 'core_user', 'genderId', $this->prefix . 'core_option', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'user_marital', $this->prefix . 'core_user', 'maritalId', $this->prefix . 'core_option', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'user_avatar', $this->prefix . 'core_user', 'avatarId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'user_banner', $this->prefix . 'core_user', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'user_video', $this->prefix . 'core_user', 'videoId', $this->prefix . 'core_file', 'id', 'SET NULL' );
@@ -1668,6 +1676,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		// User
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_locale', $this->prefix . 'core_user' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_gender', $this->prefix . 'core_user' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_marital', $this->prefix . 'core_user' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_avatar', $this->prefix . 'core_user' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_banner', $this->prefix . 'core_user' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_video', $this->prefix . 'core_user' );

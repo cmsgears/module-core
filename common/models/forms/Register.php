@@ -27,6 +27,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $type
  * @property integer $localeId
  * @property integer $genderId
+ * @property integer $maritalId
  * @property integer $templateId
  * @property string $title
  * @property string $firstName
@@ -71,6 +72,7 @@ class Register extends BaseForm {
 
 	public $localeId;
 	public $genderId;
+	public $maritalId;
 	public $templateId;
 
 	public $title;
@@ -148,7 +150,7 @@ class Register extends BaseForm {
 			[ [ 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
-			[ [ 'localeId', 'genderId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'localeId', 'genderId', 'maritalId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
 			[ 'dob', 'date' ]
 		];
@@ -171,6 +173,7 @@ class Register extends BaseForm {
 		return [
 			'localeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LOCALE ),
 			'genderId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GENDER ),
+			'maritalId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MARITAL ),
 			'avatarId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
 			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
 			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),

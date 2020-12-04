@@ -152,7 +152,9 @@ class CoreGlobal {
 
 	// Categories Slug -------------------------------------------------
 
-	const CATEGORY_GENDER = 'gender';
+	const CATEGORY_GENDER	= 'gender';
+
+	const CATEGORY_MARITAL	= 'marital';
 
 	// Text Limits - Ideal for string validators -----------------------
 
@@ -247,6 +249,8 @@ class CoreGlobal {
 	const META_TYPE_CONFIG	= 'config'; // Configuration(no default) stored in meta table
 	const META_TYPE_SETTING	= 'setting'; // Settings(preference with default/alternate) stored in meta table
 	const META_TYPE_SOCIAL	= 'social';
+
+	const META_RECEIVE_EMAIL = 'receive_email';
 
 	// Comment Attributes
 	const META_COMMENT_SPAM_REQUEST	   = 'spamRequest';

@@ -427,7 +427,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 		$config[ 'type' ] = $type;
 
-		$query = $modelClass::queryByType( $parentId, $parentType, $type, $config );
+		$query = $modelClass::queryL0Approved( $parentId, $parentType, $config );
 
 		return $query->andWhere( [ 'featured' => true ] )->all();
 	}

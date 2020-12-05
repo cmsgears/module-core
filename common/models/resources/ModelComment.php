@@ -482,7 +482,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 
 		$config[ 'type' ] = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
 
-		return self::queryByType( $parentId, $parentType, $type, $config )->andWhere( [ 'baseId' => null ] );
+		return self::queryByType( $parentId, $parentType, $config )->andWhere( [ 'baseId' => null ] );
 	}
 
 	// Read - Find ------------
@@ -495,7 +495,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	 * @param integer $userId
 	 * @return ModelComment
 	 */
-	public static function findByUserId( $parentId, $parentType, $userId, $config = [] ) {
+	public static function findFirstByUserId( $parentId, $parentType, $userId, $config = [] ) {
 
 		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
 
@@ -510,7 +510,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	 * @param integer $userId
 	 * @return ModelComment
 	 */
-	public static function findAllByUser( $parentId, $parentType, $userId, $config = [] ) {
+	public static function findAllByUserId( $parentId, $parentType, $userId, $config = [] ) {
 
 		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
 
@@ -529,7 +529,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 
 		$config[ 'type' ] = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
 
-		$comment = static::findByUser( $parentId, $parentType, $userId, $config );
+		$comment = static::findFirstByUserId( $parentId, $parentType, $userId, $config );
 
 		return isset( $comment );
 	}

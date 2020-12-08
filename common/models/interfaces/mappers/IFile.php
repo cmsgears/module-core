@@ -64,6 +64,15 @@ interface IFile {
 	public function getFilesByType( $type, $active = true );
 
 	/**
+	 * Return files associated with the parent for given mapping types.
+	 *
+	 * @param @param array $types
+	 * @param boolean $active
+	 * @return \cmsgears\core\common\models\resources\File[]
+	 */
+	public function getFilesByTypes( $types, $active = true );
+
+	/**
 	 * Return file associated with the parent for given code.
 	 *
 	 * @param string $code

@@ -49,7 +49,7 @@ interface IMeta {
 	/**
 	 * Return all the active meta associated with model for given types.
 	 *
-	 * @param string $type
+	 * @param array $types
 	 * @return \cmsgears\core\common\models\base\Meta[]
 	 */
 	public function getActiveMetasByTypes( $types );

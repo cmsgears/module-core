@@ -143,6 +143,32 @@ trait FileTrait {
 	/**
 	 * @inheritdoc
 	 */
+	public function getFilesByTypes( $types, $active = true ) {
+
+		$fileTable		= File::tableName();
+		$modelFileTable	= ModelFile::tableName();
+
+		if( $active ) {
+
+			return File::find()
+				->leftJoin( $modelFileTable, "$modelFileTable.modelId=$fileTable.id" )
+				->where( "$modelFileTable.parentId=:pid AND $modelFileTable.parentType=:ptype AND $modelFileTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':active' => $active ] )
+				->filterWhere( "$modelFileTable.type", 'in', $types )
+				->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] )
+				->all();
+		}
+
+		return File::find()
+			->leftJoin( $modelFileTable, "$modelFileTable.modelId=$fileTable.id" )
+			->where( "$modelFileTable.parentId=:pid AND $modelFileTable.parentType=:ptype", [ ':pid' => $this->id, ':ptype' => $this->modelType ] )
+			->filterWhere( "$modelFileTable.type", 'in', $types )
+			->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] )
+			->all();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function getFileByCode( $code ) {
 
 		$fileTable		= File::tableName();

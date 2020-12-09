@@ -156,6 +156,8 @@ class CoreGlobal {
 
 	const CATEGORY_MARITAL	= 'marital';
 
+	const CATEGORY_NOK_RELATION = 'nok-relation';
+
 	// Text Limits - Ideal for string validators -----------------------
 
 	const TEXT_MICRO		=   8;

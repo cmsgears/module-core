@@ -686,6 +686,18 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
+		$this->insert( $this->prefix . 'core_category', [
+			'siteId' => $this->site->id,
+			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
+			'name' => 'NOK Relation', 'slug' => CoreGlobal::CATEGORY_NOK_RELATION,
+			'type' => CoreGlobal::TYPE_OPTION_GROUP, 'icon' => null,
+			'description' => 'NOK Relationionship category with available options.',
+			'featured' => false,
+			'lValue' => 1, 'rValue' => 2,
+			'createdAt' => DateUtil::getDateTime(),
+			'modifiedAt' => DateUtil::getDateTime()
+		]);
+
 		$genderCategory		= Category::findBySlugType( CoreGlobal::CATEGORY_GENDER, CoreGlobal::TYPE_OPTION_GROUP );
 		$maritalCategory	= Category::findBySlugType( CoreGlobal::CATEGORY_MARITAL, CoreGlobal::TYPE_OPTION_GROUP );
 

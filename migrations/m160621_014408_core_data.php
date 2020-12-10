@@ -359,7 +359,7 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 		$this->insert( $this->prefix . 'core_form', [
 			'siteId' => $this->site->id,
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-			'name' => 'Config Core', 'slug' => 'config-core',
+			'name' => 'Config Core', 'slug' => 'config-' . CoreGlobal::CONFIG_CORE,
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Core configuration form.',
 			'success' => 'All configurations saved successfully.',
@@ -370,7 +370,7 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlugType( 'config-core', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-' . CoreGlobal::CONFIG_CORE, CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -405,7 +405,7 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 		$this->insert( $this->prefix . 'core_form', [
 			'siteId' => $this->site->id,
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-			'name' => 'Config Cache', 'slug' => 'config-cache',
+			'name' => 'Config Cache', 'slug' => 'config-' . CoreGlobal::CONFIG_CACHE,
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Cache configuration form.',
 			'success' => 'All configurations saved successfully.',
@@ -416,7 +416,7 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlugType( 'config-cache', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-' . CoreGlobal::CONFIG_CACHE, CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -436,7 +436,7 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 		$this->insert( $this->prefix . 'core_form', [
 			'siteId' => $this->site->id,
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-			'name' => 'Config Mail', 'slug' => 'config-mail',
+			'name' => 'Config Mail', 'slug' => 'config-' . CoreGlobal::CONFIG_MAIL,
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Mail configuration form.',
 			'success' => 'All configurations saved successfully.',
@@ -447,7 +447,7 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlugType( 'config-mail', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-' . CoreGlobal::CONFIG_MAIL, CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -475,7 +475,7 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 		$this->insert( $this->prefix . 'core_form', [
 			'siteId' => $this->site->id,
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-			'name' => 'Config Comment', 'slug' => 'config-comment',
+			'name' => 'Config Comment', 'slug' => 'config-' . CoreGlobal::CONFIG_COMMENT,
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Comment configuration form.',
 			'success' => 'All configurations saved successfully.',
@@ -486,7 +486,7 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlugType( 'config-comment', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-' . CoreGlobal::CONFIG_COMMENT, CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -515,7 +515,7 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 		$this->insert( $this->prefix . 'core_form', [
 			'siteId' => $this->site->id,
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-			'name' => 'Config Backend', 'slug' => 'config-backend',
+			'name' => 'Config Backend', 'slug' => 'config-' . CoreGlobal::CONFIG_ADMIN,
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Backend configuration form.',
 			'success' => 'All configurations saved successfully.',
@@ -526,7 +526,7 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlugType( 'config-backend', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-' . CoreGlobal::CONFIG_ADMIN, CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -548,7 +548,7 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 		$this->insert( $this->prefix . 'core_form', [
 			'siteId' => $this->site->id,
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-			'name' => 'Config Frontend', 'slug' => 'config-frontend',
+			'name' => 'Config Frontend', 'slug' => 'config-' . CoreGlobal::CONFIG_FRONTEND,
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Frontend configuration form.',
 			'success' => 'All configurations saved successfully.',
@@ -559,7 +559,7 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlugType( 'config-frontend', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-' . CoreGlobal::CONFIG_FRONTEND, CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -590,71 +590,71 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 		$columns = [ 'modelId', 'name', 'label', 'type', 'active', 'valueType', 'value', 'data' ];
 
 		$metas = [
-			[ $this->site->id, 'locale_message', 'Locale Message', 'core', 1, 'flag', '0',NULL ],
-			[ $this->site->id, 'language', 'Language', 'core', 1, 'text', 'en-US',NULL ],
-			[ $this->site->id, 'locale', 'Locale', 'core', 1, 'text', 'en_US',NULL ],
-			[ $this->site->id, 'charset', 'Charset', 'core', 1, 'text', 'UTF-8',NULL ],
-			[ $this->site->id, 'site_title', 'Site Title', 'core', 1, 'text', $this->siteTitle,NULL ],
-			[ $this->site->id, 'site_name','Site Name','core', 1, 'text', $this->siteName,NULL ],
-			[ $this->site->id, 'site_url', 'Site Url', 'core', 1, 'text', $defaultSite,NULL ],
-			[ $this->site->id, 'admin_url', 'Admin Url', 'core', 1, 'text', $defaultAdmin,NULL ],
-			[ $this->site->id, 'resource_url', 'Resource Url', 'core', 1, 'text', $defaultSite,NULL ],
-			[ $this->site->id, 'registration','Registration','core', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'login','Login','core', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'change_email','Change Email','core', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'change_username','Change Username','core', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'change_mobile','Change Mobile','core', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'date_format','Date Format','core', 1, 'text','yyyy-MM-dd',NULL ],
-			[ $this->site->id, 'time_format','Time Format','core', 1, 'text','HH:mm:ss',NULL ],
-			[ $this->site->id, 'date_time_format','Date Time Format','core', 1, 'text','yyyy-MM-dd HH:mm:ss',NULL ],
-			[ $this->site->id, 'timezone','Timezone','core', 1, 'text', $timezone,NULL ],
-			[ $this->site->id, 'auto_login','Auto Login','core', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'auto_load','Auto Load','core', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'caching','Caching','cache', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'cache_duration','Cache Type','cache', 1, 'text',NULL,NULL ],
-			[ $this->site->id, 'default_cache','Default Cache','cache', 1, 'text',NULL,NULL ],
-			[ $this->site->id, 'primary_cache','Primary Cache','cache', 1, 'text',NULL,NULL ],
-			[ $this->site->id, 'secondary_cache','Secondary Cache','cache', 1, 'text',NULL,NULL ],
-			[ $this->site->id, 'smtp','SMTP','mail', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'smtp_username','SMTP Username','mail', 1, 'text','',NULL ],
-			[ $this->site->id, 'smtp_password','SMTP Password','mail', 1, 'text','',NULL ],
-			[ $this->site->id, 'smtp_host','SMTP Host','mail', 1, 'text','',NULL ],
-			[ $this->site->id, 'smtp_port','SMTP Port','mail', 1, 'text','587',NULL ],
-			[ $this->site->id, 'smtp_encryption','SMTP Encryption','mail', 1, 'text','tls',NULL ],
-			[ $this->site->id, 'debug','Debug','mail', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'sender_name','Sender Name','mail', 1, 'text','Admin',NULL ],
-			[ $this->site->id, 'sender_email','Sender Email','mail', 1, 'text', "$siteMaster@$primaryDomain",NULL ],
-			[ $this->site->id, 'contact_name','Contact Name','mail', 1, 'text','Contact Us',NULL ],
-			[ $this->site->id, 'contact_email','Contact Email','mail', 1, 'text', "$siteContact@$primaryDomain",NULL ],
-			[ $this->site->id, 'info_name','Info Name','mail', 1, 'text','Info',NULL ],
-			[ $this->site->id, 'info_email','Info Email','mail', 1, 'text',"$siteInfo@$primaryDomain",NULL ],
-			[ $this->site->id, 'comments','Comments','comment', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'comments_user','Comments User','comment', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'comments_recent','Comments Recent','comment', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'comments_limit','Comments Limit','comment', 1, 'text', EntityService::PAGE_LIMIT,NULL ],
-			[ $this->site->id, 'comments_email_admin','Comments Email Admin','comment', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'comments_email_user','Comments Email User','comment', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'comments_form_top','Comments Form Top','comment', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'comments_auto','Comments Auto','comment', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'comments_anonymous', 'Comments Anonymous','comment', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'comments_filter','Comments Filter','comment', 1, 'text', NULL,NULL ],
-			[ $this->site->id, 'comments_all_fields','Comments All Fields','comment', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'comments_labels','Comments Labels','comment', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'comments_disqus','Comments DISQUS','comment', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'comments_disqus_forum','Comments DISQUS Forum','comment', 1, 'text', NULL,NULL ],
-			[ $this->site->id, 'cmg_powered','CMG Powered','backend', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'default_avatar', 'Default Avatar','backend', 1, 'text', 'avatar-site.png',NULL ],
-			[ $this->site->id, 'user_avatar','User Avatar','backend', 1, 'text', 'avatar-user.png',NULL ],
-			[ $this->site->id, 'mail_avatar','Mail Avatar','backend', 1, 'text', 'avatar-mail.png',NULL ],
-			[ $this->site->id, 'default_banner','Default Banner','backend', 1, 'text', 'banner-site.jpg',NULL ],
-			[ $this->site->id, 'page_banner','Page Banner','backend', 1, 'text', 'banner-page.jpg',NULL ],
-			[ $this->site->id, 'mail_banner','Mail Banner','backend', 1, 'text', 'banner-mail.jpg',NULL ],
-			[ $this->site->id, 'default_avatar', 'Default Avatar','frontend', 1, 'text', 'avatar-site.png',NULL ],
-			[ $this->site->id, 'user_avatar','User Avatar','frontend', 1, 'text', 'avatar-user.png',NULL ],
-			[ $this->site->id, 'mail_avatar','User Avatar','frontend', 1, 'text', 'avatar-mail.png',NULL ],
-			[ $this->site->id, 'default_banner','Default Banner','frontend', 1, 'text', 'banner-site.jpg',NULL ],
-			[ $this->site->id, 'page_banner','Page Banner','frontend', 1, 'text', 'banner-page.jpg',NULL ],
-			[ $this->site->id, 'mail_banner','Page Banner','frontend', 1, 'text', 'banner-mail.jpg',NULL ]
+			[ $this->site->id, 'locale_message', 'Locale Message', CoreGlobal::CONFIG_CORE, 1, 'flag', '0',NULL ],
+			[ $this->site->id, 'language', 'Language', CoreGlobal::CONFIG_CORE, 1, 'text', 'en-US',NULL ],
+			[ $this->site->id, 'locale', 'Locale', CoreGlobal::CONFIG_CORE, 1, 'text', 'en_US',NULL ],
+			[ $this->site->id, 'charset', 'Charset', CoreGlobal::CONFIG_CORE, 1, 'text', 'UTF-8',NULL ],
+			[ $this->site->id, 'site_title', 'Site Title', CoreGlobal::CONFIG_CORE, 1, 'text', $this->siteTitle,NULL ],
+			[ $this->site->id, 'site_name','Site Name',CoreGlobal::CONFIG_CORE, 1, 'text', $this->siteName,NULL ],
+			[ $this->site->id, 'site_url', 'Site Url', CoreGlobal::CONFIG_CORE, 1, 'text', $defaultSite,NULL ],
+			[ $this->site->id, 'admin_url', 'Admin Url', CoreGlobal::CONFIG_CORE, 1, 'text', $defaultAdmin,NULL ],
+			[ $this->site->id, 'resource_url', 'Resource Url', CoreGlobal::CONFIG_CORE, 1, 'text', $defaultSite,NULL ],
+			[ $this->site->id, 'registration','Registration', CoreGlobal::CONFIG_CORE, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'login','Login', CoreGlobal::CONFIG_CORE, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'change_email','Change Email', CoreGlobal::CONFIG_CORE, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'change_username','Change Username', CoreGlobal::CONFIG_CORE, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'change_mobile','Change Mobile', CoreGlobal::CONFIG_CORE, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'date_format','Date Format', CoreGlobal::CONFIG_CORE, 1, 'text','yyyy-MM-dd',NULL ],
+			[ $this->site->id, 'time_format','Time Format', CoreGlobal::CONFIG_CORE, 1, 'text','HH:mm:ss',NULL ],
+			[ $this->site->id, 'date_time_format','Date Time Format', CoreGlobal::CONFIG_CORE, 1, 'text','yyyy-MM-dd HH:mm:ss',NULL ],
+			[ $this->site->id, 'timezone','Timezone', CoreGlobal::CONFIG_CORE, 1, 'text', $timezone,NULL ],
+			[ $this->site->id, 'auto_login','Auto Login', CoreGlobal::CONFIG_CORE, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'auto_load','Auto Load', CoreGlobal::CONFIG_CORE, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'caching','Caching', CoreGlobal::CONFIG_CACHE, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'cache_duration','Cache Type', CoreGlobal::CONFIG_CACHE, 1, 'text',NULL,NULL ],
+			[ $this->site->id, 'default_cache','Default Cache', CoreGlobal::CONFIG_CACHE, 1, 'text',NULL,NULL ],
+			[ $this->site->id, 'primary_cache','Primary Cache', CoreGlobal::CONFIG_CACHE, 1, 'text',NULL,NULL ],
+			[ $this->site->id, 'secondary_cache','Secondary Cache', CoreGlobal::CONFIG_CACHE, 1, 'text',NULL,NULL ],
+			[ $this->site->id, 'smtp','SMTP', CoreGlobal::CONFIG_MAIL, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'smtp_username','SMTP Username', CoreGlobal::CONFIG_MAIL, 1, 'text','',NULL ],
+			[ $this->site->id, 'smtp_password','SMTP Password', CoreGlobal::CONFIG_MAIL, 1, 'text','',NULL ],
+			[ $this->site->id, 'smtp_host','SMTP Host', CoreGlobal::CONFIG_MAIL, 1, 'text','',NULL ],
+			[ $this->site->id, 'smtp_port','SMTP Port', CoreGlobal::CONFIG_MAIL, 1, 'text','587',NULL ],
+			[ $this->site->id, 'smtp_encryption','SMTP Encryption', CoreGlobal::CONFIG_MAIL, 1, 'text','tls',NULL ],
+			[ $this->site->id, 'debug','Debug', CoreGlobal::CONFIG_MAIL, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'sender_name','Sender Name', CoreGlobal::CONFIG_MAIL, 1, 'text','Admin',NULL ],
+			[ $this->site->id, 'sender_email','Sender Email', CoreGlobal::CONFIG_MAIL, 1, 'text', "$siteMaster@$primaryDomain",NULL ],
+			[ $this->site->id, 'contact_name','Contact Name', CoreGlobal::CONFIG_MAIL, 1, 'text','Contact Us',NULL ],
+			[ $this->site->id, 'contact_email','Contact Email', CoreGlobal::CONFIG_MAIL, 1, 'text', "$siteContact@$primaryDomain",NULL ],
+			[ $this->site->id, 'info_name','Info Name', CoreGlobal::CONFIG_MAIL, 1, 'text','Info',NULL ],
+			[ $this->site->id, 'info_email','Info Email', CoreGlobal::CONFIG_MAIL, 1, 'text',"$siteInfo@$primaryDomain",NULL ],
+			[ $this->site->id, 'comments','Comments', CoreGlobal::CONFIG_COMMENT, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'comments_user','Comments User', CoreGlobal::CONFIG_COMMENT, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'comments_recent','Comments Recent', CoreGlobal::CONFIG_COMMENT, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'comments_limit','Comments Limit', CoreGlobal::CONFIG_COMMENT, 1, 'text', EntityService::PAGE_LIMIT,NULL ],
+			[ $this->site->id, 'comments_email_admin','Comments Email Admin', CoreGlobal::CONFIG_COMMENT, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'comments_email_user','Comments Email User', CoreGlobal::CONFIG_COMMENT, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'comments_form_top','Comments Form Top', CoreGlobal::CONFIG_COMMENT, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'comments_auto','Comments Auto', CoreGlobal::CONFIG_COMMENT, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'comments_anonymous', 'Comments Anonymous', CoreGlobal::CONFIG_COMMENT, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'comments_filter','Comments Filter', CoreGlobal::CONFIG_COMMENT, 1, 'text', NULL,NULL ],
+			[ $this->site->id, 'comments_all_fields','Comments All Fields', CoreGlobal::CONFIG_COMMENT, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'comments_labels','Comments Labels', CoreGlobal::CONFIG_COMMENT, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'comments_disqus','Comments DISQUS', CoreGlobal::CONFIG_COMMENT, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'comments_disqus_forum','Comments DISQUS Forum', CoreGlobal::CONFIG_COMMENT, 1, 'text', NULL,NULL ],
+			[ $this->site->id, 'cmg_powered','CMG Powered', CoreGlobal::CONFIG_ADMIN, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'default_avatar', 'Default Avatar', CoreGlobal::CONFIG_ADMIN, 1, 'text', 'avatar-site.png',NULL ],
+			[ $this->site->id, 'user_avatar','User Avatar', CoreGlobal::CONFIG_ADMIN, 1, 'text', 'avatar-user.png',NULL ],
+			[ $this->site->id, 'mail_avatar','Mail Avatar', CoreGlobal::CONFIG_ADMIN, 1, 'text', 'avatar-mail.png',NULL ],
+			[ $this->site->id, 'default_banner','Default Banner', CoreGlobal::CONFIG_ADMIN, 1, 'text', 'banner-site.jpg',NULL ],
+			[ $this->site->id, 'page_banner','Page Banner', CoreGlobal::CONFIG_ADMIN, 1, 'text', 'banner-page.jpg',NULL ],
+			[ $this->site->id, 'mail_banner','Mail Banner', CoreGlobal::CONFIG_ADMIN, 1, 'text', 'banner-mail.jpg',NULL ],
+			[ $this->site->id, 'default_avatar', 'Default Avatar', CoreGlobal::CONFIG_FRONTEND, 1, 'text', 'avatar-site.png',NULL ],
+			[ $this->site->id, 'user_avatar','User Avatar', CoreGlobal::CONFIG_FRONTEND, 1, 'text', 'avatar-user.png',NULL ],
+			[ $this->site->id, 'mail_avatar','User Avatar', CoreGlobal::CONFIG_FRONTEND, 1, 'text', 'avatar-mail.png',NULL ],
+			[ $this->site->id, 'default_banner','Default Banner', CoreGlobal::CONFIG_FRONTEND, 1, 'text', 'banner-site.jpg',NULL ],
+			[ $this->site->id, 'page_banner','Page Banner', CoreGlobal::CONFIG_FRONTEND, 1, 'text', 'banner-page.jpg',NULL ],
+			[ $this->site->id, 'mail_banner','Page Banner', CoreGlobal::CONFIG_FRONTEND, 1, 'text', 'banner-mail.jpg',NULL ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_site_meta', $columns, $metas );

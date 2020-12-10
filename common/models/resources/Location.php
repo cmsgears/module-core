@@ -97,14 +97,18 @@ class Location extends \cmsgears\core\common\models\base\Resource implements IDa
 		$rules = [
 			// Required, Safe
 			[ [ 'id', 'notes' ], 'safe' ],
+			[ [ 'regionId' ], 'required', 'on' => 'region' ],
 			[ [ 'latitude', 'longitude' ], 'required', 'on' => 'location' ],
+			[ [ 'regionId', 'latitude', 'longitude' ], 'required', 'on' => 'regionlocation' ],
 			// Text Limit
 			[ [ 'zip', 'subZip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ [ 'countryName', 'provinceName', 'regionName' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ [ 'title', 'cityName' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
 			[ [ 'zip', 'subZip' ], 'alphanumhyphenspace' ],
-			[ [ 'countryId', 'provinceId', 'regionId', 'cityId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ 'regionId', 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ 'regionId', 'number', 'on' => [ 'region', 'regionlocation' ], 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'countryId', 'provinceId', 'cityId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'longitude', 'latitude', 'zoomLevel' ], 'number' ],
 			[ 'accessedAt', 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];

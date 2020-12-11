@@ -512,7 +512,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'galleryId' => $this->bigInteger( 20 ),
 			'templateId' => $this->bigInteger( 20 ),
 			'status' => $this->smallInteger( 6 )->defaultValue( 0 ),
-			'email' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
+			'email' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'username' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'slug' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'passwordHash' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),

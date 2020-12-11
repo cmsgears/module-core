@@ -23,16 +23,18 @@ $returnUrl		= $this->context->returnUrl;
 							<div class="colf colf12x5">
 								<?= $form->field( $model, 'title' ) ?>
 							</div>
-							<div class="colf colf12x2"> </div>
-							<div class="colf colf12x5"></div>
-						</div>
-						<div class="row max-cols-100">
+							<div class="colf colf12x2"></div>
 							<div class="colf colf12x5">
 								<?= $form->field( $model, 'line1' )->textInput()->label( 'Address 1' ) ?>
 							</div>
-							<div class="colf colf12x2"> </div>
+						</div>
+						<div class="row max-cols-100">
 							<div class="colf colf12x5">
 								<?= $form->field( $model, 'line2' )->textInput()->label( 'Address 2' ) ?>
+							</div>
+							<div class="colf colf12x2"></div>
+							<div class="colf colf12x5">
+								<?= $form->field( $model, 'line3' )->textInput()->label( 'Address 3' ) ?>
 							</div>
 						</div>
 						<div class="row max-cols-100">

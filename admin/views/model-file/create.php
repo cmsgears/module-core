@@ -21,7 +21,7 @@ $fileErrors = $file->getErrors();
 			</div>
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<label>File</label>
 							<?= SharedUploader::widget( [ 'model' => $file ] ) ?>
@@ -33,7 +33,7 @@ $fileErrors = $file->getErrors();
 							<?= $form->field( $file, 'description' )->textarea() ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $file, 'title' ) ?>
 						</div>
@@ -41,7 +41,7 @@ $fileErrors = $file->getErrors();
 							<?= $form->field( $file, 'caption' ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $file, 'link' ) ?>
 						</div>
@@ -49,7 +49,7 @@ $fileErrors = $file->getErrors();
 							<?= $form->field( $file, 'altText' ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col4">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active' ) ?>
 						</div>

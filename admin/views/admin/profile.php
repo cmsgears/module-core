@@ -13,7 +13,6 @@ $user = Yii::$app->core->getUser();
 		<div class="header">My Profile</div>
 	</div>
 	<div class="box-wrap-content">
-
 		<div class="box-content clearfix">
 			<div class="header">User Avatar</div>
 			<?= AvatarUploader::widget([
@@ -22,7 +21,6 @@ $user = Yii::$app->core->getUser();
 				'postAction' => true, 'postViewIcon' => 'cmti cmti-2x cmti-user'
 			])?>
 		</div>
-
 		<div class="box-content clearfix">
 			<div class="header">User Profile</div>
 			<div class="box-form box-form-regular">

@@ -14,7 +14,7 @@ $renderers		= Yii::$app->templateManager->renderers;
 
 Editor::widget();
 ?>
-<div class="box-crud-wrap row">
+<div class="box-crud-wrap">
 	<div class="box-crud-wrap-main">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-template', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
@@ -23,7 +23,7 @@ Editor::widget();
 			</div>
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col3">
 							<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
@@ -34,7 +34,7 @@ Editor::widget();
 							<?= $form->field( $model, 'title' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ], 'disabled' => true ] ) ?>
 						</div>
@@ -42,7 +42,7 @@ Editor::widget();
 							<?= $form->field( $model, 'renderer' )->dropDownList( $renderers, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active', [ 'disabled' => true ] ) ?>
 						</div>
@@ -50,7 +50,7 @@ Editor::widget();
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'frontend', [ 'disabled' => true ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
 						</div>
@@ -58,7 +58,7 @@ Editor::widget();
 							<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'classPath' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>

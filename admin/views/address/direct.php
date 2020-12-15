@@ -9,7 +9,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Address | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
-<div class="box-crud-wrap row">
+<div class="box-crud-wrap">
 	<div class="box-crud-wrap-main">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-address', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">

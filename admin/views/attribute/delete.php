@@ -23,7 +23,7 @@ Editor::widget();
 			</div>
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2 margin margin-bottom-small">
 							<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=> 'true' ] ) ?>
 							<p class="note">Attribute name must be lower case. An underscore(_) must be used to separate words.</p>
@@ -33,7 +33,7 @@ Editor::widget();
 							<p class="note">Attribute label will be used for display purpose.</p>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'valueType' )->dropDownList( $typeMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
 						</div>
@@ -42,7 +42,7 @@ Editor::widget();
 							<p class="note reader">Attributes can be segregated based on type. It must be set to <em class="bold">default</em> in case no segregation is required.</p>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= IconChooser::widget( [ 'model' => $model, 'disabled' => true, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
@@ -50,7 +50,7 @@ Editor::widget();
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active', [ 'disabled' => true ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'value' )->textarea( [ 'rows' => 5, 'readonly'=> 'true' ] ) ?>
 						</div>

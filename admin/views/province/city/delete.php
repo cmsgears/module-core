@@ -20,7 +20,7 @@ $region	= isset( $model->region ) ? $model->region->name : null;
 			</div>
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
@@ -31,7 +31,7 @@ $region	= isset( $model->region ) ? $model->region->name : null;
 							])?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'code' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
@@ -39,7 +39,7 @@ $region	= isset( $model->region ) ? $model->region->name : null;
 							<?= $form->field( $model, 'iso' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'latitude' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
@@ -47,7 +47,7 @@ $region	= isset( $model->region ) ? $model->region->name : null;
 							<?= $form->field( $model, 'longitude' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'zone' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
@@ -55,7 +55,7 @@ $region	= isset( $model->region ) ? $model->region->name : null;
 							<?= $form->field( $model, 'regions' )->textarea( [ 'readonly' => true ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'postal' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>

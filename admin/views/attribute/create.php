@@ -20,7 +20,7 @@ $returnUrl		= $this->context->returnUrl;
 			</div>
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2 margin margin-bottom-small">
 							<?= $form->field( $model, 'name' ) ?>
 							<p class="note">To accept values from Form submits, an underscore(_) can be used to separate words.</p>
@@ -30,7 +30,7 @@ $returnUrl		= $this->context->returnUrl;
 							<p class="note">Attribute label will be used for display purpose.</p>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'valueType' )->dropDownList( $typeMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
@@ -39,7 +39,7 @@ $returnUrl		= $this->context->returnUrl;
 							<p class="note reader">Attributes can be segregated based on type. It must be set to <em class="bold">default</em> in case no segregation is required.</p>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
@@ -47,7 +47,7 @@ $returnUrl		= $this->context->returnUrl;
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active' ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'value' )->textarea( [ 'rows' => 5 ] ) ?>
 						</div>

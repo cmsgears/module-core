@@ -16,7 +16,7 @@ $returnUrl		= $this->context->returnUrl;
 
 Editor::widget();
 ?>
-<div class="box-crud-wrap row">
+<div class="box-crud-wrap">
 	<div class="box-crud-wrap-main">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-user', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
@@ -25,7 +25,7 @@ Editor::widget();
 			</div>
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'email' ) ?>
 						</div>
@@ -33,7 +33,7 @@ Editor::widget();
 							<?= $form->field( $model, 'username' ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col4">
 							<?= $form->field( $model, 'title' ) ?>
 						</div>
@@ -47,7 +47,7 @@ Editor::widget();
 							<?= $form->field( $model, 'lastName' ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'mobile' ) ?>
 						</div>
@@ -55,7 +55,7 @@ Editor::widget();
 							<?= $form->field( $model, 'phone' ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'message' ) ?>
 						</div>
@@ -63,7 +63,7 @@ Editor::widget();
 							<?= Yii::$app->formDesigner->getIconInput( $form, $model, 'dob', [ 'right' => true, 'icon' => 'cmti cmti-calendar', 'options' => [ 'class' => 'datepicker', 'autocomplete' => 'off' ] ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $member, 'roleId' )->dropDownList( $roleMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
@@ -71,7 +71,7 @@ Editor::widget();
 							<?= $form->field( $model, 'status' )->dropDownList( $statusMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
@@ -89,7 +89,7 @@ Editor::widget();
 			</div>
 			<div class="box-content">
 				<div class="box-content">
-					<div class="row padding padding-small-v">
+					<div class="row max-cols-50 padding padding-small-v">
 						<div class="col col12x4">
 							<label>Avatar</label>
 							<?= AvatarUploader::widget( [ 'model' => $avatar, 'clearAction' => true ] ) ?>

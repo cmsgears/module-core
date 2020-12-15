@@ -24,7 +24,7 @@ Editor::widget();
 			</div>
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="row row-medium">
 							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'createdBy', [
 								'placeholder' => 'Search Creator', 'icon' => 'cmti cmti-search',
@@ -34,7 +34,7 @@ Editor::widget();
 						<div class="note">Notes: Use Search Creator only in case submit need to be done on behalf of selected user.</div>
 					</div>
 					<div class="filler-height filler-height-medium"></div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
@@ -42,7 +42,7 @@ Editor::widget();
 							<?= $form->field( $model, 'email' ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'avatarUrl' ) ?>
 						</div>
@@ -50,7 +50,7 @@ Editor::widget();
 							<?= $form->field( $model, 'websiteUrl' ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'status' )->dropDownList( $statusMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
@@ -58,7 +58,7 @@ Editor::widget();
 							<?= Yii::$app->formDesigner->getRatingField( [ 'model' => $model, 'stars' => $stars ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured', [ 'disabled' => true ] ) ?>
 						</div>

@@ -20,7 +20,7 @@ $apixBase		= $this->context->apixBase;
 
 Editor::widget();
 ?>
-<div class="box-crud-wrap row">
+<div class="box-crud-wrap">
 	<div class="box-crud-wrap-main">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-element', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
@@ -29,7 +29,7 @@ Editor::widget();
 			</div>
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $object, 'name' ) ?>
 						</div>
@@ -37,7 +37,7 @@ Editor::widget();
 							<?= $form->field( $object, 'title' ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $object, 'status' )->dropDownList( $statusMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
@@ -45,7 +45,7 @@ Editor::widget();
 							<?= $form->field( $object, 'visibility' )->dropDownList( $visibilityMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $object, 'pinned' ) ?>
 						</div>
@@ -53,7 +53,7 @@ Editor::widget();
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $object, 'featured' ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= IconChooser::widget( [ 'model' => $object, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
@@ -61,7 +61,7 @@ Editor::widget();
 							<?= TextureChooser::widget( [ 'model' => $object, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $object, 'description' )->textarea() ?>
 						</div>
@@ -69,7 +69,7 @@ Editor::widget();
 							<?= $form->field( $object, 'htmlOptions' )->textarea() ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $object, 'order' ) ?>
 						</div>

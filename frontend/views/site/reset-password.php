@@ -18,13 +18,13 @@ $this->title	= $coreProperties->getSiteTitle() . ' | Reset Password';
 ?>
 		<ul>
 			<li>
-				<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email*', 'readOnly' => true ] ) ?>
+				<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email *', 'readOnly' => true ] ) ?>
 			</li>
 			<li>
-				<?= $form->field( $model, 'password' )->passwordInput( [ 'placeholder' => 'Password*' ] ) ?>
+				<?= $form->field( $model, 'password' )->passwordInput( [ 'placeholder' => 'Password *' ] ) ?>
 			</li>
 			<li>
-				<?= $form->field( $model, 'password_repeat' )->passwordInput( [ 'placeholder' => 'Repeat Password*' ] ) ?>
+				<?= $form->field( $model, 'password_repeat' )->passwordInput( [ 'placeholder' => 'Repeat Password *' ] ) ?>
 			</li>
 			<li>
 				<input type="submit" value="Reset" />

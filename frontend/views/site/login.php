@@ -16,10 +16,10 @@ $this->title	= $coreProperties->getSiteTitle() . ' | Login';
 ?>
 	<ul>
 		<li>
-			<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email*' ] ) ?>
+			<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email / Username *' ] ) ?>
 		</li>
 		<li>
-			<?= $form->field( $model, 'password' )->passwordInput( array( 'placeholder' => 'Password*' ) ) ?>
+			<?= $form->field( $model, 'password' )->passwordInput( [ 'placeholder' => 'Password *' ] ) ?>
 		</li>
 		<li>
 			<?= $form->field( $model, 'rememberMe' )->checkbox() ?>

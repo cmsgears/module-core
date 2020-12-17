@@ -21,7 +21,7 @@ $this->title	= $coreProperties->getSiteTitle() . " | Forgot Password";
 				Please provide the email address used while signing up.
 			</li>
 			<li>
-				<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email*' ] ) ?>
+				<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email *' ] ) ?>
 			</li>
 			<li>
 				<input type="submit"  value="Submit" />

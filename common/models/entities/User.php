@@ -213,7 +213,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 		$rules = [
 			// Required, Safe
 			[ 'email', 'required' ],
-			[ [ 'firstName', 'email', 'username' ], 'required', 'on' => 'profile' ],
+			[ [ 'firstName', 'username' ], 'required', 'on' => 'profile' ],
 			[ [ 'id', 'content' ], 'safe' ],
 			// Unique
 			[ 'email', 'unique' ],

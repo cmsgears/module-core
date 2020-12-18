@@ -159,6 +159,8 @@ abstract class PageWidget extends Widget {
 	 */
 	public $siteId = null;
 
+	public $query;
+
 	/**
 	 * DataProvider to fetch initial page.
 	 */

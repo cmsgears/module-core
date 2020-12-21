@@ -63,7 +63,7 @@ Editor::widget();
 							<?= $form->field( $model, 'classPath' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'fileRender', [ 'class' => 'cmt-checkbox cmt-choice cmt-field-group', 'disabled' => true, 'group-target' => 'render-file', 'group-alt' => 'render-content' ] ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'fileRender', [ 'class' => 'cmt-checkbox choice cmt-field-group', 'disabled' => true, 'group-target' => 'render-file', 'group-alt' => 'render-content' ] ) ?>
 						</div>
 					</div>
 					<div class="row render-file">

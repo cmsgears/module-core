@@ -64,7 +64,8 @@ trait NameTypeTrait {
 	// Read - Query -----------
 
 	/**
-	 * Return query to find the models by given name.
+	 * Return query to find the models by given name. It's mostly used for auto-search, hence
+	 * set the default limit to 10.
 	 *
 	 * @param string $name
 	 * @param array $config
@@ -97,7 +98,8 @@ trait NameTypeTrait {
 	}
 
 	/**
-	 * Return query to find the models by given type.
+	 * Return query to find the models by given type. It's mostly used for mappings, hence
+	 * set the default limit to 0.
 	 *
 	 * @param string $type
 	 * @param array $config
@@ -107,7 +109,7 @@ trait NameTypeTrait {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 
-		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 1;
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
 		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
@@ -141,7 +143,7 @@ trait NameTypeTrait {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 
-		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 1;
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
 		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {

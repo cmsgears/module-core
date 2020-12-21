@@ -65,6 +65,8 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 	 */
 	public $scenario;
 
+	public $notification = false;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -158,6 +160,12 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 						}
 					}
 
+					// Trigger Notification
+					if( isset( $this->notification ) ) {
+
+						$this->triggerNotification( $modelComment );
+					}
+
 					// Trigger Ajax Success
 					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 				}
@@ -183,6 +191,11 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 		}
 
 		return $files;
+	}
+
+	protected function triggerNotification( $model ) {
+
+		// Placeholder Method
 	}
 
 }

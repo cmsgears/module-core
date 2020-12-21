@@ -137,6 +137,10 @@ class CoreGlobal {
 	const TPL_NOTIFY_SUGGEST_CATEGORY	= 'suggest-category';
 	const TPL_NOTIFY_SUGGEST_OPTION		= 'suggest-option';
 
+	// Feedback & Testimonial
+	const TPL_NOTIFY_FEEDBACK		= 'notify-feedback';
+	const TPL_NOTIFY_TESTIMONIAL	= 'notify-testimonial';
+
 	// Template Views --------------------------------------------------
 
 	const TPL_VIEW_ADMIN		= 'admin';

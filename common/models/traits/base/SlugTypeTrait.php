@@ -68,7 +68,7 @@ trait SlugTypeTrait {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 
-		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
 		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
@@ -102,7 +102,7 @@ trait SlugTypeTrait {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 
-		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
 		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {

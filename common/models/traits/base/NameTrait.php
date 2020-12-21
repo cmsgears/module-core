@@ -72,16 +72,26 @@ trait NameTrait {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
+		$query	= null;
+
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'name=:name AND siteId=:siteId', [ ':name' => $name, ':siteId' => $siteId ] );
+			$query = static::find()->where( 'name=:name AND siteId=:siteId', [ ':name' => $name, ':siteId' => $siteId ] );
 		}
 		else {
 
-			return static::find()->where( 'name=:name', [ ':name' => $name ] );
+			$query = static::find()->where( 'name=:name', [ ':name' => $name ] );
 		}
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
+
+		return $query;
 	}
 
 	// Read - Find ------------

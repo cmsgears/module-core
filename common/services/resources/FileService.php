@@ -207,13 +207,13 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 		$filter		= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
 
 		// Filter - Visibility
-		if( isset( $visibility ) && isset( $modelClass::$urlRevVisibilityMap[ $visibility ] ) ) {
+		if( isset( $visibility ) && empty( $config[ 'conditions' ][ "$modelTable.visibility" ] ) && isset( $modelClass::$urlRevVisibilityMap[ $visibility ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.visibility" ]	= $modelClass::$urlRevVisibilityMap[ $visibility ];
 		}

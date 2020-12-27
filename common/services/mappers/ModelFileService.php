@@ -234,13 +234,13 @@ class ModelFileService extends \cmsgears\core\common\services\base\ModelMapperSe
 		$visibility	= Yii::$app->request->getQueryParam( 'visibility' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
 
 		// Filter - File Type
-		if( isset( $ftype ) ) {
+		if( isset( $ftype ) && empty( $config[ 'conditions' ][ "$fileTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$fileTable.type" ] = $ftype;
 		}

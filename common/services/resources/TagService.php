@@ -161,7 +161,7 @@ class TagService extends \cmsgears\core\common\services\base\ResourceService imp
 		$type = Yii::$app->request->getQueryParam( 'type' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}

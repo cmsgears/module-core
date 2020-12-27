@@ -593,67 +593,6 @@ class Core extends \cmsgears\core\common\base\Config {
 
 	// Cookies & Session
 
-	public function setAppUser( $user ) {
-
-		$cookieName = '_app-user';
-
-		$guestUser[ 'user' ] = [ 'id' => $user->id, 'firstname' => $user->firstName, 'lastname' => $user->lastName, 'email' => $user->email ];
-
-		if( isset( $_COOKIE[ $cookieName ] ) ) {
-
-			$data = unserialize( $_COOKIE[ $cookieName ] );
-
-			if( $data[ 'user' ][ 'id' ] != $user->id ) {
-
-				return setcookie( $cookieName, serialize( $guestUser ), time() + ( 10 * 365 * 24 * 60 * 60 ), "/", null );
-			}
-		}
-		else {
-
-			return setcookie( $cookieName, serialize( $guestUser ), time() + ( 10 * 365 * 24 * 60 * 60 ), "/", null );
-		}
-	}
-
-	// Call setAppUser at least once for new user before calling this method.
-	public function getAppUser() {
-
-		$cookieName = '_app-user';
-		$appUser	= null;
-		$user		= Yii::$app->user->identity;
-
-		if( $user != null ) {
-
-			$appUser = $user;
-		}
-		else if( isset( $_COOKIE[ $cookieName ] ) ) {
-
-			$data = unserialize( $_COOKIE[ $cookieName ] );
-
-			if( isset( $data[ 'user' ] ) ) {
-
-				//$appUser = (object) $data[ 'user' ]['user'];
-
-				$appUser = UserService::findById( $data[ 'user' ][ 'id' ] );
-			}
-		}
-
-		return $appUser;
-	}
-
-	public function resetAppUser() {
-
-		$cookieName = '_app-user';
-
-		if( isset( $_COOKIE[ $cookieName ] ) ) {
-
-			$data = unserialize( $_COOKIE[ $cookieName ] );
-
-			$data[ 'user' ] = null;
-
-			return setcookie( $cookieName, serialize( $data ), time() + ( 10 * 365 * 24 * 60 * 60 ), "/", null );
-		}
-	}
-
 	/*
 	 * @return $session - Open a session if does not exist in application.
 	 */

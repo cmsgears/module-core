@@ -421,6 +421,8 @@ class CoreGlobal {
 	const FIELD_IMG_SIZES	= 'imgSizesField';
 	const FIELD_ALT_TEXT	= 'altTextField';
 
+	const FIELD_STARTS_AT	= 'startsAtField';
+	const FIELD_ENDS_AT		= 'endsAtField';
 	const FIELD_DATE_START	= 'startDateField';
 	const FIELD_DATE_END	= 'endDateField';
 	const FIELD_DAY_WEEK	= 'Week Day';

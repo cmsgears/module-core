@@ -252,12 +252,12 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		$status	= Yii::$app->request->getQueryParam( 'status' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
 
-		if( isset( $status ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
+		if( isset( $status ) && empty( $config[ 'conditions' ][ "$modelTable.status" ] ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.status" ]	= $modelClass::$urlRevStatusMap[ $status ];
 		}

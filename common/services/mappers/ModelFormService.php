@@ -158,13 +158,13 @@ class ModelFormService extends \cmsgears\core\common\services\base\ModelMapperSe
 		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
 
 		// Filter - Status
-		if( isset( $status ) && isset( $formClass::$urlRevStatusMap[ $status ] ) ) {
+		if( isset( $status ) && empty( $config[ 'conditions' ][ "$modelTable.status" ] ) && isset( $formClass::$urlRevStatusMap[ $status ] ) ) {
 
 			$config[ 'conditions' ][ "$formTable.status" ] = $formClass::$urlRevStatusMap[ $status ];
 		}

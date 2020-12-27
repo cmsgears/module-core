@@ -250,6 +250,12 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 
 	    if( parent::beforeSave( $insert ) ) {
 
+			// Default Site
+			if( empty( $this->siteId ) || $this->siteId <= 0 ) {
+
+				$this->siteId = Yii::$app->core->siteId;
+			}
+
 			// Default Type - Default
 			$this->type = $this->type ?? FileManager::FILE_TYPE_DOCUMENT;
 

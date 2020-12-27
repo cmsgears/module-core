@@ -178,6 +178,8 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_ALT_TEXT => 'Alt Text',
 		CoreGlobal::FIELD_IMG_SRCSET => 'Srcset Breakpoints',
 		CoreGlobal::FIELD_IMG_SIZES => 'Responsive Sizes',
+		CoreGlobal::FIELD_STARTS_AT => 'Starts At',
+		CoreGlobal::FIELD_ENDS_AT => 'Ends At',
 		CoreGlobal::FIELD_DATE_START => 'Start Date',
 		CoreGlobal::FIELD_DATE_END => 'End Date',
 		CoreGlobal::FIELD_DAY_WEEK => 'Week Day',

@@ -142,7 +142,7 @@ class ModelMetaService extends \cmsgears\core\common\services\base\ModelResource
 		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}

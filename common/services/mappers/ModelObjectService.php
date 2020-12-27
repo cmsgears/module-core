@@ -180,13 +180,13 @@ class ModelObjectService extends \cmsgears\core\common\services\base\ModelMapper
 		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
 
 		// Filter - Status
-		if( isset( $status ) && isset( $objectDataClass::$urlRevStatusMap[ $status ] ) ) {
+		if( isset( $status ) && empty( $config[ 'conditions' ][ "$modelTable.status" ] ) && isset( $objectDataClass::$urlRevStatusMap[ $status ] ) ) {
 
 			$config[ 'conditions' ][ "$objectDataTable.status" ] = $objectDataClass::$urlRevStatusMap[ $status ];
 		}

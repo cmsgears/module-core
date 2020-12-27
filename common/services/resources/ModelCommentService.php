@@ -210,7 +210,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Status
-		if( isset( $status ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
+		if( isset( $status ) && empty( $config[ 'conditions' ][ "$modelTable.status" ] ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.status" ]	= $modelClass::$urlRevStatusMap[ $status ];
 		}

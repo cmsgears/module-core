@@ -203,7 +203,7 @@ class CategoryService extends \cmsgears\core\common\services\base\ResourceServic
 		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}

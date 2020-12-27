@@ -183,7 +183,7 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 		$type = Yii::$app->request->getQueryParam( 'type' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}

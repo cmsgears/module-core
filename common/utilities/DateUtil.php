@@ -54,7 +54,22 @@ class DateUtil {
         self::MONTH_SEP => 'September',
         self::MONTH_OCT => 'October',
         self::MONTH_NOV => 'November',
-        self::MONTH_DEC =>'December'
+        self::MONTH_DEC => 'December'
+    ];
+
+    public static $revMonthsMap = [
+        'January' => self::MONTH_JAN,
+        'February' => self::MONTH_FEB,
+        'March' => self::MONTH_MAR,
+        'April' => self::MONTH_APR,
+        'May' => self::MONTH_MAY,
+        'June' => self::MONTH_JUN,
+        'July' => self::MONTH_JUL,
+        'August' => self::MONTH_AUG,
+        'September' => self::MONTH_SEP,
+        'October' => self::MONTH_OCT,
+        'November' => self::MONTH_NOV,
+        'December' => self::MONTH_DEC
     ];
 
 	// Week Days ---------------------------------------------------

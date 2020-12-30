@@ -161,6 +161,20 @@ class CodeGenUtil {
 		return $options;
 	}
 
+	public static function generateMapFromCsv( $csv ) {
+
+		$items = preg_split( '/,/', $csv );
+
+		$map = [];
+
+		foreach( $items as $item ) {
+
+			$map[ $item ] = $item;
+		}
+
+		return $map;
+	}
+
 	// Select for Option Table - By Id and Name
 	public static function generateSelectOptionsIdName( $data, $selected = null ) {
 

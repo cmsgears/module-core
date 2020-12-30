@@ -236,6 +236,7 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IApp
 				$this->templateId = null;
 			}
 
+			// Default Order - zero
 			if( empty( $this->order ) || $this->order <= 0 ) {
 
 				$this->order = 0;
@@ -243,6 +244,9 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IApp
 
 			// Default Type - Default
 			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
+
+			// Default Visibility - Private
+			$this->visibility = $this->visibility ?? self::VISIBILITY_PUBLIC;
 
 			return true;
 		}

@@ -317,15 +317,6 @@ class GalleryService extends \cmsgears\core\common\services\base\ResourceService
 
 	public function create( $model, $config = [] ) {
 
-		// Model Class
-		$modelClass = static::$modelClass;
-
-		// Default Visibility
-		if( !isset( $model->visibility ) ) {
-
-			$model->visibility = $modelClass::VISIBILITY_PUBLIC;
-		}
-
 		// Copy Template
 		$config[ 'template' ] = $model->template;
 

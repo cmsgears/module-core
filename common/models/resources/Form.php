@@ -250,8 +250,17 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IApprov
 				$this->templateId = null;
 			}
 
+			// Default Status - New
+			if( empty( $this->status ) || $this->status <= 0 ) {
+
+				$this->status = self::STATUS_NEW;
+			}
+
 			// Default Type - Default
 			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
+
+			// Default Visibility - Private
+			$this->visibility = $this->visibility ?? self::VISIBILITY_PRIVATE;
 
 			return true;
 		}

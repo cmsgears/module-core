@@ -515,16 +515,9 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	public function create( $model, $config = [] ) {
 
-		$modelClass	= static::$modelClass;
-
 		$avatar	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 		$banner	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$video 	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
-
-		if( !isset( $model->visibility ) ) {
-
-			$model->visibility = $modelClass::VISIBILITY_PRIVATE;
-		}
 
 		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
 

@@ -132,7 +132,8 @@ abstract class ModelObjectController extends Controller {
 				'dataProvider' => $dataProvider,
 				'parent' => $parent,
 				'statusMap' => $objectClass::$minStatusMap,
-				'visibilityMap' => $objectClass::$visibilityMap
+				'visibilityMap' => $objectClass::$visibilityMap,
+				'filterStatusMap' => $objectClass::$filterMinStatusMap
 			]);
 		}
 

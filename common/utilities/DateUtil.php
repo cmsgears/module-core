@@ -694,8 +694,13 @@ class DateUtil {
 
 		$startYear	= isset( $config[ 'startYear' ] ) ? $config[ 'startYear' ] : $currentyear;
 		$endYear	= isset( $config[ 'endYear' ] ) ? $config[ 'endYear' ] : $currentyear;
+		$addToEnd	= isset( $config[ 'addToEnd' ] ) ? $config[ 'addToEnd' ] : 0;
 		$difference	= isset( $config[ 'difference' ] ) ? $config[ 'difference' ] : 1;
 		$reverse	= isset( $config[ 'reverse' ] ) ? $config[ 'reverse' ] : false;
+
+		$endYear = $endYear + $addToEnd;
+
+		$year = $startYear;
 
 		if( $reverse ) {
 

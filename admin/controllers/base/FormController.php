@@ -120,7 +120,8 @@ abstract class FormController extends Controller {
 			'dataProvider' => $dataProvider,
 			'submits' => $this->submits,
 			'visibilityMap' => $modelClass::$visibilityMap,
-			'statusMap' => $modelClass::$statusMap
+			'statusMap' => $modelClass::$subStatusMap,
+			'filterStatusMap' => $modelClass::$filterSubStatusMap
 		]);
 	}
 

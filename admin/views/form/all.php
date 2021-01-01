@@ -27,13 +27,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'cdate' => 'Created At', 'udate' => 'Updated At'
 	],
 	'filters' => [
-		'status' => [
-			'new' => 'New', 'submitted' => 'Submitted', 're-submitted' => 'Re Submitted',
-			'rejected' => 'Rejected', 'active' => 'Active',
-			'frozen' => 'Frozen', 'uplift-freeze' => 'Uplift Freeze',
-			'blocked' => 'Blocked', 'uplift-block' => 'Uplift Block',
-			'terminated' => 'Terminated'
-		],
+		'status' => $filterStatusMap,
 		'model' => [
 			'captcha' => 'Captcha', 'umail' => 'User Mail', 'amail' => 'Admin Mail',
 			'uqsubmit' => 'Unique Submit', 'upsubmit' => 'Update Submit'

@@ -110,13 +110,69 @@ trait ApprovalTrait {
 		'rejected' => IApproval::STATUS_REJECTED,
 		're-submitted' => IApproval::STATUS_RE_SUBMIT,
 		'confirmed' => IApproval::STATUS_CONFIRMED,
-		'approved' => IApproval::STATUS_APPROVED,
 		'active' => IApproval::STATUS_ACTIVE,
 		'frozen' => IApproval::STATUS_FROJEN,
 		'uplift-freeze' => IApproval::STATUS_UPLIFT_FREEZE,
 		'blocked' => IApproval::STATUS_BLOCKED,
 		'uplift-block' => IApproval::STATUS_UPLIFT_BLOCK,
 		'terminated' => IApproval::STATUS_TERMINATED
+	];
+
+	public static $urlRevSubStatusMap = [
+		'new' => IApproval::STATUS_NEW,
+		'submitted' => IApproval::STATUS_SUBMITTED,
+		'rejected' => IApproval::STATUS_REJECTED,
+		're-submitted' => IApproval::STATUS_RE_SUBMIT,
+		'active' => IApproval::STATUS_ACTIVE,
+		'frozen' => IApproval::STATUS_FROJEN,
+		'uplift-freeze' => IApproval::STATUS_UPLIFT_FREEZE,
+		'blocked' => IApproval::STATUS_BLOCKED,
+		'uplift-block' => IApproval::STATUS_UPLIFT_BLOCK,
+		'terminated' => IApproval::STATUS_TERMINATED
+	];
+
+	public static $urlRevMinStatusMap = [
+		'new' => IApproval::STATUS_NEW,
+		'active' => IApproval::STATUS_ACTIVE,
+		'blocked' => IApproval::STATUS_BLOCKED,
+		'uplift-block' => IApproval::STATUS_UPLIFT_BLOCK,
+		'terminated' => IApproval::STATUS_TERMINATED
+	];
+
+	public static $filterStatusMap = [
+		'new' => 'New',
+		'accepted' => 'Accepted',
+		'submitted' => 'Submitted',
+		'rejected' =>'Rejected',
+		're-submitted' => 'Re Submitted',
+		'confirmed' => 'Confirmed',
+		'active' => 'Active',
+		'frozen' => 'Frozen',
+		'uplift-freeze' => 'Uplift Frozen',
+		'blocked' => 'Blocked',
+		'uplift-block' => 'Uplift Block',
+		'terminated' => 'Terminated'
+	];
+
+	public static $filterSubStatusMap = [
+		'new' => 'New',
+		'submitted' => 'Submitted',
+		'rejected' => 'Rejected',
+		're-submitted' => 'Re Submitted',
+		'active' => 'Active',
+		'frozen' => 'Frozen',
+		'uplift-freeze' => 'Uplift Frozen',
+		'blocked' => 'Blocked',
+		'uplift-block' => 'Uplift Block',
+		'terminated' => 'Terminated'
+	];
+
+	public static $filterMinStatusMap = [
+		'new' => 'New',
+		'active' => 'Active',
+		'blocked' => 'Blocked',
+		'uplift-block' => 'Uplift Block',
+		'terminated' => 'Terminated'
 	];
 
 	// Public -----------------

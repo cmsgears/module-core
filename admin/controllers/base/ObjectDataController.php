@@ -128,7 +128,8 @@ abstract class ObjectDataController extends CrudController {
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
 			'visibilityMap' => $modelClass::$visibilityMap,
-			'statusMap' => $modelClass::$statusMap
+			'statusMap' => $this->minStatusMap ? $modelClass::$minStatusMap : $modelClass::$subStatusMap,
+			'filterStatusMap' => $this->minStatusMap ? $modelClass::$filterMinStatusMap : $modelClass::$filterSubStatusMap
 		]);
 	}
 
@@ -162,7 +163,7 @@ abstract class ObjectDataController extends CrudController {
 
 		$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-		$statusMap = $this->minStatusMap ? $modelClass::$minStatusMap : $modelClass::$statusMap;
+		$statusMap = $this->minStatusMap ? $modelClass::$minStatusMap : $modelClass::$subStatusMap;
 
 		return $this->render( 'create', [
 			'model' => $model,
@@ -203,7 +204,7 @@ abstract class ObjectDataController extends CrudController {
 
 			$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-			$statusMap = $this->minStatusMap ? $modelClass::$minStatusMap : $modelClass::$statusMap;
+			$statusMap = $this->minStatusMap ? $modelClass::$minStatusMap : $modelClass::$subStatusMap;
 
 			return $this->render( 'update', [
 				'model' => $model,
@@ -248,7 +249,7 @@ abstract class ObjectDataController extends CrudController {
 
 			$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-			$statusMap = $this->minStatusMap ? $modelClass::$minStatusMap : $modelClass::$statusMap;
+			$statusMap = $this->minStatusMap ? $modelClass::$minStatusMap : $modelClass::$subStatusMap;
 
 			return $this->render( 'delete', [
 				'model' => $model,

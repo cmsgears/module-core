@@ -258,6 +258,11 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 
 	public function sendAcceptMail( $model, $email ) {
 
+		if( empty( $email ) ) {
+
+			return;
+		}
+
 		$fromEmail 	= $this->mailProperties->getSenderEmail();
 		$fromName 	= $this->mailProperties->getSenderName();
 
@@ -270,6 +275,11 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 	}
 
 	public function sendApproveMail( $model, $email ) {
+
+		if( empty( $email ) ) {
+
+			return;
+		}
 
 		$fromEmail 	= $this->mailProperties->getSenderEmail();
 		$fromName 	= $this->mailProperties->getSenderName();
@@ -284,6 +294,11 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 
 	public function sendRejectMail( $model, $email, $message ) {
 
+		if( empty( $email ) ) {
+
+			return;
+		}
+
 		$fromEmail 	= $this->mailProperties->getSenderEmail();
 		$fromName 	= $this->mailProperties->getSenderName();
 
@@ -296,6 +311,11 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 	}
 
 	public function sendBlockMail( $model, $email, $message ) {
+
+		if( empty( $email ) ) {
+
+			return;
+		}
 
 		$fromEmail 	= $this->mailProperties->getSenderEmail();
 		$fromName 	= $this->mailProperties->getSenderName();
@@ -310,6 +330,11 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 
 	public function sendFreezeMail( $model, $email, $message ) {
 
+		if( empty( $email ) ) {
+
+			return;
+		}
+
 		$fromEmail  = $this->mailProperties->getSenderEmail();
 		$fromName   = $this->mailProperties->getSenderName();
 
@@ -322,6 +347,11 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 	}
 
 	public function sendActivateMail( $model, $email ) {
+
+		if( empty( $email ) ) {
+
+			return;
+		}
 
 		$fromEmail 	= $this->mailProperties->getSenderEmail();
 		$fromName 	= $this->mailProperties->getSenderName();

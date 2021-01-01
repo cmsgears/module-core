@@ -27,11 +27,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'cdate' => 'Created At', 'udate' => 'Updated At'
 	],
 	'filters' => [
-		'status' => [
-			'new' => 'New', 'active' => 'Active',
-			'blocked' => 'Blocked', 'uplift-block' => 'Uplift Block',
-			'terminated' => 'Terminated'
-		],
+		'status' => $filterStatusMap,
 		'model' => [
 			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular'
 		]
@@ -49,7 +45,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'popular' => [ 'title' => 'Popular', 'type' => 'flag' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		//'status' => [ 'confirm' => 'Confirm', 'approve' => 'Approve', 'reject' => 'Reject', 'activate' => 'Activate', 'freeze' => 'Freeze', 'block' => 'Block' ],
+		//'status' => [ 'activate' => 'Activate', 'block' => 'Block', 'terminate' => 'Terminated' ],
 		'model' => [
 			'activate' => 'Activate', 'disable' => 'Disable',
 			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular',

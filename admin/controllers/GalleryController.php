@@ -136,7 +136,8 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\CrudContro
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
 			'visibilityMap' => Gallery::$visibilityMap,
-			'statusMap' => Gallery::$statusMap
+			'statusMap' => Gallery::$subStatusMap,
+			'filterStatusMap' => Gallery::$filterSubStatusMap
 		]);
 	}
 

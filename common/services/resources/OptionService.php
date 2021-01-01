@@ -255,6 +255,10 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 	 */
 	public function getIdNameMapByCategoryId( $categoryId, $config = [] ) {
 
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'order' ] = isset( $config[ 'order' ] ) ? $config[ 'order' ] : "$modelTable.order ASC, $modelTable.value ASC";
+
 		$config[ 'conditions' ][ 'categoryId' ] = $categoryId;
 
 		return $this->getIdNameMap( $config );

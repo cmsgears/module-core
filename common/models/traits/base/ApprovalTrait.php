@@ -511,7 +511,7 @@ trait ApprovalTrait {
 	 */
 	public function isSubmittable() {
 
-		return $this->isRegistration();
+		return $this->isRegistration() || $this->isRejected() || $this->isFrojen() || $this->isBlocked();
 	}
 
 	/**

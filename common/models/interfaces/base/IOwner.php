@@ -26,4 +26,6 @@ interface IOwner {
 	 */
 	public function isOwner( $user = null, $strict = false );
 
+	public function getOwner();
+
 }

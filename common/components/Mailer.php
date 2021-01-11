@@ -266,11 +266,13 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromEmail 	= $this->mailProperties->getSenderEmail();
 		$fromName 	= $this->mailProperties->getSenderName();
 
+		$modelName = $model->getDisplayName();
+
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_ACCEPT, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model ] )
 			->setTo( $email )
 			->setFrom( [ $fromEmail => $fromName ] )
-			->setSubject( "Accepted - $model->name | " . $this->coreProperties->getSiteName() )
+			->setSubject( "Accepted - $modelName | " . $this->coreProperties->getSiteName() )
 			->send();
 	}
 
@@ -284,11 +286,13 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromEmail 	= $this->mailProperties->getSenderEmail();
 		$fromName 	= $this->mailProperties->getSenderName();
 
+		$modelName = $model->getDisplayName();
+
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_APPROVE, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model ] )
 			->setTo( $email )
 			->setFrom( [ $fromEmail => $fromName ] )
-			->setSubject( "Approved - $model->name | " . $this->coreProperties->getSiteName() )
+			->setSubject( "Approved - $modelName | " . $this->coreProperties->getSiteName() )
 			->send();
 	}
 
@@ -302,11 +306,13 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromEmail 	= $this->mailProperties->getSenderEmail();
 		$fromName 	= $this->mailProperties->getSenderName();
 
+		$modelName = $model->getDisplayName();
+
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_REJECT, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model, 'message' => $message ] )
 			->setTo( $email )
 			->setFrom( [ $fromEmail => $fromName ] )
-			->setSubject( "Rejected - $model->name | " . $this->coreProperties->getSiteName() )
+			->setSubject( "Rejected - $modelName | " . $this->coreProperties->getSiteName() )
 			->send();
 	}
 
@@ -320,11 +326,13 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromEmail 	= $this->mailProperties->getSenderEmail();
 		$fromName 	= $this->mailProperties->getSenderName();
 
+		$modelName = $model->getDisplayName();
+
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_BLOCK, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model, 'message' => $message ] )
 			->setTo( $email )
 			->setFrom( [ $fromEmail => $fromName ] )
-			->setSubject( "Blocked - $model->name | " . $this->coreProperties->getSiteName() )
+			->setSubject( "Blocked - $modelName | " . $this->coreProperties->getSiteName() )
 			->send();
 	}
 
@@ -338,11 +346,13 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromEmail  = $this->mailProperties->getSenderEmail();
 		$fromName   = $this->mailProperties->getSenderName();
 
+		$modelName = $model->getDisplayName();
+
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_FROZEN, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model, 'message' => $message ] )
 			->setTo( $email )
 			->setFrom( [ $fromEmail => $fromName ] )
-			->setSubject( "Frozen - $model->name | " . $this->coreProperties->getSiteName() )
+			->setSubject( "Frozen - $modelName | " . $this->coreProperties->getSiteName() )
 			->send();
 	}
 
@@ -356,11 +366,13 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromEmail 	= $this->mailProperties->getSenderEmail();
 		$fromName 	= $this->mailProperties->getSenderName();
 
+		$modelName = $model->getDisplayName();
+
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_ACTIVATE, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model ] )
 			->setTo( $email )
 			->setFrom( [ $fromEmail => $fromName ] )
-			->setSubject( "Activated - $model->name | " . $this->coreProperties->getSiteName() )
+			->setSubject( "Activated - $modelName | " . $this->coreProperties->getSiteName() )
 			->send();
 	}
 
@@ -370,11 +382,13 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromName   = $this->mailProperties->getSenderName();
 		$toEmail    = $this->mailProperties->getContactEmail();
 
+		$modelName = $model->getDisplayName();
+
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_A_REQUEST, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model, 'url' => $url ] )
 			->setTo( $toEmail )
 			->setFrom( [ $fromEmail => $fromName ] )
-			->setSubject( "Activation Request - $model->name | " . $this->coreProperties->getSiteName() )
+			->setSubject( "Activation Request - $modelName | " . $this->coreProperties->getSiteName() )
 			->send();
 	}
 

@@ -288,4 +288,16 @@ class Option extends \cmsgears\core\common\models\base\Resource implements ICont
 		return self::deleteAll( 'categoryId=:id', [ ':id' => $categoryId ] );
 	}
 
+	/**
+	 * Delete all the options for given name and category id.
+	 *
+	 * @param string $name
+	 * @param integer $categoryId
+	 * @return integer number of rows.
+	 */
+	public static function deleteByNameCategoryId( $name, $categoryId ) {
+
+		return self::deleteAll( "name=:name AND categoryId=:id", [ ':name' => $name, ':id' => $categoryId ] );
+	}
+
 }

@@ -261,7 +261,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 			$trim[] = [ [ 'email', 'username', 'message', 'description', 'mobile', 'phone', 'firstName', 'middleName', 'lastName', 'avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-			return ArrayHelper::merge( $trim, $rules );
+			return ArrayHelper::merge( $rules, $trim );
 		}
 
 		return $rules;
@@ -324,6 +324,11 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 			if( $this->genderId <= 0 ) {
 
 				$this->genderId = null;
+			}
+
+			if( $this->maritalId <= 0 ) {
+
+				$this->maritalId = null;
 			}
 
 			if( $this->timeZone <= 0 ) {

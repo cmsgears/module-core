@@ -700,16 +700,25 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 
 		$genderCategory		= Category::findBySlugType( CoreGlobal::CATEGORY_GENDER, CoreGlobal::TYPE_OPTION_GROUP );
 		$maritalCategory	= Category::findBySlugType( CoreGlobal::CATEGORY_MARITAL, CoreGlobal::TYPE_OPTION_GROUP );
+		$nokCategory		= Category::findBySlugType( CoreGlobal::CATEGORY_NOK_RELATION, CoreGlobal::TYPE_OPTION_GROUP );
 
-		$columns = [ 'categoryId', 'name', 'value', 'icon' ];
+		$columns = [ 'categoryId', 'name', 'value', 'icon', 'active', 'order' ];
 
 		$options = [
-			[ $genderCategory->id, 'Male', 'male', null ],
-			[ $genderCategory->id, 'Female', 'female', null ],
-			[ $genderCategory->id, 'Other', 'other', null ],
-			[ $maritalCategory->id, 'Married', 'married', null ],
-			[ $maritalCategory->id, 'Unmarried', 'unmarried', null ],
-			[ $maritalCategory->id, 'Other', 'other', null ]
+			[ $genderCategory->id, 'Male', 'male', null, 1, 0 ],
+			[ $genderCategory->id, 'Female', 'female', null, 1, 0 ],
+			[ $genderCategory->id, 'Other', 'other', null, 1, 1 ],
+			[ $maritalCategory->id, 'Married', 'married', null, 1, 0 ],
+			[ $maritalCategory->id, 'Unmarried', 'unmarried', null, 1, 0 ],
+			[ $maritalCategory->id, 'Other', 'other', null, 1, 1 ],
+			[ $nokCategory->id, 'Brother', 'brother', null, 1, 0 ],
+			[ $nokCategory->id, 'Daughter', 'sister', null, 1, 0 ],
+			[ $nokCategory->id, 'Father', 'sister', null, 1, 0 ],
+			[ $nokCategory->id, 'Mother', 'sister', null, 1, 0 ],
+			[ $nokCategory->id, 'Sister', 'sister', null, 1, 0 ],
+			[ $nokCategory->id, 'Son', 'sister', null, 1, 0 ],
+			[ $nokCategory->id, 'Spouse', 'sister', null, 1, 0 ],
+			[ $nokCategory->id, 'Other', 'other', null, 1, 1 ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_option', $columns, $options );

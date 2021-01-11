@@ -648,26 +648,6 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 		}
 	}
 
-	public function isImage() {
-
-		return $this->type == FileManager::FILE_TYPE_IMAGE;
-	}
-
-	public function isAudio() {
-
-		return $this->type == FileManager::FILE_TYPE_AUDIO;
-	}
-
-	public function isVideo() {
-
-		return $this->type == FileManager::FILE_TYPE_VIDEO;
-	}
-
-	public function isDocument() {
-
-		return $this->type == FileManager::FILE_TYPE_DOCUMENT;
-	}
-
 	public function generateSrcset( $background = false ) {
 
 		$smallUrl	= !empty( $this->small ) ? $this->getSmallUrl() : null;
@@ -800,6 +780,96 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 	<?php } ?>
 </video>
 <?php
+	}
+
+	public function isImage() {
+
+		return $this->type == FileManager::FILE_TYPE_IMAGE || in_array( $this->extension, Yii::$app->fileManager->imageExtensions );
+	}
+
+	public function isVideo() {
+
+		return $this->type == FileManager::FILE_TYPE_VIDEO || in_array( $this->extension, Yii::$app->fileManager->videoExtensions );
+	}
+
+	public function isAudio() {
+
+		return $this->type == FileManager::FILE_TYPE_AUDIO || in_array( $this->extension, Yii::$app->fileManager->audioExtensions );
+	}
+
+	public function isDocument() {
+
+		return $this->type == FileManager::FILE_TYPE_DOCUMENT || in_array( $this->extension, Yii::$app->fileManager->documentExtensions );
+	}
+
+	public function isCompressed() {
+
+		return $this->type == FileManager::FILE_TYPE_COMPRESSED || in_array( $this->extension, Yii::$app->fileManager->compressedExtensions );
+	}
+
+	public function getFileIcon() {
+
+		$fileIcon = 'icon cmti cmti-file';
+
+		if( in_array( $this->extension, Yii::$app->fileManager->imageExtensions ) ) {
+
+			$fileIcon = 'icon cmti cmti-file-image';
+		}
+		else if( in_array( $this->extension, Yii::$app->fileManager->videoExtensions ) ) {
+
+			$fileIcon = 'icon cmti cmti-file-video';
+		}
+		else if( in_array( $this->extension, Yii::$app->fileManager->audioExtensions ) ) {
+
+			$fileIcon = 'icon cmti cmti-file-audio';
+		}
+		else if( in_array( $this->extension, Yii::$app->fileManager->compressedExtensions ) ) {
+
+			$fileIcon = 'icon cmti cmti-file-archive';
+		}
+		else if( in_array( $this->extension, Yii::$app->fileManager->documentExtensions ) ) {
+
+			switch( $this->extension ) {
+
+				case 'doc':
+				case 'docx':
+				case 'odt': {
+
+					$fileIcon = 'icon cmti cmti-file-doc';
+
+					break;
+				}
+				case 'ppt':
+				case 'pptx':
+				case 'odp': {
+
+					$fileIcon = 'icon cmti cmti-file-ppt';
+
+					break;
+				}
+				case 'xls':
+				case 'ods': {
+
+					$fileIcon = 'icon cmti cmti-file-xls';
+
+					break;
+				}
+				case 'xlsx': {
+
+					$fileIcon = 'icon cmti cmti-file-xlsx';
+
+					break;
+				}
+				case 'pdf': {
+
+					$fileIcon = 'icon cmti cmti-file-pdf';
+
+					break;
+				}
+			}
+		}
+
+		return $fileIcon;
 	}
 
 	// Static Methods ----------------------------------------------

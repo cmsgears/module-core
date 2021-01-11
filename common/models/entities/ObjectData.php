@@ -51,6 +51,7 @@ use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\FeaturedTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
 use cmsgears\core\common\models\traits\base\NameTypeTrait;
+use cmsgears\core\common\models\traits\base\OwnerTrait;
 use cmsgears\core\common\models\traits\base\SlugTypeTrait;
 use cmsgears\core\common\models\traits\base\VisibilityTrait;
 use cmsgears\core\common\models\traits\resources\CommentTrait;
@@ -159,6 +160,7 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use ObjectTrait;
+	use OwnerTrait;
 	use SlugTypeTrait;
 	use SocialLinkTrait;
 	use TemplateTrait;
@@ -355,9 +357,14 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 				$user = Yii::$app->core->getUser();
 			}
 
-			if( isset( $user ) ) {
+			if( isset( $user ) && isset( $this->userId ) ) {
 
-				return $this->createdBy == $user->id;
+				return $user->id == $this->userId;
+			}
+
+			if( isset( $user ) && isset( $this->createdBy ) ) {
+
+				return $user->id == $this->createdBy;
 			}
 		}
 

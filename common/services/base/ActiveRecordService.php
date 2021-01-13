@@ -1811,9 +1811,11 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		// Multiple columns
 		if( is_array( $columns ) ) {
 
+			$firstCol = true;
+
 			foreach( $columns as $ckey => $column ) {
 
-				$query	= null;
+				$query	= '';
 
 				foreach( $searchTerms as $skey => $term ) {
 
@@ -1829,9 +1831,11 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 				if( isset( $query ) ) {
 
-					if( $ckey  == 0 ) {
+					if( $firstCol ) {
 
 						$searchQuery =	"( $query )";
+
+						$firstCol = false;
 					}
 					else {
 

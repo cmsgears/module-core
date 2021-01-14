@@ -781,7 +781,12 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		// Update User
 		$userToUpdate->update();
 
-		return $userToUpdate;
+		if( $userToUpdate->update() !== false ) {
+
+			return $userToUpdate;
+		}
+
+		return false;
 	}
 
 	// Log last activity ----

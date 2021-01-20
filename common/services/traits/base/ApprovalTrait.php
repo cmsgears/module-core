@@ -295,7 +295,7 @@ trait ApprovalTrait {
 
 				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_ACCEPTED ];
 
-				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
+				$config[ 'data' ][ 'parentType' ] = $this->getParentTypeStr();
 
 				$this->notifyAdmin( $model, $config );
 			}
@@ -323,7 +323,7 @@ trait ApprovalTrait {
 
 				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_SUBMITTED ];
 
-				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
+				$config[ 'data' ][ 'parentType' ] = $this->getParentTypeStr();
 
 				$this->notifyAdmin( $model, $config );
 			}
@@ -351,7 +351,7 @@ trait ApprovalTrait {
 
 				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_REJECTED ];
 
-				$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
+				$config[ 'data' ][ 'parentType' ]	= $this->getParentTypeStr();
 				$config[ 'data' ][ 'message' ]		= $model->getRejectMessage();
 
 				$this->notifyUser( $model, $config );
@@ -380,7 +380,7 @@ trait ApprovalTrait {
 
 				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_RE_SUBMIT ];
 
-				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
+				$config[ 'data' ][ 'parentType' ] = $this->getParentTypeStr();
 
 				$this->notifyAdmin( $model, $config );
 			}
@@ -408,7 +408,7 @@ trait ApprovalTrait {
 
 				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_CONFIRMED ];
 
-				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
+				$config[ 'data' ][ 'parentType' ] = $this->getParentTypeStr();
 
 				$this->notifyUser( $model, $config );
 			}
@@ -436,7 +436,7 @@ trait ApprovalTrait {
 
 				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_APPROVED ];
 
-				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
+				$config[ 'data' ][ 'parentType' ] = $this->getParentTypeStr();
 
 				$this->notifyUser( $model, $config );
 			}
@@ -468,7 +468,7 @@ trait ApprovalTrait {
 
 				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_ACTIVE ];
 
-				$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
+				$config[ 'data' ][ 'parentType' ]	= $this->getParentTypeStr();
 				$config[ 'data' ][ 'oldStatus' ]	= $oldStatus;
 				$config[ 'data' ][ 'newStatus' ]	= $newStatus;
 
@@ -498,7 +498,7 @@ trait ApprovalTrait {
 
 				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_FROJEN ];
 
-				$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
+				$config[ 'data' ][ 'parentType' ]	= $this->getParentTypeStr();
 				$config[ 'data' ][ 'message' ]		= $model->getRejectMessage();
 
 				$this->notifyUser( $model, $config );
@@ -527,7 +527,7 @@ trait ApprovalTrait {
 
 				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_UPLIFT_FREEZE ];
 
-				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
+				$config[ 'data' ][ 'parentType' ] = $this->getParentTypeStr();
 
 				$this->notifyAdmin( $model, $config );
 			}
@@ -555,7 +555,7 @@ trait ApprovalTrait {
 
 				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_BLOCKED ];
 
-				$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
+				$config[ 'data' ][ 'parentType' ]	= $this->getParentTypeStr();
 				$config[ 'data' ][ 'message' ]		= $model->getRejectMessage();
 
 				$this->notifyUser( $model, $config );
@@ -584,7 +584,7 @@ trait ApprovalTrait {
 
 				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_UPLIFT_BLOCK ];
 
-				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
+				$config[ 'data' ][ 'parentType' ] = $this->getParentTypeStr();
 
 				$this->notifyAdmin( $model, $config );
 			}
@@ -612,7 +612,7 @@ trait ApprovalTrait {
 
 				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_TERMINATED ];
 
-				$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
+				$config[ 'data' ][ 'parentType' ]	= $this->getParentTypeStr();
 				$config[ 'data' ][ 'message' ]		= $model->getTerminateMessage();
 
 				$this->notifyUser( $model, $config );
@@ -637,7 +637,7 @@ trait ApprovalTrait {
 
 			$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_CHANGED ];
 
-			$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
+			$config[ 'data' ][ 'parentType' ]	= $this->getParentTypeStr();
 			$config[ 'data' ][ 'oldStatus' ]	= $oldStatus;
 			$config[ 'data' ][ 'newStatus' ]	= $newStatus;
 			$config[ 'data' ][ 'message' ]		= null;
@@ -667,7 +667,7 @@ trait ApprovalTrait {
 
 				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_DELETED ];
 
-				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
+				$config[ 'data' ][ 'parentType' ] = $this->getParentTypeStr();
 
 				$this->notifyUser( $model, $config );
 			}
@@ -703,7 +703,7 @@ trait ApprovalTrait {
 
 			$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_CHANGED ];
 
-			$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
+			$config[ 'data' ][ 'parentType' ]	= $this->getParentTypeStr();
 			$config[ 'data' ][ 'oldStatus' ]	= $oldStatus;
 			$config[ 'data' ][ 'newStatus' ]	= $newStatus;
 			$config[ 'data' ][ 'message' ]		= null;
@@ -739,7 +739,7 @@ trait ApprovalTrait {
 
 			$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_CHANGED ];
 
-			$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
+			$config[ 'data' ][ 'parentType' ]	= $this->getParentTypeStr();
 			$config[ 'data' ][ 'oldStatus' ]	= $oldStatus;
 			$config[ 'data' ][ 'newStatus' ]	= $newStatus;
 			$config[ 'data' ][ 'message' ]		= null;

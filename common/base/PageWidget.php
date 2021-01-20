@@ -161,6 +161,8 @@ abstract class PageWidget extends Widget {
 
 	public $query;
 
+	public $printQuery = false;
+
 	/**
 	 * DataProvider to fetch initial page.
 	 */

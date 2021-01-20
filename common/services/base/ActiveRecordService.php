@@ -80,6 +80,13 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public static $parentType = null;
 
+	/**
+	 * The string representation of parent type.
+	 *
+	 * @var type string
+	 */
+	public static $parentTypeStr = null;
+
 	// Protected --------------
 
 	// Variables -----------------------------
@@ -133,6 +140,11 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	public function getParentType() {
 
 		return static::$parentType;
+	}
+
+	public function getParentTypeStr() {
+
+		return !empty( static::$parentTypeStr ) ? static::$parentTypeStr : ucfirst( static::$parentType );
 	}
 
 	// Data Provider ------

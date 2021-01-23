@@ -81,7 +81,7 @@ class DirectController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 	// CMG parent classes --------------------
 
-	// DirectController ------------------------
+	// DirectController ----------------------
 
 	public function actionAll( $config = [] ) {
 

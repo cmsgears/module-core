@@ -59,9 +59,8 @@ trait SharedTrait {
 	 */
 	public function getBackendSharedPage( $config = [] ) {
 
-		$config[ 'conditions' ][ 'backend' ]	= true;
-		$config[ 'conditions' ][ 'frontend' ]	= false;
-		$config[ 'conditions' ][ 'shared' ]		= true;
+		$config[ 'conditions' ][ 'userId' ]	= null;
+		$config[ 'conditions' ][ 'shared' ]	= true;
 
 		return $this->getPage( $config );
 	}
@@ -81,9 +80,8 @@ trait SharedTrait {
 	 */
 	public function getBackendDirectPage( $config = [] ) {
 
-		$config[ 'conditions' ][ 'backend' ]	= true;
-		$config[ 'conditions' ][ 'frontend' ]	= false;
-		$config[ 'conditions' ][ 'shared' ]		= false;
+		$config[ 'conditions' ][ 'userId' ]	= null;
+		$config[ 'conditions' ][ 'shared' ]	= false;
 
 		return $this->getPage( $config );
 	}
@@ -95,8 +93,7 @@ trait SharedTrait {
 
 		$modelTable	= $this->getModelTable();
 
-		$config[ 'conditions' ][ "$modelTable.shared" ]		= true;
-		$config[ 'conditions' ][ "$modelTable.createdBy" ]	= $ownerId;
+		$config[ 'conditions' ][ "$modelTable.shared" ] = true;
 
 		return $this->getPageByOwnerId( $ownerId, $config );
 	}

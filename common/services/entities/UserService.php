@@ -633,9 +633,24 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 			$attributes[] = 'status';
 		}
 
-		return parent::update( $model, [
+		// Model Checks
+		$oldStatus = $model->getOldAttribute( 'status' );
+
+		$model = parent::update( $model, [
 			'attributes' => $attributes
 		]);
+
+		// Check status change and notify User
+		if( $oldStatus != $model->status ) {
+
+			$config[ 'users' ] = [ $model->id ];
+
+			$config[ 'data' ][ 'message' ] = 'User status changed.';
+
+			$this->checkStatusChange( $model, $oldStatus, $config );
+		}
+
+		return $model;
 	}
 
 	/**

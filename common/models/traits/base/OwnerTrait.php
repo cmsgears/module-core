@@ -75,12 +75,12 @@ trait OwnerTrait {
 	 */
 	public function getOwner() {
 
-		if( isset( $this->user ) ) {
+		if( isset( $this->userId ) ) {
 
 			return $this->user;
 		}
 
-		if( isset( $this->creator ) ) {
+		if( isset( $this->createdBy ) ) {
 
 			return $this->creator;
 		}

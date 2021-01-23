@@ -133,8 +133,8 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 					'label' => 'Template',
 				],
 				'parent' => [
-					'asc' => [ "$templateTable.parentId" => SORT_ASC ],
-					'desc' => [ "$templateTable.parentId" => SORT_DESC ],
+					'asc' => [ "$modelTable.parentId" => SORT_ASC ],
+					'desc' => [ "$modelTable.parentId" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Parent',
 				],
@@ -209,18 +209,6 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 					'desc' => [ "$modelTable.popular" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Popular'
-				],
-				'backend' => [
-					'asc' => [ "$modelTable.backend" => SORT_ASC ],
-					'desc' => [ "$modelTable.backend" => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'Backend'
-				],
-				'frontend' => [
-					'asc' => [ "$modelTable.frontend" => SORT_ASC ],
-					'desc' => [ "$modelTable.frontend" => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'Frontend'
 				],
 				'shared' => [
 					'asc' => [ "$modelTable.shared" => SORT_ASC ],
@@ -298,18 +286,6 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 				case 'popular': {
 
 					$config[ 'conditions' ][ "$modelTable.popular" ] = true;
-
-					break;
-				}
-				case 'backend': {
-
-					$config[ 'conditions' ][ "$modelTable.backend" ] = true;
-
-					break;
-				}
-				case 'frontend': {
-
-					$config[ 'conditions' ][ "$modelTable.frontend" ] = true;
 
 					break;
 				}
@@ -637,9 +613,24 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 			}
 		}
 
-		return parent::update( $model, [
+		// Model Checks
+		$oldStatus = $model->getOldAttribute( 'status' );
+
+		$model = parent::update( $model, [
 			'attributes' => $attributes
 		]);
+
+		// Check status change and notify User
+		if( isset( $model->userId ) && $oldStatus != $model->status ) {
+
+			$config[ 'users' ] = [ $model->userId ];
+
+			$config[ 'data' ][ 'message' ] = 'Form status changed.';
+
+			$this->checkStatusChange( $model, $oldStatus, $config );
+		}
+
+		return $model;
 	}
 
 	// Delete -------------
@@ -653,7 +644,8 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 			$backend	= isset( $config[ 'backend' ] ) ? $config[ 'backend' ] : false;
 			$frontend	= isset( $config[ 'frontend' ] ) ? $config[ 'frontend' ] : false;
 
-			if( $backend || ( $frontend && $model->frontend && $model->shared ) || !$model->shared ) {
+			// Delete by Admin, Model User, Direct
+			if( $backend || ( $frontend && isset( $model->userId ) && $model->shared ) || !$model->shared ) {
 
 				$transaction = Yii::$app->db->beginTransaction();
 
@@ -696,7 +688,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		$direct = isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : false; // Trigger direct notifications
-		$users	= isset( $config[ 'users' ] ) ? $config[ 'users' ] : []; // Trigger user notifications
+		$users	= isset( $config[ 'users' ] ) ? $config[ 'users' ] : ( isset( $model->userId ) ? [ $model->userId ] : [] ); // Trigger user notifications
 
 		switch( $column ) {
 

@@ -77,6 +77,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $siteId
  * @property integer $themeId
  * @property integer $templateId
+ * @property integer $userId
  * @property integer $parentId
  * @property integer $avatarId
  * @property integer $bannerId
@@ -100,8 +101,6 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property boolean $pinned
  * @property boolean $featured
  * @property boolean $popular
- * @property boolean $backend
- * @property boolean $frontend
  * @property boolean $shared
  * @property datetime $createdAt
  * @property datetime $modifiedAt
@@ -232,10 +231,10 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 			[ [ 'title', 'classPath', 'viewPath', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
-			[ [ 'pinned', 'featured', 'popular', 'backend', 'frontend', 'shared', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'pinned', 'featured', 'popular', 'shared', 'gridCacheValid' ], 'boolean' ],
 			[ [ 'visibility', 'status', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'themeId', 'templateId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'siteId', 'avatarId', 'bannerId', 'videoId', 'galleryId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'siteId', 'userId', 'avatarId', 'bannerId', 'videoId', 'galleryId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
@@ -259,6 +258,7 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'themeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_THEME ),
 			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
+			'userId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
 			'avatarId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
 			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
 			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
@@ -278,8 +278,6 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'pinned' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PINNED ),
 			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
-			'backend' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BACKEND ),
-			'frontend' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FRONTEND ),
 			'shared' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SHARED ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'summary' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SUMMARY ),
@@ -311,6 +309,11 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 			if( $this->templateId <= 0 ) {
 
 				$this->templateId = null;
+			}
+
+			if( $this->userId <= 0 ) {
+
+				$this->userId = null;
 			}
 
 			// Default Status - New
@@ -388,6 +391,16 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	}
 
 	/**
+	 * Returns the corresponding user.
+	 *
+	 * @return User
+	 */
+	public function getUser() {
+
+		return $this->hasOne( User::class, [ 'id' => 'userId' ] );
+	}
+
+	/**
 	 * Returns the immediate parent.
 	 *
 	 * Notes: Override in child classes to get the exact class object if required.
@@ -397,26 +410,6 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	public function getParent() {
 
 		return $this->hasOne( ObjectData::class, [ 'id' => 'parentId' ] );
-	}
-
-	/**
-	 * Returns string representation of [[$backend]].
-	 *
-	 * @return boolean
-	 */
-	public function getBackendStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->backend );
-	}
-
-	/**
-	 * Returns string representation of [[$frontend]].
-	 *
-	 * @return boolean
-	 */
-	public function getFrontendStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->frontend );
 	}
 
 	/**
@@ -465,9 +458,8 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	public static function queryWithHasOne( $config = [] ) {
 
 		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [
-			'site', 'theme', 'template',
-			'avatar', 'banner', 'video',
-			'creator', 'modifier'
+			'site', 'theme', 'template', 'user',
+			'avatar', 'banner', 'video'
 		];
 
 		$config[ 'relations' ] = $relations;

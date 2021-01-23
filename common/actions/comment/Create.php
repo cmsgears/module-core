@@ -67,6 +67,18 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	public $notification = false;
 
+	public $notifyAdmin		= false;
+	public $notifyUser		= false;
+	public $notifyParent	= false;
+
+	public $notifyAdminUrl;
+	public $notifyUserUrl;
+	public $notifyParentUrl;
+
+	public $notifyAdminTemplate;
+	public $notifyUserTemplate;
+	public $notifyParentTemplate;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -122,6 +134,7 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 				$modelComment->copyForUpdateFrom( $commentForm, [
 					'baseId', 'bannerId', 'videoId', 'title', 'avatarUrl', 'websiteUrl',
+					'field1', 'field2', 'field3', 'field4', 'field5',
 					'rate1', 'rate2', 'rate3', 'rate4', 'rate5', 'rating',
 					'anonymous', 'content'
 				]);
@@ -163,7 +176,20 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 					// Trigger Notification
 					if( isset( $this->notification ) ) {
 
-						$this->triggerNotification( $modelComment );
+						if( isset( $this->notifyAdmin ) && isset( $this->notifyAdminUrl ) ) {
+
+							$this->triggerAdminNotification( $modelComment );
+						}
+
+						if( isset( $this->notifyUser ) && isset( $this->notifyUserUrl ) ) {
+
+							$this->triggerUserNotification( $modelComment );
+						}
+
+						if( isset( $this->notifyParent ) && isset( $this->notifyParentUrl ) ) {
+
+							$this->triggerParentNotification( $modelComment );
+						}
 					}
 
 					// Trigger Ajax Success
@@ -193,9 +219,49 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 		return $files;
 	}
 
-	protected function triggerNotification( $model ) {
+	protected function triggerAdminNotification( $model ) {
 
-		// Placeholder Method
+		$modelService = Yii::$app->factory->get( 'modelCommentService' );
+
+		Yii::$app->eventManager->triggerNotification(
+			$this->notifyAdminTemplate,
+			[ 'model' => $model, 'service' => $modelService ],
+			[
+				'admin' => true, 'direct' => false,
+				'parentId' => $model->id, 'parentType' => $modelService->getParentType(),
+				'adminLink' => "{$this->notifyAdminUrl}?id={$model->id}"
+			]
+		);
+	}
+
+	protected function triggerUserNotification( $model ) {
+
+		$modelService = Yii::$app->factory->get( 'modelCommentService' );
+
+		Yii::$app->eventManager->triggerNotification(
+			$this->notifyAdminTemplate,
+			[ 'model' => $model, 'service' => $modelService ],
+			[
+				'user' => true, 'direct' => false,
+				'parentId' => $model->id, 'parentType' => $modelService->getParentType(),
+				'adminLink' => "{$this->notifyAdminUrl}?id={$model->id}"
+			]
+		);
+	}
+
+	protected function triggerParentNotification( $model ) {
+
+		$modelService = Yii::$app->factory->get( 'modelCommentService' );
+
+		Yii::$app->eventManager->triggerNotification(
+			$this->notifyAdminTemplate,
+			[ 'model' => $model, 'service' => $modelService ],
+			[
+				'admin' => false, 'user' => false, 'direct' => true,
+				'parentId' => $model->id, 'parentType' => $modelService->getParentType(),
+				'adminLink' => "{$this->notifyAdminUrl}?id={$model->id}"
+			]
+		);
 	}
 
 }

@@ -20,7 +20,7 @@ use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Create creates the gallery item.
+ * Create creates the user file.
  *
  * @since 1.0.0
  */
@@ -102,11 +102,11 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 		$modelFile->active = true;
 
+		$user = Yii::$app->core->getUser();
 		$file = new File();
 
 		$file->siteId	= Yii::$app->core->siteId;
-		$file->backend	= false;
-		$file->frontend	= true;
+		$file->userId	= $user->id;
 		$file->shared	= false;
 
 		if( $file->load( Yii::$app->request->post(), $this->fileName ) && $file->validate() ) {

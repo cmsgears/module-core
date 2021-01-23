@@ -153,18 +153,6 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 					'default' => SORT_DESC,
 					'label' => 'Path'
 				],
-				'backend' => [
-					'asc' => [ "$modelTable.backend" => SORT_ASC ],
-					'desc' => [ "$modelTable.backend" => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'Backend'
-				],
-				'frontend' => [
-					'asc' => [ "$modelTable.frontend" => SORT_ASC ],
-					'desc' => [ "$modelTable.frontend" => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'Frontend'
-				],
 				'shared' => [
 					'asc' => [ "$modelTable.shared" => SORT_ASC ],
 					'desc' => [ "$modelTable.shared" => SORT_DESC ],
@@ -223,18 +211,6 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 
 			switch( $filter ) {
 
-				case 'backend': {
-
-					$config[ 'conditions' ][ "$modelTable.backend" ] = true;
-
-					break;
-				}
-				case 'frontend': {
-
-					$config[ 'conditions' ][ "$modelTable.frontend" ] = true;
-
-					break;
-				}
 				case 'shared': {
 
 					$config[ 'conditions' ][ "$modelTable.shared" ] = true;
@@ -570,7 +546,7 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 			// Admin can delete all the files
 			// Users can delete frontend and shared files
 			// Non-Shared files can be deleted with the model
-			if( $backend || ( $frontend && $model->frontend && $model->shared ) || !$model->shared ) {
+			if( $backend || ( $frontend && isset( $model->userId ) && $model->shared ) || !$model->shared ) {
 
 				// Delete mappings
 				Yii::$app->factory->get( 'modelFileService' )->deleteByModelId( $model->id );

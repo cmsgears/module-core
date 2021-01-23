@@ -32,6 +32,7 @@ use cmsgears\core\common\models\interfaces\resources\IGridCache;
 use cmsgears\core\common\models\interfaces\resources\ITemplate;
 
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\entities\User;
 
 use cmsgears\core\common\models\traits\base\ApprovalTrait;
 use cmsgears\core\common\models\traits\base\AuthorTrait;
@@ -52,6 +53,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @property integer $id
  * @property integer $siteId
+ * @property integer $userId
  * @property integer $templateId
  * @property integer $createdBy
  * @property integer $modifiedBy
@@ -186,7 +188,7 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IApprov
 			[ [ 'visibility', 'status' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'captcha', 'userMail', 'adminMail', 'uniqueSubmit', 'updateSubmit', 'gridCacheValid' ], 'boolean' ],
 			[ 'templateId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'siteId', 'userId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
@@ -208,6 +210,7 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IApprov
 
 		return [
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+			'userId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
 			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
@@ -275,6 +278,16 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IApprov
 	// Validators ----------------------------
 
 	// Form ----------------------------------
+
+	/**
+	 * Returns the corresponding user.
+	 *
+	 * @return User
+	 */
+	public function getUser() {
+
+		return $this->hasOne( User::class, [ 'id' => 'userId' ] );
+	}
 
 	/**
 	 * Return all the fields associated with the form.
@@ -394,7 +407,7 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IApprov
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'template', 'creator', 'modifier' ];
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'template', 'user' ];
 
 		$config[ 'relations' ] = $relations;
 

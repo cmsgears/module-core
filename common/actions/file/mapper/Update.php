@@ -18,7 +18,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Update update the gallery item.
+ * Update updates the user file.
  *
  * @since 1.0.0
  */

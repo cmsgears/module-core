@@ -48,7 +48,7 @@ trait ApprovalTrait {
 	// Data Provider ------
 
 	/**
-	 * It expects the model to support either of createdBy or ownerId column. If both exist, ownerId will dominate.
+	 * It expects the model to support either userId or createdBy column. If both exist, userId will dominate.
 	 */
 	public function getPageByOwnerId( $ownerId, $config = [] ) {
 
@@ -58,7 +58,7 @@ trait ApprovalTrait {
 
 		if( $owner ) {
 
-			$config[ 'conditions' ][ "$modelTable.ownerId" ] = $ownerId;
+			$config[ 'conditions' ][ "$modelTable.userId" ] = $ownerId;
 		}
 		else {
 
@@ -93,7 +93,7 @@ trait ApprovalTrait {
 
 			$query = $modelClass::queryWithOwnerAuthor();
 
-			$query->andWhere( "$modelTable.ownerId =:oid OR ($modelTable.ownerId IS NULL AND $modelTable.createdBy =:cid )", [ ':oid' => $id, ':cid' => $id ] );
+			$query->andWhere( "$modelTable.userId =:oid OR ($modelTable.userId IS NULL AND $modelTable.createdBy =:cid )", [ ':oid' => $id, ':cid' => $id ] );
 		}
 		else {
 
@@ -190,7 +190,7 @@ trait ApprovalTrait {
 
 		if( $owner ) {
 
-			$query->where( "$modelTable.ownerId=$ownerId" )->groupBy( 'status' );
+			$query->where( "$modelTable.userId=$ownerId" )->groupBy( 'status' );
 		}
 		else {
 
@@ -235,11 +235,11 @@ trait ApprovalTrait {
 
 		if( $owner ) {
 
-			$query->where( "$modelTable.ownerId=$id" )->groupBy( 'status' );
+			$query->where( "$modelTable.userId=$id" )->groupBy( 'status' );
 		}
 		else {
 
-			$query->where( "($modelTable.ownerId IS NULL AND $modelTable.createdBy=$id) OR $modelTable.ownerId=$id" );
+			$query->where( "($modelTable.userId IS NULL AND $modelTable.createdBy=$id) OR $modelTable.userId=$id" );
 		}
 
 		$query->groupBy( 'status' );
@@ -640,7 +640,7 @@ trait ApprovalTrait {
 			$config[ 'data' ][ 'parentType' ]	= $this->getParentTypeStr();
 			$config[ 'data' ][ 'oldStatus' ]	= $oldStatus;
 			$config[ 'data' ][ 'newStatus' ]	= $newStatus;
-			$config[ 'data' ][ 'message' ]		= null;
+			$config[ 'data' ][ 'message' ]		= isset( $config[ 'data' ][ 'message' ] ) ? $config[ 'data' ][ 'message' ] : null;
 
 			$this->notifyUser( $model, $config );
 

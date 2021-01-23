@@ -46,6 +46,11 @@ class Comment extends Create {
 
 	public $scenario = CommentForm::SCENARIO_IDENTITY;
 
+	public $notification = true;
+
+	public $notifyAdminTemplate = CoreGlobal::TPL_NOTIFY_COMMENT_ADMIN;
+	public $notifyUserTemplate	= CoreGlobal::TPL_NOTIFY_COMMENT_USER;
+
 	// Protected --------------
 
 	// Private ----------------

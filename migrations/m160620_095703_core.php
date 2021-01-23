@@ -226,6 +226,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'siteId' => $this->bigInteger( 20 ),
 			'themeId' => $this->bigInteger( 20 ),
 			'templateId' => $this->bigInteger( 20 ),
+			'userId' => $this->bigInteger( 20 ),
 			'parentId' => $this->bigInteger( 20 ),
 			'avatarId' => $this->bigInteger( 20 ),
 			'bannerId' => $this->bigInteger( 20 ),
@@ -249,8 +250,6 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
 			'popular' => $this->boolean()->notNull()->defaultValue( false ),
-			'backend' => $this->boolean()->notNull()->defaultValue( false ), // Admin Object
-			'frontend' => $this->boolean()->notNull()->defaultValue( false ), // User Object
 			'shared' => $this->boolean()->notNull()->defaultValue( false ), // Shared Object
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
@@ -267,6 +266,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'object_site', $this->prefix . 'core_object', 'siteId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_theme', $this->prefix . 'core_object', 'themeId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_template', $this->prefix . 'core_object', 'templateId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'object_user', $this->prefix . 'core_object', 'userId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_parent', $this->prefix . 'core_object', 'parentId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_avatar', $this->prefix . 'core_object', 'avatarId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_banner', $this->prefix . 'core_object', 'bannerId' );
@@ -726,6 +726,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->createTable( $this->prefix . 'core_file', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'siteId' => $this->bigInteger( 20 )->notNull(),
+			'userId' => $this->bigInteger( 20 ),
 			'createdBy' => $this->bigInteger( 20 ),
 			'modifiedBy' => $this->bigInteger( 20 ),
 			'name' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
@@ -749,8 +750,6 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'caption' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'altText' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'link' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
-			'backend' => $this->boolean()->notNull()->defaultValue( false ), // Admin File
-			'frontend' => $this->boolean()->notNull()->defaultValue( false ), // User File
 			'shared' => $this->boolean()->notNull()->defaultValue( false ), // Shared File
 			'srcset' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'sizes' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
@@ -765,6 +764,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		// Index for columns creator and modifier
 		$this->createIndex( 'idx_' . $this->prefix . 'file_site', $this->prefix . 'core_file', 'siteId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'file_user', $this->prefix . 'core_file', 'userId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'file_creator', $this->prefix . 'core_file', 'createdBy' );
 		$this->createIndex( 'idx_' . $this->prefix . 'file_modifier', $this->prefix . 'core_file', 'modifiedBy' );
 	}
@@ -811,6 +811,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->createTable( $this->prefix . 'core_form', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'siteId' => $this->bigInteger( 20 )->notNull(),
+			'userId' => $this->bigInteger( 20 ),
 			'templateId' => $this->bigInteger( 20 ),
 			'createdBy' => $this->bigInteger( 20 )->notNull(),
 			'modifiedBy' => $this->bigInteger( 20 ),
@@ -847,6 +848,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		// Index for columns creator and modifier
 		$this->createIndex( 'idx_' . $this->prefix . 'form_site', $this->prefix . 'core_form', 'siteId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'form_user', $this->prefix . 'core_form', 'userId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'form_template', $this->prefix . 'core_form', 'templateId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'form_creator', $this->prefix . 'core_form', 'createdBy' );
 		$this->createIndex( 'idx_' . $this->prefix . 'form_modifier', $this->prefix . 'core_form', 'modifiedBy' );
@@ -1083,11 +1085,11 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
 			'popular' => $this->boolean()->notNull()->defaultValue( false ),
 			'anonymous' => $this->boolean()->notNull()->defaultValue( false ),
-			'field1' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
-			'field2' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
-			'field3' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
-			'field4' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
-			'field5' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
+			'field1' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
+			'field2' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
+			'field3' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
+			'field4' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
+			'field5' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'approvedAt' => $this->dateTime(),
@@ -1377,6 +1379,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_site', $this->prefix . 'core_object', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_theme', $this->prefix . 'core_object', 'themeId', $this->prefix . 'core_theme', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_template', $this->prefix . 'core_object', 'templateId', $this->prefix . 'core_template', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'object_user', $this->prefix . 'core_object', 'userId', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_parent', $this->prefix . 'core_object', 'parentId', $this->prefix . 'core_object', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_avatar', $this->prefix . 'core_object', 'avatarId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_banner', $this->prefix . 'core_object', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
@@ -1463,6 +1466,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		// File
 		$this->addForeignKey( 'fk_' . $this->prefix . 'file_site', $this->prefix . 'core_file', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'file_user', $this->prefix . 'core_file', 'userId', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'file_creator', $this->prefix . 'core_file', 'createdBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'file_modifier', $this->prefix . 'core_file', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
 
@@ -1474,6 +1478,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		// Form
 		$this->addForeignKey( 'fk_' . $this->prefix . 'form_site', $this->prefix . 'core_form', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'form_user', $this->prefix . 'core_form', 'userId', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'form_template', $this->prefix . 'core_form', 'templateId', $this->prefix . 'core_template', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'form_creator', $this->prefix . 'core_form', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'form_modifier', $this->prefix . 'core_form', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
@@ -1628,6 +1633,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_site', $this->prefix . 'core_object' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_theme', $this->prefix . 'core_object' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_template', $this->prefix . 'core_object' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_user', $this->prefix . 'core_object' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_parent', $this->prefix . 'core_object' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_avatar', $this->prefix . 'core_object' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_banner', $this->prefix . 'core_object' );
@@ -1712,6 +1718,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		// File
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'file_site', $this->prefix . 'core_file' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'file_user', $this->prefix . 'core_file' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'file_creator', $this->prefix . 'core_file' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'file_modifier', $this->prefix . 'core_file' );
 
@@ -1723,6 +1730,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		// Form
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'form_site', $this->prefix . 'core_form' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'form_user', $this->prefix . 'core_form' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'form_template', $this->prefix . 'core_form' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'form_creator', $this->prefix . 'core_form' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'form_modifier', $this->prefix . 'core_form' );

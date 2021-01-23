@@ -83,13 +83,13 @@ class ObjectSearch extends AutoSearch {
 
 		if( $this->backend ) {
 
-			$config[ 'query' ]->andWhere( "$modelTable.`backend`=1 AND $modelTable.`shared`=1 AND $modelTable.`name` like :name", [ ':name' => "$name%" ] );
+			$config[ 'query' ]->andWhere( "$modelTable.`userId` IS NULL AND $modelTable.`shared`=1 AND $modelTable.`name` like :name", [ ':name' => "%$name%" ] );
 		}
 		else if( $this->frontend ) {
 
 			$user = Yii::$app->core->getUser();
 
-			$config[ 'query' ]->andWhere( "$modelTable.`frontend`=1 AND $modelTable.`shared`=1 AND $modelTable.`name` like :name AND $modelTable.`createdBy`=:uid", [ ':name' => "$name%", ':uid' => $user->id ] );
+			$config[ 'query' ]->andWhere( "$modelTable.`userId`=:uid AND $modelTable.`shared`=1 AND $modelTable.`name` like :name", [ ':name' => "%$name%", ':uid' => $user->id ] );
 		}
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;

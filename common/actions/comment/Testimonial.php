@@ -9,9 +9,6 @@
 
 namespace cmsgears\core\common\actions\comment;
 
-// Yii Imports
-use Yii;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
@@ -45,6 +42,13 @@ class Testimonial extends Create {
 
 	public $notification = true;
 
+	public $notifyAdmin = true;
+
+	public $notifyAdminUrl = 'core/testimonial/update';
+
+	public $notifyAdminTemplate = CoreGlobal::TPL_NOTIFY_TESTIMONIAL_ADMIN;
+	public $notifyUserTemplate	= CoreGlobal::TPL_NOTIFY_TESTIMONIAL_USER;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -64,20 +68,5 @@ class Testimonial extends Create {
 	// CMG parent classes --------------------
 
 	// Testimonial ---------------------------
-
-	protected function triggerNotification( $model ) {
-
-		$modelService = Yii::$app->factory->get( 'modelCommentService' );
-
-		Yii::$app->eventManager->triggerNotification(
-			CoreGlobal::TPL_NOTIFY_TESTIMONIAL,
-			[ 'model' => $model, 'service' => $modelService ],
-			[
-				'admin' => true, 'direct' => false,
-				'parentId' => $model->id, 'parentType' => $modelService->getParentType(),
-				'adminLink' => "core/testimonial/update?id={$model->id}"
-			]
-		);
-	}
 
 }

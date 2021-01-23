@@ -83,7 +83,7 @@ class SharedController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 	// CMG parent classes --------------------
 
-	// SharedController ------------------------
+	// SharedController ----------------------
 
 	public function actionAll( $config = [] ) {
 

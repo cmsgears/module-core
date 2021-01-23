@@ -30,6 +30,16 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $phone
  * @property string $avatarUrl
  * @property string $websiteUrl
+ * @property string $field1
+ * @property string $field2
+ * @property string $field3
+ * @property string $field4
+ * @property string $field5
+ * @property integer $rate1
+ * @property integer $rate2
+ * @property integer $rate3
+ * @property integer $rate4
+ * @property integer $rate5
  * @property integer $rating
  * @property boolean $anonymous
  * @property string $content
@@ -69,6 +79,11 @@ class Comment extends BaseForm {
 	public $phone;
 	public $avatarUrl;
 	public $websiteUrl;
+	public $field1;
+	public $field2;
+	public $field3;
+	public $field4;
+	public $field5;
 	public $rate1 = 0;
 	public $rate2 = 0;
 	public $rate3 = 0;
@@ -114,6 +129,7 @@ class Comment extends BaseForm {
 			[ 'email', 'email' ],
 			// Text Limit
 			[ [ 'mobile', 'phone' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'field1', 'field2', 'field3', 'field4', 'field5' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ [ 'name', 'email' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			[ [ 'title', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Check captcha need for testimonial and review

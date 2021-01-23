@@ -79,6 +79,11 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromEmail	= $this->mailProperties->getSenderEmail();
 		$fromName	= $this->mailProperties->getSenderName();
 
+		if( empty( $user->email ) ) {
+
+			return;
+		}
+
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_ACCOUNT_CREATE, [ 'coreProperties' => $this->coreProperties, 'user' => $user ] )
 			->setTo( $user->email )
@@ -96,6 +101,11 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$siteName	= $this->coreProperties->getSiteName();
 		$fromEmail	= $this->mailProperties->getSenderEmail();
 		$fromName	= $this->mailProperties->getSenderName();
+
+		if( empty( $user->email ) ) {
+
+			return;
+		}
 
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_ACCOUNT_ACTIVATE, [ 'coreProperties' => $this->coreProperties, 'user' => $user ] )
@@ -115,6 +125,11 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromEmail	= $this->mailProperties->getSenderEmail();
 		$fromName	= $this->mailProperties->getSenderName();
 
+		if( empty( $user->email ) ) {
+
+			return;
+		}
+
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_REG, [ 'coreProperties' => $this->coreProperties, 'user' => $user ] )
 			->setTo( $user->email )
@@ -132,6 +147,11 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$siteName	= $this->coreProperties->getSiteName();
 		$fromEmail	= $this->mailProperties->getSenderEmail();
 		$fromName	= $this->mailProperties->getSenderName();
+
+		if( empty( $user->email ) ) {
+
+			return;
+		}
 
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_REG_CONFIRM, [ 'coreProperties' => $this->coreProperties, 'user' => $user ] )
@@ -151,6 +171,11 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromEmail	= $this->mailProperties->getSenderEmail();
 		$fromName	= $this->mailProperties->getSenderName();
 
+		if( empty( $user->email ) ) {
+
+			return;
+		}
+
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_PASSWORD_RESET, [ 'coreProperties' => $this->coreProperties, 'user' => $user ] )
 			->setTo( $user->email )
@@ -168,6 +193,11 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$siteName	= $this->coreProperties->getSiteName();
 		$fromEmail	= $this->mailProperties->getSenderEmail();
 		$fromName	= $this->mailProperties->getSenderName();
+
+		if( empty( $user->email ) ) {
+
+			return;
+		}
 
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_PASSWORD_CHANGE, [ 'coreProperties' => $this->coreProperties, 'user' => $user ] )
@@ -188,6 +218,11 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromName		= $this->mailProperties->getSenderName();
 		$contactEmail	= $this->mailProperties->getContactEmail();
 
+		if( empty( $contactEmail ) ) {
+
+			return;
+		}
+
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_COMMENT_FEEDBACK, [ 'coreProperties' => $this->coreProperties, 'comment' => $comment ] )
 			->setTo( $contactEmail )
@@ -206,6 +241,11 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromEmail		= $this->mailProperties->getSenderEmail();
 		$fromName		= $this->mailProperties->getSenderName();
 		$contactEmail	= $this->mailProperties->getContactEmail();
+
+		if( empty( $contactEmail ) ) {
+
+			return;
+		}
 
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_COMMENT_TESTIMONIAL, [ 'coreProperties' => $this->coreProperties, 'comment' => $comment ] )
@@ -226,6 +266,11 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromName		= $this->mailProperties->getSenderName();
 		$contactEmail	= $this->mailProperties->getContactEmail();
 
+		if( empty( $contactEmail ) ) {
+
+			return;
+		}
+
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_COMMENT_SPAM_REQUEST, [ 'coreProperties' => $this->coreProperties, 'comment' => $comment, 'updatePath' => $updatePath ] )
 			->setTo( $contactEmail )
@@ -244,6 +289,11 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$fromEmail		= $this->mailProperties->getSenderEmail();
 		$fromName		= $this->mailProperties->getSenderName();
 		$contactEmail	= $this->mailProperties->getContactEmail();
+
+		if( empty( $contactEmail ) ) {
+
+			return;
+		}
 
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_COMMENT_DELETE_REQUEST, [ 'coreProperties' => $this->coreProperties, 'comment' => $comment, 'updatePath' => $updatePath ] )
@@ -383,6 +433,11 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$toEmail    = $this->mailProperties->getContactEmail();
 
 		$modelName = $model->getDisplayName();
+
+		if( empty( $toEmail ) ) {
+
+			return;
+		}
 
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_A_REQUEST, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model, 'url' => $url ] )

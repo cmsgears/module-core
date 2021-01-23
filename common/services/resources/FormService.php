@@ -376,9 +376,24 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 			$attributes[] = 'data';
 		}
 
-		return parent::update( $model, [
+		// Model Checks
+		$oldStatus = $model->getOldAttribute( 'status' );
+
+		$model = parent::update( $model, [
 			'attributes' => $attributes
 		]);
+
+		// Check status change and notify User
+		if( isset( $model->userId ) && $oldStatus != $model->status ) {
+
+			$config[ 'users' ] = [ $model->userId ];
+
+			$config[ 'data' ][ 'message' ] = 'Form status changed.';
+
+			$this->checkStatusChange( $model, $oldStatus, $config );
+		}
+
+		return $model;
 	}
 
 	// Delete -------------
@@ -419,7 +434,7 @@ class FormService extends \cmsgears\core\common\services\base\ResourceService im
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		$direct = isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : false; // Trigger direct notifications
-		$users	= isset( $config[ 'users' ] ) ? $config[ 'users' ] : []; // Trigger user notifications
+		$users	= isset( $config[ 'users' ] ) ? $config[ 'users' ] : ( isset( $model->userId ) ? [ $model->userId ] : [] ); // Trigger user notifications
 
 		switch( $column ) {
 

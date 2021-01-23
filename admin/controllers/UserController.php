@@ -271,8 +271,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 		$model->setScenario( 'update' );
 
 		// Model checks
-		$oldStatus	= $model->status;
-		$oldRoleId	= $member->roleId;
+		$oldRoleId = $member->roleId;
 
 		// Load & Validate
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) &&
@@ -292,9 +291,6 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 
 				// Update Site Member
 				$this->memberService->update( $member );
-
-				// Check Status Change
-				$this->modelService->checkStatusChange( $model, $oldStatus, [ 'users' => [ $model->id ] ] );
 
 				// Check Role Change
 				$this->modelService->checkRoleChange( $model, $oldRoleId );

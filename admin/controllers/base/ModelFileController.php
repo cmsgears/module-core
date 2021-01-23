@@ -136,9 +136,7 @@ abstract class ModelFileController extends Controller {
 			$model	= new $modelClass;
 			$file	= new $fileClass;
 
-			$file->backend	= true;
-			$file->frontend	= false;
-			$file->shared	= false;
+			$file->shared = false;
 
 			$model->active = true;
 

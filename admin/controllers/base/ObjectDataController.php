@@ -33,8 +33,6 @@ abstract class ObjectDataController extends CrudController {
 
 	// Protected --------------
 
-	protected $backend;
-	protected $frontend;
 	protected $shared;
 
 	protected $minStatusMap;
@@ -119,9 +117,8 @@ abstract class ObjectDataController extends CrudController {
 		$modelClass = $this->modelService->getModelClass();
 		$modelTable = $this->modelService->getModelTable();
 
-		$config[ 'conditions' ][ "$modelTable.backend" ]	= $this->backend;
-		$config[ 'conditions' ][ "$modelTable.frontend" ]	= $this->frontend;
-		$config[ 'conditions' ][ "$modelTable.shared" ]		= $this->shared;
+		$config[ 'conditions' ][ "$modelTable.userId" ] = null;
+		$config[ 'conditions' ][ "$modelTable.shared" ] = $this->shared;
 
 		$dataProvider = $this->modelService->getPageByType( $this->type, $config );
 
@@ -139,11 +136,9 @@ abstract class ObjectDataController extends CrudController {
 
 		$model = new $modelClass;
 
-		$model->siteId		= Yii::$app->core->siteId;
-		$model->type		= $this->type;
-		$model->backend		= $this->backend;
-		$model->frontend	= $this->frontend;
-		$model->shared		= $this->shared;
+		$model->siteId	= Yii::$app->core->siteId;
+		$model->type	= $this->type;
+		$model->shared	= $this->shared;
 
 		$avatar	= File::loadFile( null, 'Avatar' );
 		$banner	= File::loadFile( null, 'Banner' );

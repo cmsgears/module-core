@@ -138,8 +138,14 @@ class CoreGlobal {
 	const TPL_NOTIFY_SUGGEST_OPTION		= 'suggest-option';
 
 	// Feedback & Testimonial
-	const TPL_NOTIFY_FEEDBACK		= 'notify-feedback';
-	const TPL_NOTIFY_TESTIMONIAL	= 'notify-testimonial';
+	const TPL_NOTIFY_FEEDBACK_ADMIN		= 'notify-feedback-admin';
+	const TPL_NOTIFY_FEEDBACK_USER		= 'notify-feedback-user';
+	const TPL_NOTIFY_TESTIMONIAL_ADMIN	= 'notify-testimonial-admin';
+	const TPL_NOTIFY_TESTIMONIAL_USER	= 'notify-testimonial-user';
+	const TPL_NOTIFY_REVIEW_ADMIN		= 'notify-review-admin';
+	const TPL_NOTIFY_REVIEW_USER		= 'notify-review-user';
+	const TPL_NOTIFY_COMMENT_ADMIN		= 'notify-comment-admin';
+	const TPL_NOTIFY_COMMENT_USER		= 'notify-comment-user';
 
 	// Template Views --------------------------------------------------
 

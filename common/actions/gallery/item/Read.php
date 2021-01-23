@@ -18,7 +18,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * The Read action find gallery item for given item id and returh item data.
+ * The Read action find gallery item for given item id and returns item data.
  *
  * @since 1.0.0
  */

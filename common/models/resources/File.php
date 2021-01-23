@@ -27,6 +27,7 @@ use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
 
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\entities\User;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
@@ -44,6 +45,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @property integer $id
  * @property integer $siteId
+ * @property integer $userId
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
@@ -67,8 +69,6 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $caption
  * @property string $altText
  * @property string $link
- * @property boolean $backend
- * @property boolean $frontend
  * @property boolean $shared
  * @property string $srcset
  * @property string $sizes
@@ -191,8 +191,8 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 			// Other
 			[ [ 'visibility', 'width', 'height', 'mwidth', 'mheight', 'swidth', 'sheight', 'twidth', 'theight' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ 'size', 'number', 'min' => 0 ],
-			[ [ 'backend', 'frontend', 'shared', 'changed', 'gridCacheValid' ], 'boolean' ],
-			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'shared', 'changed', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'siteId', 'userId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
@@ -215,6 +215,7 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 
 		return [
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+			'userId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
 			'createdBy' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'code' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CODE ),
@@ -232,8 +233,6 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 			'link' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINK ),
 			'srcset' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IMG_SRCSET ),
 			'sizes' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IMG_SIZES ),
-			'backend' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BACKEND ),
-			'frontend' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FRONTEND ),
 			'shared' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SHARED ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
@@ -256,6 +255,12 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 				$this->siteId = Yii::$app->core->siteId;
 			}
 
+			// Default User
+			if( empty( $this->userId ) || $this->userId <= 0 ) {
+
+				$this->userId = null;
+			}
+
 			// Default Type - Default
 			$this->type = $this->type ?? FileManager::FILE_TYPE_DOCUMENT;
 
@@ -274,6 +279,16 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 	// File ----------------------------------
 
 	/**
+	 * Returns the corresponding user.
+	 *
+	 * @return User
+	 */
+	public function getUser() {
+
+		return $this->hasOne( User::class, [ 'id' => 'userId' ] );
+	}
+
+	/**
 	 * Returns string representation of [[$type]].
 	 *
 	 * @return boolean
@@ -281,26 +296,6 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 	public function getTypeStr() {
 
 		return self::$typeMap[ $this->type ];
-	}
-
-	/**
-	 * Returns string representation of [[$backend]].
-	 *
-	 * @return boolean
-	 */
-	public function getBackendStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->backend );
-	}
-
-	/**
-	 * Returns string representation of [[$frontend]].
-	 *
-	 * @return boolean
-	 */
-	public function getFrontendStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->frontend );
 	}
 
 	/**
@@ -897,7 +892,7 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'user' ];
 
 		$config[ 'relations' ] = $relations;
 

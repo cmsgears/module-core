@@ -9,9 +9,6 @@
 
 namespace cmsgears\core\common\actions\comment;
 
-// Yii Imports
-use Yii;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
@@ -45,6 +42,13 @@ class Feedback extends Create {
 
 	public $notification = true;
 
+	public $notifyAdmin = true;
+
+	public $notifyAdminUrl = 'core/feedback/update';
+
+	public $notifyAdminTemplate = CoreGlobal::TPL_NOTIFY_FEEDBACK_ADMIN;
+	public $notifyUserTemplate	= CoreGlobal::TPL_NOTIFY_FEEDBACK_USER;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -64,20 +68,5 @@ class Feedback extends Create {
 	// CMG parent classes --------------------
 
 	// Feedback ------------------------------
-
-	protected function triggerNotification( $model ) {
-
-		$modelService = Yii::$app->factory->get( 'modelCommentService' );
-
-		Yii::$app->eventManager->triggerNotification(
-			CoreGlobal::TPL_NOTIFY_FEEDBACK,
-			[ 'model' => $model, 'service' => $modelService ],
-			[
-				'admin' => true, 'direct' => false,
-				'parentId' => $model->id, 'parentType' => $modelService->getParentType(),
-				'adminLink' => "core/feedback/update?id={$model->id}"
-			]
-		);
-	}
 
 }

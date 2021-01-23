@@ -18,7 +18,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Delete delete the gallery item.
+ * Delete deletes the user file.
  *
  * @since 1.0.0
  */

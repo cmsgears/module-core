@@ -216,7 +216,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 			// Text Limit
 			[ [ 'phone', 'mobile' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ [ 'parentType', 'type', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'field1', 'field2', 'field3', 'field4', 'field5' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'field1', 'field2', 'field3', 'field4', 'field5' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ [ 'name', 'email', 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			[ [ 'title', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Other

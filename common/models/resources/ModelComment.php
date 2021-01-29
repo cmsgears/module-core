@@ -28,6 +28,7 @@ use cmsgears\core\common\models\interfaces\resources\IVisual;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
 
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\entities\User;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\FeaturedTrait;
@@ -45,7 +46,9 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @property integer $id
  * @property integer $siteId
+ * @property integer $userId
  * @property integer $baseId
+ * @property integer $avatarId
  * @property integer $bannerId
  * @property integer $videoId
  * @property integer $parentId
@@ -224,7 +227,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 			[ [ 'pinned', 'featured', 'popular', 'anonymous', 'gridCacheValid' ], 'boolean' ],
 			[ [ 'rate1', 'rate2', 'rate3', 'rate4', 'rate5' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'ipNum', 'status', 'rating', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'siteId', 'baseId', 'bannerId', 'videoId', 'parentId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'siteId', 'userId', 'baseId', 'avatarId', 'bannerId', 'videoId', 'parentId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'approvedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
@@ -246,7 +249,9 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 
 		return [
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+			'userId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
 			'baseId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'avatarId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
 			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
 			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
@@ -308,6 +313,16 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	// Validators ----------------------------
 
 	// ModelComment --------------------------
+
+	/**
+	 * Returns the corresponding user.
+	 *
+	 * @return User
+	 */
+	public function getUser() {
+
+		return $this->hasOne( User::class, [ 'id' => 'userId' ] );
+	}
 
 	/**
 	 * Return the immediate parent comment.
@@ -376,7 +391,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 
 		if( $sum > 0 ) {
 
-			$this->rating = floor( $sum/5 );
+			$this->rating = floor( $sum / 5 );
 		}
 	}
 
@@ -405,7 +420,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'creator', 'modifier' ];
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'userId' ];
 
 		$config[ 'relations' ] = $relations;
 
@@ -499,7 +514,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 
 		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
 
-		return static::find()->where( 'parentId=:pid AND parentType=:ptype AND createdBy=:uid AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':uid' => $userId, ':type' => $type ] )->one();
+		return static::find()->where( 'parentId=:pid AND parentType=:ptype AND userId=:uid AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':uid' => $userId, ':type' => $type ] )->one();
 	}
 
 	/**
@@ -514,7 +529,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 
 		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
 
-		return static::find()->where( 'parentId=:pid AND parentType=:ptype AND createdBy=:uid AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':uid' => $userId, ':type' => $type ] )->all();
+		return static::find()->where( 'parentId=:pid AND parentType=:ptype AND userId=:uid AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':uid' => $userId, ':type' => $type ] )->all();
 	}
 
 	/**

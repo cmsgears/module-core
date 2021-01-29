@@ -1055,7 +1055,9 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->createTable( $this->prefix . 'core_model_comment', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'siteId' => $this->bigInteger( 20 )->notNull(),
+			'userId' => $this->bigInteger( 20 ),
 			'baseId' => $this->bigInteger( 20 ),
+			'avatarId' => $this->bigInteger( 20 ),
 			'bannerId' => $this->bigInteger( 20 ),
 			'videoId' => $this->bigInteger( 20 ),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
@@ -1102,7 +1104,9 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		// Index for columns base, creator and modifier
 		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_site', $this->prefix . 'core_model_comment', 'siteId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_user', $this->prefix . 'core_model_comment', 'userId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_base', $this->prefix . 'core_model_comment', 'baseId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_avatar', $this->prefix . 'core_model_comment', 'avatarId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_banner', $this->prefix . 'core_model_comment', 'bannerId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_video', $this->prefix . 'core_model_comment', 'videoId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_creator', $this->prefix . 'core_model_comment', 'createdBy' );
@@ -1514,7 +1518,9 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		// Model Comment
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_comment_site', $this->prefix . 'core_model_comment', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_comment_user', $this->prefix . 'core_model_comment', 'userId', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_comment_base', $this->prefix . 'core_model_comment', 'baseId', $this->prefix . 'core_model_comment', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_comment_avatar', $this->prefix . 'core_model_comment', 'avatarId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_comment_banner', $this->prefix . 'core_model_comment', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_comment_video', $this->prefix . 'core_model_comment', 'videoId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_comment_creator', $this->prefix . 'core_model_comment', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
@@ -1766,7 +1772,9 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		// Model Comment
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_site', $this->prefix . 'core_model_comment' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_user', $this->prefix . 'core_model_comment' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_base', $this->prefix . 'core_model_comment' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_avatar', $this->prefix . 'core_model_comment' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_banner', $this->prefix . 'core_model_comment' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_video', $this->prefix . 'core_model_comment' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_creator', $this->prefix . 'core_model_comment' );

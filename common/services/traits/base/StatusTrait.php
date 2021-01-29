@@ -45,7 +45,10 @@ trait StatusTrait {
 			$oldStatus	= $modelClass::$statusMap[ $oldStatus ];
 			$newStatus	= $modelClass::$statusMap[ $model->status ];
 
-			$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_CHANGE;
+			if( empty( $config[ 'template' ] ) ) {
+
+				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_CHANGE;
+			}
 
 			$config[ 'data' ][ 'parentType' ]	= $this->getParentTypeStr();
 			$config[ 'data' ][ 'oldStatus' ]	= $oldStatus;

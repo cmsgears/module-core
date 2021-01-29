@@ -322,20 +322,35 @@ class CodeGenUtil {
 	// Return Image Tag
 	public static function getImageThumbTag( $image, $options = [] ) {
 
+		$type = isset( $options[ 'type' ] ) ? $options[ 'type' ] : 'thumb';
+
 		// Use Image from DB
 		if( isset( $image ) ) {
 
-			$thumbUrl = $image->getThumbUrl();
+			$imageUrl = null;
+
+			if( $type == 'thumb' ) {
+
+				$imageUrl = $image->getThumbUrl();
+			}
+			else if( $type == 'medium' ) {
+
+				$imageUrl = $image->getMediumUrl();
+			}
+			else if( $type == 'file' ) {
+
+				$imageUrl = $image->getFileUrl();
+			}
 
 			if( isset( $options[ 'class' ] ) ) {
 
 				$class = $options[ 'class' ];
 
-				return "<img class='$class' src='$thumbUrl'>";
+				return "<img class=\"{$class}\" src=\"{$imageUrl}\">";
 			}
 			else {
 
-				return "<img src='$thumbUrl'>";
+				return "<img src=\"{$imageUrl}\">";
 			}
 		}
 		else {
@@ -350,11 +365,11 @@ class CodeGenUtil {
 
 					$class	= $options[ 'class' ];
 
-					return "<img class='$class' src='$images/$img'>";
+					return "<img class=\"{$class}\" src=\"{$images}/{$img}\">";
 				}
 				else {
 
-					return "<img src='$images/$img'>";
+					return "<img src=\"{$images}/{$img}\">";
 				}
 			}
 			// Use icon
@@ -362,7 +377,7 @@ class CodeGenUtil {
 
 				$icon = $options[ 'icon' ];
 
-				return "<span class='$icon'></span>";
+				return "<span class=\"icon $icon\" data-icon=\"{$icon}\"></span>";
 			}
 		}
 	}

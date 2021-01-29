@@ -420,7 +420,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'userId' ];
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'user' ];
 
 		$config[ 'relations' ] = $relations;
 

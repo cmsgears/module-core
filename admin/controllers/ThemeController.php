@@ -87,7 +87,11 @@ class ThemeController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 		Url::remember( Yii::$app->request->getUrl(), 'themes' );
 
-		return parent::actionAll( $config );
+		$dataProvider = $this->modelService->getPageByType( CoreGlobal::TYPE_SITE );
+
+		return $this->render( 'all', [
+			'dataProvider' => $dataProvider
+		]);
 	}
 
 }

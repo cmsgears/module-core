@@ -292,6 +292,13 @@ class UserController extends \cmsgears\core\common\controllers\apix\base\Control
 
 			if( $model->load( Yii::$app->request->post(), 'ResetPassword' ) && $model->validate() ) {
 
+				if( empty( $user->email ) ) {
+
+					$user->email = $model->email;
+
+					$user = $this->modelService->update( $user );
+				}
+
 				// Update Password
 				if( $this->modelService->resetPassword( $user, $model, false ) ) {
 

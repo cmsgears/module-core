@@ -669,6 +669,16 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	}
 
 	/**
+	 * Returns gender selected by user.
+	 *
+	 * @return \cmsgears\core\common\models\resources\Option From Category 'gender'.
+	 */
+	public function getMarital() {
+
+		return $this->hasOne( Option::class, [ 'id' => 'maritalId' ] );
+	}
+
+	/**
 	 * Returns gallery associated with the user.
 	 *
 	 * @return \cmsgears\core\common\models\resources\Gallery
@@ -686,6 +696,23 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	public function getGenderStr() {
 
 		$option = $this->gender;
+
+		if( isset( $option ) ) {
+
+			return $option->value;
+		}
+
+		return '';
+	}
+
+	/**
+	 * Returns string representation of marital.
+	 *
+	 * @return string
+	 */
+	public function getMaritalStr() {
+
+		$option = $this->marital;
 
 		if( isset( $option ) ) {
 

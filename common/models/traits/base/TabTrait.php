@@ -117,21 +117,21 @@ trait TabTrait {
 	public function getPreviousTab() {
 
 		$action		= Yii::$app->controller->action->id;
-		$basePath	= isset( Yii::$app->controller->baseUrl ) ? Yii::$app->controller->baseUrl : null;
+		$baseUrl	= isset( Yii::$app->controller->baseUrl ) ? Yii::$app->controller->baseUrl : null;
 
 		if( isset( $this->previousTab[ $action ] ) ) {
 
-			if( isset( $basePath ) ) {
+			if( isset( $baseUrl ) ) {
 
 				$tab = $this->previousTab[ $action ];
 
 				if( isset( $this->slug ) ) {
 
-					return "$basePath/$tab?slug=$this->slug";
+					return "$baseUrl/$tab?slug=$this->slug";
 				}
 				else {
 
-					return "$basePath/$tab?id=$this->id";
+					return "$baseUrl/$tab?id=$this->id";
 				}
 			}
 			else {

@@ -20,7 +20,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\forms\Login;
 use cmsgears\core\common\models\forms\ForgotPassword;
 use cmsgears\core\common\models\forms\Register;
-use cmsgears\core\common\models\resources\ModelMeta;
+use cmsgears\core\common\models\resources\UserMeta;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
@@ -152,10 +152,11 @@ class SiteController extends \cmsgears\core\frontend\controllers\apix\base\Contr
 				$this->siteMemberService->create( $user );
 
 				// Default Settings
-				$metaService = Yii::$app->factory->get( 'modelMetaService' );
+				$metaService = Yii::$app->factory->get( 'userMetaService' );
 
-				$metaService->initByNameType( $user->id, CoreGlobal::TYPE_USER, 'receive_email', 'notification', ModelMeta::VALUE_TYPE_FLAG );
-				$metaService->initByNameType( $user->id, CoreGlobal::TYPE_USER, 'receive_email', 'reminder', ModelMeta::VALUE_TYPE_FLAG );
+				// Default Settings
+				$this->metaService->initByNameType( $user->id, CoreGlobal::META_RECEIVE_EMAIL, CoreGlobal::SETTINGS_NOTIFICATION, UserMeta::VALUE_TYPE_FLAG );
+				$this->metaService->initByNameType( $user->id, CoreGlobal::META_RECEIVE_EMAIL, CoreGlobal::SETTINGS_REMINDER, UserMeta::VALUE_TYPE_FLAG );
 
 				// Send Register Mail
 				Yii::$app->coreMailer->sendRegisterMail( $user );

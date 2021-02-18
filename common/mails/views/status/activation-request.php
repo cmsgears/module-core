@@ -33,7 +33,7 @@ $modelName	= Html::encode( $model->getDisplayName() );
 	</tr>
 	<tr><td height="20"></td></tr>
 	<tr>
-		<td> <font face="Roboto, Arial, sans-serif">Manager: <?= $name ?></font></td>
+		<td> <font face="Roboto, Arial, sans-serif">Owner/Manager: <?= $name ?></font></td>
 	</tr>
 	<tr><td height="20"></td></tr>
 	<tr>

@@ -120,6 +120,7 @@ class OptionController extends \cmsgears\core\frontend\controllers\apix\base\Con
 
 		Yii::$app->factory->get( 'userService' )->notifyAdmin( $user, [
 			'template' => CoreGlobal::TPL_NOTIFY_SUGGEST_OPTION,
+			'adminLink' => "core/optiongroup/option/all?pid={$category->id}",
 			'data' => [ 'name' => $name, 'category' => $category ]
 		]);
 

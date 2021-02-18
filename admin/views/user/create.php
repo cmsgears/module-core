@@ -60,7 +60,7 @@ Editor::widget();
 							<?= $form->field( $model, 'message' ) ?>
 						</div>
 						<div class="col col2">
-							<?= Yii::$app->formDesigner->getIconInput( $form, $model, 'dob', [ 'right' => true, 'icon' => 'cmti cmti-calendar', 'options' => [ 'class' => 'datepicker', 'autocomplete' => 'off' ] ] ) ?>
+							<?= Yii::$app->formDesigner->getIconInput( $form, $model, 'dob', [ 'right' => true, 'icon' => 'cmti cmti-calendar', 'options' => [ 'class' => 'dt-dob-picker', 'autocomplete' => 'off' ] ] ) ?>
 						</div>
 					</div>
 					<div class="row max-cols-100">

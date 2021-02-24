@@ -66,6 +66,7 @@ trait SlugTrait {
 	public static function queryBySlug( $slug, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
 
 		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
 		$query	= null;
@@ -80,6 +81,25 @@ trait SlugTrait {
 
 			$query = static::find()->where( 'slug=:slug', [ ':slug' => $slug ] );
 		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
 
 		if( $limit > 0 ) {
 

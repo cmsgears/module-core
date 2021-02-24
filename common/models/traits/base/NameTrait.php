@@ -71,6 +71,7 @@ trait NameTrait {
 	public static function queryByName( $name, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
 
 		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
 		$query	= null;
@@ -85,6 +86,25 @@ trait NameTrait {
 
 			$query = static::find()->where( 'name=:name', [ ':name' => $name ] );
 		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
 
 		if( $limit > 0 ) {
 

@@ -74,6 +74,7 @@ trait NameTypeTrait {
 	public static function queryByName( $name, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
 
 		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
 		$query	= null;
@@ -88,6 +89,25 @@ trait NameTypeTrait {
 
 			$query = static::find()->where( 'name=:name', [ ':name' => $name ] );
 		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
 
 		if( $limit > 0 ) {
 
@@ -108,6 +128,7 @@ trait NameTypeTrait {
 	public static function queryByType( $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
 
 		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
 		$query	= null;
@@ -122,6 +143,25 @@ trait NameTypeTrait {
 
 			$query = static::find()->where( 'type=:type', [ ':type' => $type ] );
 		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
 
 		if( $limit > 0 ) {
 
@@ -142,6 +182,7 @@ trait NameTypeTrait {
 	public static function queryByNameType( $name, $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
 
 		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
 		$query	= null;
@@ -156,6 +197,25 @@ trait NameTypeTrait {
 
 			$query = static::find()->where( 'name=:name AND type=:type', [ ':name' => $name, ':type' => $type ] );
 		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
 
 		if( $limit > 0 ) {
 

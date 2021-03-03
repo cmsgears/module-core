@@ -30,7 +30,9 @@ class CodeGenUtil {
 	 * Return pagination info to be displayed on data grid footer or header.
 	 * @return string - pagination info
 	 */
-	public static function getPaginationDetail( $dataProvider ) {
+	public static function getPaginationDetail( $dataProvider, $config = [] ) {
+
+		$label = $config[ 'label' ] ?? 'entries';
 
 		$total			= $dataProvider->getTotalCount();
 		$pagination		= $dataProvider->getPagination();
@@ -56,7 +58,7 @@ class CodeGenUtil {
 			$end += 1;
 		}
 
-		return "Showing $start to $end out of $total entries";
+		return "Showing $start to $end out of $total $label";
 	}
 
 	public static function getPaginationOptions( $limits = [], $pageLimit = null ) {

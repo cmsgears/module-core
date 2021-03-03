@@ -14,6 +14,8 @@ use Yii;
 use yii\db\Query;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\interfaces\base\IFollower;
 
 use cmsgears\core\common\services\interfaces\mappers\IFollowerService;

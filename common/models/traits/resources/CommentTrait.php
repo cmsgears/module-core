@@ -149,7 +149,7 @@ trait CommentTrait {
 	 */
 	public function getRatingStars( $type, $minStars = 0, $maxStars = 5, $topLevel = true ) {
 
-		$returnArr		= [];
+		$returnArr = [];
 
 		for( $i = $minStars; $i <= $maxStars; $i++ ) {
 

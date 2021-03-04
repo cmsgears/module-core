@@ -103,9 +103,7 @@ class SharedController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 		$model = $this->modelService->getModelObject();
 
-		$model->backend		= true;
-		$model->frontend	= false;
-		$model->shared		= true;
+		$model->shared = true;
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 

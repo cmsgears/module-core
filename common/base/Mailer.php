@@ -35,6 +35,10 @@ class Mailer extends \yii\base\Component {
 
 	// Public -----------------
 
+	public $htmlLayout;
+	public $textLayout;
+	public $viewPath;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -53,10 +57,6 @@ class Mailer extends \yii\base\Component {
 		parent::init();
 
 		$this->mailer = Yii::$app->getMailer();
-
-		$this->mailer->htmlLayout	= $this->htmlLayout;
-		$this->mailer->textLayout	= $this->textLayout;
-		$this->mailer->viewPath		= $this->viewPath;
 	}
 
 	public function initSmtp() {
@@ -86,6 +86,10 @@ class Mailer extends \yii\base\Component {
 	// Mailer --------------------------------
 
 	public function getMailer() {
+
+		$this->mailer->htmlLayout	= $this->htmlLayout;
+		$this->mailer->textLayout	= $this->textLayout;
+		$this->mailer->viewPath		= $this->viewPath;
 
 		return $this->mailer;
 	}

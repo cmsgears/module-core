@@ -19,6 +19,8 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\config\CoreProperties;
 
+use cmsgears\core\common\utilities\DateUtil;
+
 /**
  * The class CodeGenUtil provides utility methods to generate code snippets for commonly used code.
  */
@@ -505,6 +507,23 @@ class CodeGenUtil {
 
 		$metaContent = '';
 
+		// Last Updated
+		if( isset( $params[ 'model' ] ) ) {
+
+			$model		= $params[ 'model' ];
+			$content	= isset( $model->modelContent ) ? $model->modelContent : null;
+
+			$date = $model->modifiedAt;
+
+			if( isset( $content ) && isset( $content->modifiedAt ) ) {
+
+				$date = DateUtil::greaterThan( $date, $content->modifiedAt ) ? $content->modifiedAt : $date;
+			}
+
+			$metaContent .= "<meta name=\"last-updated\" content=\"$date UTC\">";
+		}
+
+		// Description
 		if( isset( $params[ 'desc' ] ) ) {
 
 			$description = $params[ 'desc' ];
@@ -520,6 +539,7 @@ class CodeGenUtil {
 			$metaContent .= "<meta name=\"description\" content=\"$description\" />";
 		}
 
+		// Keywords
 		if( isset( $params[ 'keywords' ] ) ) {
 
 			$keywords	= $params[ 'keywords' ];
@@ -535,6 +555,7 @@ class CodeGenUtil {
 			$metaContent .= "<meta name=\"keywords\" content=\"$keywords\" />";
 		}
 
+		// Robot
 		if( isset( $params[ 'robot' ] ) ) {
 
 			$robot = $params[ 'robot' ];
@@ -542,6 +563,7 @@ class CodeGenUtil {
 			$metaContent .= "<meta name=\"robots\" content=\"$robot\" />";
 		}
 
+		// User defined Schema
 		if( isset( $params[ 'schema' ] ) ) {
 
 			$schema = $params[ 'schema' ];

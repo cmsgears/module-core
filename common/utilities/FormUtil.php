@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\utilities;
 
 // Yii Imports
@@ -9,32 +17,31 @@ use cmsgears\core\common\models\resources\FormField;
 
 class FormUtil {
 
-	// Static Methods ----------------------------------------------
-
 	public static function fillFromModelMeta( $formSlug, $formType, $modelMetas ) {
 
-		$form		= Yii::$app->factory->get( 'formService' )->getBySlugType( $formSlug, $formType );
-		$fieldsMap	= [];
+		$form = Yii::$app->factory->get( 'formService' )->getBySlugType( $formSlug, $formType );
+
+		$fieldsMap = [];
 
 		if( isset( $form ) ) {
 
 			$formFields	= $form->getFieldsMap();
 
-			foreach ( $formFields as $key => $formField ) {
+			foreach( $formFields as $key => $formField ) {
 
 				// Convert CheckBox csv to array
 				if( $formField->isCheckboxGroup() ) {
 
-					$this->$fieldName	= split("/,/", $formField->value );
+					$this->$fieldName = split("/,/", $formField->value );
 				}
 
 				// Ignore passwords
 				if( !$formField->isPassword() ) {
 
-					$formField->value	= $modelMetas[ $key ]->value;
+					$formField->value = $modelMetas[ $key ]->value;
 				}
 
-				$fieldsMap[ $formField->name ]	= $formField;
+				$fieldsMap[ $formField->name ] = $formField;
 			}
 		}
 
@@ -80,11 +87,13 @@ class FormUtil {
 
 	public static function getFieldsHtml( $form, $model, $config = [] ) {
 
-		$fields				= $model->fields;
-		$fieldsHtml			= '';
-		$config[ 'label' ]	= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
+		$config[ 'label' ] = isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
 
-		foreach ( $fields as $key => $field ) {
+		$fields = $model->fields;
+
+		$fieldsHtml	= '';
+
+		foreach( $fields as $key => $field ) {
 
 			// Convert Json to Array
 			if( isset( $field->htmlOptions ) && strlen( $field->htmlOptions ) > 0 ) {
@@ -104,10 +113,12 @@ class FormUtil {
 
 	public static function getApixFieldsHtml( $form, $model, $config = [] ) {
 
-		$fields					= $form->fields;
-		$fieldsHtml				= '';
 		$config[ 'label' ]		= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
 		$config[ 'modelName' ]	= isset( $config[ 'modelName' ] ) ? $config[ 'modelName' ] : 'GenericForm';
+
+		$fields = $form->activeFields;
+
+		$fieldsHtml	= '';
 
 		foreach( $fields as $key => $field ) {
 
@@ -123,7 +134,8 @@ class FormUtil {
 
 			if( isset( $model ) ) {
 
-				$value		 = $model->fields[ $field->name ]->value;
+				$value = $model->fields[ $field->name ]->value;
+
 				$fieldsHtml .= Yii::$app->formDesigner->getApixFieldHtml( $config, $field, $value );
 			}
 			else {
@@ -134,4 +146,5 @@ class FormUtil {
 
 		return $fieldsHtml;
 	}
+
 }

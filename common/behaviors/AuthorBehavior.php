@@ -11,7 +11,6 @@ namespace cmsgears\core\common\behaviors;
 
 // Yii Imports
 use Yii;
-use yii\behaviors\AttributeBehavior;
 use yii\db\BaseActiveRecord;
 
 /**
@@ -19,7 +18,7 @@ use yii\db\BaseActiveRecord;
  *
  * @since 1.0.0
  */
-class AuthorBehavior extends AttributeBehavior {
+class AuthorBehavior extends \yii\behaviors\AttributeBehavior {
 
 	public $createdByAttribute = 'createdBy';
 

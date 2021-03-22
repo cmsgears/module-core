@@ -16,9 +16,9 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\frontend\controllers\base\Controller;
+use cmsgears\core\common\utilities\AjaxUtil;
 
-class RegionController extends Controller {
+class RegionController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -37,7 +37,7 @@ class RegionController extends Controller {
 		parent::init();
 
 		// Permission
-		$this->crudPermission = CoreGlobal::PERM_USER;
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'regionService' );
@@ -57,12 +57,20 @@ class RegionController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					// 'auto-search' => [ 'permission' => $this->crudPermission ]
+					'auto-search' => [ 'permission' => CoreGlobal::PERM_ADMIN ],
+					'bulk' => [ 'permission' => $this->crudPermission ],
+					'generic' => [ 'permission' => $this->crudPermission ],
+					'delete' => [ 'permission' => $this->crudPermission ],
+					'options-list' => [ 'permission' => CoreGlobal::PERM_ADMIN ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
+					'auto-search' => [ 'post' ],
+					'bulk' => [ 'post' ],
+					'generic' => [ 'post' ],
+					'delete' => [ 'post' ],
 					'options-list' => [ 'post' ]
 				]
 			]
@@ -74,6 +82,9 @@ class RegionController extends Controller {
 	public function actions() {
 
 		return [
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
+			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
+			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ],
 			'options-list' => [ 'class' => 'cmsgears\core\common\actions\location\data\RegionOptions' ]
 		];
 	}
@@ -83,5 +94,22 @@ class RegionController extends Controller {
 	// CMG parent classes --------------------
 
 	// RegionController ----------------------
+
+	public function actionAutoSearch() {
+
+		$name		= Yii::$app->request->post( 'name' );
+		$provinceId	= Yii::$app->request->get( 'pid' );
+
+		$regionClass = $this->modelService->getModelClass();
+
+		$query = $regionClass::find();
+
+		$query->andWhere( "provinceId=:pid", [ ':pid' => $provinceId ] );
+
+		$data = $this->modelService->searchByName( $name, [ 'query' => $query ] );
+
+		// Trigger Ajax Success
+		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+	}
 
 }

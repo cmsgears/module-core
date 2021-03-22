@@ -44,15 +44,13 @@ class ModelLocationService extends \cmsgears\core\common\services\base\ModelMapp
 
 	// Private ----------------
 
-	private $locationService;
-
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
 
 	public function __construct( ILocationService $locationService, $config = [] ) {
 
-		$this->locationService = $locationService;
+		$this->parentService = $locationService;
 
 		parent::__construct( $config );
 	}
@@ -73,10 +71,15 @@ class ModelLocationService extends \cmsgears\core\common\services\base\ModelMapp
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
-		$locationTable = $this->locationService->getModelTable();
+		$locationTable = $this->parentService->getModelTable();
 
 		// Sorting ----------
 
@@ -137,9 +140,7 @@ class ModelLocationService extends \cmsgears\core\common\services\base\ModelMapp
 					'label' => 'Active'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -161,7 +162,7 @@ class ModelLocationService extends \cmsgears\core\common\services\base\ModelMapp
 		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
@@ -177,25 +178,36 @@ class ModelLocationService extends \cmsgears\core\common\services\base\ModelMapp
 
 					break;
 				}
+				case 'disabled': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = false;
+
+					break;
+				}
 			}
 		}
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'title' => "$locationTable.title"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'title' => "address.title"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'title' => "$locationTable.title",
 			'order' => "$modelTable.order",
 			'active' => "$modelTable.active"
@@ -222,7 +234,51 @@ class ModelLocationService extends \cmsgears\core\common\services\base\ModelMapp
 
 	// Delete -------------
 
+	public function deleteWithParent( $model, $config = [] ) {
+
+		$parent = $this->parentService->getById( $model->modelId );
+
+		$this->parentService->delete( $parent, $config );
+	}
+
 	// Bulk ---------------
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'activate': {
+
+						$model->active = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'disable': {
+
+						$model->active = false;
+
+						$model->update();
+
+						break;
+					}
+					case 'delete': {
+
+						$this->deleteWithParent( $model, $config );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
 
 	// Notifications ------
 

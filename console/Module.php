@@ -9,15 +9,12 @@
 
 namespace cmsgears\core\console;
 
-// CMG Imports
-use cmsgears\core\common\base\Module as BaseModule;
-
 /**
  * The Console Module of Core Module.
  *
  * @since 1.0.0
  */
-class Module extends BaseModule {
+class Module extends \cmsgears\core\common\base\Module {
 
 	// Variables ---------------------------------------------------
 

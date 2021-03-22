@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\base;
 
 // Yii Imports
@@ -9,7 +17,7 @@ use yii\base\InvalidConfigException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\utilities\CodeGenUtil;
+use cmsgears\core\common\utilities\UrlUtil;
 
 /**
  * The class GridWidget can be used by widgets showing data grids.
@@ -30,17 +38,17 @@ abstract class GridWidget extends Widget {
 
 	// Public -----------------
 
-	public $wrap		= true;
+	public $wrap = true;
 
-	public $template	= 'simple';
+	public $template = 'simple';
 
 	// HTML options used by the widget div
-	public $options		= [ 'class' => 'grid-data' ];
+	public $options = [ 'class' => 'grid-data' ];
 
 	// Additional data
-	public $data 		= [];
+	public $data = [];
 
-	public $provider 	= true; // Flag to check whether data provider is required
+	public $provider = true; // Flag to check whether data provider is required
 
 	// Data provider having sort, pagination and query to provide data
 	public $dataProvider;
@@ -59,19 +67,21 @@ abstract class GridWidget extends Widget {
 	public $add = true;
 
 	// Base URL to form sub URLs
-	public $baseUrl		= null;
+	public $baseUrl = null;
 
 	// Url to add model
-	public $addUrl		= 'add';
+	public $addUrl = 'add';
 
 	// Add using popup
-	public $addPopup	= false;
+	public $addPopup = false;
 
 	// Widget Sections
 	public $sort	= true;	// Show sort options
 	public $search	= true;	// Show search options
 	public $filter	= true; // Show grid filters
 	public $bulk	= true; // Show bulk options
+	public $import	= false; // Show import options
+	public $export	= false; // Show export options
 	public $report	= true; // Show report options
 
 	public $head	= true; // Show grid title
@@ -85,34 +95,36 @@ abstract class GridWidget extends Widget {
 	public $searchView		= 'search';
 	public $filtersView		= 'filters';
 	public $bulkView		= 'bulk';
+	public $importView		= 'import';
+	public $exportView		= 'export';
 	public $reportView		= 'report';
 
-	public $headView		= 'head';
-	public $optionsView		= 'options';
+	public $headView	= 'head';
+	public $optionsView	= 'options';
 
-	public $headerView		= 'header';
+	public $headerView = 'header';
 
-	public $dataView		= 'data';
-	public $listView		= 'list';
-	public $cardView		= 'cards';
-	public $actionView		= 'actions';
+	public $dataView	= 'data';
+	public $listView	= 'list';
+	public $cardView	= 'cards';
+	public $actionView	= 'actions';
 
-	public $footerView		= 'footer';
+	public $footerView = 'footer';
 
-	public $gridView		= 'grid';
+	public $gridView = 'grid';
 
 	// Sorting - columns available for sorting
-	public $sortColumns		= [];
+	public $sortColumns = [];
 
 	// Searching - columns available for searching
-	public $searchColumns	= [];
+	public $searchColumns = [];
 
 	// Quick Filters - filter the data
-	public $filters			= [];
+	public $filters = [];
 
 	// Bulk Options
-	public $bulkActions		= [];
-	public $bulkPopup		= 'popup-bulk';
+	public $bulkActions = [];
+	public $bulkPopup	= 'popup-bulk';
 
 	// Reporting - generate report
 	public $reportColumns	= [];
@@ -139,17 +151,13 @@ abstract class GridWidget extends Widget {
 	public $cardColumns	= []; // Configure only if specific columns are required for card view
 
 	// Grid Cards
-	public $gridCards	= [];
+	public $gridCards = [];
 
 	// Grid Actions
-	public $actions		= [];
-
-	// Import/Export
-	public $import = false;
-	public $export = false;
+	public $actions = [];
 
 	// Grid having static columns
-	public $fixedColumns	= [];
+	public $fixedColumns = [];
 
 	public $leftColumns		= [];
 	public $rightColumns	= [];
@@ -221,7 +229,7 @@ abstract class GridWidget extends Widget {
 		$this->layout = $gridLayout;
 
 		// Views
-		$this->actionView = CodeGenUtil::isAbsolutePath( $this->actionView ) ? $this->actionView : "$this->template/$this->actionView";
+		$this->actionView = UrlUtil::isAbsolutePath( $this->actionView ) ? $this->actionView : "$this->template/$this->actionView";
 
 		$sortHtml		= $this->sort ? $this->renderSort( $config ) : null;
 
@@ -231,29 +239,38 @@ abstract class GridWidget extends Widget {
 
 		$bulkHtml		= $this->bulk ? $this->renderBulk( $config ) : null;
 
+		$importHtml		= $this->import ? $this->renderImport( $config ) : null;
+
+		$exportHtml		= $this->export ? $this->renderExport( $config ) : null;
+
 		$reportHtml		= $this->report ? $this->renderReport( $config ) : null;
 
-		$headHtml		= $this->head ? $this->renderHead( $config, [ 'sortHtml' => $sortHtml, 'searchHtml' => $searchHtml, 'filtersHtml' => $filtersHtml, 'bulkHtml' => $bulkHtml ] ) : null;
+		$headHtml = $this->head ? $this->renderHead( $config, [
+			'sortHtml' => $sortHtml, 'searchHtml' => $searchHtml,
+			'filtersHtml' => $filtersHtml, 'bulkHtml' => $bulkHtml ] ) : null;
 
-		$optionsHtml	= $this->option ? $this->renderOptions( $config, [ 'sortHtml' => $sortHtml, 'searchHtml' => $searchHtml, 'filtersHtml' => $filtersHtml, 'bulkHtml' => $bulkHtml ] ) : null;
+		$optionsHtml = $this->option ? $this->renderOptions( $config, [
+			'sortHtml' => $sortHtml, 'searchHtml' => $searchHtml,
+			'filtersHtml' => $filtersHtml, 'bulkHtml' => $bulkHtml ] ) : null;
 
-		$headerHtml		= $this->header ? $this->renderHeader( $config ) : null;
+		$headerHtml = $this->header ? $this->renderHeader( $config ) : null;
 
-		$dataHtml		= $this->grid && $this->layout == 'data' ? $this->renderData( $config ) : null;
-		$dataHtml		= $this->table && $this->layout == 'table' ? $this->renderData( $config ) : $dataHtml;
+		$dataHtml	= $this->grid && $this->layout == 'data' ? $this->renderData( $config ) : null;
+		$dataHtml	= $this->table && $this->layout == 'table' ? $this->renderData( $config ) : $dataHtml;
 
-		$listHtml		= $this->list && $this->layout == 'list' ? $this->renderList( $config ) : null;
+		$listHtml = $this->list && $this->layout == 'list' ? $this->renderList( $config ) : null;
 
-		$cardHtml		= $this->card && $this->layout == 'card' ? $this->renderCards( $config ) : null;
+		$cardHtml = $this->card && $this->layout == 'card' ? $this->renderCards( $config ) : null;
 
-		$footerHtml		= $this->footer ? $this->renderFooter( $config ) : null;
+		$footerHtml = $this->footer ? $this->renderFooter( $config ) : null;
 
-		$gridView		= CodeGenUtil::isAbsolutePath( $this->gridView ) ? $this->gridView : "$this->template/$this->gridView";
+		$gridView = UrlUtil::isAbsolutePath( $this->gridView ) ? $this->gridView : "$this->template/$this->gridView";
 
 		$widgetHtml = $this->render( $gridView, [
 			'widget' => $this,
 			'sortHtml' => $sortHtml, 'searchHtml' => $searchHtml, 'filtersHtml' => $filtersHtml,
-			'bulkHtml' => $bulkHtml, 'reportHtml' => $reportHtml, 'headHtml' => $headHtml, 'optionsHtml' => $optionsHtml,
+			'bulkHtml' => $bulkHtml, 'importHtml' => $importHtml, 'exportHtml' => $exportHtml,
+			'reportHtml' => $reportHtml, 'headHtml' => $headHtml, 'optionsHtml' => $optionsHtml,
 			'headerHtml' => $headerHtml, 'footerHtml' => $footerHtml,
 			'dataHtml' => $dataHtml, 'listHtml' => $listHtml, 'cardHtml' => $cardHtml
 		]);
@@ -270,42 +287,56 @@ abstract class GridWidget extends Widget {
 
 	public function renderSort( $config = [] ) {
 
-		$sortView = CodeGenUtil::isAbsolutePath( $this->sortView ) ? $this->sortView : "$this->template/$this->sortView";
+		$sortView = UrlUtil::isAbsolutePath( $this->sortView ) ? $this->sortView : "$this->template/$this->sortView";
 
         return $this->render( $sortView, [ 'widget' => $this ] );
 	}
 
 	public function renderSearch( $config = [] ) {
 
-		$searchView = CodeGenUtil::isAbsolutePath( $this->searchView ) ? $this->searchView : "$this->template/$this->searchView";
+		$searchView = UrlUtil::isAbsolutePath( $this->searchView ) ? $this->searchView : "$this->template/$this->searchView";
 
         return $this->render( $searchView, [ 'widget' => $this ] );
 	}
 
 	public function renderFilters( $config = [] ) {
 
-		$filtersView = CodeGenUtil::isAbsolutePath( $this->filtersView ) ? $this->filtersView : "$this->template/$this->filtersView";
+		$filtersView = UrlUtil::isAbsolutePath( $this->filtersView ) ? $this->filtersView : "$this->template/$this->filtersView";
 
         return $this->render( $filtersView, [ 'widget' => $this ] );
 	}
 
 	public function renderBulk( $config = [] ) {
 
-		$bulkView = CodeGenUtil::isAbsolutePath( $this->bulkView ) ? $this->bulkView : "$this->template/$this->bulkView";
+		$bulkView = UrlUtil::isAbsolutePath( $this->bulkView ) ? $this->bulkView : "$this->template/$this->bulkView";
 
         return $this->render( $bulkView, [ 'widget' => $this ] );
 	}
 
+	public function renderImport( $config = [] ) {
+
+		$importView = UrlUtil::isAbsolutePath( $this->importView ) ? $this->importView : "$this->template/$this->importView";
+
+        return $this->render( $importView, [ 'widget' => $this ] );
+	}
+
+	public function renderExport( $config = [] ) {
+
+		$exportView = UrlUtil::isAbsolutePath( $this->exportView ) ? $this->exportView : "$this->template/$this->exportView";
+
+        return $this->render( $exportView, [ 'widget' => $this ] );
+	}
+
 	public function renderReport( $config = [] ) {
 
-		$reportView = CodeGenUtil::isAbsolutePath( $this->reportView ) ? $this->reportView : "$this->template/$this->reportView";
+		$reportView = UrlUtil::isAbsolutePath( $this->reportView ) ? $this->reportView : "$this->template/$this->reportView";
 
         return $this->render( $reportView, [ 'widget' => $this ] );
 	}
 
 	public function renderHead( $config = [], $html = [] ) {
 
-		$headView = CodeGenUtil::isAbsolutePath( $this->headView ) ? $this->headView : "$this->template/$this->headView";
+		$headView = UrlUtil::isAbsolutePath( $this->headView ) ? $this->headView : "$this->template/$this->headView";
 
         return $this->render( $headView, [
 			'widget' => $this, 'sortHtml' => $html[ 'sortHtml' ], 'searchHtml' => $html[ 'searchHtml' ],
@@ -315,7 +346,7 @@ abstract class GridWidget extends Widget {
 
 	public function renderOptions( $config = [], $html = [] ) {
 
-		$optionsView = CodeGenUtil::isAbsolutePath( $this->optionsView ) ? $this->optionsView : "$this->template/$this->optionsView";
+		$optionsView = UrlUtil::isAbsolutePath( $this->optionsView ) ? $this->optionsView : "$this->template/$this->optionsView";
 
         return $this->render( $optionsView, [
 			'widget' => $this, 'sortHtml' => $html[ 'sortHtml' ], 'searchHtml' => $html[ 'searchHtml' ],
@@ -325,35 +356,35 @@ abstract class GridWidget extends Widget {
 
 	public function renderHeader( $config = [] ) {
 
-		$headerView = CodeGenUtil::isAbsolutePath( $this->headerView ) ? $this->headerView : "$this->template/$this->headerView";
+		$headerView = UrlUtil::isAbsolutePath( $this->headerView ) ? $this->headerView : "$this->template/$this->headerView";
 
         return $this->render( $headerView, [ 'widget' => $this ] );
 	}
 
 	public function renderData( $config = [] ) {
 
-		$dataView = CodeGenUtil::isAbsolutePath( $this->dataView ) ? $this->dataView : "$this->template/$this->dataView";
+		$dataView = UrlUtil::isAbsolutePath( $this->dataView ) ? $this->dataView : "$this->template/$this->dataView";
 
         return $this->render( $dataView, [ 'widget' => $this ] );
 	}
 
 	public function renderList( $config = [] ) {
 
-		$listView = CodeGenUtil::isAbsolutePath( $this->listView ) ? $this->listView : "$this->template/$this->listView";
+		$listView = UrlUtil::isAbsolutePath( $this->listView ) ? $this->listView : "$this->template/$this->listView";
 
         return $this->render( $listView, [ 'widget' => $this ] );
 	}
 
 	public function renderCards( $config = [] ) {
 
-		$cardView = CodeGenUtil::isAbsolutePath( $this->cardView ) ? $this->cardView : "$this->template/$this->cardView";
+		$cardView = UrlUtil::isAbsolutePath( $this->cardView ) ? $this->cardView : "$this->template/$this->cardView";
 
         return $this->render( $cardView, [ 'widget' => $this ] );
 	}
 
 	public function renderFooter( $config = [] ) {
 
-		$footerView = CodeGenUtil::isAbsolutePath( $this->footerView ) ? $this->footerView : "$this->template/$this->footerView";
+		$footerView = UrlUtil::isAbsolutePath( $this->footerView ) ? $this->footerView : "$this->template/$this->footerView";
 
         return $this->render( $footerView, [ 'widget' => $this ] );
 	}

@@ -18,14 +18,12 @@ use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\services\interfaces\mappers\IModelTagService;
 use cmsgears\core\common\services\interfaces\resources\ITagService;
 
-use cmsgears\core\common\services\base\ModelMapperService;
-
 /**
  * ModelTagService provide service methods of tag mapper.
  *
  * @since 1.0.0
  */
-class ModelTagService extends ModelMapperService implements IModelTagService {
+class ModelTagService extends \cmsgears\core\common\services\base\ModelMapperService implements IModelTagService {
 
 	// Variables ---------------------------------------------------
 
@@ -47,15 +45,13 @@ class ModelTagService extends ModelMapperService implements IModelTagService {
 
 	// Private ----------------
 
-	private $tagService;
-
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
 
 	public function __construct( ITagService $tagService, $config = [] ) {
 
-		$this->tagService = $tagService;
+		$this->parentService = $tagService;
 
 		parent::__construct( $config );
 	}
@@ -97,11 +93,13 @@ class ModelTagService extends ModelMapperService implements IModelTagService {
 				continue;
 			}
 
-			$tag = $this->tagService->getFirstByNameType( $tagName, $parentType );
+			$tag = $this->parentService->getFirstByNameType( $tagName, $parentType );
 
 			if( !isset( $tag ) ) {
 
-				$tag = $this->tagService->createByParams( [ 'siteId' => Yii::$app->core->siteId, 'name' => ucfirst( $tagName ), 'type' => $parentType ] );
+				$tag = $this->parentService->createByParams([
+					'name' => ucfirst( $tagName ), 'type' => $parentType
+				]);
 			}
 
 			$modelTag = $this->getFirstByParentModelId( $parentId, $parentType, $tag->id );
@@ -109,7 +107,10 @@ class ModelTagService extends ModelMapperService implements IModelTagService {
 			// Create if does not exist
 			if( empty( $modelTag ) ) {
 
-				$this->createByParams( [ 'modelId' => $tag->id, 'parentId' => $parentId, 'parentType' => $parentType, 'order' => 0, 'active' => true ] );
+				$this->createByParams([
+					'modelId' => $tag->id, 'parentId' => $parentId, 'parentType' => $parentType,
+					'order' => 0, 'active' => true
+				]);
 			}
 			// Activate if already exist
 			else {
@@ -133,39 +134,28 @@ class ModelTagService extends ModelMapperService implements IModelTagService {
 
 	// Update -------------
 
-	public function update( $model, $config = [] ) {
-
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'order', 'active'
-		];
-
-		return parent::update( $model, [
-			'attributes' => $attributes
-		]);
-	}
-
 	public function bindTags( $parentId, $parentType, $config = [] ) {
 
 		$binderName	= isset( $config[ 'binder' ] ) ? $config[ 'binder' ] : 'Binder';
-		$binder		= $config[ 'tagBinder' ] ?? null;
 
-		if( empty( $binder ) ) {
+		$modelBinder = $config[ 'modelBinder' ] ?? null;
 
-			$binder = new Binder();
+		if( empty( $modelBinder ) ) {
 
-			$binder->load( Yii::$app->request->post(), $binderName );
+			$modelBinder = new Binder();
+
+			$modelBinder->load( Yii::$app->request->post(), $binderName );
 		}
 
-		$all		= $binder->all;
-		$binded		= $binder->binded;
-		$process	= [];
+		$all	= $modelBinder->all;
+		$binded	= $modelBinder->binded;
+
+		$process = [];
 
 		// Check for All
 		if( count( $all ) > 0 ) {
 
 			$process = $all;
-
-			// TODO: Handle the situation where all check is required. Refer bindCategories of ModelCategoryService
 		}
 		// Check for Active
 		else {
@@ -184,11 +174,9 @@ class ModelTagService extends ModelMapperService implements IModelTagService {
 
 	public function deleteByTagSlug( $parentId, $parentType, $tagSlug, $delete = false ) {
 
-		$tag = $this->tagService->getBySlugType( $tagSlug, $parentType );
+		$tag = $this->parentService->getBySlugType( $tagSlug, $parentType );
 
 		$this->disableByModelId( $parentId, $parentType, $tag->id, $delete = false );
-
-		return true;
 	}
 
 	// Bulk ---------------

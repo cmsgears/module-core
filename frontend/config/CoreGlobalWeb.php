@@ -26,27 +26,28 @@ class CoreGlobalWeb {
 	const PAGE_REGISTER			= 'register';
 	const PAGE_SIGNUP			= 'signup';
 	const PAGE_ACCOUNT_CONFIRM	= 'confirm-account';
+	const PAGE_LOGIN			= 'login';
 	const PAGE_FEEDBACK			= 'feedback';
 	const PAGE_TESTIMONIAL		= 'testimonial';
 
 	// Private
-	const PAGE_PROFILE			= 'profile';
-	const PAGE_ACCOUNT			= 'account';
-	const PAGE_ADDRESS			= 'address';
-	const PAGE_SETTINGS			= 'settings';
+	const PAGE_PROFILE	= 'profile';
+	const PAGE_ACCOUNT	= 'account';
+	const PAGE_ADDRESS	= 'address';
+	const PAGE_SETTINGS	= 'settings';
 
 	// Grouping by type ------------------------------------------------
 
 	// Templates -------------------------------------------------------
 
-	const LAYOUT_LANDING		= '//landing';
+	const LAYOUT_LANDING	= '//landing';
 
-	const LAYOUT_PUBLIC			= '//public';
-	const LAYOUT_PRIVATE		= '//private';
+	const LAYOUT_PUBLIC		= '//public';
+	const LAYOUT_PRIVATE	= '//private';
 
-	const LAYOUT_SEARCH			= '//search';
-	const LAYOUT_CATEGORY		= '//category';
-	const LAYOUT_TAG			= '//tag';
+	const LAYOUT_SEARCH		= '//search';
+	const LAYOUT_CATEGORY	= '//category';
+	const LAYOUT_TAG		= '//tag';
 
 	// Config ----------------------------------------------------------
 

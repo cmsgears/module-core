@@ -15,8 +15,6 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Action;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -24,7 +22,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class Update extends Action {
+class Update extends \cmsgears\core\common\base\Action {
 
 	// Variables ---------------------------------------------------
 
@@ -78,10 +76,16 @@ class Update extends Action {
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->controller->model = $this->modelService->update( $model );
+			$model = $this->modelService->update( $model );
 
 			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
+			if( $model ) {
+
+				// Controller Model for post action
+				$this->controller->model = $model;
+
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+			}
 		}
 
 		// Generate Errors

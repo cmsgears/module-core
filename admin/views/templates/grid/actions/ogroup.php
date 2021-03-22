@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 ?>
 
-<span class="action"><?= Html::a( "<i class=\"cmti cmti-list-small\" title=\"Options\"></i>", [ "optiongroup/option/all?cid=$model->id" ] ) ?></span>
+<span class="action"><?= Html::a( "<i class=\"cmti cmti-list-small\" title=\"Options\"></i>", [ "optiongroup/option/all?pid=$model->id" ] ) ?></span>
 
 <span class="action"><?= Html::a( "<i class=\"cmti cmti-edit\" title=\"Update\"></i>", [ "update?id=$model->id" ] ) ?></span>
 

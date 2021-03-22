@@ -12,7 +12,9 @@ namespace cmsgears\core\common\services\interfaces\resources;
 // CMG Imports
 use cmsgears\core\common\services\interfaces\base\IMultiSite;
 use cmsgears\core\common\services\interfaces\base\IResourceService;
+use cmsgears\core\common\services\interfaces\base\IShared;
 use cmsgears\core\common\services\interfaces\base\IVisibility;
+use cmsgears\core\common\services\interfaces\cache\IGridCacheable;
 use cmsgears\core\common\services\interfaces\resources\IData;
 
 /**
@@ -20,7 +22,7 @@ use cmsgears\core\common\services\interfaces\resources\IData;
  *
  * @since 1.0.0
  */
-interface IFileService extends IResourceService, IData, IMultiSite, IVisibility {
+interface IFileService extends IResourceService, IData, IGridCacheable, IMultiSite, IShared, IVisibility {
 
 	// Data Provider ------
 

@@ -21,7 +21,7 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * @since 1.0.0
  */
-class UserController extends \cmsgears\core\common\controllers\base\Controller {
+class UserController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -44,7 +44,7 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 		$this->crudPermission = CoreGlobal::PERM_IDENTITY;
 
 		$this->modelService	= Yii::$app->factory->get( 'userService' );
-		$this->metaService	= Yii::$app->factory->get( 'modelMetaService' );
+		$this->metaService	= Yii::$app->factory->get( 'userMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -184,10 +184,10 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 			'update-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Update' ],
 			'delete-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Delete' ],
 			// Options
-			'assign-option' => [ 'class' => 'cmsgears\core\common\actions\option\Assign' ],
-			'remove-option' => [ 'class' => 'cmsgears\core\common\actions\option\Remove' ],
-			'delete-option' => [ 'class' => 'cmsgears\core\common\actions\option\Delete' ],
-			'toggle-option' => [ 'class' => 'cmsgears\core\common\actions\option\Toggle' ],
+			'assign-option' => [ 'class' => 'cmsgears\core\common\actions\option\mapper\Assign' ],
+			'remove-option' => [ 'class' => 'cmsgears\core\common\actions\option\mapper\Remove' ],
+			'delete-option' => [ 'class' => 'cmsgears\core\common\actions\option\mapper\Delete' ],
+			'toggle-option' => [ 'class' => 'cmsgears\core\common\actions\option\mapper\Toggle' ],
 			// Metas
 			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Create' ],
 			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update' ],
@@ -195,10 +195,10 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete' ],
 			'settings' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMultiple' ],
 			// Address
-			'get-address' => [ 'class' => 'cmsgears\core\common\actions\address\Read' ],
-			'add-address' => [ 'class' => 'cmsgears\core\common\actions\address\Create' ],
-			'update-address' => [ 'class' => 'cmsgears\core\common\actions\address\Update' ],
-			'delete-address' => [ 'class' => 'cmsgears\core\common\actions\address\Delete' ],
+			'get-address' => [ 'class' => 'cmsgears\core\common\actions\address\mapper\Read' ],
+			'add-address' => [ 'class' => 'cmsgears\core\common\actions\address\mapper\Create' ],
+			'update-address' => [ 'class' => 'cmsgears\core\common\actions\address\mapper\Update' ],
+			'delete-address' => [ 'class' => 'cmsgears\core\common\actions\address\mapper\Delete' ],
 			// Data Object
 			'set-data' => [ 'class' => 'cmsgears\core\common\actions\data\data\Set' ],
 			'remove-data' => [ 'class' => 'cmsgears\core\common\actions\data\data\Remove' ],
@@ -210,7 +210,7 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 			'remove-setting' => [ 'class' => 'cmsgears\core\common\actions\data\setting\Remove' ],
 			// Model
 			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

@@ -14,14 +14,14 @@ use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
-use cmsgears\core\admin\controllers\base\Controller;
+use cmsgears\core\common\config\CoreGlobal;
 
 /**
  * OptionController provides actions specific to option model.
  *
  * @since 1.0.0
  */
-class OptionController extends Controller {
+class OptionController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -38,6 +38,9 @@ class OptionController extends Controller {
 	public function init() {
 
 		parent::init();
+
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'optionService' );
@@ -78,7 +81,7 @@ class OptionController extends Controller {
 	public function actions() {
 
 		return [
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

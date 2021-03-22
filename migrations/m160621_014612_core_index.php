@@ -150,6 +150,15 @@ class m160621_014612_core_index extends Migration {
 		$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_user' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'user_name' . '(name)' );
 		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_user' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'user_search' . '(name, message, description, content)' );
 
+		// User Meta
+		$this->createIndex( 'idx_' . $this->prefix . 'user_meta_name', $this->prefix . 'core_user_meta', 'name' );
+		$this->createIndex( 'idx_' . $this->prefix . 'user_meta_type', $this->prefix . 'core_user_meta', 'type' );
+		//$this->createIndex( 'idx_' . $this->prefix . 'user_meta_label', $this->prefix . 'core_user_meta', 'label' );
+		//$this->createIndex( 'idx_' . $this->prefix . 'user_meta_vtype', $this->prefix . 'core_user_meta', 'valueType' );
+		//$this->createIndex( 'idx_' . $this->prefix . 'user_meta_mit', $this->prefix . 'core_user_meta', [ 'modelId', 'type' ] );
+		//$this->createIndex( 'idx_' . $this->prefix . 'user_meta_mitn', $this->prefix . 'core_user_meta', [ 'modelId', 'type', 'name' ] );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_user_meta' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'user_meta_search' . '(name, value)' );
+
 		// Site
 		$this->createIndex( 'idx_' . $this->prefix . 'site_name', $this->prefix . 'core_site', 'name' );
 		$this->createIndex( 'idx_' . $this->prefix . 'site_slug', $this->prefix . 'core_site', 'slug' );
@@ -226,12 +235,17 @@ class m160621_014612_core_index extends Migration {
 
 	private function upDependent() {
 
+		// Locale message
+		$this->createIndex( 'idx_' . $this->prefix . 'locale_message_parent_t', $this->prefix . 'core_locale_message', 'parentType' );
+		//$this->createIndex( 'idx_' . $this->prefix . 'locale_message_name', $this->prefix . 'core_locale_message', 'name' );
+		$this->createIndex( 'idx_' . $this->prefix . 'locale_message_type', $this->prefix . 'core_locale_message', 'type' );
+		//$this->createIndex( 'idx_' . $this->prefix . 'locale_message_pipt', $this->prefix . 'core_locale_message', [ 'parentId', 'parentType' ] );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_locale_message' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'locale_message_search' . '(name, value)' );
+
 		// Model message
-		$this->createIndex( 'idx_' . $this->prefix . 'model_message_parent_t', $this->prefix . 'core_model_message', 'parentType' );
-		//$this->createIndex( 'idx_' . $this->prefix . 'model_message_name', $this->prefix . 'core_model_message', 'name' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_message_type', $this->prefix . 'core_model_message', 'type' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_message_pipt', $this->prefix . 'core_model_message', [ 'parentId', 'parentType' ] );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_model_message' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'model_message_search' . '(name, value)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_model_message' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'model_message_search' . '(name, email, agent, content)' );
 
 		// Model Comment
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_comment_name', $this->prefix . 'core_model_comment', 'name' );
@@ -409,6 +423,15 @@ class m160621_014612_core_index extends Migration {
 		$this->dropIndex( 'idx_' . $this->prefix . 'user_name', $this->prefix . 'core_user' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'user_search', $this->prefix . 'core_user' );
 
+		// User Meta
+		$this->dropIndex( 'idx_' . $this->prefix . 'user_meta_name', $this->prefix . 'core_user_meta' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'user_meta_type', $this->prefix . 'core_user_meta' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'user_meta_label', $this->prefix . 'core_user_meta' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'user_meta_vtype', $this->prefix . 'core_user_meta' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'user_meta_mit', $this->prefix . 'core_user_meta' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'user_meta_mitn', $this->prefix . 'core_user_meta' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'user_meta_search', $this->prefix . 'core_user_meta' );
+
 		// Site
 		$this->dropIndex( 'idx_' . $this->prefix . 'site_name', $this->prefix . 'core_site' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'site_slug', $this->prefix . 'core_site' );
@@ -485,10 +508,15 @@ class m160621_014612_core_index extends Migration {
 
 	private function downDependent() {
 
+		// Locale message
+		$this->dropIndex( 'idx_' . $this->prefix . 'locale_message_parent_t', $this->prefix . 'core_locale_message' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'locale_message_name', $this->prefix . 'core_locale_message' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'locale_message_type', $this->prefix . 'core_locale_message' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'locale_message_pipt', $this->prefix . 'core_locale_message' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'locale_message_search', $this->prefix . 'core_locale_message' );
+
 		// Model message
-		$this->dropIndex( 'idx_' . $this->prefix . 'model_message_parent_t', $this->prefix . 'core_model_message' );
-		//$this->dropIndex( 'idx_' . $this->prefix . 'model_message_name', $this->prefix . 'core_model_message' );
-		$this->dropIndex( 'idx_' . $this->prefix . 'model_message_type', $this->prefix . 'core_model_message' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'model_message_type', $this->prefix . 'core_model_message', 'type' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'model_message_pipt', $this->prefix . 'core_model_message' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'model_message_search', $this->prefix . 'core_model_message' );
 

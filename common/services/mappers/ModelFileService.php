@@ -12,19 +12,20 @@ namespace cmsgears\core\common\services\mappers;
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\core\common\services\interfaces\mappers\IModelFileService;
-
-use cmsgears\core\common\services\base\ModelMapperService;
 
 /**
  * ModelFileService provide service methods of file mapper.
  *
  * @since 1.0.0
  */
-class ModelFileService extends ModelMapperService implements IModelFileService {
+class ModelFileService extends \cmsgears\core\common\services\base\ModelMapperService implements IModelFileService {
 
 	// Variables ---------------------------------------------------
 
@@ -46,15 +47,13 @@ class ModelFileService extends ModelMapperService implements IModelFileService {
 
 	// Private ----------------
 
-	private $fileService;
-
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
 
 	public function __construct( IFileService $fileService, $config = [] ) {
 
-		$this->fileService = $fileService;
+		$this->parentService = $fileService;
 
 		parent::__construct( $config );
 	}
@@ -75,10 +74,15 @@ class ModelFileService extends ModelMapperService implements IModelFileService {
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
-		$fileClass	= Yii::$app->factory->get( 'fileService' )->getModelClass();
+		$fileClass	= $this->parentService->getModelClass();
 		$fileTable	= $fileClass::tableName();
 
 		// Sorting ----------
@@ -96,6 +100,12 @@ class ModelFileService extends ModelMapperService implements IModelFileService {
 					'desc' => [ "$fileTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Name'
+				],
+				'code' => [
+					'asc' => [ "$fileTable.code" => SORT_ASC ],
+					'desc' => [ "$fileTable.code" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Code'
 				],
 				'title' => [
 					'asc' => [ "$fileTable.title" => SORT_ASC ],
@@ -180,11 +190,27 @@ class ModelFileService extends ModelMapperService implements IModelFileService {
 					'desc' => [ "$modelTable.active" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Active'
-				]
+				],
+				'pinned' => [
+					'asc' => [ "$modelTable.pinned" => SORT_ASC ],
+					'desc' => [ "$modelTable.pinned" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Pinned'
+				],
+				'featured' => [
+					'asc' => [ "$modelTable.featured" => SORT_ASC ],
+					'desc' => [ "$modelTable.featured" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Featured'
+				],
+				'popular' => [
+					'asc' => [ "$modelTable.popular" => SORT_ASC ],
+					'desc' => [ "$modelTable.popular" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Popular'
+				],
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -208,13 +234,13 @@ class ModelFileService extends ModelMapperService implements IModelFileService {
 		$visibility	= Yii::$app->request->getQueryParam( 'visibility' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
 
 		// Filter - File Type
-		if( isset( $ftype ) ) {
+		if( isset( $ftype ) && empty( $config[ 'conditions' ][ "$fileTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$fileTable.type" ] = $ftype;
 		}
@@ -230,43 +256,77 @@ class ModelFileService extends ModelMapperService implements IModelFileService {
 
 					break;
 				}
+				case 'disabled': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = false;
+
+					break;
+				}
+				case 'pinned': {
+
+					$config[ 'conditions' ][ "$modelTable.pinned" ] = true;
+
+					break;
+				}
+				case 'featured': {
+
+					$config[ 'conditions' ][ "$modelTable.featured" ] = true;
+
+					break;
+				}
+				case 'popular': {
+
+					$config[ 'conditions' ][ "$modelTable.popular" ] = true;
+
+					break;
+				}
 			}
 		}
 
 		// Filter - Visibility
 		if( isset( $visibility ) && isset( $fileClass::$urlRevVisibilityMap[ $visibility ] ) ) {
 
-			$config[ 'conditions' ][ "$fileTable.visibility" ]	= $fileClass::$urlRevVisibilityMap[ $visibility ];
+			$config[ 'conditions' ][ "$fileTable.visibility" ] = $fileClass::$urlRevVisibilityMap[ $visibility ];
 		}
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'title' => "$fileTable.title",
+			'desc' => "$fileTable.description",
+			'caption' => "$fileTable.caption",
+			'extension' => "$fileTable.extension",
+			'directory' => "$fileTable.directory"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'title' => "$fileTable.title",
-				'desc' => "$fileTable.description",
-				'caption' => "$fileTable.caption",
-				'extension' => "$fileTable.extension",
-				'directory' => "$fileTable.directory"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'title' => "$fileTable.title",
 			'desc' => "$fileTable.description",
 			'caption' => "$fileTable.caption",
 			'extension' => "$fileTable.extension",
 			'directory' => "$fileTable.directory",
 			'visibility' => "$fileTable.visibility",
+			'ftype' => "$fileTable.type",
+			'type' => "$modelTable.type",
 			'order' => "$modelTable.order",
-			'active' => "$modelTable.active"
+			'active' => "$modelTable.active",
+			'pinned' => "$modelTable.pinned",
+			'featured' => "$modelTable.featured",
+			'popular' => "$modelTable.popular"
 		];
 
 		// Result -----------
@@ -281,17 +341,17 @@ class ModelFileService extends ModelMapperService implements IModelFileService {
 	/**
 	 * @inheritdoc
 	 */
-	public function getByFileTag( $parentId, $parentType, $fileTag, $type = null ) {
+	public function getByFileCode( $parentId, $parentType, $fileCode, $type = null ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::findByFileTag( $parentId, $parentType, $fileTag, $type );
+		return $modelClass::findByFileCode( $parentId, $parentType, $fileCode, $type );
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function searchByFileTitle( $parentId, $parentType, $fileTitle ) {
+	public function getByFileTitle( $parentId, $parentType, $fileTitle ) {
 
 		$modelClass	= static::$modelClass;
 
@@ -322,7 +382,7 @@ class ModelFileService extends ModelMapperService implements IModelFileService {
 
 		$parentId	= $config[ 'parentId' ];
 		$parentType	= $config[ 'parentType' ];
-		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : $parent->type;
+		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_DEFAULT;
 		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
 		$file = null;
@@ -331,33 +391,121 @@ class ModelFileService extends ModelMapperService implements IModelFileService {
 
 			case 'image': {
 
-				$file = $this->fileService->saveImage( $parent );
+				$file = $this->parentService->saveImage( $parent );
 			}
 			// TODO: Add case to save cross-browser compatible videos
 			default: {
 
-				$file = $this->fileService->saveFile( $parent );
+				$file = $this->parentService->saveFile( $parent );
 			}
 		}
 
-		$model = new $modelClass;
+		$model = isset( $config[ 'model' ] ) ? $config[ 'model' ] : new $modelClass;
 
 		$model->modelId		= $file->id;
 		$model->parentId	= $parentId;
 		$model->parentType	= $parentType;
 
-		$model->type	= $type;
+		$model->type	= $file->type;
 		$model->order	= $order;
-		$model->active	= true;
+		$model->active	= isset( $model->active ) ? $model->active : true;
 
 		return parent::create( $model );
 	}
 
 	// Update -------------
 
+	public function update( $model, $config = [] ) {
+
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'type', 'order', 'active'
+		];
+
+		if( $admin ) {
+
+			$attributes	= ArrayHelper::merge( $attributes, [
+				'pinned', 'featured', 'popular'
+			]);
+		}
+
+		return parent::update( $model, [
+			'attributes' => $attributes
+		]);
+	}
+
 	// Delete -------------
 
+	public function deleteWithParent( $model, $config = [] ) {
+
+		$parent = $this->parentService->getById( $model->modelId );
+
+		$this->parentService->delete( $parent, $config );
+	}
+
 	// Bulk ---------------
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'activate': {
+
+						$model->active = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'disable': {
+
+						$model->active = false;
+
+						$model->update();
+
+						break;
+					}
+					case 'pinned': {
+
+						$model->pinned = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'featured': {
+
+						$model->featured = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'popular': {
+
+						$model->popular = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'delete': {
+
+						$this->deleteWithParent( $model, $config );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
 
 	// Notifications ------
 

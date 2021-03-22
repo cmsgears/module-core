@@ -17,6 +17,7 @@ use yii\data\Sort;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\entities\ITemplateService;
+use cmsgears\core\common\services\interfaces\resources\IFileService;
 
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
@@ -53,6 +54,8 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 	// Protected --------------
 
+	protected $fileService;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
@@ -64,6 +67,13 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 	use SlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
+
+	public function __construct( IFileService $fileService, $config = [] ) {
+
+		$this->fileService = $fileService;
+
+		parent::__construct( $config );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -80,6 +90,11 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -141,6 +156,12 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 	                'default' => SORT_DESC,
 	                'label' => 'Active'
 	            ],
+				'frontend' => [
+	                'asc' => [ "$modelTable.frontend" => SORT_ASC ],
+	                'desc' => [ "$modelTable.frontend" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Frontend'
+	            ],
 	            'renderer' => [
 	                'asc' => [ "$modelTable.renderer" => SORT_ASC ],
 	                'desc' => [ "$modelTable.renderer" => SORT_DESC ],
@@ -184,9 +205,7 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 	                'label' => 'Updated At'
 	            ]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -211,7 +230,7 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
@@ -224,6 +243,18 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 				case 'active': {
 
 					$config[ 'conditions' ][ "$modelTable.active" ] = true;
+
+					break;
+				}
+				case 'disabled': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = false;
+
+					break;
+				}
+				case 'frontend': {
+
+					$config[ 'conditions' ][ "$modelTable.frontend" ] = true;
 
 					break;
 				}
@@ -244,28 +275,33 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'content' => "$modelTable.content"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description",
-				'content' => "$modelTable.content"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'name' => "$modelTable.name",
-			'type' => "$modelTable.type",
 			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
 			'active' => "$modelTable.active",
+			'frontend' => "$modelTable.frontend",
 			'renderer' => "$modelTable.renderer",
 			'frender' => "$modelTable.fileRender",
 			'layout' => "$modelTable.layout",
@@ -284,6 +320,13 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 	// Read - Models ---
 
+	public function getActiveByType( $type, $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::findActiveByType( $type, $config );
+	}
+
 	public function getGlobalBySlugType( $slug, $type, $config = [] ) {
 
 		$modelClass = static::$modelClass;
@@ -298,20 +341,32 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 		return $modelClass::findByThemeSlugType( $slug, $type, $config );
 	}
 
-	public function getActiveByType( $type ) {
-
-		$modelClass = static::$modelClass;
-
-		return $modelClass::findActiveByType( $type );
-	}
-
 	// Read - Lists ----
 
 	// Read - Maps -----
 
+	public function getFrontendIdNameMapByType( $type, $config = [] ) {
+
+		$config[ 'conditions' ][ 'type' ]		= $type;
+		$config[ 'conditions' ][ 'frontend' ]	= true;
+
+		return $this->getIdNameMap( $config );
+	}
+
 	// Read - Others ---
 
 	// Create -------------
+
+	public function create( $model, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+
+		$preview = isset( $config[ 'preview' ] ) ? $config[ 'preview' ] : null;
+
+		$this->fileService->saveFiles( $model, [ 'previewId' => $preview ] );
+
+		return parent::create( $model, $config );
+	}
 
 	// Update -------------
 
@@ -319,9 +374,11 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
+		$preview = isset( $config[ 'preview' ] ) ? $config[ 'preview' ] : null;
+
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'name', 'slug', 'icon', 'title', 'description', 'renderer', 'fileRender',
-			'layout', 'layoutGroup', 'viewPath', 'view', 'htmlOptions', 'help', 'content',
+			'previewId', 'name', 'slug', 'icon', 'title', 'description', 'renderer', 'fileRender',
+			'layout', 'layoutGroup', 'viewPath', 'view', 'htmlOptions', 'help', 'message', 'content',
 			'classPath', 'dataPath', 'dataForm', 'attributesPath', 'attributesForm',
 			'configPath', 'configForm', 'settingsPath', 'settingsForm'
 		];
@@ -329,7 +386,11 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 		if( $admin ) {
 
 			$attributes[] = 'active';
+			$attributes[] = 'frontend';
 		}
+
+		// Save Files
+		$this->fileService->saveFiles( $model, [ 'previewId' => $preview ] );
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -360,9 +421,9 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 	public function toggleGroupLayout( $model, $config = [] ) {
 
-		$global = $model->layoutGroup ? false : true;
+		$group = $model->layoutGroup ? false : true;
 
-		$model->layoutGroup	= $global;
+		$model->layoutGroup	= $group;
 
 		return parent::updateSelective( $model, [
 			'attributes' => [ 'layoutGroup' ]
@@ -370,6 +431,15 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
  	}
 
 	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete files
+		$this->fileService->deleteMultiple( [ $model->preview ] );
+
+		// Delete model
+		return parent::delete( $model, $config );
+	}
 
 	// Bulk ---------------
 
@@ -381,7 +451,7 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 				switch( $action ) {
 
-					case 'active': {
+					case 'activate': {
 
 						$model->active = true;
 
@@ -389,9 +459,17 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 						break;
 					}
-					case 'inactive': {
+					case 'disable': {
 
 						$model->active = false;
+
+						$model->update();
+
+						break;
+					}
+					case 'frontend': {
+
+						$model->frontend = true;
 
 						$model->update();
 

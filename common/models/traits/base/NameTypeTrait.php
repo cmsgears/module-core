@@ -64,7 +64,8 @@ trait NameTypeTrait {
 	// Read - Query -----------
 
 	/**
-	 * Return query to find the models by given name.
+	 * Return query to find the models by given name. It's mostly used for auto-search, hence
+	 * set the default limit to 10.
 	 *
 	 * @param string $name
 	 * @param array $config
@@ -73,21 +74,52 @@ trait NameTypeTrait {
 	public static function queryByName( $name, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'name=:name AND siteId=:siteId', [ ':name' => $name, ':siteId' => $siteId ] );
+			$query = static::find()->where( 'name=:name AND siteId=:siteId', [ ':name' => $name, ':siteId' => $siteId ] );
 		}
 		else {
 
-			return static::find()->where( 'name=:name', [ ':name' => $name ] );
+			$query = static::find()->where( 'name=:name', [ ':name' => $name ] );
 		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
+
+		return $query;
 	}
 
 	/**
-	 * Return query to find the models by given type.
+	 * Return query to find the models by given type. It's mostly used for mappings, hence
+	 * set the default limit to 0.
 	 *
 	 * @param string $type
 	 * @param array $config
@@ -96,17 +128,47 @@ trait NameTypeTrait {
 	public static function queryByType( $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
+		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] );
+			$query = static::find()->where( 'type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] );
 		}
 		else {
 
-			return static::find()->where( 'type=:type', [ ':type' => $type ] );
+			$query = static::find()->where( 'type=:type', [ ':type' => $type ] );
 		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
+
+		return $query;
 	}
 
 	/**
@@ -120,17 +182,47 @@ trait NameTypeTrait {
 	public static function queryByNameType( $name, $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
+		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'name=:name AND type=:type AND siteId=:siteId', [ ':name' => $name, ':type' => $type, ':siteId' => $siteId ] );
+			$query = static::find()->where( 'name=:name AND type=:type AND siteId=:siteId', [ ':name' => $name, ':type' => $type, ':siteId' => $siteId ] );
 		}
 		else {
 
-			return static::find()->where( 'name=:name AND type=:type', [ ':name' => $name, ':type' => $type ] );
+			$query = static::find()->where( 'name=:name AND type=:type', [ ':name' => $name, ':type' => $type ] );
 		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
+
+		return $query;
 	}
 
 	// Read - Find ------------
@@ -221,7 +313,7 @@ trait NameTypeTrait {
 	 */
 	public static function isExistByNameType( $name, $type, $config = [] ) {
 
-		$model	= self::findByNameType( $name, $type, $config );
+		$model = self::findByNameType( $name, $type, $config );
 
 		return isset( $model );
 	}

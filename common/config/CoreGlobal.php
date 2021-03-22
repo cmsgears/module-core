@@ -18,15 +18,18 @@ class CoreGlobal {
 
 	// System Sites ---------------------------------------------------
 
-	const SITE_MAIN		= 'main';
+	const SITE_MAIN = 'main';
 
 	const APP_ADMIN		= 'app-admin';
 	const APP_FRONTEND	= 'app-site';
 	const APP_CONSOLE	= 'app-console';
+	const APP_API		= 'app-api';
 
 	// System Pages ---------------------------------------------------
 
-	const PAGE_HOME = 'home';
+	const PAGE_HOME		= 'home';
+	const PAGE_COLORS	= 'colors';
+	const PAGE_THEME	= 'theme';
 
 	const PAGE_ACCOUNT_ACTIVATE		= 'activate-account';
 	const PAGE_PASSWORD_FORGOT		= 'forgot-password';
@@ -48,55 +51,63 @@ class CoreGlobal {
 
 	// Standard Redirects ----------------------------------------------
 
-	const REDIRECT_LOGIN		= 'loginRedirectLink';
+	const REDIRECT_LOGIN = 'loginRedirectLink';
 
 	// Grouping by type ------------------------------------------------
 
 	// Generic
-	const TYPE_DEFAULT			= 'default';
-	const TYPE_CORE				= 'core';
-	const TYPE_SYSTEM			= 'system';
+	const TYPE_DEFAULT	= 'default';
+	const TYPE_CORE		= 'core';
+	const TYPE_SYSTEM	= 'system';
 
 	// Entities
-	const TYPE_CITY				= 'city';
-	const TYPE_REGION			= 'region';
-	const TYPE_COUNTRY			= 'country';
-	const TYPE_LOCALE			= 'locale';
-	const TYPE_OBJECT			= 'object';
-	const TYPE_PERMISSION		= 'permission';
-	const TYPE_PROVINCE			= 'province';
-	const TYPE_ROLE				= 'role';
-	const TYPE_SITE				= 'site';
-	const TYPE_APP				= 'app';
-	const TYPE_TEMPLATE			= 'template';
-	const TYPE_THEME			= 'theme';
-	const TYPE_USER				= 'user';
+	const TYPE_CITY			= 'city';
+	const TYPE_REGION		= 'region';
+	const TYPE_COUNTRY		= 'country';
+	const TYPE_LOCALE		= 'locale';
+	const TYPE_OBJECT		= 'object';
+	const TYPE_PERMISSION	= 'permission';
+	const TYPE_PROVINCE		= 'province';
+	const TYPE_ROLE			= 'role';
+	const TYPE_SITE			= 'site';
+	const TYPE_APP			= 'app';
+	const TYPE_TEMPLATE		= 'template';
+	const TYPE_THEME		= 'theme';
+	const TYPE_USER			= 'user';
 
 	// Resources
-	const TYPE_ACTIVITY			= 'activity';
-	const TYPE_ADDRESS			= 'address';
-	const TYPE_LOCATION			= 'location';
-	const TYPE_CATEGORY			= 'category';
-	const TYPE_COMMENT			= 'comment';
-	const TYPE_FILE				= 'file';
-	const TYPE_FORM				= 'form';
-	const TYPE_FORM_FIELD		= 'form-field';
-	const TYPE_GALLERY			= 'gallery';
-	const TYPE_OPTION			= 'option';
-	const TYPE_TAG				= 'tag';
+	const TYPE_ACTIVITY		= 'activity';
+	const TYPE_ADDRESS		= 'address';
+	const TYPE_LOCATION		= 'location';
+	const TYPE_CATEGORY		= 'category';
+	const TYPE_COMMENT		= 'comment';
+	const TYPE_MESSAGE		= 'message';
+	const TYPE_FILE			= 'file';
+	const TYPE_FORM			= 'form';
+	const TYPE_FORM_FIELD	= 'form-field';
+	const TYPE_GALLERY		= 'gallery';
+	const TYPE_OPTION		= 'option';
+	const TYPE_TAG			= 'tag';
 
 	// Additional
-	const TYPE_ADMIN			= 'admin';
-	const TYPE_REVIEW			= 'review';
-	const TYPE_TESTIMONIAL		= 'testimonial';
-	const TYPE_OPTION_GROUP		= 'option-group';
+	const TYPE_ADMIN		= 'admin';
+	const TYPE_REVIEW		= 'review';
+	const TYPE_TESTIMONIAL	= 'testimonial';
+	const TYPE_OPTION_GROUP	= 'option-group';
 
 	// Templates -------------------------------------------------------
 
 	const TEMPLATE_DEFAULT	= 'default';
+	const TEMPLATE_CATEGORY	= 'category';
+	const TEMPLATE_TAG		= 'tag';
+
+	// Notifications - User
+	const TPL_NOTIFY_USER_NEW	= 'user-new';
+	const TPL_NOTIFY_USER_ROLE	= 'role-changed';
 
 	// Notification - Status Templates
     const TPL_NOTIFY_STATUS_NEW			= 'status-new';
+	const TPL_NOTIFY_STATUS_ACCEPT		= 'status-accept';
 	const TPL_NOTIFY_STATUS_SUBMIT		= 'status-submit';
 	const TPL_NOTIFY_STATUS_REJECT		= 'status-reject';
     const TPL_NOTIFY_STATUS_RESUBMIT	= 'status-resubmit';
@@ -110,24 +121,57 @@ class CoreGlobal {
 	const TPL_NOTIFY_STATUS_TERMINATE	= 'status-terminate';
 	const TPL_NOTIFY_STATUS_DELETE		= 'status-delete';
 
+	const TPL_NOTIFY_STATUS_CHANGE = 'status-change';
+
+	// Comment - Status Templates
+    const TPL_COMMENT_STATUS_NEW		= 'comment-new';
+	const TPL_COMMENT_STATUS_SPAM		= 'comment-spam';
+	const TPL_COMMENT_STATUS_APPROVE	= 'comment-approve';
+	const TPL_COMMENT_STATUS_TRASH		= 'comment-trash';
+	const TPL_COMMENT_STATUS_DELETE		= 'comment-delete';
+	const TPL_COMMENT_REQUEST_SPAM		= 'comment-r-spam';
+	const TPL_COMMENT_REQUEST_APPROVE	= 'comment-r-approve';
+	const TPL_COMMENT_REQUEST_DELETE	= 'comment-r-delete';
+
+	// Categories and Options
+	const TPL_NOTIFY_SUGGEST_CATEGORY	= 'suggest-category';
+	const TPL_NOTIFY_SUGGEST_OPTION		= 'suggest-option';
+
+	// Feedback & Testimonial
+	const TPL_NOTIFY_FEEDBACK_ADMIN		= 'notify-feedback-admin';
+	const TPL_NOTIFY_FEEDBACK_USER		= 'notify-feedback-user';
+	const TPL_NOTIFY_TESTIMONIAL_ADMIN	= 'notify-testimonial-admin';
+	const TPL_NOTIFY_TESTIMONIAL_USER	= 'notify-testimonial-user';
+	const TPL_NOTIFY_REVIEW_ADMIN		= 'notify-review-admin';
+	const TPL_NOTIFY_REVIEW_USER		= 'notify-review-user';
+	const TPL_NOTIFY_COMMENT_ADMIN		= 'notify-comment-admin';
+	const TPL_NOTIFY_COMMENT_USER		= 'notify-comment-user';
+
 	// Template Views --------------------------------------------------
 
 	const TPL_VIEW_ADMIN		= 'admin';
 	const TPL_VIEW_PRIVATE		= 'private';
 	const TPL_VIEW_PUBLIC		= 'public';
 	const TPL_VIEW_SEARCH		= 'search';
-	const TPL_VIEW_CATEGRY		= 'category';
+	const TPL_VIEW_CATEGORY		= 'category';
 	const TPL_VIEW_TAG			= 'tag';
 	const TPL_VIEW_ARCHIVE		= 'archive';
 	const TPL_VIEW_AUTHOR		= 'author';
 	const TPL_VIEW_PRINT		= 'print';
+	const TPL_VIEW_AMP			= 'amp';
 
 	// Categories Slug -------------------------------------------------
 
 	const CATEGORY_GENDER	= 'gender';
 
+	const CATEGORY_MARITAL	= 'marital';
+
+	const CATEGORY_NOK_RELATION = 'nok-relation';
+
 	// Text Limits - Ideal for string validators -----------------------
 
+	const TEXT_MICRO		=   8;
+	const TEXT_MINI			=  16;
 	const TEXT_TINY			=  32;
 	const TEXT_SMALL		=  64;
 	const TEXT_MEDIUM		= 160; // Meta Description Limit
@@ -153,10 +197,10 @@ class CoreGlobal {
 
 	// Roles -----------------------------------------------------------
 
-	const ROLE_SUPER_ADMIN		= 'super-admin';
+	const ROLE_SUPER_ADMIN = 'super-admin';
 
-	const ROLE_ADMIN			= 'admin';
-	const ROLE_USER				= 'user';
+	const ROLE_ADMIN	= 'admin';
+	const ROLE_USER		= 'user';
 
 	const ROLE_USER_ADMIN		= 'user-admin';
 	const ROLE_GALLERY_ADMIN	= 'gallery-admin';
@@ -176,6 +220,9 @@ class CoreGlobal {
 	const PERM_IDENTITY	= 'identity';	// Allows admin to manage site users
 	const PERM_RBAC		= 'rbac';		// Allows admin to manage roles and permissions
 
+	// Settings
+	const PERM_SETTINGS	= 'settings';
+
 	// Gallery
 	const PERM_GALLERY_ADMIN = 'admin-galleries';
 
@@ -186,10 +233,15 @@ class CoreGlobal {
 
 	// Model Attributes ------------------------------------------------
 
-	// data attributes
-	const DATA_CONFIG	= 'config'; // Configuration(no default) stored on data column
-	const DATA_SETTINGS	= 'settings'; // Settings(preference with default/alternate) stored on data column
-	const DATA_SEO		= 'seo';
+	// Data Attributes
+	const DATA_ATTRIBUTES	= 'attributes'; // Attributes stored on data column
+	const DATA_CONFIG		= 'config'; // Configuration(no default) stored on data column
+	const DATA_DATA			= 'data'; // Data stored on data column
+	const DATA_SETTINGS		= 'settings'; // Settings(preference with default/alternate) stored on data column
+	const DATA_PLUGINS		= 'plugins'; // Plugins configurations stored on the data column
+
+	// Model SEO
+	const DATA_SEO = 'seo'; // SEO data stored on the data column
 
 	// Approval Process
 	const DATA_REJECT_REASON	= 'rejectReason';
@@ -204,10 +256,13 @@ class CoreGlobal {
 	const DATA_SIDEBAR_MICRO	= 'microSidebar'; // Used to show micro or full view of sidebar.
 
 	// Model attributes
+	const META_TYPE_DEFAULT	= 'default';
 	const META_TYPE_USER	= 'user';
 	const META_TYPE_CONFIG	= 'config'; // Configuration(no default) stored in meta table
 	const META_TYPE_SETTING	= 'setting'; // Settings(preference with default/alternate) stored in meta table
 	const META_TYPE_SOCIAL	= 'social';
+
+	const META_RECEIVE_EMAIL = 'receive_email';
 
 	// Comment Attributes
 	const META_COMMENT_SPAM_REQUEST	   = 'spamRequest';
@@ -263,6 +318,8 @@ class CoreGlobal {
 	const ERROR_SESSION_EXPIRED	= 'sessionExpiredError';
 	const ERROR_TOKEN_EXPIRED	= 'tokenExpiredError';
 	const ERROR_PARENT_CHAIN	= 'parentChainError';
+	const ERROR_NAME			= 'nameError';
+	const ERROR_SLUG			= 'slugError';
 
 	// Errors - Comments
 	const ERROR_NO_COMMENTS	= 'noCommentsError';
@@ -335,11 +392,16 @@ class CoreGlobal {
 	const FIELD_VALUE_TYPE	= 'valueTypeField';
 	const FIELD_DESCRIPTION	= 'descField';
 	const FIELD_OTP			= 'otp';
+	const FIELD_NOTE		= 'noteField';
 	const FIELD_NOTES		= 'notesField';
+	const FIELD_GUEST		= 'guestField';
 
 	const FIELD_ACTIVE		= 'activeField';
 	const FIELD_STATUS		= 'statusField';
 	const FIELD_ACCESS		= 'accessField';
+	const FIELD_PRIMARY		= 'primaryField';
+	const FIELD_SECONDARY	= 'secondaryField';
+	const FIELD_MODE		= 'modeField';
 	const FIELD_SENT		= 'sentField';
 	const FIELD_DELIVERED	= 'deliveredField';
 	const FIELD_CONSUMED	= 'consumedField';
@@ -354,11 +416,19 @@ class CoreGlobal {
 	const FIELD_EXPIRED		= 'expiredField';
 	const FIELD_PINNED		= 'pinnedField';
 	const FIELD_FEATURED	= 'featuredField';
+	const FIELD_POPULAR		= 'popularField';
 	const FIELD_ANONYMOUS	= 'anonymousField';
 	const FIELD_USER_MAPPED	= 'userMappedField';
 	const FIELD_FAILED		= 'failedField';
 	const FIELD_FAIL_COUNT	= 'failCountField';
+	const FIELD_STORAGE		= 'storageField';
+	const FIELD_CAPTION		= 'captionField';
+	const FIELD_IMG_SRCSET	= 'imgSrcsetField';
+	const FIELD_IMG_SIZES	= 'imgSizesField';
+	const FIELD_ALT_TEXT	= 'altTextField';
 
+	const FIELD_STARTS_AT	= 'startsAtField';
+	const FIELD_ENDS_AT		= 'endsAtField';
 	const FIELD_DATE_START	= 'startDateField';
 	const FIELD_DATE_END	= 'endDateField';
 	const FIELD_DAY_WEEK	= 'Week Day';
@@ -385,13 +455,16 @@ class CoreGlobal {
 	const FIELD_NOK			= 'nokField';
 	const FIELD_NOK_RELATION = 'nokRelationField';
 	const FIELD_AGE			= 'ageField';
+	const FIELD_ROOT		= 'rootField';
 	const FIELD_PARENT		= 'parentField';
 	const FIELD_PARENT_TYPE	= 'parentTypeField';
+	const FIELD_CHILD		= 'childField';
 	const FIELD_LOCALE		= 'localeField';
 	const FIELD_PROVINCE	= 'provinceField';
 	const FIELD_REGION		= 'regionField';
 	const FIELD_COUNTRY		= 'countryField';
 	const FIELD_CATEGORY	= 'categoryField';
+	const FIELD_OPTION_GROUP = 'optionGroupField';
 	const FIELD_OPTION		= 'optionField';
 	const FIELD_FILE		= 'fileField';
 	const FIELD_TAG			= 'tagField';
@@ -399,27 +472,36 @@ class CoreGlobal {
 	const FIELD_EVENT		= 'eventField';
 	const FIELD_OBJECT		= 'objectField';
 	const FIELD_THEME		= 'themeField';
+	const FIELD_PREVIEW		= 'previewField';
 	const FIELD_COMMENT		= 'commentField';
 	const FIELD_COMMENTS	= 'commentsField';
 	const FIELD_REVIEWS		= 'reviewsField';
 	const FIELD_TEMPLATE	= 'templateField';
+	const FIELD_MODULE		= 'moduleField';
 
 	const FIELD_USER		= 'userField';
 	const FIELD_ADMIN		= 'adminField';
+	const FIELD_FRONTEND	= 'frontendField';
+	const FIELD_BACKEND		= 'backendField';
+	const FIELD_WEBSITE		= 'websiteField';
 	const FIELD_AUTHOR		= 'authorField';
 	const FIELD_MEMBER		= 'memberField';
 	const FIELD_OWNER		= 'ownerField';
 	const FIELD_APPROVER	= 'approverField';
 	const FIELD_FOLLOWER	= 'followerField';
+	const FIELD_FOLLOWERS	= 'followersField';
 	const FIELD_PROFILE		= 'profileField';
+	const FIELD_SHARED		= 'sharedField';
 
-	const FIELD_WEBSITE		= 'websiteField';
 	const FIELD_AVATAR		= 'avatarField';
 	const FIELD_AVATAR_URL	= 'avatarUrlField';
 	const FIELD_BANNER		= 'bannerField';
+	const FIELD_BANNER_M	= 'mbannerField';
 	const FIELD_VIDEO		= 'videoField';
+	const FIELD_VIDEO_M		= 'mvideoField';
 	const FIELD_DOCUMENT	= 'documentField';
 
+	const FIELD_MULTIPLE	= 'multipleField';
 	const FIELD_GLOBAL		= 'globalField';
 	const FIELD_SESSION		= 'sessionField';
 	const FIELD_TOKEN		= 'tokenField';
@@ -445,64 +527,65 @@ class CoreGlobal {
 	const FIELD_HOME_URL	= 'homeUrlField';
 
 	// Address Fields
-	const FIELD_LINE1				= 'line1Field';
-	const FIELD_LINE2				= 'line2Field';
-	const FIELD_LINE3				= 'line3Field';
-	const FIELD_CITY				= 'cityField';
-	const FIELD_ZIP					= 'zipField';
-	const FIELD_ZIP_SUB				= 'subZipField';
-	const FIELD_MOBILE				= 'mobileField';
-	const FIELD_PHONE				= 'phoneField';
-	const FIELD_FAX					= 'faxField';
-	const FIELD_LONGITUDE			= 'longitudeField';
-	const FIELD_LATITUDE			= 'latitudeField';
-	const FIELD_ZOOM				= 'zoomField';
-	const FIELD_ADDRESS				= 'addressField';
-	const FIELD_ADDRESS_TYPE		= 'addressTypeField';
-	const FIELD_ZONE				= 'zoneField';
-	const FIELD_REGIONS				= 'regionsField';
-	const FIELD_ZIP_CODES			= 'zipCodesField';
-	const FIELD_LANDMARK			= 'landmarkField';
-	const FIELD_LOCATION			= 'locationField';
+	const FIELD_LINE1			= 'line1Field';
+	const FIELD_LINE2			= 'line2Field';
+	const FIELD_LINE3			= 'line3Field';
+	const FIELD_CITY			= 'cityField';
+	const FIELD_ZIP				= 'zipField';
+	const FIELD_ZIP_SUB			= 'subZipField';
+	const FIELD_MOBILE			= 'mobileField';
+	const FIELD_PHONE			= 'phoneField';
+	const FIELD_FAX				= 'faxField';
+	const FIELD_LONGITUDE		= 'longitudeField';
+	const FIELD_LATITUDE		= 'latitudeField';
+	const FIELD_ZOOM			= 'zoomField';
+	const FIELD_ADDRESS			= 'addressField';
+	const FIELD_ADDRESS_TYPE	= 'addressTypeField';
+	const FIELD_ZONE			= 'zoneField';
+	const FIELD_REGIONS			= 'regionsField';
+	const FIELD_ZIP_CODES		= 'zipCodesField';
+	const FIELD_LANDMARK		= 'landmarkField';
+	const FIELD_LOCATION		= 'locationField';
 
 	// User Fields
-	const FIELD_EMAIL				= 'emailField';
-	const FIELD_USERNAME			= 'usernameField';
-	const FIELD_PASSWORD			= 'passwordField';
-	const FIELD_PASSWORD_REPEAT		= 'passwordRepeatField';
-	const FIELD_PASSWORD_OLD		= 'passwordOldField';
-	const FIELD_FIRSTNAME			= 'firstNameField';
-	const FIELD_MIDDLENAME			= 'middleNameField';
-	const FIELD_LASTNAME			= 'lastNameField';
-	const FIELD_DOB					= 'dobField';
-	const FIELD_TERMS				= 'termsField';
+	const FIELD_EMAIL			= 'emailField';
+	const FIELD_USERNAME		= 'usernameField';
+	const FIELD_PASSWORD		= 'passwordField';
+	const FIELD_PASSWORD_REPEAT	= 'passwordRepeatField';
+	const FIELD_PASSWORD_OLD	= 'passwordOldField';
+	const FIELD_FIRSTNAME		= 'firstNameField';
+	const FIELD_MIDDLENAME		= 'middleNameField';
+	const FIELD_LASTNAME		= 'lastNameField';
+	const FIELD_DOB				= 'dobField';
+	const FIELD_TERMS			= 'termsField';
 
 	// Verification Fields
-	const FIELD_PHONE_VERIFIED	= 'phoneVerifiedField';
+	const FIELD_MOBILE_VERIFIED	= 'mobileVerifiedField';
 	const FIELD_EMAIL_VERIFIED	= 'emailVerifiedField';
 	const FIELD_TOKEN_VERIFY	= 'verifyTokenField';
 	const FIELD_TOKEN_VERIFY_VALIDITY = 'verifyTokenValidityField';
 	const FIELD_OTP_VALIDITY = 'otpValidityField';
 
 	// File Fields
-	const FIELD_EXTENSION			= 'extensionField';
-	const FIELD_DIRECTORY			= 'directoryField';
-	const FIELD_SIZE				= 'sizeField';
-	const FIELD_URL					= 'urlField';
-	const FIELD_LINK				= 'linkField';
+	const FIELD_EXTENSION	= 'extensionField';
+	const FIELD_DIRECTORY	= 'directoryField';
+	const FIELD_SIZE		= 'sizeField';
+	const FIELD_URL			= 'urlField';
+	const FIELD_LINK		= 'linkField';
 
 	// Notification/Reminder/Message Fields
-	const FIELD_NOTIFIER		= 'notifierField';
-	const FIELD_SENDER			= 'senderField';
-	const FIELD_RECIPIENT		= 'recipientField';
+	const FIELD_NOTIFIER	= 'notifierField';
+	const FIELD_SENDER		= 'senderField';
+	const FIELD_PUBLISHER	= 'publisherField';
+	const FIELD_RECIPIENT	= 'recipientField';
 
 	// Site/Site Member Fields
-	const FIELD_SITE			= 'siteField';
+	const FIELD_SITE = 'siteField';
 
 	// Content Fields
-	const FIELD_SUMMARY			= 'summaryField';
-	const FIELD_HELP			= 'helpField';
-	const FIELD_CONTENT			= 'contentField';
+	const FIELD_SUMMARY	= 'summaryField';
+	const FIELD_HELP	= 'helpField';
+	const FIELD_CONTENT	= 'contentField';
 
 	// Views
 	const FIELD_LAYOUT			= 'layoutField';
@@ -530,7 +613,19 @@ class CoreGlobal {
 	const FIELD_RATING			= 'ratingField';
 
 	// Visibility
-	const FIELD_PRIVATE			= 'privateField';
-	const FIELD_PUBLIC			= 'publicField';
+	const FIELD_PRIVATE	= 'privateField';
+	const FIELD_PUBLIC	= 'publicField';
+
+	// Dependency - Generic Mapper
+	const FIELD_SOURCE		= 'sourceField';
+	const FIELD_SOURCE_TYPE	= 'sourceTypeField';
+	const FIELD_TARGET		= 'targetField';
+	const FIELD_TARGET_TYPE	= 'targetTypeField';
+
+	// SEO
+	const FIELD_SEO_NAME		= 'seoNameField';
+	const FIELD_SEO_DESCRIPTION	= 'seoDescriptionField';
+	const FIELD_SEO_KEYWORDS	= 'seoKeywordsField';
+	const FIELD_SEO_ROBOT		= 'seoRobotField';
 
 }

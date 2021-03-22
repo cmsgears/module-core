@@ -15,14 +15,18 @@ $themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => "create?pid={$parent->id}", 'data' => [ 'parent' => $parent ],
-	'title' => 'Addresses', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'title' => 'Title', 'line1' => 'Line 1' ],
+	'title' => $this->title, 'options' => [ 'class' => 'grid-data grid-data-admin' ],
+	'searchColumns' => [
+		'title' => 'Title', 'line1' => 'Line 1'
+	],
 	'sortColumns' => [
 		'title' => 'Title', 'line1' => 'Line 1', 'country' => 'Country',
 		'province' => 'Province', 'region' => 'Region', 'city' => 'City'
 	],
 	'filters' => [
-		'model' => [ 'active' => 'Active' ]
+		'model' => [
+			'active' => 'Active', 'disabled' => 'Disabled'
+		]
 	],
 	'reportColumns' => [
 		'title' => [ 'title' => 'Title', 'type' => 'text' ],
@@ -30,8 +34,11 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'order' => [ 'title' => 'Order', 'type' => 'range' ],
 		'active' => [ 'title' => 'Active', 'type' => 'flag' ]
 	],
-	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		//'model' => [ 'active' => 'Activate', 'disabled' => 'Disable', 'delete' => 'Delete' ]
+	'bulkPopup' => 'popup-grid-bulk',
+	'bulkActions' => [
+		'model' => [
+			'activate' => 'Activate', 'disable' => 'Disable', 'delete' => 'Delete'
+		]
 	],
 	'header' => false, 'footer' => true,
 	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x2', 'x2', 'x2', 'x2', null, 'x2', null, null, null ] ],
@@ -52,16 +59,16 @@ $themeTemplates		= '@themes/admin/views/templates';
 	//'dataView' => "$moduleTemplates/grid/data/maddress",
 	//'cardView' => "$moduleTemplates/grid/cards/maddress",
 	'actionView' => "$moduleTemplates/grid/actions/maddress"
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
 	'data' => [ 'model' => $title, 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Delete Address', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
 	'data' => [ 'model' => $title, 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?pid=$parent->id&id=" ]
-]) ?>
+])?>

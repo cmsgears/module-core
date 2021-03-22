@@ -17,10 +17,14 @@ use yii\helpers\ArrayHelper;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Resource;
 use cmsgears\core\common\models\entities\Country;
 use cmsgears\core\common\models\entities\Province;
+use cmsgears\core\common\models\entities\Region;
 use cmsgears\core\common\models\entities\City;
+
+use cmsgears\core\common\models\interfaces\resources\IData;
+
+use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
  * The Location model used to store the location details.
@@ -40,10 +44,13 @@ use cmsgears\core\common\models\entities\City;
  * @property integer $latitude
  * @property integer $longitude
  * @property integer $zoomLevel
+ * @property datetime $accessedAt
+ * @property string $notes
+ * @property string $data
  *
  * @since 1.0.0
  */
-class Location extends Resource {
+class Location extends \cmsgears\core\common\models\base\Resource implements IData {
 
 	// Variables ---------------------------------------------------
 
@@ -67,6 +74,8 @@ class Location extends Resource {
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
+
 	// Constructor and Initialisation ------------------------------
 
 	// Instance methods --------------------------------------------
@@ -87,16 +96,21 @@ class Location extends Resource {
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ 'id', 'safe' ],
+			[ [ 'id', 'notes' ], 'safe' ],
+			[ [ 'regionId' ], 'required', 'on' => 'region' ],
 			[ [ 'latitude', 'longitude' ], 'required', 'on' => 'location' ],
+			[ [ 'regionId', 'latitude', 'longitude' ], 'required', 'on' => 'regionlocation' ],
 			// Text Limit
 			[ [ 'zip', 'subZip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ [ 'countryName', 'provinceName', 'regionName' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ [ 'title', 'cityName' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
 			[ [ 'zip', 'subZip' ], 'alphanumhyphenspace' ],
-			[ [ 'countryId', 'provinceId', 'regionId', 'cityId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'longitude', 'latitude', 'zoomLevel' ], 'number' ]
+			[ 'regionId', 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ 'regionId', 'number', 'on' => [ 'region', 'regionlocation' ], 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'countryId', 'provinceId', 'cityId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'longitude', 'latitude', 'zoomLevel' ], 'number' ],
+			[ 'accessedAt', 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
 		// Trim Text
@@ -129,8 +143,44 @@ class Location extends Resource {
 			'subZip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP_SUB ),
 			'latitude' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LATITUDE ),
 			'longitude' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LONGITUDE ),
-			'zoomLevel' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZOOM )
+			'zoomLevel' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZOOM ),
+			'notes' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NOTES )
 		];
+	}
+
+	// yii\db\BaseActiveRecord
+
+	/**
+	 * @inheritdoc
+	 */
+	public function beforeSave( $insert ) {
+
+		if( parent::beforeSave( $insert ) ) {
+
+			if( $this->countryId <= 0 ) {
+
+				$this->countryId = null;
+			}
+
+			if( $this->provinceId <= 0 ) {
+
+				$this->provinceId = null;
+			}
+
+			if( $this->regionId <= 0 ) {
+
+				$this->regionId = null;
+			}
+
+			if( $this->cityId <= 0 ) {
+
+				$this->cityId = null;
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 
 	// CMG interfaces ------------------------
@@ -176,25 +226,31 @@ class Location extends Resource {
 	// TODO: Use location template to return the location string.
 	public function toString() {
 
-		$countryName	= !empty( $this->countryName ) ? $this->countryName : ( isset( $this->country ) ? $this->country->name : null );
-		$provinceName	= !empty( $this->provinceName ) ? $this->provinceName : ( isset( $this->province ) ? $this->province->name : null );
-		$cityName		= !empty( $this->cityName ) ? $this->cityName : ( isset( $this->city ) ? $this->city->name : null );
+		$country	= !empty( $this->countryName ) ? $this->countryName : ( isset( $this->country ) ? $this->country->name : null );
+		$province	= !empty( $this->provinceName ) ? $this->provinceName : ( isset( $this->province ) ? $this->province->name : null );
+		$region		= !empty( $this->regionName ) ? $this->regionName : ( isset( $this->region ) ? $this->region->name : null );
+		$city		= !empty( $this->cityName ) ? $this->cityName : ( isset( $this->city ) ? $this->city->name : null );
 
 		$location = $this->title;
 
-		if( isset( $cityName ) && strlen( $cityName ) > 0 ) {
+		if( !empty( $city ) ) {
 
-			$location .= ", $cityName";
+			$location .= ", $city";
 		}
 
-		if( isset( $provinceName ) && strlen( $provinceName ) > 0 ) {
+		if( !empty( $region) ) {
 
-			$location .= ", $provinceName";
+			$location .= ", $region";
 		}
 
-		if( isset( $provinceName ) && isset( $countryName ) && strlen( $countryName ) > 0 ) {
+		if( !empty( $province ) ) {
 
-			$location .= ", $countryName";
+			$location .= ", $province";
+		}
+
+		if( !empty( $country ) ) {
+
+			$location .= ", $country";
 		}
 
 		return $location;
@@ -225,7 +281,7 @@ class Location extends Resource {
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country', 'province', 'city' ];
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country', 'province', 'region', 'city' ];
 
 		$config[ 'relations' ] = $relations;
 
@@ -259,10 +315,23 @@ class Location extends Resource {
 	}
 
 	/**
-	 * Return query to find the location with country and province.
+	 * Return query to find the location with region.
 	 *
 	 * @param array $config
-	 * @return \yii\db\ActiveQuery to query with country and province.
+	 * @return \yii\db\ActiveQuery to query with region.
+	 */
+	public static function queryWithRegion( $config = [] ) {
+
+		$config[ 'relations' ] = [ 'region' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	/**
+	 * Return query to find the location with city.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with city.
 	 */
 	public static function queryWithCity( $config = [] ) {
 

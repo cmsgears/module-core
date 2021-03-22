@@ -20,10 +20,12 @@ use cmsgears\core\common\models\entities\User;
 
 use cmsgears\core\common\services\interfaces\entities\IUserService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
+use cmsgears\core\common\services\interfaces\resources\IUserMetaService;
 
 use cmsgears\core\common\services\traits\base\ApprovalTrait;
+use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
-use cmsgears\core\common\services\traits\resources\ModelMetaTrait;
+use cmsgears\core\common\services\traits\resources\MetaTrait;
 use cmsgears\core\common\services\traits\resources\SocialLinkTrait;
 use cmsgears\core\common\services\traits\resources\VisualTrait;
 
@@ -59,20 +61,23 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	// Private ----------------
 
 	private $fileService;
+	private $metaService;
 
 	// Traits ------------------------------------------------------
 
 	use ApprovalTrait;
 	use DataTrait;
-	use ModelMetaTrait;
+	use GridCacheTrait;
+	use MetaTrait;
 	use SocialLinkTrait;
 	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( IFileService $fileService, $config = [] ) {
+	public function __construct( IFileService $fileService, IUserMetaService $metaService, $config = [] ) {
 
-		$this->fileService = $fileService;
+		$this->fileService	= $fileService;
+		$this->metaService	= $metaService;
 
 		parent::__construct( $config );
 	}
@@ -92,6 +97,11 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -120,6 +130,12 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 					'desc' => [ "$modelTable.genderId" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Gender'
+				],
+				'marital' => [
+					'asc' => [ "$modelTable.maritalId" => SORT_ASC ],
+					'desc' => [ "$modelTable.maritalId" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Marital Status'
 				],
 				'role' => [
 					'asc' => [ "$roleTable.name" => SORT_ASC ],
@@ -212,9 +228,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	                'label' => 'Last Activity'
 	            ]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -238,41 +252,58 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		$status	= Yii::$app->request->getQueryParam( 'status' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
 
-		if( isset( $status ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
+		if( isset( $status ) && empty( $config[ 'conditions' ][ "$modelTable.status" ] ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.status" ]	= $modelClass::$urlRevStatusMap[ $status ];
 		}
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'message' => "$modelTable.message",
+			'desc' => "$modelTable.description",
+			'username' => "$modelTable.username",
+			'email' => "$modelTable.email",
+			'mobile' => "$modelTable.mobile",
+			'phone' => "$modelTable.phone",
+			'content' => "$modelTable.ontent"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name", 'message' => "$modelTable.message", 'desc' => "$modelTable.description",
-				'username' => "$modelTable.username", 'email' => "$modelTable.email",
-				'mobile' => "$modelTable.mobile", 'phone' => "$modelTable.phone",
-				'content' => "$modelTable.ontent"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
-			'locale' => "$modelTable.localeId", 'gender' => "$modelTable.genderId",
-			'name' => "$modelTable.name", 'status' => "$modelTable.status",
-			'message' => "$modelTable.message", 'desc' => "$modelTable.description",
-			'username' => "$modelTable.username", 'email' => "$modelTable.email",
-			'mobile' => "$modelTable.mobile", 'phone' => "$modelTable.phone",
-			'tzone' => "$modelTable.timeZone", 'content' => "$modelTable.ontent",
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
+			'locale' => "$modelTable.localeId",
+			'gender' => "$modelTable.genderId",
+			'marital' => "$modelTable.maritalId",
+			'name' => "$modelTable.name",
+			'status' => "$modelTable.status",
+			'role' => "$roleTable.name",
+			'message' => "$modelTable.message",
+			'desc' => "$modelTable.description",
+			'username' => "$modelTable.username",
+			'email' => "$modelTable.email",
+			'mobile' => "$modelTable.mobile",
+			'phone' => "$modelTable.phone",
+			'tzone' => "$modelTable.timeZone",
+			'content' => "$modelTable.ontent"
 		];
 
 		// Result -----------
@@ -285,6 +316,15 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		$modelTable = $this->getModelTable();
 
 		$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+
+		return $this->getPage( $config );
+	}
+
+	public function getPageByRoleId( $roleId, $config = [] ) {
+
+		$siteMemberTable = Yii::$app->factory->get( 'siteMemberService' )->getModelTable();
+
+		$config[ 'conditions' ][ "$siteMemberTable.roleId" ] = $roleId;
 
 		return $this->getPage( $config );
 	}
@@ -417,15 +457,13 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		return static::findIdNameList( $config );
 	}
 
-	// Read - Maps -----
-
 	public function searchByName( $name, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
 		$config[ 'query' ]		= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.email" ];
+		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.email", "$modelTable.mobile" ];
 		$config[ 'array' ]		= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
 
 		$config[ 'query' ]->andWhere( "$modelTable.name LIKE :name", [ ':name' => "$name%" ] );
@@ -439,7 +477,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		$modelTable	= $this->getModelTable();
 
 		$config[ 'query' ]		= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.email" ];
+		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.email", "$modelTable.mobile" ];
 		$config[ 'array' ]		= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
 
 		$config[ 'query' ]->andWhere( "$modelTable.name LIKE :name AND type=:type", [ ':name' => "$name%", ':type' => $type ] );
@@ -447,24 +485,35 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		return static::searchModels( $config );
 	}
 
+	// Read - Maps -----
+
 	/**
 	 * @param string $roleSlug
 	 * @return array
 	 */
-	public function getIdNameMapByRoleSlug( $roleSlug ) {
+	public function getIdNameMapByRoleSlug( $roleSlug, $config = [] ) {
+
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
 		$roleTable			= Yii::$app->get( 'roleService' )->getModelTable();
-		$siteTable			= Yii::$app->get( 'siteService' )->getModelTable();
 		$siteMemberTable	= Yii::$app->get( 'siteMemberService' )->getModelTable();
 
-		$users	= $modelClass::find()
-					->leftJoin( $siteMemberTable, "$siteMemberTable.userId = $modelTable.id" )
-					->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
-					->leftJoin( $roleTable, "$roleTable.id = $siteMemberTable.roleId" )
-					->where( "$roleTable.slug=:slug AND $siteTable.name=:name", [ ':slug' => $roleSlug, ':name' => Yii::$app->core->getSiteName() ] )->all();
+		$query = $modelClass::find()
+			->leftJoin( $siteMemberTable, "$siteMemberTable.userId = $modelTable.id" )
+			->leftJoin( $roleTable, "$roleTable.id = $siteMemberTable.roleId" )
+			->where( "$roleTable.slug=:slug", [ ':slug' => $roleSlug ] );
+
+		if( !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			$query->andWhere( "$siteMemberTable.siteId=:siteId", [ ':siteId' => $siteId ] );
+		}
+
+		$users = $query->all();
 
 		$usersMap = [];
 
@@ -493,23 +542,16 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$video	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 
+		$modelClass	= static::$modelClass;
+
 		// Set Attributes
 		$model->registeredAt = DateUtil::getDateTime();
 
-		if( empty( $model->status ) ) {
+		// Default Status - New
+		$model->status = $model->status ?? $modelClass::STATUS_NEW;
 
-			$model->status = User::STATUS_NEW;
-		}
-
-		if( empty( $model->type ) ) {
-
-			$model->type = CoreGlobal::TYPE_DEFAULT;
-		}
-
-		if( empty( $model->slug ) ) {
-
-			$model->slug = $model->username;
-		}
+		// Default Slug - Username
+		$model->slug = $model->slug ?? $model->username;
 
 		// Generate Tokens
 		$model->generateVerifyToken();
@@ -523,7 +565,8 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	}
 
 	/**
-	 * Register User - It register the user and set status to new. It also generate verification token.
+	 * Register User - It register the user and set status to new. It also generate
+	 * verification token.
 	 *
 	 * @param RegisterForm $model
 	 * @return User
@@ -533,15 +576,17 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : User::STATUS_NEW;
 		$user	= isset( $config[ 'user' ] ) ? $config[ 'user' ] : $this->getModelObject();
 
-		$date	= DateUtil::getDateTime();
+		$date = DateUtil::getDateTime();
 
 		$user->email		= $model->email;
 		$user->username		= $model->username;
+		$user->slug			= empty( $model->slug ) ? $model->username : $model->slug;
 		$user->title		= $model->title;
 		$user->firstName	= $model->firstName;
 		$user->middleName	= $model->middleName;
 		$user->lastName		= $model->lastName;
 		$user->mobile		= $model->mobile;
+		$user->phone		= $model->phone;
 		$user->dob			= $model->dob;
 		$user->registeredAt	= $date;
 		$user->status		= $status;
@@ -571,7 +616,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'localeId', 'genderId', 'avatarId', 'bannerId', 'videoId', 'templateId',
+			'localeId', 'genderId', 'maritalId', 'avatarId', 'bannerId', 'videoId', 'templateId',
 			'email', 'username', 'slug', 'title', 'firstName', 'middleName', 'lastName', 'message',
 			'description', 'dob', 'mobile', 'phone', 'timeZone', 'avatarUrl', 'websiteUrl', 'content'
 		];
@@ -588,13 +633,29 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 			$attributes[] = 'status';
 		}
 
-		return parent::update( $model, [
+		// Model Checks
+		$oldStatus = $model->getOldAttribute( 'status' );
+
+		$model = parent::update( $model, [
 			'attributes' => $attributes
 		]);
+
+		// Check status change and notify User
+		if( $oldStatus != $model->status ) {
+
+			$config[ 'users' ] = [ $model->id ];
+
+			$config[ 'data' ][ 'message' ] = 'User status changed.';
+
+			$this->checkStatusChange( $model, $oldStatus, $config );
+		}
+
+		return $model;
 	}
 
 	/**
-	 * Confirm User - The method verify and confirm user by accepting valid token sent via mail. It also set user status to active.
+	 * Confirm User - The method verify and confirm user by accepting valid token
+	 * sent via mail. It also set user status to active.
 	 *
 	 * @param User $user
 	 * @param string $token
@@ -613,6 +674,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 			// User need admin approval
 			if( Yii::$app->core->isUserApproval() ) {
 
+				// Mark user as verified for further action from admin
 				$userToUpdate->verify();
 			}
 			// Direct approval and activation
@@ -632,7 +694,8 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	}
 
 	/**
-	 * Activate User / Reset Password - Activates the User created from Admin Panel or reset password.
+	 * Activate User / Reset Password - Activates the User created from Admin Panel or
+	 * reset password.
 	 *
 	 * @param User $user
 	 * @param string $token
@@ -653,7 +716,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 			// Generate Password
 			$userToUpdate->generatePassword( $resetForm->password );
 
-			// User need admin approval if not added by admin for activation
+			// User need admin approval for activation
 			if( !$activate && Yii::$app->core->isUserApproval() ) {
 
 				$userToUpdate->verify();
@@ -666,6 +729,8 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 			$userToUpdate->unsetResetToken();
 
+			$userToUpdate->unsetVerifyToken();
+
 			$userToUpdate->update();
 
 			return true;
@@ -676,6 +741,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 	/**
 	 * The method generate a new reset token which can be used later to update user password.
+	 *
 	 * @param User $user
 	 * @return User
 	 */
@@ -697,7 +763,9 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	}
 
 	/**
-	 * The method generate a new secure password for the given password and unset the reset token. It also activate user.
+	 * The method generate a new secure password for the given password and unset the
+	 * reset token. It also activate user.
+	 *
 	 * @param User $user
 	 * @param ResetPasswordForm $resetForm
 	 * @param boolean $activate
@@ -728,14 +796,19 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		// Update User
 		$userToUpdate->update();
 
-		return $userToUpdate;
+		if( $userToUpdate->update() !== false ) {
+
+			return $userToUpdate;
+		}
+
+		return false;
 	}
 
 	// Log last activity ----
 
 	public function logLastActivity() {
 
-		$user = Yii::$app->user->getIdentity();
+		$user = Yii::$app->core->getUser();
 
 		if( isset( $user ) ) {
 
@@ -757,11 +830,39 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	 */
 	public function delete( $model, $config = [] ) {
 
-		// Delete Files
-		$this->fileService->deleteMultiple( [ $model->avatar, $model->banner, $model->video ] );
+		$config[ 'hard' ] = $config[ 'hard' ] ?? !Yii::$app->core->isSoftDelete();
 
-		// Delete Notifications
-		Yii::$app->eventManager->deleteNotificationsByUserId( $model->id );
+		if( $config[ 'hard' ] ) {
+
+			$transaction = Yii::$app->db->beginTransaction();
+
+			try {
+
+				// Delete Meta
+				$this->metaService->deleteByModelId( $model->id );
+
+				// Delete Files
+				$this->fileService->deleteMultiple( [ $model->avatar, $model->banner, $model->video ] );
+
+				// Delete Model Files
+				$this->fileService->deleteFiles( $model->files );
+
+				// Delete Option Mappings
+				Yii::$app->factory->get( 'modelOptionService' )->deleteByParent( $model->id, static::$parentType );
+
+				// Delete Notifications
+				Yii::$app->eventManager->deleteNotificationsByUserId( $model->id );
+
+				// Commit
+				$transaction->commit();
+			}
+			catch( Exception $e ) {
+
+				$transaction->rollBack();
+
+				throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+			}
+		}
 
 		// Delete model
 		return parent::delete( $model, $config );
@@ -771,25 +872,36 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
+		$direct = isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : false; // Trigger direct notifications
+		$users	= isset( $config[ 'users' ] ) ? $config[ 'users' ] : [ $model->id ]; // Trigger user notifications
+
 		switch( $column ) {
 
 			case 'status': {
 
 				switch( $action ) {
 
-					case 'active': {
+					case 'activate': {
 
-						$this->approve( $model );
+						$this->activate( $model, [ 'direct' => $direct, 'users' => $users ] );
 
-						// TODO: Trigger activate email
+						break;
+					}
+					case 'freeze': {
+
+						$this->freeze( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
 					case 'block': {
 
-						$this->block( $model );
+						$this->block( $model, [ 'direct' => $direct, 'users' => $users ] );
 
-						// TODO: Trigger block email
+						break;
+					}
+					case 'terminate': {
+
+						$this->terminate( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
@@ -815,6 +927,23 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	}
 
 	// Notifications ------
+
+	public function checkRoleChange( $model, $oldRoleId ) {
+
+		if( $model->activeSiteMember->roleId !== intval( $oldRoleId ) ) {
+
+			$roleService = Yii::$app->factory->get( 'roleService' );
+
+			$oldRole = $roleService->getById( $oldRoleId )->name;
+			$newRole = $roleService->getById( $model->activeSiteMember->roleId )->name;
+
+			// Trigger Role Change Notification
+			$this->notifyUser( $model, [
+				'template' => CoreGlobal::TPL_NOTIFY_USER_ROLE,
+				'users' => [ $model->id ], 'data' => [ 'oldRole' => $oldRole, 'newRole' => $newRole ]
+			]);
+		}
+	}
 
 	// Cache --------------
 

@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\CrudController;
-
 /**
  * ThemeController provides actions specific to theme model.
  *
  * @since 1.0.0
  */
-class ThemeController extends CrudController {
+class ThemeController extends \cmsgears\core\admin\controllers\base\CrudController {
 
 	// Variables ---------------------------------------------------
 
@@ -89,7 +87,11 @@ class ThemeController extends CrudController {
 
 		Url::remember( Yii::$app->request->getUrl(), 'themes' );
 
-		return parent::actionAll( $config );
+		$dataProvider = $this->modelService->getPageByType( CoreGlobal::TYPE_SITE );
+
+		return $this->render( 'all', [
+			'dataProvider' => $dataProvider
+		]);
 	}
 
 }

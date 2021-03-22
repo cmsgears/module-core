@@ -21,7 +21,7 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * @since 1.0.0
  */
-class GalleryController extends \cmsgears\core\admin\controllers\base\Controller {
+class GalleryController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -96,12 +96,12 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
 
 		return [
 			// Gallery
-			'update' => [ 'class' => 'cmsgears\core\common\actions\gallery\Update', 'direct' => true ],
-			'get-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Read', 'direct' => true ],
-			'add-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Create', 'direct' => true ],
-			'update-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Update', 'direct' => true ],
-			'delete-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Delete', 'direct' => true ],
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'update' => [ 'class' => 'cmsgears\core\common\actions\gallery\Update', 'admin' => true ],
+			'get-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Read', 'admin' => true ],
+			'add-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Create', 'admin' => true ],
+			'update-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Update', 'admin' => true ],
+			'delete-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Delete', 'admin' => true ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

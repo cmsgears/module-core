@@ -1,11 +1,12 @@
 <?php
 /**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
  * @link https://www.cmsgears.org/
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
- * @license https://www.cmsgears.org/license/
- * @package module
- * @subpackage core
  */
+
 namespace cmsgears\core\common\components;
 
 /**
@@ -20,6 +21,8 @@ class PluginManager extends \cmsgears\core\common\base\Component {
 	// Globals ----------------
 
 	// Public -----------------
+
+	public $plugins = [];
 
 	// Protected --------------
 
@@ -38,5 +41,28 @@ class PluginManager extends \cmsgears\core\common\base\Component {
 	// CMG parent classes --------------------
 
 	// PluginManager -------------------------
+
+	public function renderAdminForms( $model, $type, $apixBase = null ) {
+
+		$plugins = $this->plugins;
+
+		$formsHtml = "";
+
+		foreach( $plugins as $id => $plugin ) {
+
+			$pluginClass	= $plugin[ 'class' ];
+			$modelTypes		= $plugin[ 'modelTypes' ];
+
+			// Plugin configured for the model type
+			if( in_array( $type, $modelTypes ) ) {
+
+				$pluginObj = new $pluginClass( [ 'id' => $id, 'model' => $model, 'admin' => true, 'apixBase' => $apixBase ] );
+
+				$formsHtml .= $pluginObj->renderAdminForms();
+			}
+		}
+
+		return $formsHtml;
+	}
 
 }

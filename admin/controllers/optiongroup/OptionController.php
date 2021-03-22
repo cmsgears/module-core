@@ -13,14 +13,15 @@ namespace cmsgears\core\admin\controllers\optiongroup;
 use Yii;
 use yii\helpers\Url;
 
-use cmsgears\core\admin\controllers\base\category\OptionController as BaseOptionController;
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 
 /**
  * OptionController provides actions specific to option model.
  *
  * @since 1.0.0
  */
-class OptionController extends BaseOptionController {
+class OptionController extends \cmsgears\core\admin\controllers\base\category\OptionController {
 
 	// Variables ---------------------------------------------------
 
@@ -37,6 +38,9 @@ class OptionController extends BaseOptionController {
 	public function init() {
 
 		parent::init();
+
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Config
 		$this->apixBase = 'core/optiongroup/option';
@@ -81,10 +85,11 @@ class OptionController extends BaseOptionController {
 
 	// OptionController ----------------------
 
-	public function actionAll( $cid ) {
+	public function actionAll( $pid ) {
 
 		Url::remember( Yii::$app->request->getUrl(), 'options' );
 
-		return parent::actionAll( $cid );
+		return parent::actionAll( $pid );
 	}
+
 }

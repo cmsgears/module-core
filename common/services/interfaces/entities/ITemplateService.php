@@ -30,15 +30,17 @@ interface ITemplateService extends IEntityService, IData, IGridCacheable, IMulti
 
 	// Read - Models ---
 
+	public function getActiveByType( $type, $config = [] );
+
 	public function getGlobalBySlugType( $slug, $type, $config = [] );
 
 	public function getByThemeSlugType( $slug, $type, $config = [] );
 
-	public function getActiveByType( $type );
-
 	// Read - Lists ----
 
 	// Read - Maps -----
+
+	public function getFrontendIdNameMapByType( $type, $config = [] );
 
 	// Read - Others ---
 

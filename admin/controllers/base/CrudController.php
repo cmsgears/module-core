@@ -18,6 +18,8 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\behaviors\ActivityBehavior;
+
 /**
  * CrudController provide generic actions to perform CRUD operations.
  *
@@ -51,22 +53,35 @@ abstract class CrudController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'index'	 => [ 'permission' => $this->crudPermission ],
-					'all'  => [ 'permission' => $this->crudPermission ],
-					'create'  => [ 'permission' => $this->crudPermission ],
-					'update'  => [ 'permission' => $this->crudPermission ],
-					'delete'  => [ 'permission' => $this->crudPermission ]
+					'index' => [ 'permission' => $this->crudPermission ],
+					'all' => [ 'permission' => $this->crudPermission ],
+					'create' => [ 'permission' => $this->crudPermission ],
+					'update' => [ 'permission' => $this->crudPermission ],
+					'delete' => [ 'permission' => $this->crudPermission ],
+					'pdf' => [ 'permission' => $this->crudPermission ],
+					'import' => [ 'permission' => $this->crudPermission ],
+					'export' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
 					'index' => [ 'get', 'post' ],
-					'all'  => [ 'get' ],
-					'create'  => [ 'get', 'post' ],
-					'update'  => [ 'get', 'post' ],
-					'delete'  => [ 'get', 'post' ]
+					'all' => [ 'get' ],
+					'create' => [ 'get', 'post' ],
+					'update' => [ 'get', 'post' ],
+					'delete' => [ 'get', 'post' ],
+					'pdf' => [ 'get' ],
+					'import' => [ 'post' ],
+					'export' => [ 'get' ]
 				]
+			],
+			'activity' => [
+				'class' => ActivityBehavior::class,
+				'admin' => true,
+				'create' => [ 'create' ],
+				'update' => [ 'update' ],
+				'delete' => [ 'delete' ]
 			]
 		];
 	}
@@ -89,7 +104,7 @@ abstract class CrudController extends Controller {
 		$dataProvider = $this->modelService->getPage();
 
 		return $this->render( 'all', [
-			 'dataProvider' => $dataProvider
+			'dataProvider' => $dataProvider
 		]);
 	}
 
@@ -98,13 +113,6 @@ abstract class CrudController extends Controller {
 		$modelClass = $this->modelService->getModelClass();
 
 		$model = new $modelClass();
-
-		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
-
-		if( $modelClass::isMultiSite() && !$ignoreSite ) {
-
-			$model->siteId = isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
-		}
 
 		if( isset( $this->scenario ) ) {
 
@@ -115,7 +123,10 @@ abstract class CrudController extends Controller {
 
 			$this->model = $this->modelService->add( $model, [ 'admin' => true ] );
 
-			return $this->redirect( 'all' );
+			if( $this->model ) {
+
+				return $this->redirect( 'all' );
+			}
 		}
 
 		return $this->render( 'create', [

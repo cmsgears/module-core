@@ -16,8 +16,6 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -25,7 +23,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class MemberController extends Controller {
+class MemberController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -51,7 +49,7 @@ class MemberController extends Controller {
 		// Services
 		$this->modelService	= Yii::$app->factory->get( 'siteMemberService' );
 
-		$this->userService	= Yii::$app->factory->get( 'userService' );
+		$this->userService = Yii::$app->factory->get( 'userService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -90,11 +88,17 @@ class MemberController extends Controller {
 	public function actions() {
 
 		return [
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
 	}
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// MemberController ----------------------
 
 	public function actionAutoSearch() {
 
@@ -114,11 +118,5 @@ class MemberController extends Controller {
 		// Trigger Ajax Success
 		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 	}
-
-	// CMG interfaces ------------------------
-
-	// CMG parent classes --------------------
-
-	// CityController ------------------------
 
 }

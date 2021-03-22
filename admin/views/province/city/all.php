@@ -35,10 +35,13 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'model' => [ 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x3', null, 'x2', 'x2', null, 'x2', 'x2', null ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x3', 'x2', null, 'x2', 'x2', null, null, null, null ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'name' => 'Name',
+		'region' => [ 'title' => 'Region', 'generate' => function( $model ) {
+			return isset( $model->region ) ? $model->region->name : null;
+		}],
 		'code' => 'Code',
 		'iso' => 'ISO',
 		'zone' => 'Zone',

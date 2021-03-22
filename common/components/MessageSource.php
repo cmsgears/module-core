@@ -1,11 +1,12 @@
 <?php
 /**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
  * @link https://www.cmsgears.org/
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
- * @license https://www.cmsgears.org/license/
- * @package module
- * @subpackage core
  */
+
 namespace cmsgears\core\common\components;
 
 // Yii Imports
@@ -69,6 +70,8 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::ERROR_SESSION_EXPIRED => 'Your session expired.',
 		CoreGlobal::ERROR_TOKEN_EXPIRED => 'Your token expired.',
 		CoreGlobal::ERROR_PARENT_CHAIN => 'A model cannot be parent of itself.',
+		CoreGlobal::ERROR_NAME => 'The name {value} has already been taken.',
+		CoreGlobal::ERROR_SLUG => 'The slug {value} has already been taken.',
 
 		// Errors - Comments
 		CoreGlobal::ERROR_NO_COMMENTS => 'Comments are not allowed.',
@@ -106,8 +109,8 @@ class MessageSource extends \yii\base\Component {
 
 		// Errors - User Account
 		CoreGlobal::ERROR_PASSWORD_OLD => 'Please provide valid value for old password.',
-		CoreGlobal::ERROR_ACCOUNT_CONFIRM => 'Either your account does not exist or the confirmation link is not valid. Please try to reset your password.',
-		CoreGlobal::ERROR_PASSWORD_RESET => 'Either your account does not exist or the reset link is not valid. Please try to reset your password.',
+		CoreGlobal::ERROR_ACCOUNT_CONFIRM => null,
+		CoreGlobal::ERROR_PASSWORD_RESET => null,
 		CoreGlobal::ERROR_CHANGE_EMAIL => 'Email change is not allowed.',
 		CoreGlobal::ERROR_CHANGE_USERNAME => 'Username change is not allowed.',
 		CoreGlobal::ERROR_CHANGE_MOBILE => 'Mobile change is not allowed.',
@@ -141,11 +144,16 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_VALUE_TYPE => 'Value Type',
 		CoreGlobal::FIELD_DESCRIPTION => 'Description',
 		CoreGlobal::FIELD_OTP => 'OTP',
+		CoreGlobal::FIELD_NOTE => 'Note',
 		CoreGlobal::FIELD_NOTES => 'Notes',
+		CoreGlobal::FIELD_GUEST => 'Guest',
 
 		CoreGlobal::FIELD_ACTIVE => 'Active',
 		CoreGlobal::FIELD_STATUS => 'Status',
 		CoreGlobal::FIELD_ACCESS => 'Access',
+		CoreGlobal::FIELD_PRIMARY => 'Primary',
+		CoreGlobal::FIELD_SECONDARY => 'Secondary',
+		CoreGlobal::FIELD_MODE => 'Mode',
 		CoreGlobal::FIELD_SENT => 'Sent',
 		CoreGlobal::FIELD_DELIVERED => 'Delivered',
 		CoreGlobal::FIELD_CONSUMED => 'Consumed',
@@ -160,10 +168,18 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_EXPIRED => 'Expired',
 		CoreGlobal::FIELD_PINNED => 'Pinned',
 		CoreGlobal::FIELD_FEATURED => 'Featured',
+		CoreGlobal::FIELD_POPULAR => 'Popular',
 		CoreGlobal::FIELD_ANONYMOUS => 'Anonymous',
 		CoreGlobal::FIELD_USER_MAPPED => 'User Mapped',
 		CoreGlobal::FIELD_FAILED => 'Failed',
 		CoreGlobal::FIELD_FAIL_COUNT => 'Failure Count',
+		CoreGlobal::FIELD_STORAGE => 'Storage',
+		CoreGlobal::FIELD_CAPTION => 'Caption',
+		CoreGlobal::FIELD_ALT_TEXT => 'Alt Text',
+		CoreGlobal::FIELD_IMG_SRCSET => 'Srcset Breakpoints',
+		CoreGlobal::FIELD_IMG_SIZES => 'Responsive Sizes',
+		CoreGlobal::FIELD_STARTS_AT => 'Starts At',
+		CoreGlobal::FIELD_ENDS_AT => 'Ends At',
 		CoreGlobal::FIELD_DATE_START => 'Start Date',
 		CoreGlobal::FIELD_DATE_END => 'End Date',
 		CoreGlobal::FIELD_DAY_WEEK => 'Week Day',
@@ -190,13 +206,16 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_NOK => 'Next of Kin',
 		CoreGlobal::FIELD_NOK_RELATION => 'NOK Relation',
 		CoreGlobal::FIELD_AGE => 'Age',
+		CoreGlobal::FIELD_ROOT => 'Root',
 		CoreGlobal::FIELD_PARENT => 'Parent',
 		CoreGlobal::FIELD_PARENT_TYPE => 'Parent Type',
+		CoreGlobal::FIELD_CHILD => 'Child',
 		CoreGlobal::FIELD_LOCALE => 'Locale',
 		CoreGlobal::FIELD_PROVINCE => 'Province',
 		CoreGlobal::FIELD_REGION => 'Region',
 		CoreGlobal::FIELD_COUNTRY => 'Country',
 		CoreGlobal::FIELD_CATEGORY => 'Category',
+		CoreGlobal::FIELD_OPTION_GROUP => 'Option Group',
 		CoreGlobal::FIELD_OPTION => 'Option',
 		CoreGlobal::FIELD_FILE => 'File',
 		CoreGlobal::FIELD_TAG => 'Tag',
@@ -204,26 +223,34 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_EVENT => 'Event',
 		CoreGlobal::FIELD_OBJECT => 'Object',
 		CoreGlobal::FIELD_THEME => 'Theme',
+		CoreGlobal::FIELD_PREVIEW => 'Preview',
 		CoreGlobal::FIELD_COMMENT => 'Comment',
 		CoreGlobal::FIELD_COMMENTS => 'Comments',
 		CoreGlobal::FIELD_REVIEWS => 'Reviews',
 		CoreGlobal::FIELD_TEMPLATE => 'Template',
-
+		CoreGlobal::FIELD_MODULE => 'Module',
 		CoreGlobal::FIELD_USER => 'User',
 		CoreGlobal::FIELD_ADMIN => 'Admin',
+		CoreGlobal::FIELD_FRONTEND => 'Frontend',
+		CoreGlobal::FIELD_BACKEND => 'Backend',
+		CoreGlobal::FIELD_WEBSITE => 'Website',
 		CoreGlobal::FIELD_AUTHOR => 'Author',
 		CoreGlobal::FIELD_MEMBER => 'Member',
 		CoreGlobal::FIELD_OWNER => 'Owner',
 		CoreGlobal::FIELD_APPROVER => 'Approver',
 		CoreGlobal::FIELD_FOLLOWER => 'Follower',
+		CoreGlobal::FIELD_FOLLOWERS => 'Followers',
 		CoreGlobal::FIELD_PROFILE => 'Profile',
-		CoreGlobal::FIELD_WEBSITE => 'Website',
+		CoreGlobal::FIELD_SHARED => 'Shared',
 		CoreGlobal::FIELD_AVATAR => 'Avatar',
 		CoreGlobal::FIELD_AVATAR_URL => 'Avatar URL',
 		CoreGlobal::FIELD_BANNER => 'Banner',
+		CoreGlobal::FIELD_BANNER_M => 'Mobile Banner',
 		CoreGlobal::FIELD_VIDEO => 'Video',
+		CoreGlobal::FIELD_VIDEO_M => 'Mobile Video',
 		CoreGlobal::FIELD_DOCUMENT => 'Document',
 
+		CoreGlobal::FIELD_MULTIPLE => 'Multiple',
 		CoreGlobal::FIELD_GLOBAL => 'Global',
 		CoreGlobal::FIELD_SESSION => 'Session',
 		CoreGlobal::FIELD_TOKEN => 'Token',
@@ -278,7 +305,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_TERMS => 'Terms',
 
 		// Verification Fields
-		CoreGlobal::FIELD_PHONE_VERIFIED => 'Phone Verified',
+		CoreGlobal::FIELD_MOBILE_VERIFIED => 'Mobile Verified',
 		CoreGlobal::FIELD_EMAIL_VERIFIED => 'Email Verified',
 		CoreGlobal::FIELD_TOKEN_VERIFY => 'Verify Token',
 		CoreGlobal::FIELD_TOKEN_VERIFY_VALIDITY => 'Verify Token Validity',
@@ -294,6 +321,7 @@ class MessageSource extends \yii\base\Component {
 		// Notification/Reminder/Message Fields
 		CoreGlobal::FIELD_NOTIFIER => 'Notifier',
 		CoreGlobal::FIELD_SENDER => 'Sender',
+		CoreGlobal::FIELD_PUBLISHER => 'Publisher',
 		CoreGlobal::FIELD_RECIPIENT => 'Recipient',
 
 		// Site/Site Member Fields
@@ -331,7 +359,19 @@ class MessageSource extends \yii\base\Component {
 
 		// Visibility
 		CoreGlobal::FIELD_PRIVATE => 'Private',
-		CoreGlobal::FIELD_PUBLIC => 'Public'
+		CoreGlobal::FIELD_PUBLIC => 'Public',
+
+		// Dependency - Generic Mapper
+		CoreGlobal::FIELD_SOURCE => 'sourceField',
+		CoreGlobal::FIELD_SOURCE_TYPE => 'sourceTypeField',
+		CoreGlobal::FIELD_TARGET => 'targetField',
+		CoreGlobal::FIELD_TARGET_TYPE => 'targetTypeField',
+
+		// SEO
+		CoreGlobal::FIELD_SEO_NAME => 'SEO Name',
+		CoreGlobal::FIELD_SEO_DESCRIPTION => 'SEO Description',
+		CoreGlobal::FIELD_SEO_KEYWORDS => 'SEO Keywords',
+		CoreGlobal::FIELD_SEO_ROBOT => 'SEO Robot'
 	];
 
 	// Private ----------------
@@ -342,6 +382,9 @@ class MessageSource extends \yii\base\Component {
 
 		$loginLink = Url::toRoute( [ '/login' ] );
 		$loginLink = "<a id=\"link-login\" href=\"$loginLink\">Login</a>";
+
+		$forgotLink	= Url::toRoute( [ '/forgot-password' ] );
+		$forgotLink	= "<a id=\"link-forgot-password\" href=\"$forgotLink\">reset</a>";
 
 		if( empty( $this->messageDb[ CoreGlobal::MESSAGE_ACCOUNT_ACTIVATE ] ) ) {
 
@@ -356,6 +399,16 @@ class MessageSource extends \yii\base\Component {
 		if( empty( $this->messageDb[ CoreGlobal::MESSAGE_RESET_PASSWORD ] ) ) {
 
 			$this->messageDb[ CoreGlobal::MESSAGE_RESET_PASSWORD ] = "Your password reset request was processed successfully. Please $loginLink to continue with us.";
+		}
+
+		if( empty( $this->messageDb[ CoreGlobal::ERROR_ACCOUNT_CONFIRM ] ) ) {
+
+			$this->messageDb[ CoreGlobal::ERROR_ACCOUNT_CONFIRM ] = "Either your account does not exist or the confirmation link is not valid. Please try to $forgotLink your password.";
+		}
+
+		if( empty( $this->messageDb[ CoreGlobal::ERROR_PASSWORD_RESET ] ) ) {
+
+			$this->messageDb[ CoreGlobal::ERROR_PASSWORD_RESET ] = "Either your account does not exist or the reset link is not valid. Please try to $forgotLink your password.";
 		}
 	}
 
@@ -379,4 +432,5 @@ class MessageSource extends \yii\base\Component {
 		// TODO: Use Yii internationalisation to support languages
 		return $this->messageDb[ $messageKey ];
 	}
+
 }

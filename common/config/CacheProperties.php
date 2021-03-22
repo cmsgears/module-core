@@ -23,15 +23,15 @@ class CacheProperties extends Properties {
 
 	// Globals ----------------
 
-	const PROP_CACHING				= 'caching';
+	const PROP_CACHING			= 'caching';
 
-	const PROP_CACHE_DURATION		= 'cache_duration';
+	const PROP_CACHE_DURATION	= 'cache_duration';
 
-	const PROP_DEFAULT_CACHE		= 'default_cache';
+	const PROP_DEFAULT_CACHE	= 'default_cache';
 
-	const PROP_PRIMARY_CACHE 		= 'primary_cache';
+	const PROP_PRIMARY_CACHE 	= 'primary_cache';
 
-	const PROP_SECONDARY_CACHE 		= 'secondary_cache';
+	const PROP_SECONDARY_CACHE 	= 'secondary_cache';
 
 	// Public -----------------
 

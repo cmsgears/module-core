@@ -16,7 +16,6 @@ use Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\ModelResource;
 
 /**
  * ModelHierarchy Entity
@@ -31,7 +30,7 @@ use cmsgears\core\common\models\base\ModelResource;
  *
  * @since 1.0.0
  */
-class ModelHierarchy extends ModelResource {
+class ModelHierarchy extends \cmsgears\core\common\models\base\ModelResource {
 
 	// Variables ---------------------------------------------------
 
@@ -91,6 +90,8 @@ class ModelHierarchy extends ModelResource {
 
 		return [
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'childId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CHILD ),
+			'rootId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ROOT ),
 			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE )
 		];
 	}
@@ -148,6 +149,18 @@ class ModelHierarchy extends ModelResource {
 	public static function findChild( $parentId, $parentType, $childId ) {
 
 		return self::find()->where( 'parentId=:pid AND parentType=:type AND childId=:cid', [ ':pid' => $parentId, ':type' => $parentType, ':cid' => $childId ] )->one();
+	}
+
+	/**
+	 * Find and return the children using parent id and parent type.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @return ModelHierarchy
+	 */
+	public static function findChildren( $parentId, $parentType ) {
+
+		return self::findByParent( $parentId, $parentType );
 	}
 
 	// Create -----------------

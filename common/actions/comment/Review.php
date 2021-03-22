@@ -10,7 +10,9 @@
 namespace cmsgears\core\common\actions\comment;
 
 // CMG Imports
-use cmsgears\core\common\models\forms\Comment;
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\forms\Comment as CommentForm;
 use cmsgears\core\common\models\resources\ModelComment;
 
 /**
@@ -36,7 +38,12 @@ class Review extends Create {
 
 	public $modelType = ModelComment::TYPE_REVIEW;
 
-	public $scenario = Comment::SCENARIO_REVIEW;
+	public $scenario = CommentForm::SCENARIO_REVIEW;
+
+	public $notification = true;
+
+	public $notifyAdminTemplate = CoreGlobal::TPL_NOTIFY_REVIEW_ADMIN;
+	public $notifyUserTemplate	= CoreGlobal::TPL_NOTIFY_REVIEW_USER;
 
 	// Protected --------------
 

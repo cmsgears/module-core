@@ -15,14 +15,12 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
  * OptionController provides actions specific to option model.
  *
  * @since 1.0.0
  */
-class OptionController extends Controller {
+class OptionController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -46,9 +44,9 @@ class OptionController extends Controller {
 		$this->setViewPath( '@cmsgears/module-core/admin/views/optiongroup/option/' );
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'optionService' );
+		$this->modelService = Yii::$app->factory->get( 'optionService' );
 
-		$this->categoryService	= Yii::$app->factory->get( 'categoryService' );
+		$this->categoryService = Yii::$app->factory->get( 'categoryService' );
 
 		// Note: Child must specify sidebar and returnUrl.
 	}
@@ -69,10 +67,11 @@ class OptionController extends Controller {
 
 	// OptionController ----------------------
 
-	public function actionAll( $cid ) {
+	public function actionAll( $pid ) {
 
-		$dataProvider	= $this->modelService->getPage( [ 'conditions' => [ 'categoryId' => $cid ] ] );
-		$category		= $this->categoryService->getById( $cid );
+		$dataProvider = $this->modelService->getPageByCategoryId( $pid );
+
+		$category = $this->categoryService->getById( $pid );
 
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
@@ -80,17 +79,21 @@ class OptionController extends Controller {
 		]);
 	}
 
-	public function actionCreate( $cid ) {
+	public function actionCreate( $pid ) {
 
 		$model = $this->modelService->getModelObject();
 
-		$model->categoryId	= $cid;
+		$model->categoryId	= $pid;
+		$model->active		= true;
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->model = $this->modelService->create( $model );
+			$this->model = $this->modelService->create( $model, [ 'admin' => true ] );
 
-			return $this->redirect( "all?cid=$cid" );
+			if( $this->model ) {
+
+				return $this->redirect( "all?pid=$pid" );
+			}
 		}
 
 		return $this->render( 'create', [
@@ -108,7 +111,7 @@ class OptionController extends Controller {
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->model = $this->modelService->update( $model );
+				$this->model = $this->modelService->update( $model, [ 'admin' => true ] );
 
 				return $this->redirect( $this->returnUrl );
 			}
@@ -137,7 +140,7 @@ class OptionController extends Controller {
 
 					$this->model = $model;
 
-					$this->modelService->delete( $model );
+					$this->modelService->delete( $model, [ 'admin' => true ] );
 
 					return $this->redirect( $this->returnUrl );
 				}

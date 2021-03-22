@@ -20,17 +20,18 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * The class RbacFilter use the roles and permissions defined for the project using the database tables.
- * It identify whether a user is assigned a permission. It trigger ForbiddenException in case a user does not have
- * required permission and try to execute the controller action by indirect means. It only works when
- * useRbac is set for the core Component within the application config file and action is configured within the
- * controller behaviors.
+ * The class RbacFilter uses roles and permissions defined for the project using
+ * the database tables. It identifies whether a user is assigned a permission. It
+ * trigger ForbiddenException in case a user does not have required permission and
+ * try to execute the controller action by indirect means. It only works when
+ * useRbac is set for the core Component within the application configuration file and
+ * action is configured within the controller behaviors.
  *
  * @since 1.0.0
  */
 class RbacFilter extends \yii\base\Behavior {
 
-	//TODO Add code for caching the roles and permissions to avoid reloading them for each request
+	// TODO Add code for caching the roles and permissions to avoid reloading them for each request
 
 	/**
 	 * @var maps the action to permission and permission filters.
@@ -88,7 +89,7 @@ class RbacFilter extends \yii\base\Behavior {
 				$user = Yii::$app->core->getUser();
 
 				// Disallow action in case user is not permitted
-				if( !isset( $user ) || !isset( $permission ) || !$user->isPermitted( $permission ) ) {
+				if( !isset( $user ) || $user->isBlocked() || !isset( $permission ) || !$user->isPermitted( $permission ) ) {
 
 					// Ajax Request
 					if( Yii::$app->request->getIsAjax() ) {
@@ -143,7 +144,7 @@ class RbacFilter extends \yii\base\Behavior {
 					$dynamic = $actionConfig[ 'dynamic' ];
 
 					// Invalidate the action if dynamic method returns false
-					if( is_string( $dynamic ) && !$this->owner->$dynamic() ) {
+					if( is_string( $dynamic ) && !$this->owner->{$dynamic}() ) {
 
 						// Unset event validity
 						$event->isValid = false;
@@ -152,10 +153,19 @@ class RbacFilter extends \yii\base\Behavior {
 					}
 					else if( is_array( $dynamic ) ) {
 
-						$class 	= $dynamic[ 0 ];
-						$method = $dynamic[ 1 ];
+						$class 	= $dynamic[ 'class' ];
+						$method = $dynamic[ 'method' ];
+						$args	= isset( $dynamic[ 'args' ] ) ? $dynamic[ 'args' ] : [];
+						$static = isset( $dynamic[ 'static' ] ) ? $dynamic[ 'static' ] : false;
 
-						// TODO: Add support to execute static or public method of a class
+						if( $static ) {
+
+							forward_static_call( [ $class, $method ], 'more', $args );
+						}
+						else {
+
+							call_user_func_array( [ $class, $method ], $args );
+						}
 					}
 				}
 			}

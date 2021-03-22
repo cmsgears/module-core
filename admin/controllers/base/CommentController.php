@@ -31,15 +31,18 @@ abstract class CommentController extends Controller {
 
 	// Public -----------------
 
+	public $title;
+
 	public $parentUrl;
+	public $parentCol;
 
 	public $urlKey;
 
 	public $commentType;
 
-	// Protected --------------
+	public $stars;
 
-	protected $title;
+	// Protected --------------
 
 	protected $parentType;
 
@@ -60,8 +63,10 @@ abstract class CommentController extends Controller {
 		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Config
-		$this->apixBase = 'core/comment';
-		$this->title	= 'Comment';
+		$this->apixBase		= 'core/comment';
+		$this->title		= 'Comment';
+		$this->stars		= 5;
+		$this->parentCol	= 'Parent';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'modelCommentService' );
@@ -131,16 +136,15 @@ abstract class CommentController extends Controller {
 
 			$parent = $this->parentService->findById( $pid );
 
-			$dataProvider = $this->modelService->getPageByParent( $parent->id, $this->parentType, [ 'conditions' => [ "$commentTable.type" => $this->commentType ] ] );
+			$dataProvider = $this->modelService->getPageByParent( $parent->id, $this->parentType, [ 'type' => $this->commentType ] );
 		}
 		else {
 
-			$dataProvider = $this->modelService->getPageByParentType( $this->parentType, [ 'conditions' => [ "$commentTable.type" => $this->commentType ] ] );
+			$dataProvider = $this->modelService->getPageByParentType( $this->parentType, [ 'type' => $this->commentType ] );
 		}
 
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
-			'title' => $this->title . 's',
 			'statusMap' => $modelClass::$statusMap,
 			'parent' => $parent
 		]);
@@ -152,11 +156,11 @@ abstract class CommentController extends Controller {
 
 		$model = new $modelClass;
 
-		$model->siteId		= Yii::$app->core->getSiteId();
 		$model->parentId	= $pid;
 		$model->parentType	= $this->parentType;
 		$model->type		= $this->commentType;
-		$parentModel		= $this->parentService->findById( $pid );
+
+		$parentModel = $this->parentService->findById( $pid );
 
 		if( isset( $parentModel ) ) {
 
@@ -172,13 +176,9 @@ abstract class CommentController extends Controller {
 
 			$this->model = $this->modelService->create( $model, [ 'admin' => true ] );
 
-			if( isset( $pid ) ) {
+			if( $this->model ) {
 
-				return $this->redirect( "all?pid=$pid" );
-			}
-			else {
-
-				return $this->redirect( 'all' );
+				return isset( $pid ) ? $this->redirect( "all?pid=$pid" ) : $this->redirect( 'all' );
 			}
 		}
 

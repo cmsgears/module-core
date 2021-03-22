@@ -84,7 +84,8 @@ class AjaxUtil {
 		$response[ 'result' ]	= 0;
 		$response[ 'message' ]	= $message;
 		$response[ 'errors' ]	= empty( $errors ) ? [] : $errors;
-		$response[ 'data' ]		= $data;
+
+		$response[ 'data' ] = $data;
 
 		Yii::$app->response->format = 'json';
 
@@ -106,11 +107,12 @@ class AjaxUtil {
 		// Multiple instances of same Class
 		if( $multiple ) {
 
+			$modelErrors = [];
+
 			foreach( $source as $idx => $model ) {
 
-				$errors			= $model->getErrors();
-				$modelClass		= isset( $modelClass ) ? $modelClass : $model->getClassName();
-				$modelErrors	= [];
+				$errors		= $model->getErrors();
+				$modelClass	= isset( $modelClass ) ? $modelClass : $model->getClassName();
 
 				foreach( $errors as $key => $value ) {
 
@@ -121,11 +123,12 @@ class AjaxUtil {
 		// Models of different class
 		else if( $variable ) {
 
+			$modelErrors = [];
+
 			foreach( $source as $idx => $model ) {
 
-				$errors			= $model->getErrors();
-				$modelClass		= $model->getClassName();
-				$modelErrors	= [];
+				$errors		= $model->getErrors();
+				$modelClass	= $model->getClassName();
 
 				foreach( $errors as $key => $value ) {
 
@@ -135,9 +138,10 @@ class AjaxUtil {
 		}
 		else {
 
-			$errors			= $source->getErrors();
-			$modelClass		= isset( $modelClass ) ? $modelClass : $source->getClassName();
-			$modelErrors	= [];
+			$errors		= $source->getErrors();
+			$modelClass	= isset( $modelClass ) ? $modelClass : $source->getClassName();
+
+			$modelErrors = [];
 
 			foreach( $errors as $key => $value ) {
 
@@ -147,4 +151,5 @@ class AjaxUtil {
 
 		return $modelErrors;
 	}
+
 }

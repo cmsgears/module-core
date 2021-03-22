@@ -1,19 +1,20 @@
 <?php
-// Yii Imports
-use yii\widgets\ActiveForm;
-
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\entities\Role;
+
+use cmsgears\core\common\widgets\ActiveForm;
+
 use cmsgears\widgets\block\BasicBlock;
 
-use cmsgears\cms\common\utilities\ContentUtil;
-
 $coreProperties = $this->context->getCoreProperties();
-$pageInfo		= ContentUtil::getPageInfo( $this );
-$bannerUrl		= $pageInfo[ 'content' ]->getBannerUrl();
-$images			= Yii::getAlias( "@images" );
+$images			= Yii::getAlias( '@images' );
 $defaultAvatar  = $images . '/avatar-user.png';
-$avatar			= $user->getAvatarUrl() !== null ? $user->getAvatarUrl() : $defaultAvatar ;
- ?>
+$avatar			= $user->getAvatarUrl() !== null ? $user->getAvatarUrl() : $defaultAvatar;
+
+$userRole = Role::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
+?>
 <?php
 	BasicBlock::begin([
 		'options' => [ 'id' => 'block-public', 'class' => 'block block-basic' ],
@@ -24,20 +25,16 @@ $avatar			= $user->getAvatarUrl() !== null ? $user->getAvatarUrl() : $defaultAva
 	<div class="align align-center">
 		<img class="fluid avatar bkg bkg-white circled circled1" src="<?= $avatar ?>">
 		<div class="filler-height"></div>
-		<h3><?= $pageInfo[ 'content' ]['content'] ?></h3>
-		<div class="filler-height"></div>
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-page', 'options' => [ 'class' => 'form' ] ] ); ?>
 			<div class="hidden-easy">
-				<input name="SiteMember[siteId]" value="<?= Yii::$app->core->getSiteId()?>" >
+				<input name="SiteMember[siteId]" value="<?= Yii::$app->core->getSiteId() ?>" >
 				<input name="SiteMember[userId]" value="<?= $user->id ?>" >
-				<input name="SiteMember[roleId]" value="3" >
+				<input name="SiteMember[roleId]" value="<?= $userRole->id ?>">
 			</div>
 			<div class="align align-center">
-				<input class="element-medium" type="submit" value="Allow" />
+				<input class="element-medium" type="submit" value="Join" />
 			</div>
 		<?php ActiveForm::end(); ?>
 	</div>
-</div>	
-
-
+</div>
 <?php BasicBlock::end(); ?>

@@ -19,7 +19,6 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\interfaces\base\IName;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Entity;
 
 use cmsgears\core\common\models\traits\base\NameTrait;
 
@@ -42,7 +41,7 @@ use cmsgears\core\common\models\traits\base\NameTrait;
  *
  * @since 1.0.0
  */
-class Locale extends Entity implements IName {
+class Locale extends \cmsgears\core\common\models\base\Entity implements IName {
 
 	// Variables ---------------------------------------------------
 

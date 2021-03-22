@@ -43,7 +43,8 @@ trait DataTrait {
 	 */
 	public function generateJsonFromDataObject( $dataObject ) {
 
-		$data		= json_encode( $dataObject );
+		$data = json_encode( $dataObject );
+
 		$this->data	= $data;
 	}
 
@@ -67,6 +68,19 @@ trait DataTrait {
 		if( isset( $object->$name ) ) {
 
 			return $object->$name;
+		}
+
+		return null;
+	}
+
+	public function getDataKeyMeta( $name, $assoc = false ) {
+
+		$object	= $this->generateDataObjectFromJson( $assoc );
+		$config	= 'data';
+
+		if( isset( $object->$config ) && isset( $object->$config->$name ) ) {
+
+			return $object->$config->$name;
 		}
 
 		return null;
@@ -102,6 +116,19 @@ trait DataTrait {
 
 		$object	= $this->generateDataObjectFromJson( $assoc );
 		$config	= 'settings';
+
+		if( isset( $object->$config ) && isset( $object->$config->$name ) ) {
+
+			return $object->$config->$name;
+		}
+
+		return null;
+	}
+
+	public function getDataPluginMeta( $name, $assoc = false ) {
+
+		$object	= $this->generateDataObjectFromJson( $assoc );
+		$config	= 'plugins';
 
 		if( isset( $object->$config ) && isset( $object->$config->$name ) ) {
 
@@ -153,6 +180,21 @@ trait DataTrait {
 	/**
 	 * @inheritdoc
 	 */
+	public function unsetDataMeta( $name, $assoc = false ) {
+
+		// Convert data to object
+		$object	= $this->generateDataObjectFromJson( $assoc );
+
+		// Remove meta
+		unset( $object->$name );
+
+		// Convert object back to data
+		$this->generateJsonFromDataObject( $object );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function removeDataMeta( $name, $assoc = false ) {
 
 		// Convert data to object
@@ -174,7 +216,7 @@ trait DataTrait {
 
 	// CMG classes ---------------------------
 
-	// DataTrait ------------------------------
+	// DataTrait -----------------------------
 
 	// Read - Query -----------
 

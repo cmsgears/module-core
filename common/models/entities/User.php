@@ -30,10 +30,11 @@ use cmsgears\core\common\models\interfaces\resources\IModelMeta;
 use cmsgears\core\common\models\interfaces\resources\ISocialLink;
 use cmsgears\core\common\models\interfaces\resources\IVisual;
 use cmsgears\core\common\models\interfaces\mappers\IAddress;
+use cmsgears\core\common\models\interfaces\mappers\ICategory;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
+use cmsgears\core\common\models\interfaces\mappers\IOption;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Entity;
 use cmsgears\core\common\models\mappers\SiteMember;
 use cmsgears\core\common\models\resources\Gallery;
 use cmsgears\core\common\models\resources\Option;
@@ -46,6 +47,7 @@ use cmsgears\core\common\models\traits\resources\ModelMetaTrait;
 use cmsgears\core\common\models\traits\resources\SocialLinkTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
 use cmsgears\core\common\models\traits\mappers\AddressTrait;
+use cmsgears\core\common\models\traits\mappers\CategoryTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
 use cmsgears\core\common\models\traits\mappers\OptionTrait;
 
@@ -57,6 +59,7 @@ use cmsgears\core\common\utilities\DateUtil;
  * @property integer $id
  * @property integer $localeId
  * @property integer $genderId
+ * @property integer $maritalId
  * @property integer $avatarId
  * @property integer $bannerId
  * @property integer $videoId
@@ -106,8 +109,8 @@ use cmsgears\core\common\utilities\DateUtil;
  *
  * @since 1.0.0
  */
-class User extends Entity implements IdentityInterface, IAddress, IApproval, IContent, IData,
-	IGridCache, IFile, IModelMeta, ISocialLink, IVisual {
+class User extends \cmsgears\core\common\models\base\Entity implements IdentityInterface, IAddress,
+	IApproval, ICategory, IContent, IData, IGridCache, IFile, IModelMeta, IOption, ISocialLink, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -119,12 +122,21 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 * It will be used when user need to go through admin approval process and required to submit
 	 * registration application for approval in order to continue with the application.
 	 */
-	const STATUS_VERIFIED	= 100;
+	const STATUS_VERIFIED = 100;
 
 	const REG_TYPE_DEFAULT	= 0;
 	const REG_TYPE_SNS 		= 1;
 
 	// Public -----------------
+
+	public static $userStatusMap = [
+		IApproval::STATUS_NEW => 'New',
+		self::STATUS_VERIFIED => 'Verified',
+		IApproval::STATUS_ACTIVE => 'Active',
+		IApproval::STATUS_FROJEN => 'Frozen',
+		IApproval::STATUS_BLOCKED => 'Blocked',
+		IApproval::STATUS_TERMINATED => 'Terminated'
+	];
 
 	// Protected --------------
 
@@ -144,6 +156,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 
 	use AddressTrait;
 	use ApprovalTrait;
+	use CategoryTrait;
 	use ContentTrait;
 	use DataTrait;
 	use FileTrait;
@@ -200,8 +213,8 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 		$rules = [
 			// Required, Safe
 			[ 'email', 'required' ],
-			[ [ 'firstName', 'email', 'username' ], 'required', 'on' => 'profile' ],
-			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'firstName', 'username' ], 'required', 'on' => 'profile' ],
+			[ [ 'id', 'content' ], 'safe' ],
 			// Unique
 			[ 'email', 'unique' ],
 			[ 'username', 'unique' ],
@@ -222,12 +235,11 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			[ 'slug', 'validateSlugUpdate', 'on' => [ 'update', 'profile' ] ],
 			[ 'slug', 'validateSlugChange', 'on' => [ 'profile' ] ],
 			// Mobile
-			[ 'mobile', 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ 'mobile', 'validateMobileCreate', 'on' => [ 'create' ] ],
 			[ 'mobile', 'validateMobileUpdate', 'on' => [ 'update', 'profile' ] ],
 			[ 'mobile', 'validateMobileChange', 'on' => [ 'profile' ] ],
 			// Text Limit
-			[ [ 'type', 'title', 'phone' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
+			[ [ 'type', 'title', 'phone', 'mobile' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ 'accessTokenType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'icon', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ [ 'username', 'passwordHash' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
@@ -235,7 +247,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			[ [ 'name', 'message' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
-			[ [ 'localeId', 'genderId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'localeId', 'genderId', 'maritalId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'status', 'timeZone', 'otp' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'avatarId', 'bannerId', 'videoId', 'galleryId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
@@ -249,7 +261,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 
 			$trim[] = [ [ 'email', 'username', 'message', 'description', 'mobile', 'phone', 'firstName', 'middleName', 'lastName', 'avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-			return ArrayHelper::merge( $trim, $rules );
+			return ArrayHelper::merge( $rules, $trim );
 		}
 
 		return $rules;
@@ -263,6 +275,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 		return [
 			'localeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LOCALE ),
 			'genderId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GENDER ),
+			'maritalId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MARITAL ),
 			'avatarId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
 			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
 			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
@@ -283,6 +296,8 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			'dob' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DOB ),
 			'mobile' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MOBILE ),
 			'phone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
+			'mobileVerified' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MOBILE_VERIFIED ),
+			'emailVerified' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL_VERIFIED ),
 			'timeZone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TIME_ZONE ),
 			'avatarUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
 			'websiteUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
@@ -311,10 +326,18 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 				$this->genderId = null;
 			}
 
+			if( $this->maritalId <= 0 ) {
+
+				$this->maritalId = null;
+			}
+
 			if( $this->timeZone <= 0 ) {
 
 				$this->timeZone = null;
 			}
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
 
 			$this->name = $this->getName();
 
@@ -602,7 +625,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public function getActiveSiteMember() {
 
-		$site		= Yii::$app->core->site;
+		$site = Yii::$app->core->site;
 
 		return $this->hasOne( SiteMember::class, [ "userId" => 'id' ] )->where( [ "siteId" => $site->id ] );
 	}
@@ -618,7 +641,6 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 		$siteTable			= CoreTables::getTableName( CoreTables::TABLE_SITE );
 		$siteMemberTable	= CoreTables::getTableName( CoreTables::TABLE_SITE_MEMBER );
 
-		// TODO: Check why it's not working without appending one() after recent Yii Upgrade
 		return Role::find()
 			->leftJoin( $siteMemberTable, "$siteMemberTable.roleId = $roleTable.id" )
 			->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
@@ -647,6 +669,16 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	}
 
 	/**
+	 * Returns gender selected by user.
+	 *
+	 * @return \cmsgears\core\common\models\resources\Option From Category 'gender'.
+	 */
+	public function getMarital() {
+
+		return $this->hasOne( Option::class, [ 'id' => 'maritalId' ] );
+	}
+
+	/**
 	 * Returns gallery associated with the user.
 	 *
 	 * @return \cmsgears\core\common\models\resources\Gallery
@@ -664,6 +696,23 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	public function getGenderStr() {
 
 		$option = $this->gender;
+
+		if( isset( $option ) ) {
+
+			return $option->value;
+		}
+
+		return '';
+	}
+
+	/**
+	 * Returns string representation of marital.
+	 *
+	 * @return string
+	 */
+	public function getMaritalStr() {
+
+		$option = $this->marital;
 
 		if( isset( $option ) ) {
 
@@ -695,11 +744,6 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 		return $name;
 	}
 
-	public function getDisplayName() {
-
-		return $this->getFullName();
-	}
-
 	/**
 	 * Returns name of user using first name, middle name and last name.
 	 *
@@ -713,7 +757,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 
 		if( empty( $name ) ) {
 
-			$name	= $this->username;
+			$name = $this->username;
 
 			if( empty( $name ) ) {
 
@@ -723,6 +767,11 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 		}
 
 		return $name;
+	}
+
+	public function getDisplayName() {
+
+		return $this->getName();
 	}
 
 	/**
@@ -878,7 +927,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 
 		$now = DateUtil::getDateTime();
 
-		return $this->otp == $otp && DateUtil::lessThan( $now, $this->otpValidTill );
+		return $this->otp == $otp && DateUtil::lessThan( $this->otpValidTill, $now );
 	}
 
 	/**
@@ -993,7 +1042,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 		if( Yii::$app->core->isApis() ) {
 
 			// Find valid User
-			$user	= static::findByAccessToken( $token );
+			$user = static::findByAccessToken( $token );
 
 			// Load User Permissions
 			if( isset( $user ) ) {
@@ -1035,8 +1084,9 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'locale', 'gender' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'locale', 'gender' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -1049,8 +1099,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function queryWithLocale( $config = [] ) {
 
-		// TODO: Check why it's not working with avatar with recent Yii Upgrade
-		$config[ 'relations' ]	= [ 'avatar', 'locale' ];
+		$config[ 'relations' ] = [ 'locale' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -1063,8 +1112,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function queryWithGender( $config = [] ) {
 
-		// TODO: Check why it's not working with avatar with recent Yii Upgrade
-		$config[ 'relations' ]	= [ 'avatar', 'gender' ];
+		$config[ 'relations' ] = [ 'gender' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -1077,10 +1125,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function queryWithSiteMembers( $config = [] ) {
 
-		// TODO: Check why it's not working with avatar with recent Yii Upgrade
-		//$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
-
-		$config[ 'relations' ]	= [ 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
+		$config[ 'relations' ] = [ 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -1093,7 +1138,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function queryWithSiteMembersPermissions( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role', 'siteMembers.role.permissions' ];
+		$config[ 'relations' ] = [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role', 'siteMembers.role.permissions' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -1130,7 +1175,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function isExistByEmail( $email ) {
 
-		$user = self::find()->where( 'email=:email', [ ':email' => $email ] )->one();
+		$user = self::findByEmail( $email );
 
 		return isset( $user );
 	}
@@ -1154,7 +1199,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function isExistByUsername( $username ) {
 
-		$user = self::find()->where( 'username=:username', [ ':username' => $username ] )->one();
+		$user = self::findByUsername( $username );
 
 		return isset( $user );
 	}
@@ -1178,7 +1223,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function isExistBySlug( $slug ) {
 
-		$user = self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+		$user = self::findBySlug( $slug );
 
 		return isset( $user );
 	}
@@ -1197,7 +1242,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	/**
 	 * Check whether user exist for given username.
 	 *
-	 * @param string $username
+	 * @param string $mobile
 	 * @return boolean
 	 */
 	public static function isExistByMobile( $mobile ) {

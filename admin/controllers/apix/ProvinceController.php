@@ -16,9 +16,7 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\frontend\controllers\base\Controller;
-
-class ProvinceController extends Controller {
+class ProvinceController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -37,7 +35,7 @@ class ProvinceController extends Controller {
 		parent::init();
 
 		// Permission
-		$this->crudPermission = CoreGlobal::PERM_USER;
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'provinceService' );
@@ -59,7 +57,8 @@ class ProvinceController extends Controller {
 				'actions' => [
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'generic' => [ 'permission' => $this->crudPermission ],
-					'delete' => [ 'permission' => $this->crudPermission ]
+					'delete' => [ 'permission' => $this->crudPermission ],
+					'options-list' => [ 'permission' => CoreGlobal::PERM_ADMIN ]
 				]
 			],
 			'verbs' => [
@@ -79,7 +78,7 @@ class ProvinceController extends Controller {
 	public function actions() {
 
 		return [
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ],
 			'options-list' => [ 'class' => 'cmsgears\core\common\actions\location\data\ProvinceOptions' ]

@@ -9,15 +9,12 @@
 
 namespace cmsgears\core\common\models\resources\address;
 
-// CMG Imports
-use cmsgears\core\common\models\resources\Address;
-
 /**
  * The primary address model.
  *
  * @since 1.0.0
  */
-class PrimaryAddress extends Address {
+class PrimaryAddress extends \cmsgears\core\common\models\resources\Address {
 
 	// Variables ---------------------------------------------------
 
@@ -33,7 +30,7 @@ class PrimaryAddress extends Address {
 
 	// Public -----------------
 
-	public $type	= self::TYPE_PRIMARY;
+	public $type = self::TYPE_PRIMARY;
 
 	// Protected --------------
 

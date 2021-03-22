@@ -19,8 +19,8 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\resources\File;
+use cmsgears\core\common\models\resources\UserMeta;
 
 use cmsgears\core\common\behaviors\ActivityBehavior;
 
@@ -41,10 +41,12 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	protected $type;
 
+	protected $metaService;
 	protected $memberService;
 	protected $roleService;
 
 	protected $superRoleId;
+	protected $userRoleId;
 
 	// Private ----------------
 
@@ -66,16 +68,22 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		// Services
 		$this->modelService		= Yii::$app->factory->get( 'userService' );
+		$this->metaService		= Yii::$app->factory->get( 'userMetaService' );
 		$this->memberService	= Yii::$app->factory->get( 'siteMemberService' );
 		$this->roleService		= Yii::$app->factory->get( 'roleService' );
+
+		// User Role
+		$userRole = $this->roleService->getBySlugType( CoreGlobal::ROLE_USER, CoreGlobal::TYPE_SYSTEM );
+
+		$this->userRoleId = isset( $userRole ) ? $userRole->id : null;
 
 		// Super Admin
 		$superRole = $this->roleService->getBySlugType( CoreGlobal::ROLE_SUPER_ADMIN, CoreGlobal::TYPE_SYSTEM );
 
-		$this->superRoleId = isset( $superRole ) ?$superRole->id : null;
+		$this->superRoleId = isset( $superRole ) ? $superRole->id : null;
 
 		// Sidebar
-		$this->sidebar = [ 'parent' => 'sidebar-identity', 'child' => 'user' ];
+		$this->sidebar = [ 'parent' => 'sidebar-rbac', 'child' => 'user' ];
 
 		// Return Url
 		$this->returnUrl = Url::previous( 'users' );
@@ -142,7 +150,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 	public function actions() {
 
 		return [
-			'gallery' => [ 'class' => 'cmsgears\core\common\actions\regular\gallery\Browse' ]
+			'gallery' => [ 'class' => 'cmsgears\core\common\actions\gallery\Manage' ]
 		];
 	}
 
@@ -156,25 +164,24 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		Url::remember( Yii::$app->request->getUrl(), 'users' );
 
+		$modelClass = $this->modelService->getModelClass();
+
 		$dataProvider = $this->modelService->getPage();
 
 		$roleMap = $this->roleService->getIdNameMapByType( CoreGlobal::TYPE_SYSTEM );
 
-		$user = Yii::$app->core->getUser();
-
-		if( $user->activeSiteMember->roleId != $this->superRoleId ) {
-
-			unset( $roleMap[ $this->superRoleId ] );
-		}
-
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
 			'roleMap' => $roleMap,
-			'statusMap' => User::$statusMap
+			'statusMap' => $modelClass::$statusMap
 		]);
 	}
 
 	public function actionCreate() {
+
+		$modelClass = $this->modelService->getModelClass();
+
+		$user = Yii::$app->core->getUser();
 
 		$model	= $this->modelService->getModelObject();
 		$member	= $this->memberService->getModelObject();
@@ -185,6 +192,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 		$model->setScenario( 'create' );
 
 		$member->siteId = Yii::$app->core->siteId;
+		$member->roleId	= $this->userRoleId;
 
 		$model->type = $this->type;
 
@@ -192,29 +200,43 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 			$member->load( Yii::$app->request->post(), $member->getClassName() ) &&
 			$model->validate() && $member->validate() ) {
 
-			// Create User
-			$this->model = $this->modelService->create( $model, [ 'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video ] );
+			$valid = !( $user->activeSiteMember->roleId != $this->superRoleId && $member->roleId == $this->superRoleId );
 
-			$member->userId = $this->model->id;
+			if( $valid ) {
 
-			// Add User to current Site
-			$member = $this->memberService->create( $member );
+				// Create User
+				$this->model = $this->modelService->create( $model, [
+					'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+				]);
 
-			if( $this->model && $member ) {
+				if( $this->model ) {
 
-				// Load User Permissions
-				$this->model->loadPermissions();
+					$this->model->refresh();
 
-				// Send Account Mail
-				Yii::$app->coreMailer->sendCreateUserMail( $this->model );
+					$member->userId = $this->model->id;
 
-				return $this->redirect( 'all' );
+					// Add User to current Site
+					$member = $this->memberService->create( $member );
+
+					// Default Settings
+					$this->metaService->initByNameType( $this->model->id, CoreGlobal::META_RECEIVE_EMAIL, CoreGlobal::SETTINGS_NOTIFICATION, UserMeta::VALUE_TYPE_FLAG );
+					$this->metaService->initByNameType( $this->model->id, CoreGlobal::META_RECEIVE_EMAIL, CoreGlobal::SETTINGS_REMINDER, UserMeta::VALUE_TYPE_FLAG );
+
+					if( $this->model && $member ) {
+
+						// Load User Permissions
+						$this->model->loadPermissions();
+
+						// Send Account Mail
+						Yii::$app->coreMailer->sendCreateUserMail( $this->model );
+
+						return $this->redirect( 'all' );
+					}
+				}
 			}
 		}
 
 		$roleMap = $this->roleService->getIdNameMapByType( CoreGlobal::TYPE_SYSTEM );
-
-		$user = Yii::$app->core->getUser();
 
 		if( $user->activeSiteMember->roleId != $this->superRoleId ) {
 
@@ -228,13 +250,17 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 			'banner' => $banner,
 			'video' => $video,
 			'roleMap' => $roleMap,
-			'statusMap' => User::$statusMap
+			'statusMap' => $modelClass::$userStatusMap
 		]);
 	}
 
 	public function actionUpdate( $id ) {
 
-		// Find Model
+		$modelClass = $this->modelService->getModelClass();
+
+		$user = Yii::$app->core->getUser();
+
+		// Model from Discover Filter
 		$model = $this->model;
 
 		$member	= $model->activeSiteMember;
@@ -244,27 +270,44 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		$model->setScenario( 'update' );
 
+		// Model checks
+		$oldRoleId = $member->roleId;
+
+		// Load & Validate
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) &&
 			$member->load( Yii::$app->request->post(), $member->getClassName() ) &&
 			$model->validate() && $member->validate() ) {
 
-			// Update User and Site Member
-			$this->model = $this->modelService->update( $model, [ 'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video ] );
+			$valid = !( $user->activeSiteMember->roleId != $this->superRoleId && $member->roleId == $this->superRoleId );
 
-			$this->memberService->update( $member );
+			if( $valid ) {
 
-			return $this->redirect( $this->returnUrl );
+				// Update User
+				$this->model = $this->modelService->update( $model, [
+					'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+				]);
+
+				$this->model->refresh();
+
+				// Update Site Member
+				$this->memberService->update( $member );
+
+				// Check Role Change
+				$this->modelService->checkRoleChange( $model, $oldRoleId );
+
+				return $this->redirect( $this->returnUrl );
+			}
 		}
 
+		// Filter Super Admin Role
 		$roleMap = $this->roleService->getIdNameMapByType( CoreGlobal::TYPE_SYSTEM );
-
-		$user = Yii::$app->core->getUser();
 
 		if( $user->activeSiteMember->roleId != $this->superRoleId ) {
 
 			unset( $roleMap[ $this->superRoleId ] );
 		}
 
+		// Render
 		return $this->render( 'update', [
 			'model' => $model,
 			'member' => $member,
@@ -272,7 +315,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 			'banner' => $banner,
 			'video' => $video,
 			'roleMap' => $roleMap,
-			'statusMap' => User::$statusMap
+			'statusMap' => $modelClass::$userStatusMap
 		]);
 	}
 
@@ -283,6 +326,8 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
+
+			$modelClass = $this->modelService->getModelClass();
 
 			$member = $model->activeSiteMember;
 
@@ -298,18 +343,11 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 				}
 				catch( Exception $e ) {
 
-					throw new HttpException( 409, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+					throw new HttpException( 409, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY ) );
 				}
 			}
 
 			$roleMap = $this->roleService->getIdNameMapByType( CoreGlobal::TYPE_SYSTEM );
-
-			$user = Yii::$app->core->getUser();
-
-			if( $user->activeSiteMember->roleId != $this->superRoleId ) {
-
-				unset( $roleMap[ $this->superRoleId ] );
-			}
 
 			return $this->render( 'delete', [
 				'model' => $model,
@@ -318,7 +356,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 				'banner' => $model->banner,
 				'video' => $model->video,
 				'roleMap' => $roleMap,
-				'statusMap' => User::$statusMap
+				'statusMap' => $modelClass::$userStatusMap
 			]);
 		}
 

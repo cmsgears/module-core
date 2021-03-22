@@ -60,7 +60,7 @@ abstract class PermissionController extends CrudController {
 		$this->system	= false;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'permissionService' );
+		$this->modelService = Yii::$app->factory->get( 'permissionService' );
 
 		$this->roleService		= Yii::$app->factory->get( 'roleService' );
 		$this->hierarchyService	= Yii::$app->factory->get( 'modelHierarchyService' );
@@ -99,21 +99,26 @@ abstract class PermissionController extends CrudController {
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->model = $this->modelService->create( $model );
+			$this->model = $this->modelService->create( $model, [ 'admin' => true ] );
 
-			$binder	= new Binder( [ 'binderId' => $this->model->id ] );
+			if( $this->model ) {
 
-			$binder->load( Yii::$app->request->post(), 'Binder' );
+				$this->model->refresh();
 
-			$this->modelService->bindRoles( $binder );
+				$binder	= new Binder( [ 'binderId' => $this->model->id ] );
 
-			if( $this->model->group ) {
+				$binder->load( Yii::$app->request->post(), 'Binder' );
 
-				$binder->load( Yii::$app->request->post(), 'Children' );
-				$this->hierarchyService->assignRootChildren( CoreGlobal::TYPE_PERMISSION, $binder );
+				$this->modelService->bindRoles( $binder );
+
+				if( $this->model->group ) {
+
+					$binder->load( Yii::$app->request->post(), 'Children' );
+					$this->hierarchyService->assignRootChildren( CoreGlobal::TYPE_PERMISSION, $binder );
+				}
+
+				return $this->redirect( $this->returnUrl );
 			}
-
-			return $this->redirect( 'all' );
 		}
 
 		$roles			= $this->roleService->getIdNameListByType( $this->type );
@@ -132,14 +137,16 @@ abstract class PermissionController extends CrudController {
 	public function actionUpdate( $id, $config = [] ) {
 
 		// Find Model
-		$model		= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
 			if( $model->load( Yii::$app->request->post(), 'Permission' )  && $model->validate() ) {
 
-				$this->model = $this->modelService->update( $model );
+				$this->model = $this->modelService->update( $model, [ 'admin' => true ] );
+
+				$this->model->refresh();
 
 				$binder	= new Binder( [ 'binderId' => $this->model->id ] );
 
@@ -153,7 +160,7 @@ abstract class PermissionController extends CrudController {
 					$this->hierarchyService->assignRootChildren( CoreGlobal::TYPE_PERMISSION, $binder );
 				}
 
-				return $this->refresh();
+				return $this->redirect( $this->returnUrl );
 			}
 
 			$roles			= $this->roleService->getIdNameListByType( $this->type );
@@ -190,7 +197,7 @@ abstract class PermissionController extends CrudController {
 					$this->hierarchyService->deleteByRootId( $model->id, CoreGlobal::TYPE_PERMISSION );
 				}
 
-				$this->modelService->delete( $model );
+				$this->modelService->delete( $model, [ 'admin' => true ] );
 
 				return $this->redirect( $this->returnUrl );
 			}

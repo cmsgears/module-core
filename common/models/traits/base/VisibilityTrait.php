@@ -49,6 +49,13 @@ trait VisibilityTrait {
 		'public' => IVisibility::VISIBILITY_PUBLIC
 	];
 
+	public static $filterVisibilityMap = [
+		'private' => 'Private',
+		'secured' => 'Secured',
+		'protected' => 'Protected',
+		'public' => 'Public'
+	];
+
 	// Public -----------------
 
 	// Protected --------------

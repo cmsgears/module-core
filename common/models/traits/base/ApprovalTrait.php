@@ -28,12 +28,17 @@ trait ApprovalTrait {
 
 	// Globals ----------------
 
+	/**
+	 * The default status map.
+	 */
 	public static $statusMap = [
 		IApproval::STATUS_NEW => 'New',
+		IApproval::STATUS_ACCEPTED => 'Accepted',
 		IApproval::STATUS_SUBMITTED => 'Submitted',
 		IApproval::STATUS_REJECTED => 'Rejected',
 		IApproval::STATUS_RE_SUBMIT => 'Re Submitted',
 		IApproval::STATUS_CONFIRMED => 'Confirmed',
+		IApproval::STATUS_APPROVED => 'Approved',
 		IApproval::STATUS_ACTIVE => 'Active',
 		IApproval::STATUS_FROJEN => 'Frozen',
 		IApproval::STATUS_UPLIFT_FREEZE => 'Uplift Frozen',
@@ -42,26 +47,53 @@ trait ApprovalTrait {
 		IApproval::STATUS_TERMINATED => 'Terminated'
 	];
 
-	public static $baseStatusMap = [
+	/**
+	 * The sub status map.
+	 */
+	public static $subStatusMap = [
 		IApproval::STATUS_NEW => 'New',
+		IApproval::STATUS_SUBMITTED => 'Submitted',
+		IApproval::STATUS_REJECTED => 'Rejected',
+		IApproval::STATUS_RE_SUBMIT => 'Re Submitted',
+		IApproval::STATUS_APPROVED => 'Approved',
 		IApproval::STATUS_ACTIVE => 'Active',
-		IApproval::STATUS_BLOCKED => 'Blocked'
+		IApproval::STATUS_FROJEN => 'Frozen',
+		IApproval::STATUS_UPLIFT_FREEZE => 'Uplift Frozen',
+		IApproval::STATUS_BLOCKED => 'Blocked',
+		IApproval::STATUS_UPLIFT_BLOCK => 'Uplift Block',
+		IApproval::STATUS_TERMINATED => 'Terminated'
 	];
 
-	public static $minStatusMap = [
+	/*
+	 * Minimum status map for App.
+	 */
+	public static $baseStatusMap = [
 		IApproval::STATUS_NEW => 'New',
 		IApproval::STATUS_ACTIVE => 'Active',
 		IApproval::STATUS_BLOCKED => 'Blocked',
 		IApproval::STATUS_TERMINATED => 'Terminated'
 	];
 
+	/*
+	 * Minimum status map for Admin.
+	 */
+	public static $minStatusMap = [
+		IApproval::STATUS_NEW => 'New',
+		IApproval::STATUS_ACTIVE => 'Active',
+		IApproval::STATUS_BLOCKED => 'Blocked',
+		IApproval::STATUS_UPLIFT_BLOCK => 'Uplift Block',
+		IApproval::STATUS_TERMINATED => 'Terminated'
+	];
+
 	// Used for external docs
 	public static $revStatusMap = [
 		'New' => IApproval::STATUS_NEW,
+		'Accepted' => IApproval::STATUS_ACCEPTED,
 		'Submitted' => IApproval::STATUS_SUBMITTED,
 		'Rejected' => IApproval::STATUS_REJECTED,
 		'Re Submitted' => IApproval::STATUS_RE_SUBMIT,
 		'Confirmed' => IApproval::STATUS_CONFIRMED,
+		'Approved' => IApproval::STATUS_APPROVED,
 		'Active' => IApproval::STATUS_ACTIVE,
 		'Frozen' => IApproval::STATUS_FROJEN,
 		'Uplift Frozen' => IApproval::STATUS_UPLIFT_FREEZE,
@@ -73,6 +105,7 @@ trait ApprovalTrait {
 	// Used for url params
 	public static $urlRevStatusMap = [
 		'new' => IApproval::STATUS_NEW,
+		'accepted' => IApproval::STATUS_ACCEPTED,
 		'submitted' => IApproval::STATUS_SUBMITTED,
 		'rejected' => IApproval::STATUS_REJECTED,
 		're-submitted' => IApproval::STATUS_RE_SUBMIT,
@@ -83,6 +116,63 @@ trait ApprovalTrait {
 		'blocked' => IApproval::STATUS_BLOCKED,
 		'uplift-block' => IApproval::STATUS_UPLIFT_BLOCK,
 		'terminated' => IApproval::STATUS_TERMINATED
+	];
+
+	public static $urlRevSubStatusMap = [
+		'new' => IApproval::STATUS_NEW,
+		'submitted' => IApproval::STATUS_SUBMITTED,
+		'rejected' => IApproval::STATUS_REJECTED,
+		're-submitted' => IApproval::STATUS_RE_SUBMIT,
+		'active' => IApproval::STATUS_ACTIVE,
+		'frozen' => IApproval::STATUS_FROJEN,
+		'uplift-freeze' => IApproval::STATUS_UPLIFT_FREEZE,
+		'blocked' => IApproval::STATUS_BLOCKED,
+		'uplift-block' => IApproval::STATUS_UPLIFT_BLOCK,
+		'terminated' => IApproval::STATUS_TERMINATED
+	];
+
+	public static $urlRevMinStatusMap = [
+		'new' => IApproval::STATUS_NEW,
+		'active' => IApproval::STATUS_ACTIVE,
+		'blocked' => IApproval::STATUS_BLOCKED,
+		'uplift-block' => IApproval::STATUS_UPLIFT_BLOCK,
+		'terminated' => IApproval::STATUS_TERMINATED
+	];
+
+	public static $filterStatusMap = [
+		'new' => 'New',
+		'accepted' => 'Accepted',
+		'submitted' => 'Submitted',
+		'rejected' =>'Rejected',
+		're-submitted' => 'Re Submitted',
+		'confirmed' => 'Confirmed',
+		'active' => 'Active',
+		'frozen' => 'Frozen',
+		'uplift-freeze' => 'Uplift Frozen',
+		'blocked' => 'Blocked',
+		'uplift-block' => 'Uplift Block',
+		'terminated' => 'Terminated'
+	];
+
+	public static $filterSubStatusMap = [
+		'new' => 'New',
+		'submitted' => 'Submitted',
+		'rejected' => 'Rejected',
+		're-submitted' => 'Re Submitted',
+		'active' => 'Active',
+		'frozen' => 'Frozen',
+		'uplift-freeze' => 'Uplift Frozen',
+		'blocked' => 'Blocked',
+		'uplift-block' => 'Uplift Block',
+		'terminated' => 'Terminated'
+	];
+
+	public static $filterMinStatusMap = [
+		'new' => 'New',
+		'active' => 'Active',
+		'blocked' => 'Blocked',
+		'uplift-block' => 'Uplift Block',
+		'terminated' => 'Terminated'
 	];
 
 	// Public -----------------
@@ -138,6 +228,16 @@ trait ApprovalTrait {
 		return $this->status <= IApproval::STATUS_NEW;
 	}
 
+	public function isAccepted( $strict = true ) {
+
+		if( $strict ) {
+
+			return $this->status == IApproval::STATUS_ACCEPTED;
+		}
+
+		return $this->status >= IApproval::STATUS_ACCEPTED;
+	}
+
 	/**
 	 * @inheritdoc
 	 */
@@ -157,6 +257,19 @@ trait ApprovalTrait {
 		}
 
 		return $this->status == IApproval::STATUS_SUBMITTED || $this->status == IApproval::STATUS_RE_SUBMIT;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function isAboveSubmitted( $strict = true ) {
+
+		if( $strict ) {
+
+			return $this->status > IApproval::STATUS_SUBMITTED;
+		}
+
+		return $this->status >= IApproval::STATUS_SUBMITTED;
 	}
 
 	/**
@@ -222,6 +335,19 @@ trait ApprovalTrait {
 		}
 
 		return $this->status >= IApproval::STATUS_CONFIRMED;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function isBelowActive( $strict = true ) {
+
+		if( $strict ) {
+
+			return $this->status < IApproval::STATUS_ACTIVE;
+		}
+
+		return $this->status <= IApproval::STATUS_ACTIVE;
 	}
 
 	/**
@@ -318,6 +444,14 @@ trait ApprovalTrait {
 	/**
 	 * @inheritdoc
 	 */
+	public function isUpliftRequested() {
+
+		return $this->status == IApproval::STATUS_UPLIFT_FREEZE || $this->status == IApproval::STATUS_UPLIFT_BLOCK;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function toggleFrojen() {
 
 		if( $this->isFrojen() ) {
@@ -352,21 +486,64 @@ trait ApprovalTrait {
 	 */
 	public function isEditable() {
 
-		$editable = [ IApproval::STATUS_SUBMITTED, IApproval::STATUS_RE_SUBMIT, IApproval::STATUS_UPLIFT_FREEZE, IApproval::STATUS_UPLIFT_BLOCK ];
+		$editable = [
+			IApproval::STATUS_SUBMITTED, IApproval::STATUS_RE_SUBMIT,
+			IApproval::STATUS_UPLIFT_FREEZE, IApproval::STATUS_UPLIFT_BLOCK
+		];
 
 		return !in_array( $this->status, $editable );
 	}
 
 	/**
-	 * The model owner can submit the model for limit removal in selected states i.e. new,
-	 * rejected, frozen or blocked. defined within this method.
+	 * The admin can accept the model in selected states defined within this method.
+	 *
+	 * @return boolean
+	 */
+	public function isAcceptable() {
+
+		return $this->status == IApproval::STATUS_NEW;
+	}
+
+	/**
+	 * The model owner can submit the model for limit removal in selected states defined within this method.
 	 *
 	 * @return boolean
 	 */
 	public function isSubmittable() {
 
-		return $this->isRegistration() || $this->status == IApproval::STATUS_REJECTED ||
-			$this->status == IApproval::STATUS_FROJEN || $this->status == IApproval::STATUS_BLOCKED;
+		return $this->isRegistration() || $this->isRejected() || $this->isFrojen() || $this->isBlocked();
+	}
+
+	/**
+	 * The admin can reject the model in selected states defined within this method.
+	 *
+	 * @return boolean
+	 */
+	public function isRejectable() {
+
+		return $this->status == IApproval::STATUS_NEW ||
+			$this->status == IApproval::STATUS_SUBMITTED || $this->status == IApproval::STATUS_RE_SUBMIT;
+	}
+
+	/**
+	 * The model owner can re-submit the model for limit removal in selected states defined within this method.
+	 *
+	 * @return boolean
+	 */
+	public function isReSubmittable() {
+
+		return $this->status == IApproval::STATUS_REJECTED;
+	}
+
+	/**
+	 * The admin can confirm the model for further processing.
+	 *
+	 * @return boolean
+	 */
+	public function isConfirmable() {
+
+		return $this->status == IApproval::STATUS_NEW ||
+			$this->status == IApproval::STATUS_SUBMITTED || $this->status == IApproval::STATUS_RE_SUBMIT;
 	}
 
 	/**
@@ -378,9 +555,30 @@ trait ApprovalTrait {
 	 */
 	public function isApprovable() {
 
-		return $this->status == IApproval::STATUS_SUBMITTED || $this->status == IApproval::STATUS_FROJEN ||
-			$this->status == IApproval::STATUS_UPLIFT_FREEZE || $this->status == IApproval::STATUS_BLOCKED ||
-			$this->status == IApproval::STATUS_UPLIFT_BLOCK;
+		return $this->status == IApproval::STATUS_NEW || $this->status == IApproval::STATUS_CONFIRMED ||
+			$this->status == IApproval::STATUS_SUBMITTED || $this->status == IApproval::STATUS_RE_SUBMIT ||
+			$this->status == IApproval::STATUS_FROJEN || $this->status == IApproval::STATUS_UPLIFT_FREEZE ||
+			$this->status == IApproval::STATUS_BLOCKED || $this->status == IApproval::STATUS_UPLIFT_BLOCK;
+	}
+
+	/**
+	 * The admin can freeze the model to limit activities.
+	 *
+	 * @return boolean
+	 */
+	public function isFreezable() {
+
+		return $this->status == IApproval::STATUS_ACTIVE;
+	}
+
+	/**
+	 * The admin can block the model to restrict activities.
+	 *
+	 * @return boolean
+	 */
+	public function isBlockable() {
+
+		return $this->status == IApproval::STATUS_ACTIVE;
 	}
 
 	/**
@@ -392,6 +590,14 @@ trait ApprovalTrait {
 	public function isPublic() {
 
 		return $this->status == IApproval::STATUS_ACTIVE || $this->status == IApproval::STATUS_FROJEN;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function setRejectMessage( $message ) {
+
+		$this->updateDataMeta( CoreGlobal::DATA_REJECT_REASON, $message );
 	}
 
 	/**
@@ -409,11 +615,11 @@ trait ApprovalTrait {
 
 		if( $this->isFrojen() ) {
 
-			$text	= 'freeze';
+			$text = 'freeze';
 		}
 		else if( $this->isBlocked() ) {
 
-			$text	= 'block';
+			$text = 'block';
 		}
 
 		if( isset( $reason ) && strlen( $reason ) > 0 ) {
@@ -426,6 +632,14 @@ trait ApprovalTrait {
 		}
 
 		return $reason;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function setTerminateMessage( $message ) {
+
+		$this->updateDataMeta( CoreGlobal::DATA_TERMINATE_REASON, $message );
 	}
 
 	/**
@@ -455,6 +669,13 @@ trait ApprovalTrait {
 	// CMG classes ---------------------------
 
 	// ApprovalTrait -------------------------
+
+	public static function getStatusMap() {
+
+		ksort( static::$statusMap );
+
+		return static::$statusMap;
+	}
 
 	// Read - Query -----------
 

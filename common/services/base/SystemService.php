@@ -9,9 +9,6 @@
 
 namespace cmsgears\core\common\services\base;
 
-// Yii Imports
-use yii\base\BaseObject;
-
 // CMG Imports
 use cmsgears\core\common\services\interfaces\base\ISystemService;
 
@@ -20,7 +17,7 @@ use cmsgears\core\common\services\interfaces\base\ISystemService;
  *
  * @since 1.0.0
  */
-abstract class SystemService extends BaseObject implements ISystemService {
+abstract class SystemService extends \yii\base\BaseObject implements ISystemService {
 
 	// Variables ---------------------------------------------------
 

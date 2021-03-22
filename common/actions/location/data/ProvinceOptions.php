@@ -70,12 +70,12 @@ class ProvinceOptions extends \cmsgears\core\common\base\Action {
 
 	public function run() {
 
-		$countryId	= Yii::$app->request->post( 'country-id' );
-		$provinceId	= Yii::$app->request->post( 'province-id' );
+		$countryId	= Yii::$app->request->post( 'countryId' );
+		$provinceId	= Yii::$app->request->post( 'provinceId' );
 
 		if( isset( $countryId ) && $countryId > 0 ) {
 
-			$provinces = $this->modelService->getMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
+			$provinces = $this->modelService->getIdNameMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
 
 			$data = !empty( $provinceId ) ? CodeGenUtil::generateSelectOptionsFromArray( $provinces, intval( $provinceId ) ) : CodeGenUtil::generateSelectOptionsFromArray( $provinces );
 

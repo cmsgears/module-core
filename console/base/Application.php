@@ -16,7 +16,7 @@ use yii\base\Exception;
 // CMSGears Imports
 use cmsgears\core\common\config\CoreProperties;
 
-use cmsgears\core\common\services\entities\SiteService;
+use cmsgears\core\common\models\entities\Site;
 
 /**
  * The base application for Console based job execution.
@@ -33,9 +33,7 @@ class Application extends \yii\console\Application {
 
 			// TODO: Enable multi-site similar to web app
 
-			$siteSlug = Yii::$app->core->siteSlug;
-
-			$site = SiteService::findBySlug( $siteSlug );
+			$site = Site::findBySlug( Yii::$app->core->siteSlug );
 
 			// Site Found
 			if( isset( $site ) ) {

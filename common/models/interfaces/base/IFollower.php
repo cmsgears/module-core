@@ -22,4 +22,14 @@ interface IFollower {
 	const TYPE_FOLLOW	= 'follow'; // User Followers
 	const TYPE_WISHLIST	= 'wish'; // User who wish to have this model - specially if model is doing sales
 
+	public function isLike();
+
+	public function isDislike();
+
+	public function isFollow();
+
+	public function isWish();
+
+	public function getTypeStr();
+
 }

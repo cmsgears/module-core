@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
  * ProvinceController provides actions specific to province model.
  *
  * @since 1.0.0
  */
-class ProvinceController extends Controller {
+class ProvinceController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -112,7 +110,10 @@ class ProvinceController extends Controller {
 
 			$this->model = $this->modelService->create( $model );
 
-			return $this->redirect( "all?cid=$cid" );
+			if( $this->model ) {
+
+				return $this->redirect( "all?cid=$cid" );
+			}
 		}
 
 		return $this->render( 'create', [

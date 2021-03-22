@@ -15,8 +15,6 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\CrudController;
-
 /**
  * TagController provides actions specific to tag model.
  *
@@ -95,7 +93,10 @@ abstract class TagController extends CrudController {
 
 			$this->model = $this->modelService->create( $model, [ 'admin' => true ] );
 
-			return $this->redirect( 'all' );
+			if( $this->model ) {
+
+				return $this->redirect( 'all' );
+			}
 		}
 
 		return $this->render( 'create', [

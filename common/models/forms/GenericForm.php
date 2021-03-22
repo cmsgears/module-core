@@ -9,11 +9,6 @@
 
 namespace cmsgears\core\common\models\forms;
 
-// Yii Imports
-
-// CMG Imports
-use cmsgears\core\common\models\forms\BaseForm;
-
 /**
  * Process dynamic forms.
  */
@@ -89,7 +84,8 @@ class GenericForm extends BaseForm {
 
 		$this->fields	= $config[ 'fields' ];
 		$this->attribs	= [];
-		$fields			= $this->fields;
+
+		$fields = $this->fields;
 
 		unset( $config[ 'fields' ] );
 
@@ -149,7 +145,8 @@ class GenericForm extends BaseForm {
 
 		// Prepare validators list
 		$validators	= [];
-		$fields		= $this->fields;
+
+		$fields = $this->fields;
 
 		foreach( $fields as $key => $field ) {
 
@@ -249,11 +246,11 @@ class GenericForm extends BaseForm {
 
 		if( !isset( $classPath ) ) {
 
-			$classPath	= 'cmsgears\core\common\models\forms\GenericForm';
+			$classPath = 'cmsgears\core\common\models\forms\GenericForm';
 		}
 
 		$refclass	= new \ReflectionClass( $classPath );
-		$attribArr	= array();
+		$attribArr	= [];
 
 		foreach ( $refclass->getProperties() as $property ) {
 
@@ -267,4 +264,5 @@ class GenericForm extends BaseForm {
 
 		return $attribArr;
 	}
+
 }

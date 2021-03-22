@@ -9,15 +9,12 @@
 
 namespace cmsgears\core\common\models\resources\address;
 
-// CMG Imports
-use cmsgears\core\common\models\resources\Address;
-
 /**
  * The office address model.
  *
  * @since 1.0.0
  */
-class OfficeAddress extends Address {
+class OfficeAddress extends \cmsgears\core\common\models\resources\Address {
 
 	// Variables ---------------------------------------------------
 
@@ -33,7 +30,7 @@ class OfficeAddress extends Address {
 
 	// Public -----------------
 
-	public $type	= self::TYPE_OFFICE;
+	public $type = self::TYPE_OFFICE;
 
 	// Protected --------------
 

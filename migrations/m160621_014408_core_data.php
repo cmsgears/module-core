@@ -10,8 +10,6 @@
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Migration;
-
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\entities\Locale;
 use cmsgears\core\common\models\entities\User;
@@ -30,7 +28,7 @@ use cmsgears\core\common\utilities\DateUtil;
  *
  * @since 1.0.0
  */
-class m160621_014408_core_data extends Migration {
+class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 
 	// Public Variables
 
@@ -101,6 +99,8 @@ class m160621_014408_core_data extends Migration {
 
 		// Default Categories and Options
 		$this->insertCategories();
+
+		$this->insertNotificationTemplates();
 	}
 
 	private function insertLocale() {
@@ -173,7 +173,7 @@ class m160621_014408_core_data extends Migration {
 		$this->insert( $this->prefix . 'core_site', [
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
 			'name' => 'Main', 'slug' => CoreGlobal::SITE_MAIN,
-			'order' => 0, 'active' => true,
+			'order' => 0, 'active' => true, 'primary' => true,
 			'createdAt' => DateUtil::getDateTime(),
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
@@ -190,45 +190,47 @@ class m160621_014408_core_data extends Migration {
 		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'adminUrl', 'homeUrl', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
 
 		$roles = [
-			[ $this->master->id, $this->master->id, 'Super Admin', 'super-admin', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The Super Admin have all the permisisons to perform operations on the admin site and website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Admin','admin','dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The Admin have all the permisisons to perform operations on the admin site and website except RBAC module.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'User', 'user', NULL, NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role User is limited to website users.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'User Admin', 'user-admin', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role User Admin is limited to manage site users from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'Super Admin', CoreGlobal::ROLE_SUPER_ADMIN, 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The Super Admin have all the permisisons to perform operations on the admin site and website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Admin', CoreGlobal::ROLE_ADMIN,'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The Admin have all the permisisons to perform operations on the admin site and website except RBAC module.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'User', CoreGlobal::ROLE_USER, NULL, NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role User is limited to website users.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'User Admin', CoreGlobal::ROLE_USER_ADMIN, 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role User Admin is limited to manage site users from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );
 
-		$superAdminRole	= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
-		$adminRole		= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$userRole		= Role::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
-		$userAdminRole	= Role::findBySlugType( 'user-admin', CoreGlobal::TYPE_SYSTEM );
+		$superAdminRole	= Role::findBySlugType( CoreGlobal::ROLE_SUPER_ADMIN, CoreGlobal::TYPE_SYSTEM );
+		$adminRole		= Role::findBySlugType( CoreGlobal::ROLE_ADMIN, CoreGlobal::TYPE_SYSTEM );
+		$userRole		= Role::findBySlugType( CoreGlobal::ROLE_USER, CoreGlobal::TYPE_SYSTEM );
+		$userAdminRole	= Role::findBySlugType( CoreGlobal::ROLE_USER_ADMIN, CoreGlobal::TYPE_SYSTEM );
 
 		// Permissions
 
 		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
 
 		$permissions = [
-			[ $this->master->id, $this->master->id, 'Admin', 'admin', CoreGlobal::TYPE_SYSTEM, NULL, 'The permission admin is to distinguish between admin and app user. It is a must have permission for admins.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'User', 'user', CoreGlobal::TYPE_SYSTEM, NULL, 'The permission user is to distinguish between admin and app user. It is a must have permission for app users.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Core', 'core', CoreGlobal::TYPE_SYSTEM, NULL, 'The permission core is to manage sites, themes, testimonials, countries, drop downs and settings from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Identity', 'identity', CoreGlobal::TYPE_SYSTEM, NULL, 'The permission identity is to manage users from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'RBAC', 'rbac', CoreGlobal::TYPE_SYSTEM, NULL, 'The permission rbac is to manage roles and permissions from admin. It also need identity permission.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'Admin', CoreGlobal::PERM_ADMIN, CoreGlobal::TYPE_SYSTEM, NULL, 'The permission admin is to distinguish between admin and app user. It is a must have permission for admins.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'User', CoreGlobal::PERM_USER, CoreGlobal::TYPE_SYSTEM, NULL, 'The permission user is to distinguish between admin and app user. It is a must have permission for app users.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Core', CoreGlobal::PERM_CORE, CoreGlobal::TYPE_SYSTEM, NULL, 'The permission core is to manage sites, themes, testimonials, countries, drop downs and settings from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Identity', CoreGlobal::PERM_IDENTITY, CoreGlobal::TYPE_SYSTEM, NULL, 'The permission identity is to manage users from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'RBAC', CoreGlobal::PERM_RBAC, CoreGlobal::TYPE_SYSTEM, NULL, 'The permission rbac is to manage roles and permissions from admin. It also need identity permission.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Settings', CoreGlobal::PERM_SETTINGS, CoreGlobal::TYPE_SYSTEM, NULL, 'The permission settings is to manage settings from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
 
-		$adminPerm		= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$userPerm		= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
-		$corePerm		= Permission::findBySlugType( 'core', CoreGlobal::TYPE_SYSTEM );
-		$identityPerm	= Permission::findBySlugType( 'identity', CoreGlobal::TYPE_SYSTEM );
-		$rbacPerm		= Permission::findBySlugType( 'rbac', CoreGlobal::TYPE_SYSTEM );
+		$adminPerm		= Permission::findBySlugType( CoreGlobal::PERM_ADMIN, CoreGlobal::TYPE_SYSTEM );
+		$userPerm		= Permission::findBySlugType( CoreGlobal::PERM_USER, CoreGlobal::TYPE_SYSTEM );
+		$corePerm		= Permission::findBySlugType( CoreGlobal::PERM_CORE, CoreGlobal::TYPE_SYSTEM );
+		$identityPerm	= Permission::findBySlugType( CoreGlobal::PERM_IDENTITY, CoreGlobal::TYPE_SYSTEM );
+		$rbacPerm		= Permission::findBySlugType( CoreGlobal::PERM_RBAC, CoreGlobal::TYPE_SYSTEM );
+		$settingsPerm	= Permission::findBySlugType( CoreGlobal::PERM_SETTINGS, CoreGlobal::TYPE_SYSTEM );
 
 		// RBAC Mapping
 
 		$columns = [ 'roleId', 'permissionId' ];
 
 		$mappings = [
-			[ $superAdminRole->id, $adminPerm->id ], [ $superAdminRole->id, $userPerm->id ], [ $superAdminRole->id, $corePerm->id ], [ $superAdminRole->id, $identityPerm->id ], [ $superAdminRole->id, $rbacPerm->id ],
+			[ $superAdminRole->id, $adminPerm->id ], [ $superAdminRole->id, $userPerm->id ], [ $superAdminRole->id, $corePerm->id ], [ $superAdminRole->id, $identityPerm->id ], [ $superAdminRole->id, $rbacPerm->id ], [ $superAdminRole->id, $settingsPerm->id ],
 			[ $adminRole->id, $adminPerm->id ], [ $adminRole->id, $userPerm->id ], [ $adminRole->id, $corePerm->id ], [ $adminRole->id, $identityPerm->id ],
 			[ $userRole->id, $userPerm->id ],
 			[ $userAdminRole->id, $adminPerm->id ], [ $userAdminRole->id, $userPerm->id ], [ $userAdminRole->id, $identityPerm->id ]
@@ -244,29 +246,29 @@ class m160621_014408_core_data extends Migration {
 		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'adminUrl', 'homeUrl', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
 
 		$roles = [
-			[ $this->master->id, $this->master->id, 'File Admin', 'file-admin', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role File Admin is limited to manage files from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'File Admin', CoreGlobal::ROLE_FILE_ADMIN, 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role File Admin is limited to manage files from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );
 
-		$superAdminRole		= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
-		$adminRole			= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$fileAdminRole		= Role::findBySlugType( 'file-admin', CoreGlobal::TYPE_SYSTEM );
+		$superAdminRole		= Role::findBySlugType( CoreGlobal::ROLE_SUPER_ADMIN, CoreGlobal::TYPE_SYSTEM );
+		$adminRole			= Role::findBySlugType( CoreGlobal::ROLE_ADMIN, CoreGlobal::TYPE_SYSTEM );
+		$fileAdminRole		= Role::findBySlugType( CoreGlobal::ROLE_FILE_ADMIN, CoreGlobal::TYPE_SYSTEM );
 
 		// Permissions
 		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'type', 'icon', 'group', 'description', 'createdAt', 'modifiedAt' ];
 
 		$permissions = [
 			// Admin Permissions - Hard Coded
-			[ $this->master->id, $this->master->id, 'Admin Files', 'admin-files', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission admin files allows user to administer files from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'Admin Files', CoreGlobal::PERM_FILE_ADMIN, CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission admin files allows user to administer files from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
 
 		// Admin
-		$adminPerm		= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$userPerm		= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
-		$fileAdminPerm	= Permission::findBySlugType( 'admin-files', CoreGlobal::TYPE_SYSTEM );
+		$adminPerm		= Permission::findBySlugType( CoreGlobal::PERM_ADMIN, CoreGlobal::TYPE_SYSTEM );
+		$userPerm		= Permission::findBySlugType( CoreGlobal::PERM_USER, CoreGlobal::TYPE_SYSTEM );
+		$fileAdminPerm	= Permission::findBySlugType( CoreGlobal::PERM_FILE_ADMIN, CoreGlobal::TYPE_SYSTEM );
 
 		// RBAC Mapping
 
@@ -288,29 +290,29 @@ class m160621_014408_core_data extends Migration {
 		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'adminUrl', 'homeUrl', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
 
 		$roles = [
-			[ $this->master->id, $this->master->id, 'Gallery Admin', 'gallery-admin', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role Gallery Admin is limited to manage galleries from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'Gallery Admin', CoreGlobal::ROLE_GALLERY_ADMIN, 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role Gallery Admin is limited to manage galleries from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );
 
-		$superAdminRole		= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
-		$adminRole			= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$galleryAdminRole	= Role::findBySlugType( 'gallery-admin', CoreGlobal::TYPE_SYSTEM );
+		$superAdminRole		= Role::findBySlugType( CoreGlobal::ROLE_SUPER_ADMIN, CoreGlobal::TYPE_SYSTEM );
+		$adminRole			= Role::findBySlugType( CoreGlobal::ROLE_ADMIN, CoreGlobal::TYPE_SYSTEM );
+		$galleryAdminRole	= Role::findBySlugType( CoreGlobal::ROLE_GALLERY_ADMIN, CoreGlobal::TYPE_SYSTEM );
 
 		// Permissions
 		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'type', 'icon', 'group', 'description', 'createdAt', 'modifiedAt' ];
 
 		$permissions = [
 			// Admin Permissions - Hard Coded
-			[ $this->master->id, $this->master->id, 'Admin Galleries', 'admin-galleries', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission admin galleries allows user to administer galleries from admin. It also need admin files permission.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'Admin Galleries', CoreGlobal::PERM_GALLERY_ADMIN, CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission admin galleries allows user to administer galleries from admin. It also need admin files permission.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
 
 		// Admin
-		$adminPerm			= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$userPerm			= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
-		$galleryAdminPerm	= Permission::findBySlugType( 'admin-galleries', CoreGlobal::TYPE_SYSTEM );
+		$adminPerm			= Permission::findBySlugType( CoreGlobal::PERM_ADMIN, CoreGlobal::TYPE_SYSTEM );
+		$userPerm			= Permission::findBySlugType( CoreGlobal::PERM_USER, CoreGlobal::TYPE_SYSTEM );
+		$galleryAdminPerm	= Permission::findBySlugType( CoreGlobal::PERM_GALLERY_ADMIN, CoreGlobal::TYPE_SYSTEM );
 
 		// RBAC Mapping
 
@@ -327,10 +329,10 @@ class m160621_014408_core_data extends Migration {
 
 	private function insertSiteMembers() {
 
-		$superAdminRole		= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
-		$adminRole			= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$userRole			= Role::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
-		$userAdminRole		= Role::findBySlugType( 'user-admin', CoreGlobal::TYPE_SYSTEM );
+		$superAdminRole	= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
+		$adminRole		= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$userRole		= Role::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
+		$userAdminRole	= Role::findBySlugType( 'user-admin', CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'siteId', 'userId', 'roleId', 'createdAt', 'modifiedAt' ];
 
@@ -357,7 +359,7 @@ class m160621_014408_core_data extends Migration {
 		$this->insert( $this->prefix . 'core_form', [
 			'siteId' => $this->site->id,
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-			'name' => 'Config Core', 'slug' => 'config-core',
+			'name' => 'Config Core', 'slug' => 'config-' . CoreGlobal::CONFIG_CORE,
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Core configuration form.',
 			'success' => 'All configurations saved successfully.',
@@ -368,7 +370,7 @@ class m160621_014408_core_data extends Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlugType( 'config-core', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-' . CoreGlobal::CONFIG_CORE, CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -381,6 +383,7 @@ class m160621_014408_core_data extends Migration {
 			[ $config->id, 'site_name','Site Name', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Site name used on footers etc.","placeholder":"Site Name"}' ],
 			[ $config->id, 'site_url','Frontend URL', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Frontend URL","placeholder":"Frontend URL"}' ],
 			[ $config->id, 'admin_url','Backend URL', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Backend URL","placeholder":"Backend URL"}' ],
+			[ $config->id, 'resource_url','Resource URL', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Resource URL","placeholder":"Resource URL"}' ],
 			[ $config->id, 'registration','Registration', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Check whether site registration is allowed."}' ],
 			[ $config->id, 'login','Login', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Check whether site login is allowed."}' ],
 			[ $config->id, 'change_email','Change Email', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Check whether email change is allowed for user profile."}' ],
@@ -402,7 +405,7 @@ class m160621_014408_core_data extends Migration {
 		$this->insert( $this->prefix . 'core_form', [
 			'siteId' => $this->site->id,
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-			'name' => 'Config Cache', 'slug' => 'config-cache',
+			'name' => 'Config Cache', 'slug' => 'config-' . CoreGlobal::CONFIG_CACHE,
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Cache configuration form.',
 			'success' => 'All configurations saved successfully.',
@@ -413,14 +416,14 @@ class m160621_014408_core_data extends Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlugType( 'config-cache', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-' . CoreGlobal::CONFIG_CACHE, CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields	= [
-			[ $config->id, 'caching','Caching', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Enable HTML Caching."}' ],
-			[ $config->id, 'cache_duration','Cache Duration', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Cache Duration in seconds. It applies only to default cache which is volatile.","placeholder":"Cache Duration"}' ],
-			[ $config->id, 'default_cache','Default Cache', FormField::TYPE_SELECT, false, true, true, NULL, 0, NULL, '{"title":"Default Cache","items":{"none":"Choose Cache Type","file":"File","database":"Database","apc":"APC","mem":"Memcached","redis":"Redis","win":"Windows Cache","xcache":"XCache"}}' ],
+			[ $config->id, 'caching', 'Caching', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Enable cache"}' ],
+			[ $config->id, 'cache_duration','Cache Duration', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Cache Duration in minutes for default and volatile cache","placeholder":"Cache Duration"}' ],
+			[ $config->id, 'default_cache','Default Cache', FormField::TYPE_SELECT, false, true, true, NULL, 0, NULL, '{"title":"Default Cache","items":{"none":"Choose Cache Type","file":"File","database":"Database","memcached":"Memcached","redis":"Redis"}}' ],
 			[ $config->id, 'primary_cache','Primary Cache', FormField::TYPE_SELECT, false, true, true, NULL, 0, NULL, '{"title":"Primary Cache","items":{"none":"Choose Cache Type","file":"File","database":"Database"}}' ],
 			[ $config->id, 'secondary_cache','Secondary Cache', FormField::TYPE_SELECT, false, true, true, NULL, 0, NULL, '{"title":"Secondary Cache","items":{"none":"Choose Cache Type","elastic":"Elasticsearch","redis":"Redis"}}' ]
 		];
@@ -433,7 +436,7 @@ class m160621_014408_core_data extends Migration {
 		$this->insert( $this->prefix . 'core_form', [
 			'siteId' => $this->site->id,
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-			'name' => 'Config Mail', 'slug' => 'config-mail',
+			'name' => 'Config Mail', 'slug' => 'config-' . CoreGlobal::CONFIG_MAIL,
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Mail configuration form.',
 			'success' => 'All configurations saved successfully.',
@@ -444,7 +447,7 @@ class m160621_014408_core_data extends Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlugType( 'config-mail', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-' . CoreGlobal::CONFIG_MAIL, CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -472,7 +475,7 @@ class m160621_014408_core_data extends Migration {
 		$this->insert( $this->prefix . 'core_form', [
 			'siteId' => $this->site->id,
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-			'name' => 'Config Comment', 'slug' => 'config-comment',
+			'name' => 'Config Comment', 'slug' => 'config-' . CoreGlobal::CONFIG_COMMENT,
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Comment configuration form.',
 			'success' => 'All configurations saved successfully.',
@@ -483,7 +486,7 @@ class m160621_014408_core_data extends Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlugType( 'config-comment', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-' . CoreGlobal::CONFIG_COMMENT, CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -512,7 +515,7 @@ class m160621_014408_core_data extends Migration {
 		$this->insert( $this->prefix . 'core_form', [
 			'siteId' => $this->site->id,
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-			'name' => 'Config Backend', 'slug' => 'config-backend',
+			'name' => 'Config Backend', 'slug' => 'config-' . CoreGlobal::CONFIG_ADMIN,
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Backend configuration form.',
 			'success' => 'All configurations saved successfully.',
@@ -523,7 +526,7 @@ class m160621_014408_core_data extends Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlugType( 'config-backend', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-' . CoreGlobal::CONFIG_ADMIN, CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -545,7 +548,7 @@ class m160621_014408_core_data extends Migration {
 		$this->insert( $this->prefix . 'core_form', [
 			'siteId' => $this->site->id,
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-			'name' => 'Config Frontend', 'slug' => 'config-frontend',
+			'name' => 'Config Frontend', 'slug' => 'config-' . CoreGlobal::CONFIG_FRONTEND,
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Frontend configuration form.',
 			'success' => 'All configurations saved successfully.',
@@ -556,7 +559,7 @@ class m160621_014408_core_data extends Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlugType( 'config-frontend', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-' . CoreGlobal::CONFIG_FRONTEND, CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -582,75 +585,76 @@ class m160621_014408_core_data extends Migration {
 		$siteContact	= Yii::$app->migration->getSiteContact();
 		$siteInfo		= Yii::$app->migration->getSiteInfo();
 
-		$timezone		= Yii::$app->migration->getTimezone();
+		$timezone = Yii::$app->migration->getTimezone();
 
 		$columns = [ 'modelId', 'name', 'label', 'type', 'active', 'valueType', 'value', 'data' ];
 
-		$metas	= [
-			[ $this->site->id, 'locale_message', 'Locale Message', 'core', 1, 'flag', '0',NULL ],
-			[ $this->site->id, 'language', 'Language', 'core', 1, 'text', 'en-US',NULL ],
-			[ $this->site->id, 'locale', 'Locale', 'core', 1, 'text', 'en_US',NULL ],
-			[ $this->site->id, 'charset', 'Charset', 'core', 1, 'text', 'UTF-8',NULL ],
-			[ $this->site->id, 'site_title', 'Site Title', 'core', 1, 'text', $this->siteTitle,NULL ],
-			[ $this->site->id, 'site_name','Site Name','core', 1, 'text', $this->siteName,NULL ],
-			[ $this->site->id, 'site_url', 'Site Url', 'core', 1, 'text', $defaultSite,NULL ],
-			[ $this->site->id, 'admin_url', 'Admin Url', 'core', 1, 'text', $defaultAdmin,NULL ],
-			[ $this->site->id, 'registration','Registration','core', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'login','Login','core', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'change_email','Change Email','core', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'change_username','Change Username','core', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'change_mobile','Change Mobile','core', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'date_format','Date Format','core', 1, 'text','yyyy-MM-dd',NULL ],
-			[ $this->site->id, 'time_format','Time Format','core', 1, 'text','HH:mm:ss',NULL ],
-			[ $this->site->id, 'date_time_format','Date Time Format','core', 1, 'text','yyyy-MM-dd HH:mm:ss',NULL ],
-			[ $this->site->id, 'timezone','Timezone','core', 1, 'text', $timezone,NULL ],
-			[ $this->site->id, 'auto_login','Auto Login','core', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'auto_load','Auto Load','core', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'caching','Caching','cache', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'cache_duration','Cache Type','cache', 1, 'text',NULL,NULL ],
-			[ $this->site->id, 'default_cache','Default Cache','cache', 1, 'text',NULL,NULL ],
-			[ $this->site->id, 'primary_cache','Primary Cache','cache', 1, 'text',NULL,NULL ],
-			[ $this->site->id, 'secondary_cache','Secondary Cache','cache', 1, 'text',NULL,NULL ],
-			[ $this->site->id, 'smtp','SMTP','mail', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'smtp_username','SMTP Username','mail', 1, 'text','',NULL ],
-			[ $this->site->id, 'smtp_password','SMTP Password','mail', 1, 'text','',NULL ],
-			[ $this->site->id, 'smtp_host','SMTP Host','mail', 1, 'text','',NULL ],
-			[ $this->site->id, 'smtp_port','SMTP Port','mail', 1, 'text','587',NULL ],
-			[ $this->site->id, 'smtp_encryption','SMTP Encryption','mail', 1, 'text','tls',NULL ],
-			[ $this->site->id, 'debug','Debug','mail', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'sender_name','Sender Name','mail', 1, 'text','Admin',NULL ],
-			[ $this->site->id, 'sender_email','Sender Email','mail', 1, 'text', "$siteMaster@$primaryDomain",NULL ],
-			[ $this->site->id, 'contact_name','Contact Name','mail', 1, 'text','Contact Us',NULL ],
-			[ $this->site->id, 'contact_email','Contact Email','mail', 1, 'text', "$siteContact@$primaryDomain",NULL ],
-			[ $this->site->id, 'info_name','Info Name','mail', 1, 'text','Info',NULL ],
-			[ $this->site->id, 'info_email','Info Email','mail', 1, 'text',"$siteInfo@$primaryDomain",NULL ],
-			[ $this->site->id, 'comments','Comments','comment', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'comments_user','Comments User','comment', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'comments_recent','Comments Recent','comment', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'comments_limit','Comments Limit','comment', 1, 'text', EntityService::PAGE_LIMIT,NULL ],
-			[ $this->site->id, 'comments_email_admin','Comments Email Admin','comment', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'comments_email_user','Comments Email User','comment', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'comments_form_top','Comments Form Top','comment', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'comments_auto','Comments Auto','comment', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'comments_anonymous', 'Comments Anonymous','comment', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'comments_filter','Comments Filter','comment', 1, 'text', NULL,NULL ],
-			[ $this->site->id, 'comments_all_fields','Comments All Fields','comment', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'comments_labels','Comments Labels','comment', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'comments_disqus','Comments DISQUS','comment', 1, 'flag','0',NULL ],
-			[ $this->site->id, 'comments_disqus_forum','Comments DISQUS Forum','comment', 1, 'text', NULL,NULL ],
-			[ $this->site->id, 'cmg_powered','CMG Powered','backend', 1, 'flag','1',NULL ],
-			[ $this->site->id, 'default_avatar', 'Default Avatar','backend', 1, 'text', 'avatar-site.png',NULL ],
-			[ $this->site->id, 'user_avatar','User Avatar','backend', 1, 'text', 'avatar-user.png',NULL ],
-			[ $this->site->id, 'mail_avatar','Mail Avatar','backend', 1, 'text', 'avatar-mail.png',NULL ],
-			[ $this->site->id, 'default_banner','Default Banner','backend', 1, 'text', 'banner-site.jpg',NULL ],
-			[ $this->site->id, 'page_banner','Page Banner','backend', 1, 'text', 'banner-page.jpg',NULL ],
-			[ $this->site->id, 'mail_banner','Mail Banner','backend', 1, 'text', 'banner-mail.jpg',NULL ],
-			[ $this->site->id, 'default_avatar', 'Default Avatar','frontend', 1, 'text', 'avatar-site.png',NULL ],
-			[ $this->site->id, 'user_avatar','User Avatar','frontend', 1, 'text', 'avatar-user.png',NULL ],
-			[ $this->site->id, 'mail_avatar','User Avatar','frontend', 1, 'text', 'avatar-mail.png',NULL ],
-			[ $this->site->id, 'default_banner','Default Banner','frontend', 1, 'text', 'banner-site.jpg',NULL ],
-			[ $this->site->id, 'page_banner','Page Banner','frontend', 1, 'text', 'banner-page.jpg',NULL ],
-			[ $this->site->id, 'mail_banner','Page Banner','frontend', 1, 'text', 'banner-mail.jpg',NULL ]
+		$metas = [
+			[ $this->site->id, 'locale_message', 'Locale Message', CoreGlobal::CONFIG_CORE, 1, 'flag', '0',NULL ],
+			[ $this->site->id, 'language', 'Language', CoreGlobal::CONFIG_CORE, 1, 'text', 'en-US',NULL ],
+			[ $this->site->id, 'locale', 'Locale', CoreGlobal::CONFIG_CORE, 1, 'text', 'en_US',NULL ],
+			[ $this->site->id, 'charset', 'Charset', CoreGlobal::CONFIG_CORE, 1, 'text', 'UTF-8',NULL ],
+			[ $this->site->id, 'site_title', 'Site Title', CoreGlobal::CONFIG_CORE, 1, 'text', $this->siteTitle,NULL ],
+			[ $this->site->id, 'site_name','Site Name',CoreGlobal::CONFIG_CORE, 1, 'text', $this->siteName,NULL ],
+			[ $this->site->id, 'site_url', 'Site Url', CoreGlobal::CONFIG_CORE, 1, 'text', $defaultSite,NULL ],
+			[ $this->site->id, 'admin_url', 'Admin Url', CoreGlobal::CONFIG_CORE, 1, 'text', $defaultAdmin,NULL ],
+			[ $this->site->id, 'resource_url', 'Resource Url', CoreGlobal::CONFIG_CORE, 1, 'text', $defaultSite,NULL ],
+			[ $this->site->id, 'registration','Registration', CoreGlobal::CONFIG_CORE, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'login','Login', CoreGlobal::CONFIG_CORE, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'change_email','Change Email', CoreGlobal::CONFIG_CORE, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'change_username','Change Username', CoreGlobal::CONFIG_CORE, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'change_mobile','Change Mobile', CoreGlobal::CONFIG_CORE, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'date_format','Date Format', CoreGlobal::CONFIG_CORE, 1, 'text','yyyy-MM-dd',NULL ],
+			[ $this->site->id, 'time_format','Time Format', CoreGlobal::CONFIG_CORE, 1, 'text','HH:mm:ss',NULL ],
+			[ $this->site->id, 'date_time_format','Date Time Format', CoreGlobal::CONFIG_CORE, 1, 'text','yyyy-MM-dd HH:mm:ss',NULL ],
+			[ $this->site->id, 'timezone','Timezone', CoreGlobal::CONFIG_CORE, 1, 'text', $timezone,NULL ],
+			[ $this->site->id, 'auto_login','Auto Login', CoreGlobal::CONFIG_CORE, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'auto_load','Auto Load', CoreGlobal::CONFIG_CORE, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'caching','Caching', CoreGlobal::CONFIG_CACHE, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'cache_duration','Cache Type', CoreGlobal::CONFIG_CACHE, 1, 'text',NULL,NULL ],
+			[ $this->site->id, 'default_cache','Default Cache', CoreGlobal::CONFIG_CACHE, 1, 'text',NULL,NULL ],
+			[ $this->site->id, 'primary_cache','Primary Cache', CoreGlobal::CONFIG_CACHE, 1, 'text',NULL,NULL ],
+			[ $this->site->id, 'secondary_cache','Secondary Cache', CoreGlobal::CONFIG_CACHE, 1, 'text',NULL,NULL ],
+			[ $this->site->id, 'smtp','SMTP', CoreGlobal::CONFIG_MAIL, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'smtp_username','SMTP Username', CoreGlobal::CONFIG_MAIL, 1, 'text','',NULL ],
+			[ $this->site->id, 'smtp_password','SMTP Password', CoreGlobal::CONFIG_MAIL, 1, 'text','',NULL ],
+			[ $this->site->id, 'smtp_host','SMTP Host', CoreGlobal::CONFIG_MAIL, 1, 'text','',NULL ],
+			[ $this->site->id, 'smtp_port','SMTP Port', CoreGlobal::CONFIG_MAIL, 1, 'text','587',NULL ],
+			[ $this->site->id, 'smtp_encryption','SMTP Encryption', CoreGlobal::CONFIG_MAIL, 1, 'text','tls',NULL ],
+			[ $this->site->id, 'debug','Debug', CoreGlobal::CONFIG_MAIL, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'sender_name','Sender Name', CoreGlobal::CONFIG_MAIL, 1, 'text','Admin',NULL ],
+			[ $this->site->id, 'sender_email','Sender Email', CoreGlobal::CONFIG_MAIL, 1, 'text', "$siteMaster@$primaryDomain",NULL ],
+			[ $this->site->id, 'contact_name','Contact Name', CoreGlobal::CONFIG_MAIL, 1, 'text','Contact Us',NULL ],
+			[ $this->site->id, 'contact_email','Contact Email', CoreGlobal::CONFIG_MAIL, 1, 'text', "$siteContact@$primaryDomain",NULL ],
+			[ $this->site->id, 'info_name','Info Name', CoreGlobal::CONFIG_MAIL, 1, 'text','Info',NULL ],
+			[ $this->site->id, 'info_email','Info Email', CoreGlobal::CONFIG_MAIL, 1, 'text',"$siteInfo@$primaryDomain",NULL ],
+			[ $this->site->id, 'comments','Comments', CoreGlobal::CONFIG_COMMENT, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'comments_user','Comments User', CoreGlobal::CONFIG_COMMENT, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'comments_recent','Comments Recent', CoreGlobal::CONFIG_COMMENT, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'comments_limit','Comments Limit', CoreGlobal::CONFIG_COMMENT, 1, 'text', EntityService::PAGE_LIMIT,NULL ],
+			[ $this->site->id, 'comments_email_admin','Comments Email Admin', CoreGlobal::CONFIG_COMMENT, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'comments_email_user','Comments Email User', CoreGlobal::CONFIG_COMMENT, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'comments_form_top','Comments Form Top', CoreGlobal::CONFIG_COMMENT, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'comments_auto','Comments Auto', CoreGlobal::CONFIG_COMMENT, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'comments_anonymous', 'Comments Anonymous', CoreGlobal::CONFIG_COMMENT, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'comments_filter','Comments Filter', CoreGlobal::CONFIG_COMMENT, 1, 'text', NULL,NULL ],
+			[ $this->site->id, 'comments_all_fields','Comments All Fields', CoreGlobal::CONFIG_COMMENT, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'comments_labels','Comments Labels', CoreGlobal::CONFIG_COMMENT, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'comments_disqus','Comments DISQUS', CoreGlobal::CONFIG_COMMENT, 1, 'flag','0',NULL ],
+			[ $this->site->id, 'comments_disqus_forum','Comments DISQUS Forum', CoreGlobal::CONFIG_COMMENT, 1, 'text', NULL,NULL ],
+			[ $this->site->id, 'cmg_powered','CMG Powered', CoreGlobal::CONFIG_ADMIN, 1, 'flag','1',NULL ],
+			[ $this->site->id, 'default_avatar', 'Default Avatar', CoreGlobal::CONFIG_ADMIN, 1, 'text', 'avatar-site.png',NULL ],
+			[ $this->site->id, 'user_avatar','User Avatar', CoreGlobal::CONFIG_ADMIN, 1, 'text', 'avatar-user.png',NULL ],
+			[ $this->site->id, 'mail_avatar','Mail Avatar', CoreGlobal::CONFIG_ADMIN, 1, 'text', 'avatar-mail.png',NULL ],
+			[ $this->site->id, 'default_banner','Default Banner', CoreGlobal::CONFIG_ADMIN, 1, 'text', 'banner-site.jpg',NULL ],
+			[ $this->site->id, 'page_banner','Page Banner', CoreGlobal::CONFIG_ADMIN, 1, 'text', 'banner-page.jpg',NULL ],
+			[ $this->site->id, 'mail_banner','Mail Banner', CoreGlobal::CONFIG_ADMIN, 1, 'text', 'banner-mail.jpg',NULL ],
+			[ $this->site->id, 'default_avatar', 'Default Avatar', CoreGlobal::CONFIG_FRONTEND, 1, 'text', 'avatar-site.png',NULL ],
+			[ $this->site->id, 'user_avatar','User Avatar', CoreGlobal::CONFIG_FRONTEND, 1, 'text', 'avatar-user.png',NULL ],
+			[ $this->site->id, 'mail_avatar','User Avatar', CoreGlobal::CONFIG_FRONTEND, 1, 'text', 'avatar-mail.png',NULL ],
+			[ $this->site->id, 'default_banner','Default Banner', CoreGlobal::CONFIG_FRONTEND, 1, 'text', 'banner-site.jpg',NULL ],
+			[ $this->site->id, 'page_banner','Page Banner', CoreGlobal::CONFIG_FRONTEND, 1, 'text', 'banner-page.jpg',NULL ],
+			[ $this->site->id, 'mail_banner','Page Banner', CoreGlobal::CONFIG_FRONTEND, 1, 'text', 'banner-mail.jpg',NULL ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_site_meta', $columns, $metas );
@@ -661,7 +665,7 @@ class m160621_014408_core_data extends Migration {
 		$this->insert( $this->prefix . 'core_category', [
 			'siteId' => $this->site->id,
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-			'name' => 'Gender', 'slug' => 'gender',
+			'name' => 'Gender', 'slug' => CoreGlobal::CATEGORY_GENDER,
 			'type' => CoreGlobal::TYPE_OPTION_GROUP, 'icon' => null,
 			'description' => 'Gender category with available options.',
 			'featured' => false,
@@ -670,17 +674,90 @@ class m160621_014408_core_data extends Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$category	= Category::findBySlugType( 'gender', CoreGlobal::TYPE_OPTION_GROUP );
+		$this->insert( $this->prefix . 'core_category', [
+			'siteId' => $this->site->id,
+			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
+			'name' => 'Marital Status', 'slug' => CoreGlobal::CATEGORY_MARITAL,
+			'type' => CoreGlobal::TYPE_OPTION_GROUP, 'icon' => null,
+			'description' => 'Marital Status category with available options.',
+			'featured' => false,
+			'lValue' => 1, 'rValue' => 2,
+			'createdAt' => DateUtil::getDateTime(),
+			'modifiedAt' => DateUtil::getDateTime()
+		]);
 
-		$columns = [ 'categoryId', 'name', 'value', 'icon' ];
+		$this->insert( $this->prefix . 'core_category', [
+			'siteId' => $this->site->id,
+			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
+			'name' => 'NOK Relation', 'slug' => CoreGlobal::CATEGORY_NOK_RELATION,
+			'type' => CoreGlobal::TYPE_OPTION_GROUP, 'icon' => null,
+			'description' => 'NOK Relationionship category with available options.',
+			'featured' => false,
+			'lValue' => 1, 'rValue' => 2,
+			'createdAt' => DateUtil::getDateTime(),
+			'modifiedAt' => DateUtil::getDateTime()
+		]);
 
-		$options	= [
-			[ $category->id, 'Male', 'male', null ],
-			[ $category->id, 'Female', 'female', null ],
-			[ $category->id, 'Other', 'other', null ]
+		$genderCategory		= Category::findBySlugType( CoreGlobal::CATEGORY_GENDER, CoreGlobal::TYPE_OPTION_GROUP );
+		$maritalCategory	= Category::findBySlugType( CoreGlobal::CATEGORY_MARITAL, CoreGlobal::TYPE_OPTION_GROUP );
+		$nokCategory		= Category::findBySlugType( CoreGlobal::CATEGORY_NOK_RELATION, CoreGlobal::TYPE_OPTION_GROUP );
+
+		$columns = [ 'categoryId', 'name', 'value', 'icon', 'active', 'order' ];
+
+		$options = [
+			[ $genderCategory->id, 'Male', 'male', null, 1, 0 ],
+			[ $genderCategory->id, 'Female', 'female', null, 1, 0 ],
+			[ $genderCategory->id, 'Other', 'other', null, 1, 1 ],
+			[ $maritalCategory->id, 'Married', 'married', null, 1, 0 ],
+			[ $maritalCategory->id, 'Unmarried', 'unmarried', null, 1, 0 ],
+			[ $maritalCategory->id, 'Other', 'other', null, 1, 1 ],
+			[ $nokCategory->id, 'Brother', 'brother', null, 1, 0 ],
+			[ $nokCategory->id, 'Daughter', 'sister', null, 1, 0 ],
+			[ $nokCategory->id, 'Father', 'sister', null, 1, 0 ],
+			[ $nokCategory->id, 'Mother', 'sister', null, 1, 0 ],
+			[ $nokCategory->id, 'Sister', 'sister', null, 1, 0 ],
+			[ $nokCategory->id, 'Son', 'sister', null, 1, 0 ],
+			[ $nokCategory->id, 'Spouse', 'sister', null, 1, 0 ],
+			[ $nokCategory->id, 'Other', 'other', null, 1, 1 ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_option', $columns, $options );
+	}
+
+	private function insertNotificationTemplates() {
+
+		$master = User::findByUsername( $this->siteMaster );
+
+		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'icon', 'type', 'active', 'description', 'classPath', 'dataForm', 'renderer', 'fileRender', 'layout', 'layoutGroup', 'viewPath', 'view', 'createdAt', 'modifiedAt', 'htmlOptions', 'message', 'content', 'data' ];
+
+		$templates = [
+			// Users
+			[ $master->id, $master->id, 'New User', CoreGlobal::TPL_NOTIFY_USER_NEW, null, 'notification', true, 'Trigger Notification to Admin, when new user is registered.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, 'User registered - <b>{{model.email}}</b>', 'A new user <b>{{model.name}}</b>, <b>{{model.email}}</b> has been registered.{% if config.link %} Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %} Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"1","user":"0","direct":"0","adminEmail":"0","userEmail":"0","directEmail":"0"}}' ],
+			[ $master->id, $master->id, 'Role Changed', CoreGlobal::TPL_NOTIFY_USER_ROLE, null, 'notification', true, 'Trigger Notification to User, when role is changed while updating user.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, 'User role changed from <b>{{oldRole}}</b> to <b>{{newRole}}</b>', 'Your role has been changed from <b>{{oldRole}}</b> to <b>{{newRole}}</b>.', '{"config":{"admin":"0","user":"1","direct":"0","adminEmail":"0","userEmail":"1","directEmail":"0"}}' ],
+			// Comments
+			[ $master->id, $master->id, 'Comment New', CoreGlobal::TPL_COMMENT_STATUS_NEW, null, 'notification', true, 'A new Comment is submitted.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, '{{commentType}} submitted', '<b>{{parentType}}</b> - <b>{{parent.displayName}}</b> - {{commentType}} - has been submitted. {% if config.link %}Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %}Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"1","user":"0","direct":"1","adminEmail":"1","userEmail":"0","directEmail":"1"}}' ],
+			[ $master->id, $master->id, 'Comment Spam', CoreGlobal::TPL_COMMENT_STATUS_SPAM, null, 'notification', true, 'Admin marked the comment as spam.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, '{{commentType}} spammed', '<b>{{parentType}}</b> - <b>{{parent.displayName}}</b> - {{commentType}} - has been marked as spam. {% if config.link %}Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %}Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"0","user":"1","direct":"1","adminEmail":"0","userEmail":"1","directEmail":"1"}}' ],
+			[ $master->id, $master->id, 'Comment Approved', CoreGlobal::TPL_COMMENT_STATUS_APPROVE, null, 'notification', true, 'Admin marked the comment as approved.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, '{{commentType}} approved', '<b>{{parentType}}</b> - <b>{{parent.displayName}}</b> - {{commentType}} - has been approved. {% if config.link %}Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %}Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"0","user":"1","direct":"1","adminEmail":"0","userEmail":"1","directEmail":"1"}}' ],
+			[ $master->id, $master->id, 'Comment Trash', CoreGlobal::TPL_COMMENT_STATUS_TRASH, null, 'notification', true, 'Admin marked the comment as trash.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, '{{commentType}} trashed', '<b>{{parentType}}</b> - <b>{{parent.displayName}}</b> - {{commentType}} - has been marked as trash. {% if config.link %}Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %}Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"0","user":"1","direct":"1","adminEmail":"0","userEmail":"1","directEmail":"1"}}' ],
+			[ $master->id, $master->id, 'Comment Deleted', CoreGlobal::TPL_COMMENT_STATUS_DELETE, null, 'notification', true, 'Admin deleted the comment.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, '{{commentType}} deleted', '<b>{{parentType}}</b> - <b>{{parent.displayName}}</b> - {{commentType}} - has been deleted. {% if config.link %}Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %}Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"0","user":"1","direct":"1","adminEmail":"0","userEmail":"1","directEmail":"1"}}' ],
+			[ $master->id, $master->id, 'Comment Request Spam', CoreGlobal::TPL_COMMENT_REQUEST_SPAM, null, 'notification', true, 'User submitted request to mark spam.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, '{{commentType}} request spam', '<b>{{parentType}}</b> - <b>{{parent.displayName}}</b> - {{commentType}} - has been requested to mark as spam. {% if config.link %}Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %}Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"1","user":"0","direct":"1","adminEmail":"1","userEmail":"0","directEmail":"1"}}' ],
+			[ $master->id, $master->id, 'Comment Request Approve', CoreGlobal::TPL_COMMENT_REQUEST_APPROVE, null, 'notification', true, 'User submitted request to approve.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, '{{commentType}} request approve', '<b>{{parentType}}</b> - <b>{{parent.displayName}}</b> - {{commentType}} - has been requested to approve. {% if config.link %}Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %}Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"1","user":"0","direct":"1","adminEmail":"1","userEmail":"0","directEmail":"1"}}' ],
+			[ $master->id, $master->id, 'Comment Request Delete', CoreGlobal::TPL_COMMENT_REQUEST_DELETE, null, 'notification', true, 'User submitted request to delete.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, '{{commentType}} request delete', '<b>{{parentType}}</b> - <b>{{parent.displayName}}</b> - {{commentType}} - has been requested to delete. {% if config.link %}Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %}Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"1","user":"0","direct":"1","adminEmail":"1","userEmail":"0","directEmail":"1"}}' ],
+			// Categories and Options
+			[ $master->id, $master->id, 'Category Suggest', CoreGlobal::TPL_NOTIFY_SUGGEST_CATEGORY, null, 'notification', true, 'Trigger Notification to Admin, when user suggest category.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, 'Category Suggested - <b>{{name}}</b>', 'A new category <b>{{name}}</b> for type <b>{{type}}</b> has been suggested by <b>{{model.name}}, {{model.email}}</b>.{% if config.link %} Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %} Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"1","user":"0","direct":"0","adminEmail":"1","userEmail":"0","directEmail":"0"}}' ],
+			[ $master->id, $master->id, 'Option Suggest', CoreGlobal::TPL_NOTIFY_SUGGEST_OPTION, null, 'notification', true, 'Trigger Notification to Admin, when new user suggest category option.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, 'Option Suggested - <b>{{name}}</b>', 'A new option <b>{{name}}</b> for category <b>{{category.name}}</b> has been suggested by <b>{{model.name}}, {{model.email}}</b>.{% if config.link %} Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %} Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"1","user":"0","direct":"0","adminEmail":"1","userEmail":"0","directEmail":"0"}}' ],
+			// Comment
+			[ $master->id, $master->id, 'Feedback Admin', CoreGlobal::TPL_NOTIFY_FEEDBACK_ADMIN, null, 'notification', true, 'Trigger Notification to site Admin, when user submits feedback.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, 'Feedback Submitted - <b>{{model.name}}</b>', 'A new feedback has been submitted by <b>{{model.name}}, {{model.email}}</b>.{% if config.link %} Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %} Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"1","user":"0","direct":"0","adminEmail":"1","userEmail":"0","directEmail":"0"}}' ],
+			[ $master->id, $master->id, 'Testimonial Admin', CoreGlobal::TPL_NOTIFY_TESTIMONIAL_ADMIN, null, 'notification', true, 'Trigger Notification to site Admin, when user submits testimonial.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, 'Testimonial Submitted - <b>{{model.name}}</b>', 'A new testimonial has been submitted by <b>{{model.name}}, {{model.email}}</b>.{% if config.link %} Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %} Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"1","user":"0","direct":"0","adminEmail":"1","userEmail":"0","directEmail":"0"}}' ],
+			[ $master->id, $master->id, 'Review Admin', CoreGlobal::TPL_NOTIFY_REVIEW_ADMIN, null, 'notification', true, 'Trigger Notification to site Admin, when user submits review.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, 'Review Submitted - <b>{{model.name}}</b>', 'A new review has been submitted by <b>{{model.name}}, {{model.email}}</b>.{% if config.link %} Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %} Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"1","user":"0","direct":"0","adminEmail":"1","userEmail":"0","directEmail":"0"}}' ],
+			[ $master->id, $master->id, 'Comment Admin', CoreGlobal::TPL_NOTIFY_COMMENT_ADMIN, null, 'notification', true, 'Trigger Notification to site Admin, when user submits comment.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, 'Comment Submitted - <b>{{model.name}}</b>', 'A new comment has been submitted by <b>{{model.name}}, {{model.email}}</b>.{% if config.link %} Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %} Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"1","user":"0","direct":"0","adminEmail":"1","userEmail":"0","directEmail":"0"}}' ],
+			[ $master->id, $master->id, 'Feedback User', CoreGlobal::TPL_NOTIFY_FEEDBACK_USER, null, 'notification', true, 'Trigger Notification to parent User, when user submits feedback.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, 'Feedback Submitted - <b>{{model.name}}</b>', 'A new feedback has been submitted by <b>{{model.name}}, {{model.email}}</b>.{% if config.link %} Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %} Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"0","user":"1","direct":"0","adminEmail":"0","userEmail":"1","directEmail":"0"}}' ],
+			[ $master->id, $master->id, 'Testimonial User', CoreGlobal::TPL_NOTIFY_TESTIMONIAL_USER, null, 'notification', true, 'Trigger Notification to parent User, when user submits testimonial.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, 'Testimonial Submitted - <b>{{model.name}}</b>', 'A new testimonial has been submitted by <b>{{model.name}}, {{model.email}}</b>.{% if config.link %} Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %} Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"0","user":"1","direct":"0","adminEmail":"0","userEmail":"1","directEmail":"0"}}' ],
+			[ $master->id, $master->id, 'Review User', CoreGlobal::TPL_NOTIFY_REVIEW_USER, null, 'notification', true, 'Trigger Notification to parent User, when user submits review.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, 'Review Submitted - <b>{{model.name}}</b>', 'A new review has been submitted by <b>{{model.name}}, {{model.email}}</b>.{% if config.link %} Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %} Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"0","user":"1","direct":"0","adminEmail":"0","userEmail":"1","directEmail":"0"}}' ],
+			[ $master->id, $master->id, 'Comment User', CoreGlobal::TPL_NOTIFY_COMMENT_USER, null, 'notification', true, 'Trigger Notification to parent User, when user submits comment.', null, null, 'twig', false, null, false, null, null, DateUtil::getDateTime(), DateUtil::getDateTime(), null, 'Comment Submitted - <b>{{model.name}}</b>', 'A new comment has been submitted by <b>{{model.name}}, {{model.email}}</b>.{% if config.link %} Please follow this <a href="{{config.link}}">link</a>.{% endif %}{% if config.adminLink %} Please follow this <a href="{{config.adminLink}}">link</a>.{% endif %}', '{"config":{"admin":"0","user":"1","direct":"0","adminEmail":"0","userEmail":"1","directEmail":"0"}}' ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_template', $columns, $templates );
 	}
 
 	public function down() {

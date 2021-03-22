@@ -15,8 +15,6 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Action;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -24,7 +22,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class Create extends Action {
+class Create extends \cmsgears\core\common\base\Action {
 
 	// Variables ---------------------------------------------------
 
@@ -73,15 +71,22 @@ class Create extends Action {
 
 	public function run() {
 
-		$modelClass		= $this->modelService->getModelClass();
-		$model			= new $modelClass;
+		$modelClass = $this->modelService->getModelClass();
+
+		$model = new $modelClass;
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->controller->model = $this->modelService->create( $model );
+			$model = $this->modelService->create( $model );
 
 			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
+			if( $model ) {
+
+				// Controller Model for post action
+				$this->controller->model = $model;
+
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+			}
 		}
 
 		// Generate Errors

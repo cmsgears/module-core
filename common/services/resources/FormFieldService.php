@@ -12,6 +12,7 @@ namespace cmsgears\core\common\services\resources;
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -70,6 +71,11 @@ class FormFieldService extends \cmsgears\core\common\services\base\ResourceServi
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -135,9 +141,7 @@ class FormFieldService extends \cmsgears\core\common\services\base\ResourceServi
 					'label' => 'Order'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -159,7 +163,7 @@ class FormFieldService extends \cmsgears\core\common\services\base\ResourceServi
 		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
@@ -175,7 +179,7 @@ class FormFieldService extends \cmsgears\core\common\services\base\ResourceServi
 
 					break;
 				}
-				case 'inactive': {
+				case 'disabled': {
 
 					$config[ 'conditions' ][ "$modelTable.active" ] = false;
 
@@ -192,23 +196,28 @@ class FormFieldService extends \cmsgears\core\common\services\base\ResourceServi
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'label' => "$modelTable.label",
+			'validators' => "$modelTable.validators",
+			'content' => "$modelTable.content"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'label' => "$modelTable.label",
-				'validators' => "$modelTable.validators",
-				'content' => "$modelTable.content"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'name' => "$modelTable.name",
 			'label' => "$modelTable.label",
 			'validators' => "$modelTable.validators",
@@ -251,10 +260,19 @@ class FormFieldService extends \cmsgears\core\common\services\base\ResourceServi
 
 	public function update( $model, $config = [] ) {
 
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'name', 'label', 'type', 'compress', 'validators',
-			'order', 'icon', 'active', 'htmlOptions', 'content'
+			'optionGroupId', 'name', 'label', 'type', 'compress', 'validators',
+			'order', 'icon', 'htmlOptions', 'content'
 		];
+
+		if( $admin ) {
+
+			$attributes	= ArrayHelper::merge( $attributes, [
+				'active'
+			]);
+		}
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -280,7 +298,7 @@ class FormFieldService extends \cmsgears\core\common\services\base\ResourceServi
 
 				switch( $action ) {
 
-					case 'active': {
+					case 'activate': {
 
 						$model->active = true;
 
@@ -288,7 +306,7 @@ class FormFieldService extends \cmsgears\core\common\services\base\ResourceServi
 
 						break;
 					}
-					case 'inactive': {
+					case 'disable': {
 
 						$model->active = false;
 
@@ -298,7 +316,7 @@ class FormFieldService extends \cmsgears\core\common\services\base\ResourceServi
 					}
 					case 'compress': {
 
-						$model->comress = true;
+						$model->compress = true;
 
 						$model->update();
 

@@ -12,6 +12,7 @@ namespace cmsgears\core\common\services\entities;
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -20,10 +21,9 @@ use cmsgears\core\common\models\mappers\RolePermission;
 
 use cmsgears\core\common\services\interfaces\entities\IRoleService;
 
-use cmsgears\core\common\services\base\EntityService;
-
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
@@ -31,7 +31,7 @@ use cmsgears\core\common\services\traits\resources\DataTrait;
  *
  * @since 1.0.0
  */
-class RoleService extends EntityService implements IRoleService {
+class RoleService extends \cmsgears\core\common\services\base\EntityService implements IRoleService {
 
 	// Variables ---------------------------------------------------
 
@@ -60,6 +60,7 @@ class RoleService extends EntityService implements IRoleService {
 	// Traits ------------------------------------------------------
 
 	use DataTrait;
+	use GridCacheTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
 
@@ -80,6 +81,11 @@ class RoleService extends EntityService implements IRoleService {
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -149,9 +155,7 @@ class RoleService extends EntityService implements IRoleService {
 	                'label' => 'Updated At'
 	            ]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -173,7 +177,7 @@ class RoleService extends EntityService implements IRoleService {
 		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
@@ -194,21 +198,26 @@ class RoleService extends EntityService implements IRoleService {
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'desc' => "$modelTable.description"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'desc' => "$modelTable.description"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'name' => "$modelTable.name",
 			'type' => "$modelTable.type",
 			'desc' => "$modelTable.description"
@@ -235,9 +244,12 @@ class RoleService extends EntityService implements IRoleService {
 
 	// Read - Maps -----
 
-	public function getIdNameMapByRoles( $roles ) {
+	public function getIdNameMapByRoleIds( $roleIds ) {
 
-		return $this->getIdNameMap( [ 'filters' => [ [ 'in', 'slug', $roles ] ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Role' ] ] ] );
+		return $this->getIdNameMap([
+			'filters' => [ [ 'in', 'slug', $roleIds ] ],
+			'prepend' => [ [ 'name' => '0', 'value' => 'Choose Role' ] ]
+		]);
 	}
 
 	// Read - Others ---
@@ -248,7 +260,18 @@ class RoleService extends EntityService implements IRoleService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'slug', 'icon', 'description', 'group', 'adminUrl', 'homeUrl' ];
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'slug', 'icon', 'description', 'adminUrl', 'homeUrl'
+		];
+
+		if( $admin ) {
+
+			$attributes	= ArrayHelper::merge( $attributes, [
+				'group'
+			]);
+		}
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -274,8 +297,9 @@ class RoleService extends EntityService implements IRoleService {
 
 				$toSave	= new RolePermission();
 
-				$toSave->roleId			= $roleId;
-				$toSave->permissionId	= $id;
+				$toSave->roleId = $roleId;
+
+				$toSave->permissionId = $id;
 
 				$toSave->save();
 			}

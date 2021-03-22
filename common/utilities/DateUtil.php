@@ -1,7 +1,16 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\utilities;
 
-use \DateTime;
+use DateTime;
+use DateInterval;
 
 /**
  * DateUtil provide several utility methods related to date and time.
@@ -9,6 +18,16 @@ use \DateTime;
 class DateUtil {
 
     // Months ------------------------------------------------------
+
+	// PHP month - 1 to 12 - Jan to Dec
+	// $d = date( 'm' ); // With leading zero
+	// $d = date( 'n' ); // Without leading zero
+
+	// MySQL month - 1 to 12 - Jan to Dec
+	// SELECT MONTH( '2009-05-18' );
+
+	// JavaScript month - 0 to 12 - Jan to Dec
+	// Date.getMonth()
 
     const MONTH_JAN     = 1;
     const MONTH_FEB     = 2;
@@ -35,27 +54,45 @@ class DateUtil {
         self::MONTH_SEP => 'September',
         self::MONTH_OCT => 'October',
         self::MONTH_NOV => 'November',
-        self::MONTH_DEC =>'December'
+        self::MONTH_DEC => 'December'
     ];
 
+    public static $revMonthsMap = [
+        'January' => self::MONTH_JAN,
+        'February' => self::MONTH_FEB,
+        'March' => self::MONTH_MAR,
+        'April' => self::MONTH_APR,
+        'May' => self::MONTH_MAY,
+        'June' => self::MONTH_JUN,
+        'July' => self::MONTH_JUL,
+        'August' => self::MONTH_AUG,
+        'September' => self::MONTH_SEP,
+        'October' => self::MONTH_OCT,
+        'November' => self::MONTH_NOV,
+        'December' => self::MONTH_DEC
+    ];
 
 	// Week Days ---------------------------------------------------
 
 	// PHP Week Days : 0 - Sunday, 1 - Monday, 2 - Tuesday, 3 - Wednesday, 4 - Thursday, 5 - Friday, 6 - Saturday
 	// $w = date( 'w', strtotime( '2017-06-28' ) );
+	// Notes: $w = date( 'N', strtotime( '2017-06-28' ) ); // It returns 7 for Sunday
 
 	// MySQL Week Days : 0 - Monday, 1 - Tuesday, 2 - Wednesday, 3 - Thursday, 4 - Friday, 5 - Saturday, 6 - Sunday
 	// select weekday('2017-06-28');
 
-	const WEEK_DAY_SUN		=  0;
-	const WEEK_DAY_MON		=  1;
-	const WEEK_DAY_TUE		=  2;
-	const WEEK_DAY_WED		=  3;
-	const WEEK_DAY_THU		=  4;
-	const WEEK_DAY_FRI		=  5;
-	const WEEK_DAY_SAT		=  6;
+	// JavaScript Week Days : 0 - Sunday, 1 - Monday, 2 - Tuesday, 3 - Wednesday, 4 - Thursday, 5 - Friday, 6 - Saturday
+	// Date.getDay()
 
-	const WEEK_DAY_ALL		= 10;
+	const WEEK_DAY_SUN	=  0;
+	const WEEK_DAY_MON	=  1;
+	const WEEK_DAY_TUE	=  2;
+	const WEEK_DAY_WED	=  3;
+	const WEEK_DAY_THU	=  4;
+	const WEEK_DAY_FRI	=  5;
+	const WEEK_DAY_SAT	=  6;
+
+	const WEEK_DAY_ALL	= 10;
 
 	public static $weekDaysMap = [
 		self::WEEK_DAY_MON => 'Monday',
@@ -65,6 +102,16 @@ class DateUtil {
 		self::WEEK_DAY_FRI => 'Friday',
 		self::WEEK_DAY_SAT => 'Saturday',
 		self::WEEK_DAY_SUN => 'Sunday'
+	];
+
+	public static $weekDaysMinMap = [
+		self::WEEK_DAY_MON => 'Mon',
+		self::WEEK_DAY_TUE => 'Tue',
+		self::WEEK_DAY_WED => 'Wed',
+		self::WEEK_DAY_THU => 'Thu',
+		self::WEEK_DAY_FRI => 'Fri',
+		self::WEEK_DAY_SAT => 'Sat',
+		self::WEEK_DAY_SUN => 'Sun'
 	];
 
 	public static $weekDaysWithAllMap = [
@@ -99,11 +146,18 @@ class DateUtil {
 		self::DURATION_SECOND => 'Second'
     ];
 
+    public static $lowDurationMap = [
+		self::DURATION_DAY => 'Day',
+		self::DURATION_HOUR => 'Hour',
+		self::DURATION_MINUTE => 'Minute',
+		self::DURATION_SECOND => 'Second'
+    ];
+
 	// Hrs/Mins ----------------------------------------------------
 
 	// hours in 12 and 24 hours format
-	public static $hrs12	= [ '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12' ];
-	public static $hrs24	= [ '00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23' ];
+	public static $hrs12 = [ '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12' ];
+	public static $hrs24 = [ '00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23' ];
 
 	// minutes with different interval
 	public static $mins15	= [ '00', '15', '30', '45' ];
@@ -115,35 +169,30 @@ class DateUtil {
 	/**
 	 * @return datetime - current datetime having specified format
 	 */
-	public static function getDateTime( $format = null ) {
-
-		if( !isset( $format ) ) {
-
-			$format	= 'Y-m-d H:i:s';
-		}
+	public static function getDateTime( $format = 'Y-m-d H:i:s' ) {
 
 		return	date( $format );
 	}
 
-	public static function getDateTimeFromMillis( $millis, $format = null ) {
-
-		if( !isset( $format ) ) {
-
-			$format	= 'Y-m-d H:i:s';
-		}
+	public static function getDateTimeFromMillis( $millis, $format = 'Y-m-d H:i:s' ) {
 
 	    return  date( $format, $millis );
+	}
+
+	public static function getDateTimePlusMinutes( $minutes, $format = 'Y-m-d H:i:s' ) {
+
+		$date = date( $format );
+
+		$time = new DateTime( $date );
+		$time->add( new DateInterval( 'PT' . $minutes . 'M' ) );
+
+		return $time->format( $format );
 	}
 
 	/**
 	 * @return datetime - current date having specified format
 	 */
-	public static function getDate( $format = null ) {
-
-		if( !isset( $format ) ) {
-
-			$format	= 'Y-m-d';
-		}
+	public static function getDate( $format = 'Y-m-d' ) {
 
 		return	date( $format );
 	}
@@ -151,20 +200,23 @@ class DateUtil {
 	/**
 	 * @return time - current time having specified format
 	 */
-	public static function getTime( $format = null ) {
-
-		if( !isset( $format ) ) {
-
-			$format	= 'H:i:s';
-		}
+	public static function getTime( $format = 'H:i:s' ) {
 
 		return date( $format );
+	}
+
+	public static function getDateTimeUtc( $format = 'Y-m-d H:i:s', $timezone = 'UTC', $date = "now" ) {
+
+		$UTC		= new \DateTimeZone( $timezone );
+		$dateUTC	= new \DateTime( $date, $UTC );
+
+		return $dateUTC->format( $format );
 	}
 
 	/**
 	 * @return time - current time having specified format in UTC
 	 */
-	public static function getTimeUtc( $format = null, $timezone = 'UTC', $date = "now"  ) {
+	public static function getTimeUtc( $format = null, $timezone = 'UTC', $date = "now" ) {
 
 		$UTC		= new \DateTimeZone( $timezone );
 		$dateUTC	= new \DateTime( $date, $UTC );
@@ -180,7 +232,7 @@ class DateUtil {
 	/**
 	 * @return time - current time having specified format in UTC
 	 */
-	public static function getDateUtc( $format = null, $timezone = 'UTC', $date = "now"  ) {
+	public static function getDateUtc( $format = null, $timezone = 'UTC', $date = "now" ) {
 
 		$UTC		= new \DateTimeZone( $timezone );
 		$dateUTC	= new \DateTime( $date, $UTC );
@@ -198,7 +250,7 @@ class DateUtil {
 	 */
 	public static function getDateFromDateTime( $date ) {
 
-		$date	= preg_split( "/ /", $date );
+		$date = preg_split( "/ /", $date );
 
 		return $date[ 0 ];
 	}
@@ -208,7 +260,7 @@ class DateUtil {
 	 */
 	public static function getTimeFromDateTime( $date ) {
 
-		$date	= preg_split( "/ /", $date );
+		$date = preg_split( "/ /", $date );
 
 		return $date[ 1 ];
 	}
@@ -223,7 +275,7 @@ class DateUtil {
 			$format	= 'H:i:s';
 		}
 
-		$date	= preg_split( "/-/", $date );
+		$date = preg_split( "/-/", $date );
 
 		return $date[ 2 ];
 	}
@@ -238,9 +290,9 @@ class DateUtil {
 			$format	= 'H:i:s';
 		}
 
-		$date 	= is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
+		$date = is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
 
-		return date( "N", $date );
+		return date( "w", $date );
 	}
 
 	public static function getWeekStartDate( $date ) {
@@ -287,16 +339,16 @@ class DateUtil {
 
 	    $date = strtotime( "+" . $secs ." second", $date );
 
-	    return  date( "Y-m-d H:i:s", $date );
+	    return date( "Y-m-d H:i:s", $date );
 	}
 
 	public static function addDays( $date, $days ) {
 
-		$date 	= is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
+		$date = is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
 
-	    $date 	= strtotime( "+" . $days ." days", $date );
+	    $date = strtotime( "+" . $days ." days", $date );
 
-	    return  date( "Y-m-d", $date );
+	    return date( "Y-m-d", $date );
 	}
 
 	public static function getDayDifference( $startDate, $endDate ) {
@@ -401,7 +453,8 @@ class DateUtil {
 	public static function getWeekDates( $monday ) {
 
 		$currentDay = is_string( $monday ) ? strtotime( $monday ) : $monday->getTimestamp();
-		$dates		= [];
+
+		$dates = [];
 
 		if( !isset( $format ) ) {
 
@@ -410,7 +463,7 @@ class DateUtil {
 
 		for ( $i = 0 ; $i < 7 ; $i++ ) {
 
-			$dates[]	= date( $format, $currentDay );
+			$dates[] = date( $format, $currentDay );
 
 			$currentDay += 24 * 3600;
 		}
@@ -424,7 +477,8 @@ class DateUtil {
 	public static function getCurrentWeekDates( $format = null ) {
 
 		$currentDay = strtotime( 'last sunday' );
-		$dates		= [];
+
+		$dates = [];
 
 		if( !isset( $format ) ) {
 
@@ -433,7 +487,7 @@ class DateUtil {
 
 		for ( $i = 0 ; $i < 7 ; $i++ ) {
 
-			$dates[]	= date( $format, $currentDay );
+			$dates[] = date( $format, $currentDay );
 
 			$currentDay += 24 * 3600;
 		}
@@ -447,7 +501,8 @@ class DateUtil {
 	public static function getLastWeekDates( $format = null ) {
 
 		$currentDay = strtotime( 'last sunday' ) - 7*24*3600;
-		$dates		= [];
+
+		$dates = [];
 
 		if( !isset( $format ) ) {
 
@@ -456,7 +511,7 @@ class DateUtil {
 
 		for ( $i = 0 ; $i < 7 ; $i++ ) {
 
-			$dates[]	= date( $format, $currentDay );
+			$dates[] = date( $format, $currentDay );
 
 			$currentDay += 24 * 3600;
 		}
@@ -473,7 +528,8 @@ class DateUtil {
 		$lastDay	= date( 'Y-m-t' );
 		$daysCount	= ( strtotime( $lastDay ) - strtotime( $currentDay ) ) / 3600 / 24;
 		$currentDay	= strtotime( $currentDay );
-		$dates		= [];
+
+		$dates = [];
 
 		if( !isset( $format ) ) {
 
@@ -482,7 +538,7 @@ class DateUtil {
 
 		for ( $i = 0 ; $i <= $daysCount ; $i++ ) {
 
-			$dates[]	= date( $format, $currentDay );
+			$dates[] = date( $format, $currentDay );
 
 			$currentDay += 24 * 3600;
 		}
@@ -502,7 +558,8 @@ class DateUtil {
 		$lastDay	= $lastDay->format( 'Y-m-d' );
 		$daysCount	= ( strtotime( $lastDay ) - strtotime( $currentDay ) ) / 3600 / 24;
 		$currentDay	= strtotime( $currentDay );
-		$dates		= [];
+
+		$dates = [];
 
 		if( !isset( $format ) ) {
 
@@ -511,7 +568,7 @@ class DateUtil {
 
 		for ( $i = 0 ; $i <= $daysCount ; $i++ ) {
 
-			$dates[]	= date( $format, $currentDay );
+			$dates[] = date( $format, $currentDay );
 
 			$currentDay += 24 * 3600;
 		}
@@ -528,18 +585,18 @@ class DateUtil {
 
 		for( $slot = 1; $slot <= 97; $slot++ ) {
 
-			$houri	= $hour;
+			$houri = $hour;
 
 			if( $hour < 10 ) {
 
-				$houri	= "0$hour";
+				$houri = "0$hour";
 			}
 
 			$minutei = $minute;
 
 			if( $minute < 10 ) {
 
-				$minutei	= "0$minute";
+				$minutei = "0$minute";
 			}
 
 			$interval[]	= $houri . ':' . $minutei . ':00';
@@ -549,11 +606,12 @@ class DateUtil {
 			if( $slot % 4 == 0 ) {
 
 				 $hour++;
-				 $minute	= 0;
+
+				 $minute = 0;
 
 				 if( $hour == 24 ) {
 
-					$hour	= 0;
+					$hour = 0;
 				 }
 			}
 
@@ -576,40 +634,42 @@ class DateUtil {
 
 		for( $slot = 1; $slot <= 97; $slot++ ) {
 
-			$houri	= $hour;
+			$houri = $hour;
 
 			if( $hour < 10 ) {
 
-				$houri	= "0$hour";
+				$houri = "0$hour";
 			}
 
 			$minutei = $minute;
 
 			if( $minute < 10 ) {
 
-				$minutei	= "0$minute";
+				$minutei = "0$minute";
 			}
 
-			$time				= $houri . ':' . $minutei . ':00';
-			$interval[ $time ]	= $time;
+			$time = $houri . ':' . $minutei . ':00';
+
+			$interval[ $time ] = $time;
 
 			$minute += $minInterval;
 
 			if( $slot % 4 == 0 ) {
 
-				 $hour++;
-				 $minute	= 0;
+				$hour++;
 
-				 if( $hour == 24 ) {
+				$minute = 0;
 
-					$hour	= 0;
-				 }
+				if( $hour == 24 ) {
+
+					$hour = 0;
+				}
 			}
 
 			if( $slot == 97 ) {
 
-				 $hour		= 0;
-				 $minute	= 0;
+				$hour	= 0;
+				$minute	= 0;
 			}
 		}
 
@@ -634,8 +694,13 @@ class DateUtil {
 
 		$startYear	= isset( $config[ 'startYear' ] ) ? $config[ 'startYear' ] : $currentyear;
 		$endYear	= isset( $config[ 'endYear' ] ) ? $config[ 'endYear' ] : $currentyear;
+		$addToEnd	= isset( $config[ 'addToEnd' ] ) ? $config[ 'addToEnd' ] : 0;
 		$difference	= isset( $config[ 'difference' ] ) ? $config[ 'difference' ] : 1;
 		$reverse	= isset( $config[ 'reverse' ] ) ? $config[ 'reverse' ] : false;
+
+		$endYear = $endYear + $addToEnd;
+
+		$year = $startYear;
 
 		if( $reverse ) {
 
@@ -702,7 +767,7 @@ class DateUtil {
 			$offset_prefix		= $offset < 0 ? '-' : '+';
 			$offset_formatted 	= gmdate( 'H:i', abs($offset) );
 
-			$pretty_offset 		= "UTC${offset_prefix}${offset_formatted}";
+			$pretty_offset = "UTC${offset_prefix}${offset_formatted}";
 
 			$timezone_list[$timezone] = "(${pretty_offset}) $timezone";
 		}
@@ -713,7 +778,7 @@ class DateUtil {
     // Dates list from 1 to 31
     public static function getDatesList() {
 
-        $list   = [];
+        $list = [];
 
         for( $i = 1; $i <= 31; $i++ ) {
 
@@ -722,4 +787,5 @@ class DateUtil {
 
         return $list;
     }
+
 }

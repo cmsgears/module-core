@@ -9,15 +9,12 @@
 
 namespace cmsgears\core\common\models\resources\address;
 
-// CMG Imports
-use cmsgears\core\common\models\resources\Address;
-
 /**
  * The shipping address model.
  *
  * @since 1.0.0
  */
-class ShippingAddress extends Address {
+class ShippingAddress extends \cmsgears\core\common\models\resources\Address {
 
 	// Variables ---------------------------------------------------
 
@@ -33,7 +30,7 @@ class ShippingAddress extends Address {
 
 	// Public -----------------
 
-	public $type	= self::TYPE_SHIPPING;
+	public $type = self::TYPE_SHIPPING;
 
 	// Protected --------------
 

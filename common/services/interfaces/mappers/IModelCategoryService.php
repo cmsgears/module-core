@@ -25,13 +25,7 @@ interface IModelCategoryService extends IModelMapperService {
 
 	// Read - Models ---
 
-	public function getModelCounts( $parentType, $categoryType );
-
 	// Read - Lists ----
-
-	public function getActiveCategoryIdList( $categoryId, $parentType );
-
-	public function getActiveCategoryIdListByParent( $parentId, $parentType );
 
 	// Read - Maps -----
 
@@ -40,10 +34,6 @@ interface IModelCategoryService extends IModelMapperService {
 	// Create -------------
 
 	// Update -------------
-
-	public function toggle( $parentId, $parentType, $modelId );
-
-	public function bindCategories( $parentId, $parentType, $config = [] );
 
 	// Delete -------------
 

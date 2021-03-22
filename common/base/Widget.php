@@ -10,7 +10,6 @@
 namespace cmsgears\core\common\base;
 
 // Yii Imports
-use yii\base\Widget as BaseWidget;
 use yii\helpers\Html;
 
 // CMG Imports
@@ -24,7 +23,7 @@ use cmsgears\core\common\utilities\CodeGenUtil;
  *
  * @since 1.0.0
  */
-abstract class Widget extends BaseWidget {
+abstract class Widget extends \yii\base\Widget {
 
 	// Variables ---------------------------------------------------
 
@@ -92,11 +91,11 @@ abstract class Widget extends BaseWidget {
 	public $bufferData	= null;
 
 	/**
-	 * This flag can be utilised by widgets to use fallback options in case application factory having
-	 * model service is not available or initialised.
+	 * This flag can be utilized by widgets to use fallback options in case application factory having
+	 * model service is not available or initialized.
 	 *
-	 * The widgets in need of model service can utilise factory to get required service. In case factory
-	 * is not needed, widget can directly use models to query them or service in use must provided static method.
+	 * The widgets in need of model service can utilize factory to get required service. In case factory
+	 * is not needed, widget can directly use models to query them or service in use must provide static method.
 	 */
 	public $factory = true;
 
@@ -116,7 +115,7 @@ abstract class Widget extends BaseWidget {
 	public $cacheFile = false;
 
 	/**
-	 * Flag for widget autoloading.
+	 * Flag for widget auto-loading.
 	 */
 	public $autoload			= false;
 	public $autoloadTemplate	= 'autoload';
@@ -129,9 +128,9 @@ abstract class Widget extends BaseWidget {
 	public $autoloadAction		= 'autoload';
 
 	/**
-	 * Url for autoloading.
+	 * URL for auto-loading.
 	 */
-	public $autoloadUrl = null;
+	public $autoloadUrl = 'core/autoload/widget';
 
 	// Protected --------------
 
@@ -145,9 +144,9 @@ abstract class Widget extends BaseWidget {
 
         parent::init();
 
-        $this->autoload	= ( !empty( $this->autoloadUrl ) && CoreProperties::getInstance()->isAutoLoad() ) ? true : false;
+        $this->autoload	= ( $this->autoload && !empty( $this->autoloadUrl ) && CoreProperties::getInstance()->isAutoLoad() ) ? true : false;
 
-		$this->cache = $this->cache ? $this->cache : CacheProperties::getInstance()->isCaching();
+		$this->cache = $this->cache && CacheProperties::getInstance()->isCaching() ? true : false;
     }
 
 	// Instance methods --------------------------------------------

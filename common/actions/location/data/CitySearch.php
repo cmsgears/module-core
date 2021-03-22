@@ -69,22 +69,50 @@ class CitySearch extends \cmsgears\core\common\base\Action {
 
 	public function run() {
 
-		$provinceId	= Yii::$app->request->post( 'province-id' );
-		$regionId	= Yii::$app->request->post( 'region-id' );
+		$countryId	= Yii::$app->request->post( 'countryId' );
+		$provinceId	= Yii::$app->request->post( 'provinceId' );
+		$regionId	= Yii::$app->request->post( 'regionId' );
 		$name		= Yii::$app->request->post( 'name' );
 
-		$conditions = [ 'provinceId' => $provinceId ];
+		$limit	= Yii::$app->request->post( 'limit' );
+		$limit	= isset( $limit ) ? $limit : 5;
+
+		$autoCache	= Yii::$app->request->post( 'autoCache' );
+		$autoCache	= isset( $autoCache ) ? $autoCache : false;
+
+		$conditions = [];
+
+		if( !empty( $countryId && $countryId > 0 ) ) {
+
+			$conditions[ 'countryId' ] = $countryId;
+		}
+
+		if( !empty( $provinceId && $provinceId > 0 ) ) {
+
+			$conditions[ 'provinceId' ] = $provinceId;
+		}
 
 		if( !empty( $regionId && $regionId > 0 ) ) {
 
 			$conditions[ 'regionId' ] = $regionId;
 		}
 
-		$cities = $this->modelService->searchByName( $name, [
-			'limit' => 5,
-			'conditions' => $conditions,
-			'columns' => [ 'id', 'name', 'latitude', 'longitude', 'postal' ]
-		]);
+		$cities = [];
+
+		if( $autoCache ) {
+
+			$cities = $this->modelService->searchByName( $name, [
+				'limit' => $limit, 'conditions' => $conditions, 'autoCache' => $autoCache,
+				'columns' => [ 'id', 'autoCache AS name', 'latitude', 'longitude', 'postal' ]
+			]);
+		}
+		else {
+
+			$cities = $this->modelService->searchByName( $name, [
+				'limit' => $limit, 'conditions' => $conditions, 'autoCache' => $autoCache,
+				'columns' => [ 'id', 'name', 'latitude', 'longitude', 'postal' ]
+			]);
+		}
 
 		// Trigger Ajax Success
 		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $cities );

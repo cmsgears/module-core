@@ -29,7 +29,12 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'rdate' => 'Registered At', 'ldate' => 'Last Login', 'adate' => 'Last Activity'
 	],
 	'filters' => [
-		'status' => [ 'new' => 'New', 'active' => 'Active', 'blocked' => 'Blocked' ]
+		'status' => [
+			'new' => 'New', 'verified' => 'Verified', 'active' => 'Active',
+			'frozen' => 'Frozen', 'uplift-freeze' => 'Uplift Freeze',
+			'blocked' => 'Blocked', 'uplift-block' => 'Uplift Block',
+			'terminated' => 'Terminated'
+		]
 	],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
@@ -45,8 +50,13 @@ $themeTemplates		= '@themes/admin/views/templates';
 	],
 	'bulkPopup' => 'popup-grid-bulk',
 	'bulkActions' => [
-		'status' => [ 'active' => 'Activate', 'block' => 'Block' ],
-		'model' => [ 'delete' => 'Delete' ]
+		'status' => [
+			'activate' => 'Activate', 'freeze' => 'Freeze', 'block' => 'Block',
+			'terminate' => 'Terminate'
+		],
+		'model' => [
+			'delete' => 'Delete'
+		]
 	],
 	'header' => false, 'footer' => true,
 	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x3', 'x2', 'x3', 'x2', null, 'x2', null ] ],
@@ -65,16 +75,16 @@ $themeTemplates		= '@themes/admin/views/templates';
 	//'dataView' => "$moduleTemplates/grid/data/user",
 	//'cardView' => "$moduleTemplates/grid/cards/user",
 	//'actionView' => "$moduleTemplates/grid/actions/user"
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
 	'data' => [ 'model' => 'User', 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Delete Template', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
 	'data' => [ 'model' => 'User', 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
-]) ?>
+])?>

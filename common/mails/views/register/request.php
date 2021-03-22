@@ -1,15 +1,10 @@
 <?php
 // Yii Imports
 use yii\helpers\Html;
-use yii\helpers\Url;
 
 $siteProperties = Yii::$app->controller->getSiteProperties();
 
 $defaultIncludes = Yii::getAlias( '@cmsgears' ) . '/module-core/common/mails/views/includes';
-
-$name	= Html::encode( $user->getName() );
-$email	= Html::encode( $user->email );
-$token	= Html::encode( $user->verifyToken );
 
 $siteName	= Html::encode( $coreProperties->getSiteName() );
 $siteUrl	= Html::encode( $coreProperties->getSiteUrl() );
@@ -17,7 +12,11 @@ $logoUrl	= "$siteUrl/images/" . $siteProperties->getMailAvatar();
 $homeUrl	= $siteUrl;
 $siteBkg	= "$siteUrl/images/" . $siteProperties->getMailBanner();
 
-$confirmLink = Url::toRoute( "/confirm-account?token=$token&email=$email", true );
+$name	= Html::encode( $user->getName() );
+$email	= Html::encode( $user->email );
+$token	= Html::encode( $user->verifyToken );
+
+$confirmLink = "$siteUrl/confirm-account?token=$token&email=$email";
 ?>
 <?php include "$defaultIncludes/header.php"; ?>
 <table cellspacing="0" cellpadding="0" border="0" margin="0" padding="0" width="80%" align="center" class="ctmax">

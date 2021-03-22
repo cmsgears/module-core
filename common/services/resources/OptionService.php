@@ -12,6 +12,7 @@ namespace cmsgears\core\common\services\resources;
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -36,9 +37,9 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\Option';
+	public static $modelClass = '\cmsgears\core\common\models\resources\Option';
 
-	public static $parentType	= CoreGlobal::TYPE_OPTION;
+	public static $parentType = CoreGlobal::TYPE_OPTION;
 
 	// Protected --------------
 
@@ -73,6 +74,11 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
@@ -103,8 +109,21 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 	                'desc' => [ "$modelTable.icon" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Icon'
-	            ]
-			]
+	            ],
+	            'active' => [
+	                'asc' => [ "$modelTable.active" => SORT_ASC ],
+	                'desc' => [ "$modelTable.active" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Active'
+	            ],
+				'order' => [
+					'asc' => [ "$modelTable.order" => SORT_ASC ],
+					'desc' => [ "$modelTable.order" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Order'
+				]
+			],
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -114,32 +133,74 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 
 		// Query ------------
 
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
 		// Filters ----------
+
+		// Params
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'active': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = true;
+
+					break;
+				}
+				case 'disabled': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = false;
+
+					break;
+				}
+			}
+		}
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'value' => "$modelTable.value"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'value' => "$modelTable.value"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'name' => "$modelTable.name",
-			'value' => "$modelTable.value"
+			'value' => "$modelTable.value",
+			'active' => "$modelTable.active",
+			'order' => "$modelTable.order"
 		];
 
 		// Result -----------
 
 		return parent::getPage( $config );
+	}
+
+	public function getPageByCategoryId( $categoryId, $config = [] ) {
+
+		$config[ 'conditions' ][ 'categoryId' ] = $categoryId;
+
+		return $this->getPage( $config );
 	}
 
 	// Read ---------------
@@ -194,9 +255,20 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 	 */
 	public function getIdNameMapByCategoryId( $categoryId, $config = [] ) {
 
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'order' ] = isset( $config[ 'order' ] ) ? $config[ 'order' ] : "$modelTable.order ASC, $modelTable.value ASC";
+
 		$config[ 'conditions' ][ 'categoryId' ] = $categoryId;
 
 		return $this->getIdNameMap( $config );
+	}
+
+	public function getActiveIdNameMapByCategoryId( $categoryId, $config = [] ) {
+
+		$config[ 'conditions' ][ 'active' ] = true;
+
+		return $this->getIdNameMapByCategoryId( $categoryId, $config );
 	}
 
 	/**
@@ -215,13 +287,39 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 		return $this->getIdNameMap( $config );
 	}
 
+	public function getActiveValueNameMapByCategoryId( $categoryId, $config = [] ) {
+
+		$config[ 'conditions' ][ 'active' ] = true;
+
+		return $this->getValueNameMapByCategoryId( $categoryId, $config );
+	}
+
 	public function getIdNameMapByCategorySlug( $slug, $config = [] ) {
 
 		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_OPTION_GROUP;
 
 		$category = Yii::$app->factory->get( 'categoryService' )->getBySlugType( $slug, $type, $config );
 
-		return $this->getIdNameMapByCategoryId( $category->id, $config );
+		if( isset( $category ) ) {
+
+			return $this->getIdNameMapByCategoryId( $category->id, $config );
+		}
+
+		return [];
+	}
+
+	public function getActiveIdNameMapByCategorySlug( $slug, $config = [] ) {
+
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_OPTION_GROUP;
+
+		$category = Yii::$app->factory->get( 'categoryService' )->getBySlugType( $slug, $type, $config );
+
+		if( isset( $category ) ) {
+
+			return $this->getActiveIdNameMapByCategoryId( $category->id, $config );
+		}
+
+		return [];
 	}
 
 	public function getValueNameMapByCategorySlug( $slug, $config = [] ) {
@@ -230,9 +328,21 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 
 		$category = Yii::$app->factory->get( 'categoryService' )->getBySlugType( $slug, $type, $config );
 
-		$config[ 'defaultValue' ] = $category->name;
+		if( isset( $category ) ) {
 
-		return $this->getValueNameMapByCategoryId( $category->id, $config );
+			$config[ 'defaultValue' ] = $category->name;
+
+			return $this->getValueNameMapByCategoryId( $category->id, $config );
+		}
+
+		return [];
+	}
+
+	public function getActiveValueNameMapByCategorySlug( $slug, $config = [] ) {
+
+		$config[ 'conditions' ][ 'active' ] = true;
+
+		return $this->getValueNameMapByCategorySlug( $slug, $config );
 	}
 
 	// Read - Others ---
@@ -253,7 +363,18 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'value', 'icon', 'input', 'htmlOptions' ];
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'value', 'icon', 'input', 'order', 'htmlOptions'
+		];
+
+		if( $admin ) {
+
+			$attributes	= ArrayHelper::merge( $attributes, [
+				'active'
+			]);
+		}
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -291,6 +412,22 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 
 				switch( $action ) {
 
+					case 'activate': {
+
+						$model->active = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'disable': {
+
+						$model->active = false;
+
+						$model->update();
+
+						break;
+					}
 					case 'delete': {
 
 						$this->delete( $model );

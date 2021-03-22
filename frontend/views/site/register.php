@@ -1,6 +1,9 @@
 <?php
+// Yii Imports
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+
+// CMG Imports
+use cmsgears\core\common\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= $coreProperties->getSiteTitle() . " | Register";
@@ -21,13 +24,13 @@ $this->title	= $coreProperties->getSiteTitle() . " | Register";
 ?>
 		<ul>
 			<li>
-				<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email*' ] ) ?>
+				<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email *' ] ) ?>
 			</li>
 			<li>
-				<?= $form->field( $model, 'password' )->passwordInput( [ 'placeholder' => 'Password*' ] ) ?>
+				<?= $form->field( $model, 'password' )->passwordInput( [ 'placeholder' => 'Password *' ] ) ?>
 			</li>
 			<li>
-				<?= $form->field( $model, 'password_repeat' )->passwordInput([ 'placeholder' => 'Confirm Password*' ] ) ?>
+				<?= $form->field( $model, 'password_repeat' )->passwordInput([ 'placeholder' => 'Confirm Password *' ] ) ?>
 			</li>
 			<li>
 				<?= $form->field( $model, 'username' )->textInput( [ 'placeholder' => 'Username' ] ) ?>

@@ -18,6 +18,13 @@ namespace cmsgears\core\common\models\interfaces\base;
 interface ITab {
 
 	/**
+	 * Return the tab using the given status.
+	 *
+	 * @param type $status
+	 */
+	public function getTab( $status = null );
+
+	/**
 	 * Return the status of tab corresponding to current action.
 	 *
 	 * @return string

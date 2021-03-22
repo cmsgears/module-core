@@ -42,7 +42,8 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	public $fileName = 'File';
 
-	public $direct = false; // Gallery Items are directly managed without gallery parent
+	public $admin	= false;
+	public $user	= false;
 
 	// It allows unlimited items by default.
 	public $maxItems = 0;
@@ -84,10 +85,11 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 	 */
 	public function run( $cid ) {
 
-		$model		= $this->model;
-		$gallery	= $this->galleryService->getById( $cid );
+		$model = $this->model;
 
-		if( isset( $gallery ) && ( $this->direct || $gallery->belongsTo( $model ) ) ) {
+		$gallery = $this->galleryService->getById( $cid );
+
+		if( isset( $gallery ) && ( $this->admin || ( isset( $model ) && $gallery->belongsTo( $model ) ) ) ) {
 
 			if( $this->maxItems > 0 ) {
 
@@ -114,7 +116,8 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 					'mid' => $modelFile->id, 'fid' => $file->id,
 					'name' => $file->name, 'extension' => $file->extension,
 					'title' => $file->title, 'caption' => $file->caption,
-					'altText' => $file->altText, 'link' => $file->link, 'description' => $file->description,
+					'altText' => $file->altText, 'link' => $file->link,
+					'description' => $file->description,
 					'url' => $file->getFileUrl()
 				];
 

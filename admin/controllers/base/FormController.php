@@ -17,7 +17,7 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
+use cmsgears\core\common\behaviors\ActivityBehavior;
 
 /**
  * FormController provides actions specific to form model.
@@ -75,22 +75,29 @@ abstract class FormController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'index'	 => [ 'permission' => $this->crudPermission ],
-					'all'  => [ 'permission' => $this->crudPermission ],
-					'create'  => [ 'permission' => $this->crudPermission ],
-					'update'  => [ 'permission' => $this->crudPermission ],
-					'delete'  => [ 'permission' => $this->crudPermission ]
+					'index' => [ 'permission' => $this->crudPermission ],
+					'all' => [ 'permission' => $this->crudPermission ],
+					'create' => [ 'permission' => $this->crudPermission ],
+					'update' => [ 'permission' => $this->crudPermission ],
+					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
 					'index' => [ 'get', 'post' ],
-					'all'  => [ 'get' ],
-					'create'  => [ 'get', 'post' ],
-					'update'  => [ 'get', 'post' ],
-					'delete'  => [ 'get', 'post' ]
+					'all' => [ 'get' ],
+					'create' => [ 'get', 'post' ],
+					'update' => [ 'get', 'post' ],
+					'delete' => [ 'get', 'post' ]
 				]
+			],
+			'activity' => [
+				'class' => ActivityBehavior::class,
+				'admin' => true,
+				'create' => [ 'create' ],
+				'update' => [ 'update' ],
+				'delete' => [ 'delete' ]
 			]
 		];
 	}
@@ -113,7 +120,8 @@ abstract class FormController extends Controller {
 			'dataProvider' => $dataProvider,
 			'submits' => $this->submits,
 			'visibilityMap' => $modelClass::$visibilityMap,
-			'statusMap' => $modelClass::$statusMap
+			'statusMap' => $modelClass::$subStatusMap,
+			'filterStatusMap' => $modelClass::$filterSubStatusMap
 		]);
 	}
 
@@ -123,8 +131,8 @@ abstract class FormController extends Controller {
 
 		$model = new $modelClass;
 
-		$model->type		= $this->type;
 		$model->siteId		= Yii::$app->core->siteId;
+		$model->type		= $this->type;
 		$model->visibility	= $modelClass::VISIBILITY_PUBLIC;
 		$model->captcha		= false;
 
@@ -132,7 +140,10 @@ abstract class FormController extends Controller {
 
 			$this->model = $this->modelService->create( $model );
 
-			return $this->redirect( $this->returnUrl );
+			if( $this->model ) {
+
+				return $this->redirect( $this->returnUrl );
+			}
 		}
 
 		$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
@@ -141,7 +152,7 @@ abstract class FormController extends Controller {
 			'model' => $model,
 			'templatesMap' => $templatesMap,
 			'visibilityMap' => $modelClass::$visibilityMap,
-			'statusMap' => $modelClass::$statusMap
+			'statusMap' => $modelClass::$subStatusMap
 		]);
 	}
 
@@ -154,9 +165,13 @@ abstract class FormController extends Controller {
 		// Update if exist
 		if( isset( $model ) ) {
 
+			$template = $model->template;
+
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->model = $this->modelService->update( $model );
+				$this->model = $this->modelService->update( $model, [
+					'admin' => true, 'oldTemplate' => $template
+				]);
 
 				return $this->redirect( $this->returnUrl );
 			}
@@ -168,7 +183,7 @@ abstract class FormController extends Controller {
 				'model' => $model,
 				'templatesMap' => $templatesMap,
 				'visibilityMap' => $modelClass::$visibilityMap,
-				'statusMap' => $modelClass::$statusMap
+				'statusMap' => $modelClass::$subStatusMap
 			]);
 		}
 
@@ -201,7 +216,7 @@ abstract class FormController extends Controller {
 				'model' => $model,
 				'templatesMap' => $templatesMap,
 				'visibilityMap' => $modelClass::$visibilityMap,
-				'statusMap' => $modelClass::$statusMap
+				'statusMap' => $modelClass::$subStatusMap
 			]);
 		}
 

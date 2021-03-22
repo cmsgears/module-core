@@ -17,7 +17,6 @@ use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\models\interfaces\base\IFeatured;
 
-use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\entities\ObjectData;
 
 use cmsgears\core\common\models\traits\base\FeaturedTrait;
@@ -35,11 +34,12 @@ use cmsgears\core\common\models\traits\base\FeaturedTrait;
  * @property boolean $active
  * @property boolean $pinned
  * @property boolean $featured
+ * @property boolean $popular
  * @property string $nodes
  *
  * @since 1.0.0
  */
-class ModelObject extends ModelMapper implements IFeatured {
+class ModelObject extends \cmsgears\core\common\models\base\ModelMapper implements IFeatured {
 
 	// Variables ---------------------------------------------------
 
@@ -82,9 +82,8 @@ class ModelObject extends ModelMapper implements IFeatured {
 
 		$rules = parent::rules();
 
-		$rules[] = [ 'nodes', 'safe' ];
 		$rules[] = [ 'key', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ];
-		$rules[] = [ [ 'pinned', 'featured' ], 'boolean' ];
+		$rules[] = [ [ 'pinned', 'featured', 'popular' ], 'boolean' ];
 
 		return $rules;
 	}

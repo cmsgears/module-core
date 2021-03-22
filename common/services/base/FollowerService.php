@@ -9,13 +9,16 @@
 
 namespace cmsgears\core\common\services\base;
 
+// Yii Imports
 use Yii;
+use yii\db\Query;
+
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\interfaces\base\IFollower;
 
 use cmsgears\core\common\services\interfaces\mappers\IFollowerService;
-
-use cmsgears\core\common\services\base\MapperService;
 
 /**
  * FollowerService defines commonly used methods specific to follower models.
@@ -64,53 +67,121 @@ abstract class FollowerService extends MapperService implements IFollowerService
 
 	// Read - Models ---
 
-	public static function getByFollower( $parentId, $type = IFollower::TYPE_FOLLOW ) {
+	public function getByFollower( $parentId, $config = [] ) {
+
+		$type = $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
 
 		$modelClass = static::$modelClass;
-		$user		= Yii::$app->user->identity;
 
-		return $modelClass::findByFollower( $user->id, $parentId, $type );
+		$user = Yii::$app->core->getUser();
+
+		return isset( $user ) ? $modelClass::findByFollower( $user->id, $parentId, $type ) : null;
+	}
+
+	public function getFollowing( $config = [] ) {
+
+		$type	= $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
+		$limit	= $config[ 'limit' ] ?? null;
+
+		$modelClass = static::$modelClass;
+
+		$user = Yii::$app->core->getUser();
+
+		$query = $modelClass::find()->where( 'type=:type AND modelId=:mid', [ ':type' => $type, ':mid' => $user->id ] );
+
+		if( isset( $limit ) ) {
+
+			$query->limit( $limit );
+		}
+
+		$query->all();
 	}
 
 	// Read - Lists ----
 
     public function getFollowersIdList( $parentId, $config = [] ) {
 
-	$type = $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
+		$type	= $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
+		$active = $config[ 'active' ] ?? true;
 
-        return self::findList( [  'column' => 'modelId', 'conditions' => [ 'type' => $type, 'active' => true, 'parentId' => $parentId ] ] );
+        return self::findList([
+			'column' => 'modelId',
+			'conditions' => [ 'type' => $type, 'active' => $active, 'parentId' => $parentId ]
+		]);
     }
 
     public function getFollowingIdList( $config = [] ) {
 
-		$user = Yii::$app->user->identity;
-		$type = $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
+		$type	= $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
+		$active = $config[ 'active' ] ?? true;
 
-        return self::findList( [  'column' => 'parentId', 'conditions' => [ 'type' => $type, 'active' => true, 'modelId' => $user->id ] ] );
+		$user = Yii::$app->core->getUser();
+
+		return isset( $user ) ? self::findList([
+			'column' => 'parentId',
+			'conditions' => [ 'type' => $type, 'active' => $active, 'modelId' => $user->id ]
+		]) : [];
+    }
+
+    public function getLikeIdList( $config = [] ) {
+
+		$config[ 'type' ] = IFollower::TYPE_LIKE;
+
+		return $this->getFollowingIdList( $config );
+    }
+
+    public function getDisikeIdList( $config = [] ) {
+
+		$config[ 'type' ] = IFollower::TYPE_DISLIKE;
+
+		return $this->getFollowingIdList( $config );
+    }
+
+    public function getFollowIdList( $config = [] ) {
+
+		$config[ 'type' ] = IFollower::TYPE_FOLLOW;
+
+		return $this->getFollowingIdList( $config );
+    }
+
+    public function getWishlistIdList( $config = [] ) {
+
+		$config[ 'type' ] = IFollower::TYPE_WISHLIST;
+
+		return $this->getFollowingIdList( $config );
     }
 
 	// Read - Maps -----
 
 	// Read - Others ---
 
-	public function getFollowCount( $type = IFollower::TYPE_FOLLOW ) {
+	public function getFollowCount( $config = [] ) {
 
-		$modelClass = static::$modelClass;
-		$user		= Yii::$app->user->identity;
-
-		return $modelClass::queryByTypeModelId( $type, $user->id )->andWhere( [ 'active' => true ] )->count();
-	}
-
-	public function getFollowersCount( $parentId, $type = IFollower::TYPE_FOLLOW ) {
+		$type	= $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
+		$active = $config[ 'active' ] ?? true;
 
 		$modelClass = static::$modelClass;
 
-		return $modelClass::queryByTypeParentId( $type, $parentId )->andWhere( [ 'active' => true ] )->count();
+		$user = Yii::$app->core->getUser();
+
+		return isset( $user ) ? $modelClass::queryByTypeModelId( $type, $user->id )->andWhere( [ 'active' => $active ] )->count() : 0;
 	}
 
-    public function getStatusCounts( $parentId, $type = IFollower::TYPE_FOLLOW ) {
+	public function getFollowersCount( $parentId, $config = [] ) {
 
-        $followerTable = static::$modelTable;
+		$type	= $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
+		$active = $config[ 'active' ] ?? true;
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::queryByTypeParentId( $type, $parentId )->andWhere( [ 'active' => $active ] )->count();
+	}
+
+    public function getStatusCounts( $parentId, $config = [] ) {
+
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : IFollower::TYPE_FOLLOW;
+
+        $followerTable = $this->getModelTable();
 
         $query = new Query();
 
@@ -139,7 +210,7 @@ abstract class FollowerService extends MapperService implements IFollowerService
 
 	public function createByParams( $params = [], $config = [] ) {
 
-		$params[ 'active' ]	= true;
+		$params[ 'active' ]	= isset( $params[ 'active' ] ) ? $params[ 'active' ] : CoreGlobal::STATUS_ACTIVE;
 
 		return parent::createByParams( $params, $config );
 	}
@@ -148,31 +219,53 @@ abstract class FollowerService extends MapperService implements IFollowerService
 
 	public function update( $model, $config = [] ) {
 
-		return parent::update( $model, [
-			'attributes' => [ 'active' ]
-		]);
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'order', 'active' ];
+
+        $config[ 'attributes' ] = $attributes;
+
+		return parent::update( $model, $config );
 	}
 
 	public function updateByParams( $params = [], $config = [] ) {
 
 		$modelClass = static::$modelClass;
-		$user		= Yii::$app->user->identity;
 
-		//$userId		= $params[ 'modelId' ];
+		$user = Yii::$app->core->getUser();
+
+		$params[ 'modelId' ] = $user->id;
+
 		$parentId	= $params[ 'parentId' ];
 		$type		= $params[ 'type' ];
 
-		$follower	= $modelClass::findByFollower( $user->id, $parentId, $type );
+		$follower = $modelClass::findByFollower( $user->id, $parentId, $type );
 
 		if( isset( $follower ) ) {
 
-			return $this->toggleStatus( $follower );
+			return $this->toggleActive( $follower );
 		}
 
 		return $this->createByParams( $params, $config );
 	}
 
-	public function toggleStatus( $model ) {
+	public function activate( $model ) {
+
+		$model->active = true;
+
+		$model->update();
+
+		return $model;
+	}
+
+	public function disable( $model ) {
+
+		$model->active = false;
+
+		$model->update();
+
+		return $model;
+	}
+
+	public function toggleActive( $model ) {
 
 		if( $model->active ) {
 

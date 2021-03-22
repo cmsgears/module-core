@@ -10,6 +10,7 @@
 namespace cmsgears\core\common\services\traits\base;
 
 // Yii Imports
+use Yii;
 use yii\db\Query;
 
 /**
@@ -49,17 +50,20 @@ trait MultiSiteTrait {
 	 */
 	public function getSiteStats( $config = [] ) {
 
-		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : null;
-		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
-		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
+		$status		= isset( $config[ 'status' ] ) ? $config[ 'status' ] : null;
+		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
+		$conditions	= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : [];
 
 		$modelClass	= static::$modelClass;
         $modelTable	= $modelClass::tableName();
+		$siteTable	= Yii::$app->factory->get( 'siteService' )->getModelTable();
 
         $query = new Query();
 
-        $query->select( [ 'siteId', 'count(id) as total' ] )
-			->from( $modelTable );
+        $query->select( [ "$modelTable.siteId", "$siteTable.name", "$siteTable.title", "count($modelTable.id) as total" ] )
+			->from( $modelTable )
+			->leftJoin( $siteTable, "$siteTable.id=$modelTable.siteId" );
 
 		// Filter Status
 		if( isset( $status ) ) {
@@ -71,6 +75,23 @@ trait MultiSiteTrait {
 		if( isset( $type ) ) {
 
 			$query->andWhere( "$modelTable.type=:type", [ ':type' => $type ] );
+		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach ( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
 		}
 
 		// Limit

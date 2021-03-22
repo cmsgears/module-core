@@ -54,15 +54,36 @@ trait OwnerTrait {
 
 		if( !isset( $user ) && !$strict ) {
 
-			$user = Yii::$app->user->getIdentity();
+			$user = Yii::$app->core->getUser();
 		}
 
-		if( isset( $user ) ) {
+		if( isset( $user ) && isset( $this->userId ) ) {
+
+			return $user->id == $this->userId;
+		}
+
+		if( isset( $user ) && isset( $this->createdBy ) ) {
 
 			return $user->id == $this->createdBy;
 		}
 
 		return false;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getOwner() {
+
+		if( isset( $this->userId ) ) {
+
+			return $this->user;
+		}
+
+		if( isset( $this->createdBy ) ) {
+
+			return $this->creator;
+		}
 	}
 
 	// Static Methods ----------------------------------------------

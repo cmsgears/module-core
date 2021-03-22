@@ -53,7 +53,7 @@ trait VisibilityTrait {
 
 	public function updateVisibility( $model, $visibility ) {
 
-		$model->visibility	= $visibility;
+		$model->visibility = $visibility;
 
 		$model->update();
 

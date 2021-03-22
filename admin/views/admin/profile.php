@@ -5,23 +5,22 @@ use cmsgears\files\widgets\AvatarUploader;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= $coreProperties->getSiteTitle() . " | Profile";
-$user			= Yii::$app->user->getIdentity();
+
+$user = Yii::$app->core->getUser();
 ?>
 <div class="box box-cud">
 	<div class="box-wrap-header">
 		<div class="header">My Profile</div>
 	</div>
 	<div class="box-wrap-content">
-
 		<div class="box-content clearfix">
 			<div class="header">User Avatar</div>
 			<?= AvatarUploader::widget([
 				'options' => [ 'id' => 'avatar-user', 'class' => 'file-uploader' ],
 				'model' => $user->avatar, 'cmtApp' => 'user', 'cmtController' => 'user',
 				'postAction' => true, 'postViewIcon' => 'cmti cmti-2x cmti-user'
-			]) ?>
+			])?>
 		</div>
-
 		<div class="box-content clearfix">
 			<div class="header">User Profile</div>
 			<div class="box-form box-form-regular">

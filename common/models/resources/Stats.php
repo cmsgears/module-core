@@ -17,8 +17,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 
-use cmsgears\core\common\models\base\Resource;
-
 /**
  * The stats stores meta data of tables.
  *
@@ -29,7 +27,7 @@ use cmsgears\core\common\models\base\Resource;
  *
  * @since 1.0.0
  */
-class Stats extends Resource {
+class Stats extends \cmsgears\core\common\models\base\Resource {
 
 	// Variables ---------------------------------------------------
 

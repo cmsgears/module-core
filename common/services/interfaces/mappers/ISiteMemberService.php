@@ -11,13 +11,14 @@ namespace cmsgears\core\common\services\interfaces\mappers;
 
 // CMG Imports
 use cmsgears\core\common\services\interfaces\base\IMapperService;
+use cmsgears\core\common\services\interfaces\base\IFeatured;
 
 /**
  * ISiteMemberService provide service methods for site member mapper.
  *
  * @since 1.0.0
  */
-interface ISiteMemberService extends IMapperService {
+interface ISiteMemberService extends IMapperService, IFeatured {
 
 	// Data Provider ------
 
@@ -40,6 +41,8 @@ interface ISiteMemberService extends IMapperService {
 	// Update -------------
 
 	// Delete -------------
+
+	public static function deleteBySiteId( $siteId );
 
 	// Bulk ---------------
 

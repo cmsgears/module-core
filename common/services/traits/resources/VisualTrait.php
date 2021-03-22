@@ -93,6 +93,30 @@ trait VisualTrait {
 		]);
 	}
 
+	public function updateMobileBanner( $model, $banner ) {
+
+		$fileService = Yii::$app->factory->get( 'fileService' );
+
+		$fileService->saveFiles( $model, [ 'mbannerId' => $banner ] );
+
+		return parent::update( $model, [
+			'attributes' => [ 'mbannerId' ]
+		]);
+	}
+
+	public function clearMobileBanner( $model ) {
+
+		$fileService = Yii::$app->factory->get( 'fileService' );
+
+		$fileService->delete( $model->mobileBanner );
+
+		$model->mbannerId = null;
+
+		return parent::update( $model, [
+			'attributes' => [ 'mbannerId' ]
+		]);
+	}
+
 	public function updateVideo( $model, $video ) {
 
 		$fileService = Yii::$app->factory->get( 'fileService' );
@@ -114,6 +138,31 @@ trait VisualTrait {
 
 		return parent::update( $model, [
 			'attributes' => [ 'videoId' ]
+		]);
+	}
+
+
+	public function updateMobileVideo( $model, $video ) {
+
+		$fileService = Yii::$app->factory->get( 'fileService' );
+
+		$fileService->saveFiles( $model, [ 'mvideoId' => $video ] );
+
+		return parent::update( $model, [
+			'attributes' => [ 'mvideoId' ]
+		]);
+	}
+
+	public function clearMobileVideo( $model ) {
+
+		$fileService = Yii::$app->factory->get( 'fileService' );
+
+		$fileService->delete( $model->mobileBanner );
+
+		$model->mvideoId = null;
+
+		return parent::update( $model, [
+			'attributes' => [ 'mvideoId' ]
 		]);
 	}
 

@@ -71,17 +71,47 @@ trait NameTrait {
 	public static function queryByName( $name, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
+		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'name=:name AND siteId=:siteId', [ ':name' => $name, ':siteId' => $siteId ] );
+			$query = static::find()->where( 'name=:name AND siteId=:siteId', [ ':name' => $name, ':siteId' => $siteId ] );
 		}
 		else {
 
-			return static::find()->where( 'name=:name', [ ':name' => $name ] );
+			$query = static::find()->where( 'name=:name', [ ':name' => $name ] );
 		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
+
+		return $query;
 	}
 
 	// Read - Find ------------
@@ -117,7 +147,7 @@ trait NameTrait {
 	 */
 	public static function isExistByName( $name, $config = [] ) {
 
-		$model	= static::findFirstByName( $name, $config );
+		$model = static::findFirstByName( $name, $config );
 
 		return isset( $model );
 	}

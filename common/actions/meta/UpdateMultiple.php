@@ -18,8 +18,6 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\resources\Meta;
 use cmsgears\core\common\models\resources\ModelMeta;
 
-use cmsgears\core\common\actions\base\ModelAction;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -27,7 +25,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class UpdateMultiple extends ModelAction {
+class UpdateMultiple extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -57,7 +55,16 @@ class UpdateMultiple extends ModelAction {
 
 		parent::init();
 
-		$this->metaService	= $this->controller->metaService;
+		$this->metaService = $this->controller->metaService;
+
+		$metaClass	= $this->metaService->getModelClass();
+
+		$metaTest = new $metaClass;
+
+		if( !$metaTest->hasAttribute( 'modelId' ) ) {
+
+			$this->parentType = $this->modelService->getParentType();
+		}
 	}
 
 	// Instance methods --------------------------------------------
@@ -128,6 +135,12 @@ class UpdateMultiple extends ModelAction {
 					// Trigger Ajax Success
 					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 				}
+
+				// Generate Errors
+				$errors = AjaxUtil::generateErrorMessage( $metas, [ 'multiple' => true ] );
+
+				// Trigger Ajax Failure
+				return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 			}
 			// ModelMeta using parentId and parentType
 			else {
@@ -146,6 +159,12 @@ class UpdateMultiple extends ModelAction {
 					// Trigger Ajax Success
 					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 				}
+
+				// Generate Errors
+				$errors = AjaxUtil::generateErrorMessage( $metas, [ 'multiple' => true ] );
+
+				// Trigger Ajax Failure
+				return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 			}
 		}
 

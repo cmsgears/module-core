@@ -11,7 +11,6 @@ namespace cmsgears\core\common\filters;
 
 // Yii Imports
 use Yii;
-use yii\base\Behavior;
 use yii\web\Controller;
 use yii\helpers\Url;
 
@@ -21,11 +20,12 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Check whether user exists before redirecting user to the given url.
+ * Check whether a valid user exists to process the action before redirecting
+ * user to the given url.
  *
  * @since 1.0.0
  */
-class UserExistFilter extends Behavior {
+class UserExistFilter extends \yii\base\Behavior {
 
 	public $actions	= [];
 
@@ -39,18 +39,15 @@ class UserExistFilter extends Behavior {
 		$action = $event->action->id;
 		$found	= false;
 
-		foreach( $this->actions as $value ) {
+		if( in_array( $action, $this->actions ) ) {
 
-			if( strcmp( $action, $value ) == 0 ) {
-
-				$found = true;
-			}
+			$found = true;
 		}
 
 		// Proceed if requested action exists
 		if ( $found ) {
 
-			$user = Yii::$app->user->identity;
+			$user = Yii::$app->core->getUser();
 
 			// Return appropriate error if user does not exist
 			if( !isset( $user ) ) {

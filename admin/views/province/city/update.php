@@ -8,6 +8,8 @@ use cmsgears\core\common\widgets\ActiveForm;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update City | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
+
+$region	= isset( $model->region ) ? $model->region->name : null;
 ?>
 <div class="box-crud-wrap">
 	<div class="box-crud-wrap-main">
@@ -18,15 +20,18 @@ $returnUrl		= $this->context->returnUrl;
 			</div>
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'zone' ) ?>
+							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'regionId', [
+								'placeholder' => 'Region', 'icon' => 'cmti cmti-search',
+								'value' => $region, 'url' => "core/region/auto-search?pid={$province->id}"
+							])?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'code' ) ?>
 						</div>
@@ -34,7 +39,7 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'iso' ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'latitude' ) ?>
 						</div>
@@ -42,15 +47,18 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'longitude' ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
-							<?= $form->field( $model, 'postal' ) ?>
+							<?= $form->field( $model, 'zone' ) ?>
 						</div>
 						<div class="col col2">
 							<?= $form->field( $model, 'regions' )->textarea() ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
+						<div class="col col2">
+							<?= $form->field( $model, 'postal' ) ?>
+						</div>
 						<div class="col col2">
 							<?= $form->field( $model, 'zipCodes' )->textarea() ?>
 						</div>

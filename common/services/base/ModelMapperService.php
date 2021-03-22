@@ -9,8 +9,13 @@
 
 namespace cmsgears\core\common\services\base;
 
+// Yii Imports
+use Yii;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\forms\Binder;
 
 use cmsgears\core\common\services\interfaces\base\IModelMapperService;
 
@@ -36,6 +41,8 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 	// Public -----------------
 
 	// Protected --------------
+
+	protected $parentService;
 
 	// Variables -----------------------------
 
@@ -257,34 +264,111 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 
 	// Read - Lists ----
 
+	public function getActiveModelIdListByParent( $parentId, $parentType ) {
+
+		$modelClass	= static::$modelClass;
+
+		$models = $modelClass::findActiveByParent( $parentId, $parentType );
+
+		$ids = [];
+
+		foreach( $models as $model ) {
+
+			$ids[] = $model->parent->id;
+		}
+
+		return $ids;
+	}
+
 	// Read - Maps -----
 
 	// Read - Others ---
 
-	// Create -------------
+	public function getMappingsCount( $parentType, $config = [] ) {
 
-	public function create( $model, $config = [] ) {
+		$mappingType = $config[ 'mappingType' ] ?? null;
 
-		if( empty( $model->type ) ) {
+		$parentTable	= $this->parentService->getModelTable();
+		$mappingTable	= $this->getModelTable();
 
-			$model->type = CoreGlobal::TYPE_DEFAULT;
+		$query = new Query();
+
+		$query->select( [ "$parentTable.id as id", "count($parentTable.id) as total" ] )
+				->from( $parentTable )
+				->leftJoin( $mappingTable, "$mappingTable.parentId=$parentTable.id" )
+				->where( "$mappingTable.parentType='$parentType'" );
+
+		if( isset( $mappingType ) ) {
+
+			$query->andWhere( "$mappingTable.type='$mappingType'" );
 		}
 
-		return parent::create( $model, $config );
+		$query->groupBy( "$parentTable.id" );
+
+		$counts = $query->all();
+
+		$returnArr	= [];
+		$counter	= 0;
+
+		foreach ( $counts as $count ) {
+
+			$returnArr[ $count[ 'id' ] ] = $count[ 'total' ];
+
+			$counter = $counter + $count[ 'total' ];
+		}
+
+		$returnArr[ 'all' ] = $counter;
+
+		return $returnArr;
+	}
+
+	// Create -------------
+
+	public function createByParams( $params = [], $config = [] ) {
+
+		$params[ 'active' ]	= isset( $params[ 'active' ] ) ? $params[ 'active' ] : CoreGlobal::STATUS_ACTIVE;
+
+		return parent::createByParams( $params, $config );
+	}
+
+	public function createWithParent( $parent, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+
+		$parentId	= $config[ 'parentId' ];
+		$parentType	= $config[ 'parentType' ];
+		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_DEFAULT;
+		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
+
+		$parent = $this->parentService->create( $parent, $config );
+
+		$model = new $modelClass;
+
+		$model->modelId		= $parent->id;
+		$model->parentId	= $parentId;
+		$model->parentType	= $parentType;
+
+		$model->type	= $type;
+		$model->order	= $order;
+		$model->active	= true;
+
+		return parent::create( $model );
 	}
 
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'type', 'order', 'active' ];
+		//$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
-        $config[ 'attributes' ] = $attributes;
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'type', 'order', 'active'
+		];
 
-		return parent::update( $model, $config );
+		return parent::update( $model, [
+			'attributes' => $attributes
+		]);
 	}
-
-	// Models having active column
 
 	public function activate( $model ) {
 
@@ -295,25 +379,6 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 		return $model;
 	}
 
-	public function activateByModelId( $parentId, $parentType, $modelId, $type = null ) {
-
-		$model = $this->getFirstByParentModelId( $parentId, $parentType, $modelId );
-
-		if( isset( $model ) ) {
-
-			return $this->activate( $model );
-		}
-		else {
-
-			if( empty( $type ) ) {
-
-				$type = CoreGlobal::TYPE_DEFAULT;
-			}
-
-			return $this->createByParams( [ 'parentId' => $parentId, 'parentType' => $parentType, 'modelId' => $modelId, 'type' => $type, 'active' => true ] );
-		}
-	}
-
 	public function disable( $model ) {
 
 		$model->active = false;
@@ -321,6 +386,97 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 		$model->update();
 
 		return $model;
+	}
+
+	public function toggleActive( $model ) {
+
+		if( $model->active ) {
+
+			$model->active = false;
+		}
+		else {
+
+			$model->active = true;
+		}
+
+		return parent::update( $model, [
+			'attributes' => [ 'active' ]
+		]);
+ 	}
+
+	/**
+	 * It assumes that only one model exist for same parentId, parentType, modelId, and type.
+	 *
+	 * @inheritdoc
+	 */
+	public function activateByParentModelId( $parentId, $parentType, $modelId, $type = null ) {
+
+		$model = $this->getFirstByParentModelId( $parentId, $parentType, $modelId );
+
+		// Existing Mapping
+		if( isset( $model ) ) {
+
+			return $this->activate( $model );
+		}
+		// New Mapping
+		else {
+
+			$type = $type ??$parentType;
+
+			return $this->createByParams([
+				'parentId' => $parentId, 'parentType' => $parentType, 'modelId' => $modelId,
+				'type' => $type, 'active' => true
+			]);
+		}
+	}
+
+	public function disableByParentModelId( $parentId, $parentType, $modelId, $delete = false ) {
+
+		$model = $this->getByModelId( $parentId, $parentType, $modelId );
+
+		if( isset( $model ) ) {
+
+			// Hard delete
+			if( $delete ) {
+
+				$model->delete();
+			}
+			// Soft delete
+			else {
+
+				$this->disable( $model );
+			}
+		}
+	}
+
+	public function toggleByParentModelId( $parentId, $parentType, $modelId, $type = null ) {
+
+		$model = $this->getFirstByParentModelId( $parentId, $parentType, $modelId );
+
+		// Existing Mapping
+		if( isset( $model ) ) {
+
+			if( $model->active ) {
+
+				$model->active = false;
+			}
+			else {
+
+				$model->active = true;
+			}
+
+			$model->update();
+		}
+		// New Mapping
+		else {
+
+			$type = $type ?? $parentType;
+
+			return $this->createByParams([
+				'parentId' => $parentId, 'parentType' => $parentType, 'modelId' => $modelId,
+				'type' => $type, 'active' => true
+			]);
+		}
 	}
 
 	public function disableByParent( $parentId, $parentType, $delete = false ) {
@@ -342,23 +498,68 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 		}
 	}
 
-	public function disableByModelId( $parentId, $parentType, $modelId, $delete = false ) {
+	public function bindModels( $parentId, $parentType, $config = [] ) {
 
-		$model = $this->getByModelId( $parentId, $parentType, $modelId );
+		$modelClass	= static::$modelClass;
+		$binderName	= isset( $config[ 'binder' ] ) ? $config[ 'binder' ] : 'Binder';
 
-		if( isset( $model ) ) {
+		$modelBinder = $config[ 'modelBinder' ] ?? null;
 
-			// Hard delete
-			if( $delete ) {
+		if( empty( $modelBinder ) ) {
 
-				$model->delete();
+			$modelBinder = new Binder();
+
+			$modelBinder->load( Yii::$app->request->post(), $binderName );
+		}
+
+		$all	= $modelBinder->all; // Possible Bindings
+		$binded	= $modelBinder->binded; // Existing Bindings
+
+		$process = []; // For Execution
+
+		// Check for All
+		if( count( $all ) > 0 ) {
+
+			$process = $all;
+		}
+		// Check for Active
+		else {
+
+			$process = $binded;
+
+			$modelClass::disableByParent( $parentId, $parentType );
+		}
+
+		// Process the List
+		foreach( $process as $id ) {
+
+			$existingMapping = $modelClass::findFirstByParentModelId( $parentId, $parentType, $id );
+
+			// Existing mapping
+			if( isset( $existingMapping ) ) {
+
+				if( in_array( $id, $binded ) ) {
+
+					$existingMapping->active = true;
+				}
+				else {
+
+					$existingMapping->active = false;
+				}
+
+				$existingMapping->update();
 			}
-			// Soft delete
-			else {
+			// Create Mapping
+			else if( in_array( $id, $binded ) ) {
 
-				$this->disable( $model );
+				$this->createByParams([
+					'modelId' => $id, 'parentId' => $parentId, 'parentType' => $parentType,
+					'type' => $parentType, 'order' => 0, 'active' => true
+				]);
 			}
 		}
+
+		return true;
 	}
 
 	// Delete -------------

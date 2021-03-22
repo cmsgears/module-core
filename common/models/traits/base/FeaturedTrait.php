@@ -62,6 +62,14 @@ trait FeaturedTrait {
 		return Yii::$app->formatter->asBoolean( $this->featured );
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public function getPopularStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->popular );
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii classes ---------------------------
@@ -81,8 +89,10 @@ trait FeaturedTrait {
 	public static function queryByPinned( $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
-		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 1;
-		$query		= null;
+		$conditions = $config[ 'conditions' ] ?? [];
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
@@ -95,7 +105,29 @@ trait FeaturedTrait {
 			$query = static::find()->where( 'pinned=:pinned', [ ':pinned' => true ] );
 		}
 
-		$query->limit( $limit );
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
 
 		return $query;
 	}
@@ -111,8 +143,10 @@ trait FeaturedTrait {
 	public static function queryByPinnedType( $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
-		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 1;
-		$query		= null;
+		$conditions = $config[ 'conditions' ] ?? [];
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
@@ -125,7 +159,29 @@ trait FeaturedTrait {
 			$query = static::find()->where( 'type=:type AND pinned=:pinned', [ ':type' => $type, ':pinned' => true ] );
 		}
 
-		$query->limit( $limit );
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
 
 		return $query;
 	}
@@ -139,8 +195,10 @@ trait FeaturedTrait {
 	public static function queryByFeatured( $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
-		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
-		$query		= null;
+		$conditions = $config[ 'conditions' ] ?? [];
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
@@ -153,7 +211,29 @@ trait FeaturedTrait {
 			$query = static::find()->where( 'featured=:featured', [ ':featured' => true ] );
 		}
 
-		$query->limit( $limit );
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
 
 		return $query;
 	}
@@ -169,8 +249,10 @@ trait FeaturedTrait {
 	public static function queryByFeaturedType( $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
-		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
-		$query		= null;
+		$conditions = $config[ 'conditions' ] ?? [];
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
@@ -183,7 +265,135 @@ trait FeaturedTrait {
 			$query = static::find()->where( 'type=:type AND featured=:featured', [ ':type' => $type, ':featured' => true ] );
 		}
 
-		$query->limit( $limit );
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
+
+		return $query;
+	}
+
+	/**
+	 * Generate and return the query to filter popular models based on multi-site configuration.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery
+	 */
+	public static function queryByPopular( $config = [] ) {
+
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$query	= null;
+
+		if( static::isMultiSite() && !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			$query = static::find()->where( 'popular=:popular AND siteId=:siteId', [ ':popular' => true, ':siteId' => $siteId ] );
+		}
+		else {
+
+			$query = static::find()->where( 'popular=:popular', [ ':popular' => true ] );
+		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
+
+		return $query;
+	}
+
+	/**
+	 * Generate and return the query to filter popular models based on multi-site configuration.
+	 *
+	 * It's useful for models having type column.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery
+	 */
+	public static function queryByPopularType( $type, $config = [] ) {
+
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$query	= null;
+
+		if( static::isMultiSite() && !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			$query = static::find()->where( 'type=:type AND popular=:popular AND siteId=:siteId', [ ':type' => $type, ':popular' => true, ':siteId' => $siteId ] );
+		}
+		else {
+
+			$query = static::find()->where( 'type=:type AND popular=:popular', [ ':type' => $type, ':popular' => true ] );
+		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
 
 		return $query;
 	}

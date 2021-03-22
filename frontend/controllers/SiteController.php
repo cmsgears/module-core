@@ -18,6 +18,7 @@ use cmsgears\core\frontend\config\SiteProperties;
 use cmsgears\core\frontend\config\CoreGlobalWeb;
 
 use cmsgears\core\common\models\forms\Register;
+use cmsgears\core\common\models\resources\UserMeta;
 use cmsgears\core\common\models\mappers\SiteMember;
 
 /**
@@ -50,6 +51,8 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 		// Config
 		$this->layout = CoreGlobalWeb::LAYOUT_PUBLIC;
+
+		$this->admin = false;
 
 		// Services
 		$this->siteMemberService = Yii::$app->factory->get( 'siteMemberService' );
@@ -126,11 +129,6 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 		return $this->render( CoreGlobalWeb::PAGE_MAINTENANCE );
 	}
 
-	public function actionLogin( $admin = false ) {
-
-		return parent::actionLogin( false );
-	}
-
 	public function actionRegister() {
 
 		// Send user to home if already logged in
@@ -152,8 +150,20 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 				// Add User to current Site
 				$this->siteMemberService->createByParams( [ 'userId' => $user->id ] );
 
+				// Default Settings
+				$metaService = Yii::$app->factory->get( 'userMetaService' );
+
+				$metaService->initByNameType( $user->id, CoreGlobal::META_RECEIVE_EMAIL, CoreGlobal::SETTINGS_NOTIFICATION, UserMeta::VALUE_TYPE_FLAG );
+				$metaService->initByNameType( $user->id, CoreGlobal::META_RECEIVE_EMAIL, CoreGlobal::SETTINGS_REMINDER, UserMeta::VALUE_TYPE_FLAG );
+
 				// Send Register Mail
 				Yii::$app->coreMailer->sendRegisterMail( $user );
+
+				// Trigger New User Notification
+				$this->userService->notifyAdmin( $user, [
+					'template' => CoreGlobal::TPL_NOTIFY_USER_NEW,
+					'adminLink' => "core/user/update?id={$user->id}"
+				]);
 
 				// Set Flash Message
 				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
@@ -224,9 +234,12 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 			if( !isset( $siteMember ) ) {
 
-				$this->siteMemberService->create( $user );
+				$siteMember = $this->siteMemberService->create( $user );
 
-				$this->checkHome();
+				if( $siteMember ) {
+
+					$this->checkHome();
+				}
 			}
 		}
 

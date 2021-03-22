@@ -30,4 +30,11 @@ interface IFeatured {
 	 */
 	public function getFeaturedStr();
 
+	/**
+	 * Returns string representation of popular flag.
+	 *
+	 * @return string
+	 */
+	public function getPopularStr();
+
 }

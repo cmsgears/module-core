@@ -30,6 +30,8 @@ interface ICategory  {
 
 	public function getFeaturedByCategoryId( $categoryId, $config = [] );
 
+	public function getPopularByCategoryId( $categoryId, $config = [] );
+
 	public function getByCategoryNodeId( $categoryId, $config = [] );
 
 	// Read - Lists ----

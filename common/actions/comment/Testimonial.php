@@ -10,7 +10,9 @@
 namespace cmsgears\core\common\actions\comment;
 
 // CMG Imports
-use cmsgears\core\common\models\forms\Comment;
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\forms\Comment as CommentForm;
 use cmsgears\core\common\models\resources\ModelComment;
 
 /**
@@ -36,7 +38,16 @@ class Testimonial extends Create {
 
 	public $modelType = ModelComment::TYPE_TESTIMONIAL;
 
-	public $scenario = Comment::SCENARIO_TESTIMONIAL;
+	public $scenario = CommentForm::SCENARIO_TESTIMONIAL;
+
+	public $notification = true;
+
+	public $notifyAdmin = true;
+
+	public $notifyAdminUrl = 'core/testimonial/update';
+
+	public $notifyAdminTemplate = CoreGlobal::TPL_NOTIFY_TESTIMONIAL_ADMIN;
+	public $notifyUserTemplate	= CoreGlobal::TPL_NOTIFY_TESTIMONIAL_USER;
 
 	// Protected --------------
 

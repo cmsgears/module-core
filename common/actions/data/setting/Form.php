@@ -16,12 +16,10 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Action;
-
 /**
  * The Form action save model settings using Settings Data Form to the data column.
  */
-class Form extends Action {
+class Form extends \cmsgears\core\common\base\Action {
 
 	// Variables ---------------------------------------------------
 
@@ -68,8 +66,9 @@ class Form extends Action {
 		// Update/Render if exist
 		if( isset( $model ) && isset( $template ) ) {
 
-			$settingsClass	= $template->settingsPath;
-			$settings		= new $settingsClass( $model->getDataMeta( 'settings' ) );
+			$settingsClass = $template->settingsPath;
+
+			$settings = new $settingsClass( $model->getDataMeta( 'settings' ) );
 
 			$this->controller->setViewPath( $template->settingsForm );
 

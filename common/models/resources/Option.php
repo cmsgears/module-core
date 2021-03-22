@@ -16,11 +16,12 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Resource;
 
+use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
@@ -32,14 +33,16 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  * @property string $name
  * @property string $value
  * @property string $icon
+ * @property boolean $active
  * @property boolean $input
+ * @property integer $order
  * @property string $htmlOptions
  * @property string $content
  * @property string $data
  *
  * @since 1.0.0
  */
-class Option extends Resource implements IData {
+class Option extends \cmsgears\core\common\models\base\Resource implements IContent, IData {
 
 	// Variables ---------------------------------------------------
 
@@ -63,6 +66,7 @@ class Option extends Resource implements IData {
 
 	// Traits ------------------------------------------------------
 
+	use ContentTrait;
 	use DataTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -86,14 +90,16 @@ class Option extends Resource implements IData {
 		$rules = [
 			// Required, Safe
 			[ 'name', 'required' ],
-			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
+			[ [ 'id', 'htmlOptions', 'content' ], 'safe' ],
 			// Unique
 			[ 'name', 'unique', 'targetAttribute' => [ 'categoryId', 'name' ] ],
 			// Text Limit
 			[ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'value', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
-			[ 'input', 'boolean' ],
+			//[ 'name', 'alphanumu' ],
+			[ [ 'active', 'input' ], 'boolean' ],
+			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ]
 		];
 
@@ -118,11 +124,33 @@ class Option extends Resource implements IData {
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'input' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_INPUT ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
+	}
+
+	// yii\db\BaseActiveRecord
+
+    /**
+     * @inheritdoc
+     */
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			if( empty( $this->order ) || $this->order <= 0 ) {
+
+				$this->order = 0;
+			}
+
+	        return true;
+	    }
+
+		return false;
 	}
 
 	// CMG interfaces ------------------------
@@ -141,6 +169,16 @@ class Option extends Resource implements IData {
 	public function getCategory() {
 
 		return $this->hasOne( Category::class, [ 'id' => 'categoryId' ] );
+	}
+
+	public function getActiveStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->active );
+	}
+
+	public function getInputStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->input );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -168,8 +206,9 @@ class Option extends Resource implements IData {
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'category' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'category' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -182,7 +221,7 @@ class Option extends Resource implements IData {
 	 */
 	public static function queryWithCategory( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'category' ];
+		$config[ 'relations' ] = [ 'category' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -247,6 +286,18 @@ class Option extends Resource implements IData {
 	public static function deleteByCategoryId( $categoryId ) {
 
 		return self::deleteAll( 'categoryId=:id', [ ':id' => $categoryId ] );
+	}
+
+	/**
+	 * Delete all the options for given name and category id.
+	 *
+	 * @param string $name
+	 * @param integer $categoryId
+	 * @return integer number of rows.
+	 */
+	public static function deleteByNameCategoryId( $name, $categoryId ) {
+
+		return self::deleteAll( "name=:name AND categoryId=:id", [ ':name' => $name, ':id' => $categoryId ] );
 	}
 
 }

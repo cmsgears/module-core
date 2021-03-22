@@ -17,14 +17,12 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\CrudController;
-
 /**
  * MemberController provides actions specific to site members.
  *
  * @since 1.0.0
  */
-class MemberController extends CrudController {
+class MemberController extends \cmsgears\core\admin\controllers\base\CrudController {
 
 	// Variables ---------------------------------------------------
 
@@ -123,13 +121,16 @@ class MemberController extends CrudController {
 
 		$siteId = Yii::$app->request->get( 'sid' );
 
-		$model	= $this->modelService->getModelObject();
+		$model = $this->modelService->getModelObject();
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
 			$this->model = $this->modelService->create( $model, [ 'admin' => true ] );
 
-			return $this->redirect( "all?sid=$siteId" );
+			if( $this->model ) {
+
+				return $this->redirect( "all?sid=$siteId" );
+			}
 		}
 
 		$roleMap = $this->roleService->getIdNameMapByType( $this->roleType );

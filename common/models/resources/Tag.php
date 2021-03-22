@@ -23,15 +23,16 @@ use cmsgears\core\common\models\interfaces\base\IAuthor;
 use cmsgears\core\common\models\interfaces\base\IMultiSite;
 use cmsgears\core\common\models\interfaces\base\INameType;
 use cmsgears\core\common\models\interfaces\base\ISlugType;
+use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Resource;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
 use cmsgears\core\common\models\traits\base\NameTypeTrait;
 use cmsgears\core\common\models\traits\base\SlugTypeTrait;
+use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
@@ -48,6 +49,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $slug
  * @property string $type
  * @property string $icon
+ * @property string $texture
  * @property string $title
  * @property string $description
  * @property string $htmlOptions
@@ -58,7 +60,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Tag extends Resource implements IAuthor, IData, IMultiSite, INameType, ISlugType {
+class Tag extends \cmsgears\core\common\models\base\Resource implements IAuthor, IContent, IData,
+	IMultiSite, INameType, ISlugType {
 
 	// Variables ---------------------------------------------------
 
@@ -83,6 +86,7 @@ class Tag extends Resource implements IAuthor, IData, IMultiSite, INameType, ISl
 	// Traits ------------------------------------------------------
 
 	use AuthorTrait;
+	use ContentTrait;
 	use DataTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
@@ -133,13 +137,13 @@ class Tag extends Resource implements IAuthor, IData, IMultiSite, INameType, ISl
 		$rules = [
 			// Required, Safe
 			[ [ 'siteId', 'name' ], 'required' ],
-			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
+			[ [ 'id', 'htmlOptions', 'content' ], 'safe' ],
 			// Unique
-			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'type', 'slug' ] ],
-			[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'type', 'name' ] ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'type', 'name' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NAME ) ],
+			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'type', 'slug' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SLUG ) ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'icon', 'texture' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ 'name', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
 			[ 'slug', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			[ 'title', 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
@@ -152,7 +156,7 @@ class Tag extends Resource implements IAuthor, IData, IMultiSite, INameType, ISl
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'htmlOptions' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'title', 'description', 'htmlOptions' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -172,10 +176,31 @@ class Tag extends Resource implements IAuthor, IData, IMultiSite, INameType, ISl
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'texture' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEXTURE ),
 			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS )
+			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
+	}
+
+	// yii\db\BaseActiveRecord
+
+    /**
+     * @inheritdoc
+     */
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
+
+	        return true;
+	    }
+
+		return false;
 	}
 
 	// CMG interfaces ------------------------
@@ -211,8 +236,9 @@ class Tag extends Resource implements IAuthor, IData, IMultiSite, INameType, ISl
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}

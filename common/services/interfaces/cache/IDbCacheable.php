@@ -17,5 +17,8 @@ namespace cmsgears\core\common\services\interfaces\cache;
  */
 interface IDbCacheable {
 
+	public function prepareDbCache( $model, $config = [] );
+
 	public function cacheDb( $model, $config = [] );
+
 }

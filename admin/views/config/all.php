@@ -15,14 +15,19 @@ $themeTemplates		= '@themes/admin/views/templates';
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ 'submits' => $submits ],
 	'title' => 'Forms', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title', 'desc' => 'Description' ],
+	'searchColumns' => [
+		'name' => 'Name', 'title' => 'Title',
+		'desc' => 'Description', 'content' => 'Content'
+	],
 	'sortColumns' => [
 		'name' => 'Name', 'title' => 'Title', 'status' => 'Status',
 		'cdate' => 'Created At', 'udate' => 'Updated At'
 	],
 	'filters' => [
-		'status' => [ 'new' => 'New', 'active' => 'Active', 'blocked' => 'Blocked' ],
-		'model' => [ ]
+		'status' => [
+			'new' => 'New', 'active' => 'Active', 'blocked' => 'Blocked'
+		],
+		'model' => []
 	],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
@@ -32,7 +37,9 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'failure' => [ 'title' => 'Failure Message', 'type' => 'text' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		'status' => [ 'block' => 'Block', 'active' => 'Activate' ],
+		'status' => [
+			'activate' => 'Activate', 'block' => 'Block'
+		],
 		'model' => [ 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,

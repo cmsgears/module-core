@@ -16,12 +16,10 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Action;
-
 /**
  * The Form action save model attributes using Attributes Data Form to the data column.
  */
-class Form extends Action {
+class Form extends \cmsgears\core\common\base\Action {
 
 	// Variables ---------------------------------------------------
 
@@ -59,11 +57,12 @@ class Form extends Action {
 
 	public function run( $id ) {
 
-		$modelService = $this->controller->modelService;
+		$modelService		= $this->controller->modelService;
+		$templateService	= Yii::$app->factory->get( 'templateService' );
 
 		// Find Model
 		$model		= $modelService->getById( $id );
-		$template	= isset( $model->template ) ? $model->template : Yii::$app->factory->get( 'templateService' )->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $modelService->getParentType() );
+		$template	= isset( $model->template ) ? $model->template : $templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $modelService->getParentType() );
 
 		// Update/Render if exist
 		if( isset( $model ) && isset( $template ) ) {

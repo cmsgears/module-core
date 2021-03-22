@@ -11,27 +11,34 @@ namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
 use Yii;
+use yii\base\Exception;
 use yii\data\Sort;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\services\interfaces\entities\IObjectService;
+use cmsgears\core\common\models\mappers\ModelObject;
+
+use cmsgears\core\common\services\interfaces\entities\IObjectDataService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
 use cmsgears\core\common\services\traits\base\ApprovalTrait;
+use cmsgears\core\common\services\traits\base\FeaturedTrait;
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
+use cmsgears\core\common\services\traits\base\SharedTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
+use cmsgears\core\common\services\traits\resources\VisualTrait;
 
 /**
  * ObjectDataService provide service methods of object model.
  *
  * @since 1.0.0
  */
-class ObjectDataService extends \cmsgears\core\common\services\base\EntityService implements IObjectService {
+class ObjectDataService extends \cmsgears\core\common\services\base\EntityService implements IObjectDataService {
 
 	// Variables ---------------------------------------------------
 
@@ -63,9 +70,13 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	use ApprovalTrait;
 	use DataTrait;
+	use FeaturedTrait;
+	use GridCacheTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
+	use SharedTrait;
 	use SlugTypeTrait;
+	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -92,6 +103,11 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
@@ -115,6 +131,12 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 					'desc' => [ "$templateTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Template',
+				],
+				'parent' => [
+					'asc' => [ "$modelTable.parentId" => SORT_ASC ],
+					'desc' => [ "$modelTable.parentId" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Parent',
 				],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
@@ -182,6 +204,18 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 					'default' => SORT_DESC,
 					'label' => 'Featured'
 				],
+				'popular' => [
+					'asc' => [ "$modelTable.popular" => SORT_ASC ],
+					'desc' => [ "$modelTable.popular" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Popular'
+				],
+				'shared' => [
+					'asc' => [ "$modelTable.shared" => SORT_ASC ],
+					'desc' => [ "$modelTable.shared" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Shared'
+				],
 				'cdate' => [
 					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
 					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
@@ -195,9 +229,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 					'label' => 'Updated At'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -223,13 +255,13 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
 
 		// Filter - Status
-		if( isset( $status ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
+		if( isset( $status ) && empty( $config[ 'conditions' ][ "$modelTable.status" ] ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.status" ]	= $modelClass::$urlRevStatusMap[ $status ];
 		}
@@ -251,28 +283,45 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 					break;
 				}
+				case 'popular': {
+
+					$config[ 'conditions' ][ "$modelTable.popular" ] = true;
+
+					break;
+				}
+				case 'shared': {
+
+					$config[ 'conditions' ][ "$modelTable.shared" ] = true;
+
+					break;
+				}
 			}
 		}
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'content' => "$modelTable.content"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description",
-				'content' => "$modelTable.content"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'name' => "$modelTable.name",
 			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
@@ -281,7 +330,8 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 			'visibility' => "$modelTable.visibility",
 			'order' => "$modelTable.order",
 			'pinned' => "$modelTable.pinned",
-			'featured' => "$modelTable.featured"
+			'featured' => "$modelTable.featured",
+			'popular' => "$modelTable.popular"
 		];
 
 		// Result -----------
@@ -289,11 +339,48 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		return parent::getPage( $config );
 	}
 
-	public function getPageByType( $type, $config = [] ) {
+	/**
+	 * Returns the collection made by the user.
+	 */
+	public function getSharedPageByOwnerId( $ownerId, $config = [] ) {
+
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.shared" ] = true;
+
+		return $this->getPageByOwnerId( $ownerId, $config );
+	}
+
+	/**
+	 * Returns the child objects.
+	 */
+	public function getPageByParentId( $parentId, $config = [] ) {
 
 		$modelTable = $this->getModelTable();
 
+		$config[ 'conditions' ][ "$modelTable.parentId" ] = $parentId;
+
+		return $this->getPage( $config );
+	}
+
+	/**
+	 * Returns the collection made for the parent i.e. directly mapped models.
+	 */
+	public function getPageByTypeParent( $type, $parentId, $parentType, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$modelObjectTable = ModelObject::tableName();
+
+		$query = $modelClass::queryWithHasOne( [ 'ignoreSite' => true ] );
+
+		$query->leftJoin( $modelObjectTable, "$modelObjectTable.modelId=$modelTable.id" );
+		$query->where( "$modelObjectTable.parentId=$parentId AND $modelObjectTable.parentType='$parentType' AND $modelObjectTable.type='$type'" );
+
 		$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+
+		$config[ 'query' ] = $query;
 
 		return $this->getPage( $config );
 	}
@@ -302,23 +389,35 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Read - Models ---
 
-	public function getByName( $name ) {
+	/**
+	 * Returns all the models having the given name and using the parent type.
+	 */
+	public function getByName( $name, $config = [] ) {
 
 		return $this->getByNameType( $name, static::$parentType );
 	}
 
-	public function getFirstByName( $name ) {
+	/**
+	 * Returns the first model having the given name and using the parent type.
+	 */
+	public function getFirstByName( $name, $config = [] ) {
 
 		return $this->getFirstByNameType( $name, static::$parentType );
 	}
 
-	public function getFeatured() {
+	/**
+	 * Returns the featured and active models using the parent type.
+	 */
+	public function getFeatured( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::find()->where( 'featured=:featured AND type=:type', [ ':featured' => true, ':type' => static::$parentType ] )->all();
+		return $modelClass::find()->where( 'featured=:featured AND type=:type AND status=:status', [ ':featured' => true, ':type' => static::$parentType, ':status' => $modelClass::STATUS_ACTIVE ] )->all();
 	}
 
+	/**
+	 * Returns the active models using the parent type.
+	 */
 	public function getActive( $config = [] ) {
 
 		$modelClass = static::$modelClass;
@@ -326,6 +425,9 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		return $modelClass::queryByType( static::$parentType, $config )->andWhere( [ 'status' => $modelClass::STATUS_ACTIVE ] )->all();
 	}
 
+	/**
+	 * Returns the active models using the given type.
+	 */
 	public function getActiveByType( $type, $config = [] ) {
 
 		$modelClass = static::$modelClass;
@@ -333,8 +435,31 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		return $modelClass::queryByType( $type, $config )->andWhere( [ 'status' => $modelClass::STATUS_ACTIVE ] )->all();
 	}
 
+	/**
+	 * Returns the top level active models using the given type.
+	 */
+	public function getL0ByType( $type, $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::queryL0ByType( $type, $config )->andWhere( [ 'status' => $modelClass::STATUS_ACTIVE ] )->all();
+	}
+
+	/**
+	 * Returns the active models using the given parent id.
+	 */
+	public function getByParentId( $parentId, $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::queryByParentId( $parentId, $config )->andWhere( [ 'status' => $modelClass::STATUS_ACTIVE ] )->all();
+	}
+
 	// Read - Lists ----
 
+	/**
+	 * Returns the id list for mapping purposes using the parent type.
+	 */
 	public function getIdList( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
@@ -345,6 +470,9 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		return parent::getIdList( $config );
 	}
 
+	/**
+	 * Returns the id and name list for mapping purposes using the parent type.
+	 */
 	public function getIdNameList( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
@@ -363,20 +491,78 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	public function create( $model, $config = [] ) {
 
-		$modelClass	= static::$modelClass;
-
 		$avatar	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 		$banner	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$video 	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 
-		if( !isset( $model->visibility ) ) {
-
-			$model->visibility = $modelClass::VISIBILITY_PRIVATE;
-		}
-
 		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
 
 		return parent::create( $model, $config );
+	}
+
+	public function add( $model, $config = [] ) {
+
+		return $this->register( $model, $config );
+	}
+
+	public function register( $model, $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+		$addGallery	= isset( $config[ 'addGallery' ] ) ? $config[ 'addGallery' ] : false;
+
+		$galleryService = Yii::$app->factory->get( 'galleryService' );
+
+		$galleryClass = $galleryService->getModelClass();
+
+		$transaction = Yii::$app->db->beginTransaction();
+
+		try {
+
+			// Copy Template
+			$config[ 'template' ] = $model->template;
+
+			$this->copyTemplate( $model, $config );
+
+			// Create Gallery
+			if( isset( $gallery ) ) {
+
+				$gallery->siteId	= $model->siteId;
+				$gallery->type		= static::$parentType;
+				$gallery->status	= $galleryClass::STATUS_ACTIVE;
+				$gallery->name		= empty( $gallery->name ) ? $model->name : $gallery->name;
+
+				$gallery = $galleryService->create( $gallery );
+			}
+			else if( $addGallery ) {
+
+				$gallery = $galleryService->createByParams([
+					'siteId' => $model->siteId,
+					'type' => static::$parentType, 'status' => $galleryClass::STATUS_ACTIVE,
+					'name' => $model->name, 'title' => $model->title
+				]);
+			}
+
+			// Attach gallery
+			if( isset( $gallery ) ) {
+
+				$model->galleryId = $gallery->id;
+			}
+
+			// Create Model
+			$model = $this->create( $model, $config );
+
+			$transaction->commit();
+		}
+		catch( Exception $e ) {
+
+			$transaction->rollBack();
+
+			return false;
+		}
+
+		return $model;
 	}
 
 	// Update -------------
@@ -385,41 +571,113 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
+		$avatar 	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
+
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'templateId', 'avatarId', 'bannerId', 'videoId',
+			'templateId', 'parentId', 'avatarId', 'bannerId', 'videoId', 'galleryId',
 			'name', 'slug', 'title', 'icon', 'texture', 'description', 'visibility',
 			'htmlOptions', 'summary', 'content'
 		];
 
-		$avatar	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
-		$banner	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
-		$video 	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
-
 		if( $admin ) {
 
-			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'pinned', 'featured' ] );
+			$attributes	= ArrayHelper::merge( $attributes, [
+				'status', 'order', 'pinned', 'featured', 'classPath', 'viewPath'
+			]);
 		}
 
+		// Copy Template
+		$config[ 'template' ] = $model->template;
+
+		if( $this->copyTemplate( $model, $config ) ) {
+
+			$attributes[] = 'data';
+		}
+
+		// Save Files
 		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
 
-		return parent::update( $model, [
+		// Create/Update gallery
+		if( isset( $gallery ) ) {
+
+			$galleryService = Yii::$app->factory->get( 'galleryService' );
+
+			$gallery = $galleryService->createOrUpdate( $gallery );
+
+			if( empty( $model->galleryId ) ) {
+
+				$model->galleryId = $gallery->id;
+			}
+		}
+
+		// Model Checks
+		$oldStatus = $model->getOldAttribute( 'status' );
+
+		$model = parent::update( $model, [
 			'attributes' => $attributes
 		]);
+
+		// Check status change and notify User
+		if( isset( $model->userId ) && $oldStatus != $model->status ) {
+
+			$config[ 'users' ] = [ $model->userId ];
+
+			$config[ 'data' ][ 'message' ] = 'Form status changed.';
+
+			$this->checkStatusChange( $model, $oldStatus, $config );
+		}
+
+		return $model;
 	}
 
 	// Delete -------------
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete files
-		$this->fileService->deleteMultiple( [ $model->avatar, $model->banner, $model->video ] );
-		$this->fileService->deleteMultiple( $model->files );
+		$config[ 'hard' ] = $config[ 'hard' ] ?? !Yii::$app->core->isSoftDelete();
 
-		// Delete File Mappings - Shared Files
-		$this->modelFileService->deleteMultiple( $model->modelFiles );
+		if( $config[ 'hard' ] && isset( $model ) ) {
 
-		// Delete mapping
-		Yii::$app->factory->get( 'modelObjectService' )->deleteByModelId( $model->id );
+			$backend	= isset( $config[ 'backend' ] ) ? $config[ 'backend' ] : false;
+			$frontend	= isset( $config[ 'frontend' ] ) ? $config[ 'frontend' ] : false;
+
+			// Delete by Admin, Model User, Direct
+			if( $backend || ( $frontend && isset( $model->userId ) && $model->shared ) || !$model->shared ) {
+
+				$transaction = Yii::$app->db->beginTransaction();
+
+				try {
+
+					// Delete files
+					$this->fileService->deleteMultiple( [ $model->avatar, $model->banner, $model->video ] );
+					$this->fileService->deleteMultiple( $model->files );
+
+					// Delete File Mappings of Shared Files
+					Yii::$app->factory->get( 'modelFileService' )->deleteMultiple( $model->modelFiles );
+
+					// Delete mappings
+					Yii::$app->factory->get( 'modelObjectService' )->deleteByModelId( $model->id );
+
+					// Delete Gallery
+					if( isset( $model->gallery ) ) {
+
+						Yii::$app->factory->get( 'galleryService' )->delete( $model->gallery );
+					}
+
+					// Commit
+					$transaction->commit();
+				}
+				catch( Exception $e ) {
+
+					$transaction->rollBack();
+
+					throw new Exception( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+				}
+			}
+		}
 
 		// Delete model
 		return parent::delete( $model, $config );
@@ -429,39 +687,60 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
+		$direct = isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : false; // Trigger direct notifications
+		$users	= isset( $config[ 'users' ] ) ? $config[ 'users' ] : ( isset( $model->userId ) ? [ $model->userId ] : [] ); // Trigger user notifications
+
 		switch( $column ) {
 
 			case 'status': {
 
 				switch( $action ) {
 
-					case 'confirmed': {
+					case 'accept': {
 
-						$this->confirm( $model );
-
-						break;
-					}
-					case 'rejected': {
-
-						$this->reject( $model );
+						$this->accept( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
-					case 'active': {
+					case 'confirm': {
 
-						$this->approve( $model );
-
-						break;
-					}
-					case 'frozen': {
-
-						$this->freeze( $model );
+						$this->confirm( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
-					case 'blocked': {
+					case 'approve': {
 
-						$this->block( $model );
+						$this->approve( $model, [ 'direct' => $direct, 'users' => $users ] );
+
+						break;
+					}
+					case 'reject': {
+
+						$this->reject( $model, [ 'direct' => $direct, 'users' => $users ] );
+
+						break;
+					}
+					case 'activate': {
+
+						$this->activate( $model, [ 'direct' => $direct, 'users' => $users ] );
+
+						break;
+					}
+					case 'freeze': {
+
+						$this->freeze( $model, [ 'direct' => $direct, 'users' => $users ] );
+
+						break;
+					}
+					case 'block': {
+
+						$this->block( $model, [ 'direct' => $direct, 'users' => $users ] );
+
+						break;
+					}
+					case 'terminate': {
+
+						$this->terminate( $model, [ 'direct' => $direct, 'users' => $users ] );
 
 						break;
 					}
@@ -484,6 +763,14 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 					case 'featured': {
 
 						$model->featured = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'popular': {
+
+						$model->popular = true;
 
 						$model->update();
 

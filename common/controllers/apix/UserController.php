@@ -27,7 +27,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class UserController extends \cmsgears\core\common\controllers\base\Controller {
+class UserController extends \cmsgears\core\common\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -55,7 +55,7 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 		$this->modelService			= Yii::$app->factory->get( 'userService' );
 		$this->addressService		= Yii::$app->factory->get( 'addressService' );
 		$this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );
-		$this->metaService			= Yii::$app->factory->get( 'modelMetaService' );
+		$this->metaService			= Yii::$app->factory->get( 'userMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -87,6 +87,10 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 					'add-gallery-item' => [ 'permission' => $this->crudPermission ],
 					'update-gallery-item' => [ 'permission' => $this->crudPermission ],
 					'delete-gallery-item' => [ 'permission' => $this->crudPermission ],
+					// Categories
+					'assign-category' => [ 'permission' => $this->crudPermission ],
+					'remove-category' => [ 'permission' => $this->crudPermission ],
+					'toggle-category' => [ 'permission' => $this->crudPermission ],
 					// Options
 					'assign-option' => [ 'permission' => $this->crudPermission ],
 					'remove-option' => [ 'permission' => $this->crudPermission ],
@@ -136,6 +140,10 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 					'add-gallery-item' => [ 'post' ],
 					'update-gallery-item' => [ 'post' ],
 					'delete-gallery-item' => [ 'post' ],
+					// Categories
+					'assign-category' => [ 'post' ],
+					'remove-category' => [ 'post' ],
+					'toggle-category' => [ 'post' ],
 					// Options
 					'assign-option' => [ 'post' ],
 					'remove-option' => [ 'post' ],
@@ -187,16 +195,20 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 			'assign-video' => [ 'class' => 'cmsgears\core\common\actions\content\video\Assign', 'model' => $user ],
 			'clear-video' => [ 'class' => 'cmsgears\core\common\actions\content\video\Clear', 'model' => $user ],
 			// Gallery
-			'update-gallery' => [ 'class' => 'cmsgears\core\common\actions\gallery\Update', 'model' => $user ],
-			'get-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Read', 'model' => $user ],
-			'add-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Create', 'model' => $user ],
-			'update-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Update', 'model' => $user ],
-			'delete-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Delete', 'model' => $user ],
+			'update-gallery' => [ 'class' => 'cmsgears\core\common\actions\gallery\Update', 'model' => $user, 'user' => true ],
+			'get-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Read', 'model' => $user, 'user' => true ],
+			'add-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Create', 'model' => $user, 'user' => true ],
+			'update-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Update', 'model' => $user, 'user' => true ],
+			'delete-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Delete', 'model' => $user, 'user' => true ],
+			// Categories
+			'assign-category' => [ 'class' => 'cmsgears\core\common\actions\category\mapper\Assign', 'model' => $user ],
+			'remove-category' => [ 'class' => 'cmsgears\core\common\actions\category\mapper\Remove', 'model' => $user ],
+			'toggle-category' => [ 'class' => 'cmsgears\core\common\actions\category\mapper\Toggle', 'model' => $user ],
 			// Options
-			'assign-option' => [ 'class' => 'cmsgears\core\common\actions\option\Assign', 'model' => $user ],
-			'remove-option' => [ 'class' => 'cmsgears\core\common\actions\option\Remove', 'model' => $user ],
-			'delete-option' => [ 'class' => 'cmsgears\core\common\actions\option\Delete', 'model' => $user ],
-			'toggle-option' => [ 'class' => 'cmsgears\core\common\actions\option\Toggle', 'model' => $user ],
+			'assign-option' => [ 'class' => 'cmsgears\core\common\actions\option\mapper\Assign', 'model' => $user ],
+			'remove-option' => [ 'class' => 'cmsgears\core\common\actions\option\mapper\Remove', 'model' => $user ],
+			'delete-option' => [ 'class' => 'cmsgears\core\common\actions\option\mapper\Delete', 'model' => $user ],
+			'toggle-option' => [ 'class' => 'cmsgears\core\common\actions\option\mapper\Toggle', 'model' => $user ],
 			// Metas
 			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Create', 'model' => $user ],
 			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update', 'model' => $user ],
@@ -204,10 +216,10 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete', 'model' => $user ],
 			'settings' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMultiple', 'model' => $user ],
 			// Address
-			'get-address' => [ 'class' => 'cmsgears\core\common\actions\address\Read', 'model' => $user ],
-			'add-address' => [ 'class' => 'cmsgears\core\common\actions\address\Create', 'model' => $user ],
-			'update-address' => [ 'class' => 'cmsgears\core\common\actions\address\Update', 'model' => $user ],
-			'delete-address' => [ 'class' => 'cmsgears\core\common\actions\address\Delete', 'model' => $user ],
+			'get-address' => [ 'class' => 'cmsgears\core\common\actions\address\mapper\Read', 'model' => $user ],
+			'add-address' => [ 'class' => 'cmsgears\core\common\actions\address\mapper\Create', 'model' => $user ],
+			'update-address' => [ 'class' => 'cmsgears\core\common\actions\address\mapper\Update', 'model' => $user ],
+			'delete-address' => [ 'class' => 'cmsgears\core\common\actions\address\mapper\Delete', 'model' => $user ],
 			// Data Object - Use current logged in user to update the config and settings
 			'set-data' => [ 'class' => 'cmsgears\core\common\actions\data\data\Set', 'model' => $user ],
 			'remove-data' => [ 'class' => 'cmsgears\core\common\actions\data\data\Remove', 'model' => $user ],
@@ -280,8 +292,18 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 
 			if( $model->load( Yii::$app->request->post(), 'ResetPassword' ) && $model->validate() ) {
 
-				// Update User
+				if( empty( $user->email ) ) {
+
+					$user->email = $model->email;
+
+					$user = $this->modelService->update( $user );
+				}
+
+				// Update Password
 				if( $this->modelService->resetPassword( $user, $model, false ) ) {
+
+					// Send Password Change Mail
+					Yii::$app->coreMailer->sendPasswordChangeMail( $user );
 
 					$data = [ 'email' => $user->email, 'username' => $user->username ];
 
@@ -303,8 +325,9 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 
 	public function actionAddress( $ctype ) {
 
-		$user		= Yii::$app->core->getUser();
-		$address	= null;
+		$user = Yii::$app->core->getUser();
+
+		$address = null;
 
 		// Accept only selected type for a user
 		if( !in_array( $ctype, [ Address::TYPE_PRIMARY, Address::TYPE_BILLING, Address::TYPE_MAILING, Address::TYPE_SHIPPING ] ) ) {
@@ -351,7 +374,7 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 			$address = $this->addressService->createOrUpdate( $address );
 
 			// Create Mapping
-			$modelAddress = $this->modelAddressService->activateByModelId( $user->id, CoreGlobal::TYPE_USER, $address->id, $ctype );
+			$modelAddress = $this->modelAddressService->activateByParentModelId( $user->id, CoreGlobal::TYPE_USER, $address->id, $ctype );
 
 			$data = [
 				'line1' => $address->line1, 'line2' => $address->line2,

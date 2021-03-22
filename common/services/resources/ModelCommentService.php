@@ -19,11 +19,11 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\ModelComment;
 
-use cmsgears\files\components\FileManager;
-
 use cmsgears\core\common\services\interfaces\resources\IModelCommentService;
 
+use cmsgears\core\common\services\traits\base\MultisiteTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
+use cmsgears\core\common\services\traits\mappers\FileTrait;
 
 use cmsgears\core\common\utilities\DateUtil;
 
@@ -62,6 +62,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 	// Traits ------------------------------------------------------
 
 	use DataTrait;
+	use FileTrait;
+	use MultisiteTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -89,10 +91,13 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
-
-		$userTable = Yii::$app->factory->get( 'userService' )->getModelTable();
 
 		// Sorting ----------
 
@@ -105,8 +110,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 					'label' => 'Id'
 				],
 	            'user' => [
-					'asc' => [ "$userTable.name" => SORT_ASC ],
-					'desc' => [ "$userTable.name" => SORT_DESC ],
+					'asc' => [ "creator.name" => SORT_ASC ],
+					'desc' => [ "creator.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 	                'label' => 'User'
 	            ],
@@ -152,6 +157,18 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 					'default' => SORT_DESC,
 					'label' => 'Featured'
 				],
+				'popular' => [
+					'asc' => [ "$modelTable.popular" => SORT_ASC ],
+					'desc' => [ "$modelTable.popular" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Popular'
+				],
+				'anonymous' => [
+					'asc' => [ "$modelTable.anonymous" => SORT_ASC ],
+					'desc' => [ "$modelTable.anonymous" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Anonymous'
+				],
 	            'cdate' => [
 	                'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
 	                'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
@@ -171,9 +188,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 	                'label' => 'Approved At'
 	            ]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -195,7 +210,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Status
-		if( isset( $status ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
+		if( isset( $status ) && empty( $config[ 'conditions' ][ "$modelTable.status" ] ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.status" ]	= $modelClass::$urlRevStatusMap[ $status ];
 		}
@@ -217,35 +232,55 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 					break;
 				}
+				case 'popular': {
+
+					$config[ 'conditions' ][ "$modelTable.popular" ] = true;
+
+					break;
+				}
+				case 'anonymous': {
+
+					$config[ 'conditions' ][ "$modelTable.anonymous" ] = true;
+
+					break;
+				}
 			}
 		}
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'user' => "concat(creator.firstName, ' ', creator.lastName)",
+			'name' => "$modelTable.name",
+			'email' =>  "$modelTable.email",
+			'content' => "$modelTable.content"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'user' => "concat(creator.firstName, ' ', creator.lastName)",
-				'name' => "$modelTable.name",
-				'email' =>  "$modelTable.email",
-				'content' => "$modelTable.content"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'user' => "concat(creator.firstName, ' ', creator.lastName)",
 			'name' => "$modelTable.name",
 			'email' => "$modelTable.email",
 			'content' => "$modelTable.content",
 			'status' => "$modelTable.status",
 			'rating' => "$modelTable.rating",
-			'featured' => "$modelTable.featured"
+			'pinned' => "$modelTable.pinned",
+			'featured' => "$modelTable.featured",
+			'popular' => "$modelTable.popular",
+			'anonymous' => "$modelTable.anonymous"
 		];
 
 		// Result -----------
@@ -253,74 +288,83 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		return parent::findPage( $config );
 	}
 
-	public function getPageByParent( $parentId, $parentType, $config = [] ) {
-
-		$topLevel = isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
-
-		if( $topLevel ) {
-
-			$config[ 'conditions' ][ 'baseId' ] = null;
-		}
-
-		$config[ 'conditions' ][ 'parentId' ]	= $parentId;
-		$config[ 'conditions' ][ 'parentType' ]	= $parentType;
-
-		return $this->getPage( $config );
-	}
-
-	public function getCommentPageByParent( $parentId, $parentType, $config = [] ) {
-
-        $modelTable	= $this->getModelTable();
-
-		$config[ 'conditions' ][ "$modelTable.type" ] = ModelComment::TYPE_COMMENT;
-
-		return $this->getPageByParent( $parentId, $parentType, $config );
-	}
-
-	public function getReviewPageByParent( $parentId, $parentType, $config = [] ) {
-
-       $modelTable	= $this->getModelTable();
-
-		$config[ 'conditions' ][ "$modelTable.type" ] = ModelComment::TYPE_REVIEW;
-
-		return $this->getPageByParent( $parentId, $parentType, $config );
-	}
-
 	public function getPageByParentType( $parentType, $config = [] ) {
-
-		$topLevel = isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
-
-		if( $topLevel ) {
-
-			$config[ 'conditions' ][ 'baseId' ] = null;
-		}
-
-		$config[ 'conditions' ][ 'parentType' ]	= $parentType;
-
-		return $this->getPage( $config );
-	}
-
-	public function getPageByBaseId( $baseId, $config = [] ) {
-
-		$config[ 'conditions' ][ 'baseId' ] = $baseId;
-
-		return $this->getPage( $config );
-	}
-
-	/**
-	 * We can pass parentType as condition to utilize the classification.
-	 */
-	public function getPageForApproved( $config = [] ) {
 
 		$modelTable	= $this->getModelTable();
 		$topLevel	= isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
 
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : ModelComment::TYPE_COMMENT;
+
 		if( $topLevel ) {
 
 			$config[ 'conditions' ][ 'baseId' ] = null;
 		}
 
+		$config[ 'conditions' ][ "$modelTable.parentType" ] = $parentType;
+
+		$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+
+		return $this->getPage( $config );
+	}
+
+	public function getReviewPageByParentType( $parentType, $config = [] ) {
+
+		$config[ 'type' ] = ModelComment::TYPE_REVIEW;
+
+		return $this->getPageByParent( $parentType, $config );
+	}
+
+	public function getPageByParent( $parentId, $parentType, $config = [] ) {
+
+		$modelTable	= $this->getModelTable();
+		$topLevel	= isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
+
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : ModelComment::TYPE_COMMENT;
+
+		if( $topLevel ) {
+
+			$config[ 'conditions' ][ 'baseId' ] = null;
+		}
+
+		$config[ 'conditions' ][ "$modelTable.parentId" ]	= $parentId;
+		$config[ 'conditions' ][ "$modelTable.parentType" ]	= $parentType;
+		$config[ 'conditions' ][ "$modelTable.type" ]		= $type;
+
+		return $this->getPage( $config );
+	}
+
+	public function getReviewPageByParent( $parentId, $parentType, $config = [] ) {
+
+		$config[ 'type' ] = ModelComment::TYPE_REVIEW;
+
+		return $this->getPageByParent( $parentId, $parentType, $config );
+	}
+
+	public function getPageForApproved( $parentId, $parentType, $config = [] ) {
+
+		$modelTable	= $this->getModelTable();
+
 		$config[ 'conditions' ][ "$modelTable.status" ]	= ModelComment::STATUS_APPROVED;
+
+		return $this->getPageByParent( $parentId, $parentType, $config );
+	}
+
+	public function getReviewPageForApproved( $parentId, $parentType, $config = [] ) {
+
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.status" ]	= ModelComment::STATUS_APPROVED;
+
+		$config[ 'type' ] = ModelComment::TYPE_REVIEW;
+
+		return $this->getPageByParent( $parentId, $parentType, $config );
+	}
+
+	public function getPageByBaseId( $baseId, $config = [] ) {
+
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.baseId" ] = $baseId;
 
 		return $this->getPage( $config );
 	}
@@ -343,20 +387,20 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 		$modelClass	= self::$modelClass;
 
-		$user = Yii::$app->user->getIdentity();
+		$user = Yii::$app->core->getUser();
 
-		return $modelClass::findByUser( $parentId, $parentType, $user->id );
+		return $modelClass::findByUserId( $parentId, $parentType, $user->id );
 	}
 
 	public function isExistByUser( $parentId, $parentType ) {
 
 		$modelClass	= self::$modelClass;
 
-		$user = Yii::$app->user->getIdentity();
+		$user = Yii::$app->core->getUser();
 
 		if( isset( $user ) ) {
 
-			return $modelClass::isExistByUser( $parentId, $parentType, $user->id );
+			return $modelClass::isExistByUserId( $parentId, $parentType, $user->id );
 		}
 
 		return false;
@@ -380,16 +424,22 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 	public function getFeaturedByType( $parentId, $parentType, $type, $config = [] ) {
 
 		$modelClass	= self::$modelClass;
-		$query		= $modelClass::queryByType( $parentId, $parentType, $type, $config );
+
+		$config[ 'type' ] = $type;
+
+		$query = $modelClass::queryL0Approved( $parentId, $parentType, $config );
 
 		return $query->andWhere( [ 'featured' => true ] )->all();
 	}
 
+	public function getFeaturedReviews( $parentId, $parentType, $config = [] ) {
+
+		return $this->getFeaturedByType( $parentId, $parentType, ModelComment::TYPE_REVIEW, $config );
+	}
+
 	public function getFeaturedTestimonials( $parentId, $parentType, $config = [] ) {
 
-		$modelClass	= self::$modelClass;
-
-		return $this->getFeaturedByType( $parentId, $parentType, $modelClass::TYPE_TESTIMONIAL, $config );
+		return $this->getFeaturedByType( $parentId, $parentType, ModelComment::TYPE_TESTIMONIAL, $config );
 	}
 
 	// Read - Lists ----
@@ -400,44 +450,15 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 	// Create -------------
 
-	public function create( $comment, $config = [] ) {
+	public function create( $model, $config = [] ) {
 
-		$modelClass = static::$modelClass;
-
-		$comment->agent	= Yii::$app->request->userAgent;
-		$comment->ip	= Yii::$app->request->userIP;
+		$model->agent	= Yii::$app->request->userAgent;
+		$model->ip		= Yii::$app->request->userIP;
 
 		// Default New
-		$comment->status = $comment->status ?? $modelClass::STATUS_NEW;
+		$model->status = $model->status ?? ModelComment::STATUS_NEW;
 
-		return parent::create( $comment, $config );
-	}
-
-	public function attachMedia( $model, $file, $mediaType, $parentType ) {
-
-		switch( $mediaType ) {
-
-			case FileManager::FILE_TYPE_IMAGE : {
-
-				$file = $this->fileService->saveImage( $file );
-
-				break;
-			}
-			default: {
-
-				$file = $this->fileService->saveFile( $file );
-
-				break;
-			}
-		}
-
-		// Create Model File
-		if( $file->id > 0 ) {
-
-			$this->modelFileService->createByParams( [ 'modelId' => $file->id, 'parentId' => $model->id, 'parentType' => $parentType ] );
-		}
-
-		return $file;
+		return parent::create( $model, $config );
 	}
 
 	// Update -------------
@@ -447,12 +468,16 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content'
+			'avatarId', 'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content',
+			'rate1', 'rate2', 'rate3', 'rate4', 'rate5',
+			'field1', 'field2', 'field3', 'field4', 'field5'
 		];
 
 		if( $admin ) {
 
-			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'pinned', 'featured' ] );
+			$attributes	= ArrayHelper::merge( $attributes, [
+				'status', 'order', 'pinned', 'featured', 'popular', 'anonymous'
+			]);
 		}
 
 		return parent::update( $model, [
@@ -460,7 +485,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		]);
 	}
 
-	// Various states
+	// States -----
 
 	public function updateStatus( $model, $status ) {
 
@@ -473,7 +498,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 	public function approve( $model ) {
 
-		$model->approvedAt	= DateUtil::getDateTime();
+		$model->approvedAt = DateUtil::getDateTime();
 
 		return $this->updateStatus( $model, ModelComment::STATUS_APPROVED );
 	}
@@ -493,24 +518,57 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		return $this->updateStatus( $model, ModelComment::STATUS_TRASH );
 	}
 
-	// Attributes
+	// Requests ---
 
-	public function updateSpamRequest( $model, $value = true ) {
+	public function spamRequest( $model, $parent, $config = [] ) {
 
-		$model->setDataMeta( CoreGlobal::META_COMMENT_SPAM_REQUEST, $value );
+		$parentType		= $config[ 'parentType' ];
+		$notify			= isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+		$commentType	= isset( $config[ 'commentType' ] ) ? $config[ 'commentType' ] : ModelComment::TYPE_COMMENT;
+		$adminLink		= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : null;
 
-		$model->update();
+		if( $notify ) {
 
-		return $model;
+			$this->notifyAdmin( $model, [
+				'template' => CoreGlobal::TPL_COMMENT_REQUEST_SPAM,
+				'adminLink' => $adminLink,
+				'data' => [ 'parent' => $parent, 'parentType' => $parentType, 'commentType' => $commentType ]
+			]);
+		}
 	}
 
-	public function updateDeleteRequest( $model, $value = true ) {
+	public function approveRequest( $model, $parent, $config = [] ) {
 
-		$model->setDataMeta( CoreGlobal::META_COMMENT_DELETE_REQUEST, $value );
+		$parentType		= $config[ 'parentType' ];
+		$notify			= isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+		$commentType	= isset( $config[ 'commentType' ] ) ? $config[ 'commentType' ] : ModelComment::TYPE_COMMENT;
+		$adminLink		= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : null;
 
-		$model->update();
+		if( $notify ) {
 
-		return $model;
+			$this->notifyAdmin( $model, [
+				'template' => CoreGlobal::TPL_COMMENT_REQUEST_APPROVE,
+				'adminLink' => $adminLink,
+				'data' => [ 'parent' => $parent, 'parentType' => $parentType, 'commentType' => $commentType ]
+			]);
+		}
+	}
+
+	public function deleteRequest( $model, $parent, $config = [] ) {
+
+		$parentType		= $config[ 'parentType' ];
+		$notify			= isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+		$commentType	= isset( $config[ 'commentType' ] ) ? $config[ 'commentType' ] : ModelComment::TYPE_COMMENT;
+		$adminLink		= isset( $config[ 'adminLink' ] ) ? $config[ 'adminLink' ] : null;
+
+		if( $notify ) {
+
+			$this->notifyAdmin( $model, [
+				'template' => CoreGlobal::TPL_COMMENT_REQUEST_DELETE,
+				'adminLink' => $adminLink,
+				'data' => [ 'parent' => $parent, 'parentType' => $parentType, 'commentType' => $commentType ]
+			]);
+		}
 	}
 
 	// Delete -------------
@@ -519,9 +577,6 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 		// Delete Files
 		$this->fileService->deleteMultiple( $model->files );
-
-		// Delete File Mappings - Shared Files
-		$this->modelFileService->deleteMultiple( $model->modelFiles );
 
 		// Delete model
 		return parent::delete( $model, $config );
@@ -537,7 +592,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 				switch( $action ) {
 
-					case 'approved': {
+					case 'approve': {
 
 						$this->approve( $model );
 
@@ -555,7 +610,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 						break;
 					}
-					case 'blocked': {
+					case 'block': {
 
 						$this->block( $model );
 
@@ -580,6 +635,14 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 					case 'featured': {
 
 						$model->featured = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'popular': {
+
+						$model->popular = true;
 
 						$model->update();
 

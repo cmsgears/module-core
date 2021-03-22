@@ -16,18 +16,30 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\forms\BaseForm;
-
 /**
  * The comment form collects the comment data.
  *
  * @property integer $baseId
  * @property integer $bannerId
  * @property integer $videoId
+ * @property integer $parentId
+ * @property string $title
  * @property string $name
  * @property string $email
+ * @property string $mobile
+ * @property string $phone
  * @property string $avatarUrl
  * @property string $websiteUrl
+ * @property string $field1
+ * @property string $field2
+ * @property string $field3
+ * @property string $field4
+ * @property string $field5
+ * @property integer $rate1
+ * @property integer $rate2
+ * @property integer $rate3
+ * @property integer $rate4
+ * @property integer $rate5
  * @property integer $rating
  * @property boolean $anonymous
  * @property string $content
@@ -60,15 +72,30 @@ class Comment extends BaseForm {
 	public $baseId;
 	public $bannerId;
 	public $videoId;
+	public $title;
 	public $name;
 	public $email;
+	public $mobile;
+	public $phone;
 	public $avatarUrl;
 	public $websiteUrl;
-	public $rating;
+	public $field1;
+	public $field2;
+	public $field3;
+	public $field4;
+	public $field5;
+	public $rate1 = 0;
+	public $rate2 = 0;
+	public $rate3 = 0;
+	public $rate4 = 0;
+	public $rate5 = 0;
+	public $rating = 0;
 	public $anonymous = false;
 	public $content;
 
 	public $captcha;
+
+	public $captchaAction = '/core/site/captcha';
 
 	// Protected --------------
 
@@ -101,27 +128,29 @@ class Comment extends BaseForm {
 			// Email
 			[ 'email', 'email' ],
 			// Text Limit
+			[ [ 'mobile', 'phone' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'field1', 'field2', 'field3', 'field4', 'field5' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ [ 'name', 'email' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
-			[ [ 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'title', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Check captcha need for testimonial and review
 			[ [ 'name', 'email' ], 'required', 'on' => [ self::SCENARIO_IDENTITY, self::SCENARIO_ALL ] ],
 			[ 'rating', 'required', 'on' => [ self::SCENARIO_REVIEW, self::SCENARIO_TESTIMONIAL, self::SCENARIO_FEEDBACK , self::SCENARIO_ALL ] ],
-			[ 'captcha', 'captcha', 'captchaAction' => '/core/site/captcha', 'on' => [ self::SCENARIO_CAPTCHA, self::SCENARIO_ALL ] ],
+			[ 'captcha', 'captcha', 'captchaAction' => $this->captchaAction, 'on' => [ self::SCENARIO_CAPTCHA, self::SCENARIO_ALL ] ],
 			// Other
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
 			[ 'anonymous', 'boolean' ],
-			[ 'rating', 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'rate1', 'rate2', 'rate3', 'rate4', 'rate5', 'rating' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'baseId', 'bannerId', 'videoId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 
 		// Enable captcha for non-logged in users
-		$user = Yii::$app->user->getIdentity();
+		$user = Yii::$app->core->getUser();
 
 		// Captcha is mandatory for guest users to comment
 		if( !isset( $user ) ) {
 
 			$rules[] = [ [ 'name', 'email', 'captcha' ], 'required' ];
-			$rules[] = [ 'captcha', 'captcha', 'captchaAction' => '/core/site/captcha' ];
+			$rules[] = [ 'captcha', 'captcha', 'captchaAction' => $this->captchaAction ];
 		}
 
 		// Trim Text
@@ -142,8 +171,11 @@ class Comment extends BaseForm {
 
 		return [
 			'baseId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+			'mobile' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MOBILE ),
+			'phone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
 			'avatarUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
 			'websiteUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
 			'rating' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RATING ),

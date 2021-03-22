@@ -1,14 +1,16 @@
 <?php
 /**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
  * @link https://www.cmsgears.org/
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
- * @license https://www.cmsgears.org/license/
- * @package module
- * @subpackage core
  */
+
 namespace cmsgears\core\common\components;
 
 // Yii Imports
+use Yii;
 use yii\helpers\Html;
 use yii\helpers\StringHelper;
 use yii\helpers\HtmlPurifier;
@@ -21,8 +23,9 @@ use cmsgears\core\common\models\resources\FormField;
 // TODO: Use php templates to render the html.
 
 /**
- * Default form designer component to generate html for form elements using form and form fields.
- * It supports CMGTools UI, JS and IconLib by default, but can be overriden to support other ui libraries.
+ * Default form designer component to generate HTML for form elements using form
+ * and form fields. It supports CMGTools UI, JS and IconLib by default, but can be
+ * overridden to support other UI libraries.
  *
  * @since 1.0.0
  */
@@ -36,9 +39,18 @@ class FormDesigner extends \yii\base\Component {
 
 	// Protected --------------
 
+	protected $optionService;
+
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		$this->optionService = Yii::$app->factory->get( 'optionService' );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -104,9 +116,17 @@ class FormDesigner extends \yii\base\Component {
 
 				return $this->getSelectHtml( $form, $model, $config, $key, $field );
 			}
-			case FormField::TYPE_RATING : {
+			case FormField::TYPE_RATING: {
 
 				return $this->getRatingHtml( $form, $model, $config, $key, $field );
+			}
+			case FormField::TYPE_INTL_TEL_MOBILE: {
+
+				return $this->getIntlTelMobileHtml( $form, $model, $config, $key, $field );
+			}
+			case FormField::TYPE_INTL_TEL_PHONE: {
+
+				return $this->getIntlTelPhoneHtml( $form, $model, $config, $key, $field );
 			}
 		}
 	}
@@ -214,11 +234,17 @@ class FormDesigner extends \yii\base\Component {
 
 		$htmlOptions	= $field->htmlOptions;
 		$items			= isset( $htmlOptions[ 'items' ] ) ? $htmlOptions[ 'items' ] : [];
+		$value			= isset( $htmlOptions[ 'value' ] ) ? $htmlOptions[ 'value' ] : null;
 		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
-		$fieldHtml		= $form->field( $model, $key, $wrapperOptions )->radioList( $items, $fieldOptions );
+		if( isset( $value ) && empty( $model->$key ) ) {
+
+			$model->$key = $value;
+		}
+
+		$fieldHtml = $form->field( $model, $key, $wrapperOptions )->radioList( $items, $fieldOptions );
 
 		if( $config[ 'label' ] ) {
 
@@ -240,7 +266,12 @@ class FormDesigner extends \yii\base\Component {
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
-		$fieldHtml		= $form->field( $model, $key, $wrapperOptions )->dropDownList( $items, $fieldOptions );
+		if( isset( $field->optionGroupId ) ) {
+
+			$items = $this->optionService->getActiveValueNameMapByCategoryId( $field->optionGroupId );
+		}
+
+		$fieldHtml = $form->field( $model, $key, $wrapperOptions )->dropDownList( $items, $fieldOptions );
 
 		if( $config[ 'label' ] ) {
 
@@ -256,7 +287,7 @@ class FormDesigner extends \yii\base\Component {
 
 	protected function getRatingHtml( $form, $model, $config, $key, $field ) {
 
-		$class			= isset( $field->htmlOptions[ 'class' ] ) ? $field->htmlOptions[ 'class' ] : 'cmt-rating';
+		$class			= isset( $field->htmlOptions[ 'class' ] ) ? $field->htmlOptions[ 'class' ] : 'cmt-rating rating';
 		$readOnly		= isset( $field->htmlOptions[ 'read-only' ] ) ? $field->htmlOptions[ 'read-only' ] : false;
 		$disabled		= isset( $field->htmlOptions[ 'disabled' ] ) ? $field->htmlOptions[ 'disabled' ] : false;
 
@@ -269,7 +300,7 @@ class FormDesigner extends \yii\base\Component {
 		$starMessage	= isset( $config[ 'starMessage' ] ) ? $config[ 'starMessage' ] : [ "Poor", "Good", "Very Good", "Perfect", "Excellent" ];
 		$value			= $model->$key;
 
-		$fieldName		= StringHelper::baseName( get_class( $model ) ) . '[' . $key . ']';
+		$fieldName = StringHelper::baseName( get_class( $model ) ) . '[' . $key . ']';
 
 		if( $readOnly ) {
 
@@ -291,25 +322,25 @@ class FormDesigner extends \yii\base\Component {
 			$ratingHtml	= "<div class=\"$class\">";
 		}
 
-		$ratingHtml .= '<span class="wrap-stars">';
+		$ratingHtml .= '<span class="stars-wrap">';
 
 		for( $i = 1; $i <= $stars; $i++ ) {
 
 			if( $value > 0 && $value == $i ) {
 
-				$icon	= "<span star=\"$i\" class=\"star selected\"></span>";
+				$icon = "<span star=\"$i\" class=\"star selected\"></span>";
 			}
 			else {
 
-				$icon	= "<span star=\"$i\" class=\"star\"></span>";
+				$icon = "<span star=\"$i\" class=\"star\"></span>";
 			}
 
-			$ratingHtml	  .= $icon;
+			$ratingHtml .= $icon;
 		}
 
 		$ratingHtml .= '</span>';
 
-		$ratingHtml .= '<span class="wrap-messages">';
+		$ratingHtml .= '<span class="message-wrap">';
 
 		for( $i = 1; $i <= $stars; $i++ ) {
 
@@ -317,14 +348,14 @@ class FormDesigner extends \yii\base\Component {
 
 			if( $value > 0 && $value == $i ) {
 
-				$icon	= "<span star-message=\"$i\" class=\"star-message selected\">$message</span>";
+				$icon = "<span star-message=\"$i\" class=\"star-message selected\">$message</span>";
 			}
 			else {
 
-				$icon	= "<span star-message=\"$i\" class=\"star-message\">$message</span>";
+				$icon = "<span star-message=\"$i\" class=\"star-message\">$message</span>";
 			}
 
-			$ratingHtml	  .= $icon;
+			$ratingHtml .= $icon;
 		}
 
 		$ratingHtml .= '</span>';
@@ -334,6 +365,60 @@ class FormDesigner extends \yii\base\Component {
 		$ratingHtml	.= "</div>";
 
 		return $ratingHtml;
+	}
+
+	protected function getIntlTelMobileHtml( $form, $model, $config, $key, $field ) {
+
+		$htmlOptions	= $field->htmlOptions;
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
+		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [ 'class' => 'intl-tel-field intl-tel-field-mb' ];
+		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
+
+		$value = $model->$key;
+
+		$fieldName	= StringHelper::baseName( get_class( $model ) ) . '[' . $key . ']';
+		$fieldHtml	= Html::input( 'text', 'mobile', $value, $fieldOptions );
+		$hiddenHtml	= Html::input( 'hidden', $fieldName, $value, [ 'class' => 'intl-tel-number' ] );
+
+		if( $config[ 'label' ] ) {
+
+			$fieldHtml = "<label>$field->label</label>$fieldHtml $hiddenHtml<div class=\"help-block\"></div>";
+		}
+		else {
+
+			$fieldHtml = "$fieldHtml $hiddenHtml<div class=\"help-block\"></div>";
+		}
+
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
+
+		return $fieldHtml;
+	}
+
+	protected function getIntlTelPhoneHtml( $form, $model, $config, $key, $field ) {
+
+		$htmlOptions	= $field->htmlOptions;
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
+		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [ 'class' => 'intl-tel-field intl-tel-field-ph' ];
+		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
+
+		$value = $model->$key;
+
+		$fieldName	= StringHelper::baseName( get_class( $model ) ) . '[' . $key . ']';
+		$fieldHtml	= Html::input( 'text', 'phone', $value, $fieldOptions );
+		$hiddenHtml	= Html::input( 'hidden', $fieldName, $value, [ 'class' => 'intl-tel-number' ] );
+
+		if( $config[ 'label' ] ) {
+
+			$fieldHtml = "<label>$field->label</label>$fieldHtml $hiddenHtml<div class=\"help-block\"></div>";
+		}
+		else {
+
+			$fieldHtml = "$fieldHtml $hiddenHtml<div class=\"help-block\"></div>";
+		}
+
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
+
+		return $fieldHtml;
 	}
 
 	// == Apix Forms ===============
@@ -396,13 +481,21 @@ class FormDesigner extends \yii\base\Component {
 
 				return $this->getApixDateHtml( $config, $field, $value );
 			}
+			case FormField::TYPE_INTL_TEL_MOBILE: {
+
+				return $this->getApixIntlTelMobileHtml( $config, $field, $value );
+			}
+			case FormField::TYPE_INTL_TEL_PHONE: {
+
+				return $this->getApixIntlTelPhoneHtml( $config, $field, $value );
+			}
 		}
 	}
 
 	protected function getApixTextHtml( $config, $field, $value ) {
 
 		$htmlOptions	= $field->htmlOptions;
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -427,7 +520,7 @@ class FormDesigner extends \yii\base\Component {
 	protected function getApixHiddenHtml( $config, $field, $value ) {
 
 		$htmlOptions	= $field->htmlOptions;
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -444,7 +537,7 @@ class FormDesigner extends \yii\base\Component {
 	protected function getApixPasswordHtml( $config, $field ) {
 
 		$htmlOptions	= $field->htmlOptions;
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -469,7 +562,7 @@ class FormDesigner extends \yii\base\Component {
 	protected function getApixTextareaHtml( $config, $field, $value ) {
 
 		$htmlOptions	= $field->htmlOptions;
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -486,7 +579,7 @@ class FormDesigner extends \yii\base\Component {
 			$fieldHtml = "$fieldHtml<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 
-		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
 
 		return $fieldHtml;
 	}
@@ -494,7 +587,7 @@ class FormDesigner extends \yii\base\Component {
 	protected function getApixCheckboxHtml( $config, $field, $value ) {
 
 		$htmlOptions	= $field->htmlOptions;
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -505,16 +598,16 @@ class FormDesigner extends \yii\base\Component {
 
 		if( $config[ 'label' ] ) {
 
-			$fieldHtml = "<label>$field->label</label> <span class=\"cmt-checkbox\">$checkboxHtml $fieldHtml</span>
+			$fieldHtml = "<label>$field->label</label> <span class=\"cmt-checkbox checkbox\">$checkboxHtml $fieldHtml</span>
 							<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 		else {
 
-			$fieldHtml = "<span class=\"cmt-checkbox\">$checkboxHtml $fieldHtml</span>
+			$fieldHtml = "<span class=\"cmt-checkbox checkbox\">$checkboxHtml $fieldHtml</span>
 							<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 
-		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
 
 		return $fieldHtml;
 	}
@@ -522,39 +615,41 @@ class FormDesigner extends \yii\base\Component {
 	protected function getApixToggleHtml( $config, $field, $value ) {
 
 		$htmlOptions	= isset( $field->htmlOptions ) ? $field->htmlOptions : [];
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
 		if( isset( $fieldOptions[ 'class' ] ) ) {
 
-			$fieldOptions[ 'class' ] .= ' cmt-toggle cmt-toggle-round';
+			$fieldOptions[ 'class' ] .= ' switch-toggle switch-toggle-round';
 		}
 		else {
 
-			$fieldOptions[ 'class' ] = 'cmt-toggle cmt-toggle-round';
+			$fieldOptions[ 'class' ] = 'switch-toggle switch-toggle-round';
 		}
 
-		$modelName				= $config[ 'modelName' ];
-		$id						= $modelName . "_$field->name";
-		$fieldOptions[ 'id' ]	= $id;
-		$modelField				= $modelName . "[$field->name]";
-		$fieldHtml				= Html::hiddenInput( $modelName . "[$field->name]", $value );
-		$checkboxHtml			= Html::checkbox( "$field->name", $value, $fieldOptions );
+		$modelName	= $config[ 'modelName' ];
+		$id			= $modelName . "_$field->name";
+
+		$fieldOptions[ 'id' ] = $id;
+
+		$modelField		= $modelName . "[$field->name]";
+		$fieldHtml		= Html::hiddenInput( $modelName . "[$field->name]", $value );
+		$checkboxHtml	= Html::checkbox( "$field->name", $value, $fieldOptions );
 
 		if( $config[ 'label' ] ) {
 
 			$fieldHtml = "<label>$field->label</label>
-							<span class=\"cmt-switch cmt-checkbox\">$checkboxHtml <label for=\"$id\"></label> $fieldHtml</span>
+							<span class=\"cmt-checkbox switch\">$checkboxHtml <label for=\"$id\"></label> $fieldHtml</span>
 							<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 		else {
 
-			$fieldHtml = "<span class=\"cmt-switch cmt-checkbox\">$checkboxHtml <label for=\"$id\"></label> $fieldHtml</span>
+			$fieldHtml = "<span class=\"cmt-checkbox switch\">$checkboxHtml <label for=\"$id\"></label> $fieldHtml</span>
 							<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 
-		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
 
 		return $fieldHtml;
 	}
@@ -564,7 +659,7 @@ class FormDesigner extends \yii\base\Component {
 		$htmlOptions	= $field->htmlOptions;
 		$message		= isset( $htmlOptions[ 'message' ] ) ? $htmlOptions[ 'message' ] : null;
 		$items			= isset( $htmlOptions[ 'items' ] ) ? $htmlOptions[ 'items' ] : [];
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -591,7 +686,7 @@ class FormDesigner extends \yii\base\Component {
 			$fieldHtml = "{$message}{$fieldHtml}<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 
-		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
 
 		return $fieldHtml;
 	}
@@ -599,19 +694,19 @@ class FormDesigner extends \yii\base\Component {
 	protected function getApixRadioHtml( $config, $field, $value ) {
 
 		$htmlOptions	= isset( $field->htmlOptions ) ? $field->htmlOptions : [];
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
 		if( isset( $value ) && ( $value || strcmp( $value, 'Yes' ) == 0 ) ){
 
-			$value	= true;
+			$value = true;
 
-			$fieldOptions[ 'value' ]	= $value;
+			$fieldOptions[ 'value' ] = $value;
 		}
 		else {
 
-			$value	= false;
+			$value = false;
 		}
 
 		$modelName	= $config[ 'modelName' ];
@@ -626,7 +721,7 @@ class FormDesigner extends \yii\base\Component {
 			$fieldHtml = "$fieldHtml<span class='error' cmt-error='$field->name'></span>";
 		}
 
-		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
 
 		return $fieldHtml;
 	}
@@ -635,13 +730,13 @@ class FormDesigner extends \yii\base\Component {
 
 		$htmlOptions	= $field->htmlOptions;
 		$items			= isset( $htmlOptions[ 'items' ] ) ? $htmlOptions[ 'items' ] : [];
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$value			= isset( $htmlOptions[ 'value' ] ) ? $htmlOptions[ 'value' ] : null;
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
-
-		$modelName		= $config[ 'modelName' ];
-		$fieldHtml		= Html::radioList( $modelName . "[$field->name]", null, $items, $fieldOptions );
+		$modelName	= $config[ 'modelName' ];
+		$fieldHtml	= Html::radioList( $modelName . "[$field->name]", $value, $items, $fieldOptions );
 
 		if( $config[ 'label' ] ) {
 
@@ -652,7 +747,7 @@ class FormDesigner extends \yii\base\Component {
 			$fieldHtml = "$fieldHtml<span class='error' cmt-error='$field->name'></span>";
 		}
 
-		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
 
 		return $fieldHtml;
 	}
@@ -661,17 +756,22 @@ class FormDesigner extends \yii\base\Component {
 
 		$htmlOptions	= $field->htmlOptions;
 		$items			= isset( $htmlOptions[ 'items' ] ) ? $htmlOptions[ 'items' ] : [];
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
 		if( isset( $value ) ) {
 
-			$value	= preg_split( "/,/", $value );
+			$value = preg_split( "/,/", $value );
 		}
 
-		$modelName		= $config[ 'modelName' ];
-		$fieldHtml		= Html::dropDownList( $modelName . "[$field->name]", $value, $items, $fieldOptions );
+		if( isset( $field->categoryId ) ) {
+
+			$items = $this->optionService->getActiveValueNameMapByCategoryId( $field->categoryId );
+		}
+
+		$modelName	= $config[ 'modelName' ];
+		$fieldHtml	= Html::dropDownList( $modelName . "[$field->name]", $value, $items, $fieldOptions );
 
 		if( $config[ 'label' ] ) {
 
@@ -682,14 +782,14 @@ class FormDesigner extends \yii\base\Component {
 			$fieldHtml = "$fieldHtml<span class='error' cmt-error='$field->name'></span>";
 		}
 
-		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
 
 		return $fieldHtml;
 	}
 
 	protected function getApixRatingHtml( $config, $field, $value ) {
 
-		$class			= isset( $field->htmlOptions[ 'class' ] ) ? $field->htmlOptions[ 'class' ] : 'cmt-rating';
+		$class			= isset( $field->htmlOptions[ 'class' ] ) ? $field->htmlOptions[ 'class' ] : 'cmt-rating rating';
 		$readOnly		= isset( $field->htmlOptions[ 'read-only' ] ) ? $field->htmlOptions[ 'read-only' ] : false;
 		$disabled		= isset( $field->htmlOptions[ 'disabled' ] ) ? $field->htmlOptions[ 'disabled' ] : false;
 
@@ -724,25 +824,25 @@ class FormDesigner extends \yii\base\Component {
 			$ratingHtml	= "<div class=\"$class\">";
 		}
 
-		$ratingHtml .= '<span class="wrap-stars">';
+		$ratingHtml .= '<span class="stars-wrap">';
 
 		for( $i = 1; $i <= $stars; $i++ ) {
 
 			if( $value > 0 && $value == $i ) {
 
-				$icon	= "<span star=\"$i\" class=\"star selected\"></span>";
+				$icon = "<span star=\"$i\" class=\"star selected\"></span>";
 			}
 			else {
 
-				$icon	= "<span star=\"$i\" class=\"star\"></span>";
+				$icon = "<span star=\"$i\" class=\"star\"></span>";
 			}
 
-			$ratingHtml	  .= $icon;
+			$ratingHtml .= $icon;
 		}
 
 		$ratingHtml .= '</span>';
 
-		$ratingHtml .= '<span class="wrap-messages">';
+		$ratingHtml .= '<span class="message-wrap">';
 
 		for( $i = 1; $i <= $stars; $i++ ) {
 
@@ -750,14 +850,14 @@ class FormDesigner extends \yii\base\Component {
 
 			if( $value > 0 && $value == $i ) {
 
-				$icon	= "<span star-message=\"$i\" class=\"star-message selected\">$message</span>";
+				$icon = "<span star-message=\"$i\" class=\"star-message selected\">$message</span>";
 			}
 			else {
 
-				$icon	= "<span star-message=\"$i\" class=\"star-message\">$message</span>";
+				$icon = "<span star-message=\"$i\" class=\"star-message\">$message</span>";
 			}
 
-			$ratingHtml	  .= $icon;
+			$ratingHtml .= $icon;
 		}
 
 		$ratingHtml .= '</span>';
@@ -772,7 +872,7 @@ class FormDesigner extends \yii\base\Component {
 	protected function getApixDateHtml( $config, $field, $value ) {
 
 		$htmlOptions	= $field->htmlOptions;
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
@@ -792,6 +892,56 @@ class FormDesigner extends \yii\base\Component {
 		}
 
 		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
+
+		return $fieldHtml;
+	}
+
+	protected function getApixIntlTelMobileHtml( $config, $field, $value ) {
+
+		$htmlOptions	= $field->htmlOptions;
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
+		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [ 'class' => 'intl-tel-field intl-tel-field-mb' ];
+		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
+
+		$modelName	= $config[ 'modelName' ];
+		$fieldHtml	= Html::input( 'text', 'mobile', $value, $fieldOptions );
+		$hiddenHtml	= Html::input( 'hidden', $modelName . "[$field->name]", $value, [ 'class' => 'intl-tel-number' ] );
+
+		if( $config[ 'label' ] ) {
+
+			$fieldHtml = "<label>$field->label</label>$fieldHtml $hiddenHtml<div class=\"help-block\"></div>";
+		}
+		else {
+
+			$fieldHtml = "$fieldHtml $hiddenHtml<div class=\"help-block\"></div>";
+		}
+
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
+
+		return $fieldHtml;
+	}
+
+	protected function getApixIntlTelPhoneHtml( $config, $field, $value ) {
+
+		$htmlOptions	= $field->htmlOptions;
+		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ][ 'options' ] ) ? $htmlOptions[ 'wrapper' ][ 'options' ] : [ 'class' => 'form-group' ];
+		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [ 'class' => 'intl-tel-field intl-tel-field-ph' ];
+		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
+
+		$modelName	= $config[ 'modelName' ];
+		$fieldHtml	= Html::input( 'text', 'phone', $value, $fieldOptions );
+		$hiddenHtml	= Html::input( 'hidden', $modelName . "[$field->name]", $value, [ 'class' => 'intl-tel-number' ] );
+
+		if( $config[ 'label' ] ) {
+
+			$fieldHtml = "<label>$field->label</label>$fieldHtml $hiddenHtml<div class=\"help-block\"></div>";
+		}
+		else {
+
+			$fieldHtml = "$fieldHtml $hiddenHtml<div class=\"help-block\"></div>";
+		}
+
+		$fieldHtml = Html::tag( 'div', $fieldHtml, $wrapperOptions );
 
 		return $fieldHtml;
 	}
@@ -858,7 +1008,7 @@ class FormDesigner extends \yii\base\Component {
 		return $field;
 	}
 
-	public function getIconCheckbox( $form, $model, $field, $options, $icon, $config = [] ) {
+	public function getIconCheckbox( $form, $model, $field, $options = [], $config = [] ) {
 
 		$classPath	= get_class( $model );
 		$className	= join( '', array_slice( explode( '\\', $classPath ), -1 ) );
@@ -868,12 +1018,16 @@ class FormDesigner extends \yii\base\Component {
 
 		$fieldOptions = isset( $config[ 'fieldOptions' ] ) ? $config[ 'fieldOptions' ] : [ 'class' => 'form-group clearfix' ];
 
-		$options[ 'class' ]	= isset( $options[ 'class' ] ) ? $options[ 'class' ] : 'cmt-checkbox cmt-choice';
-
+		$options	= isset( $options ) ? $options : [];
 		$optionsStr	= '';
 		$value		= !empty( $model->$field ) ? $model->$field : 0;
 		$checked	= $value ? 'checked' : null;
 		$disabled	= isset( $options[ 'disabled' ] ) ? 'disabled' : null;
+
+		if( empty( $options[ 'class' ] ) ) {
+
+			$options[ 'class' ] = 'cmt-checkbox choice';
+		}
 
 		foreach( $options as $key => $option ) {
 
@@ -882,15 +1036,14 @@ class FormDesigner extends \yii\base\Component {
 
 		$label = HtmlPurifier::process( $label );
 
-		$template	= "<div $optionsStr>
-			      			<label>
-			            		<input type=\"hidden\" value=\"$value\" name=\"$fieldName\">
-								<input type=\"checkbox\" value=\"$value\" name=\"$field\" $checked $disabled>
-			            		<span class=\"label $icon\"></span>
-			            		<span>$label</span>
-			      			</label>
-			      			{hint}\n{error}
-						</div>";
+		$template = "<div $optionsStr>
+						<label class=\"choice-option\">
+							<input type=\"checkbox\" $checked $disabled />
+							<span class=\"label\"> $label</span>
+							<input type=\"hidden\" name=\"$fieldName\" value=\"$value\" />
+						</label>
+						{hint}\n{error}
+					</div>";
 
 		$field = $form->field( $model, $field, [ 'template' => $template, 'options' => $fieldOptions ] )->checkbox();
 
@@ -938,9 +1091,10 @@ class FormDesigner extends \yii\base\Component {
 		$placeholder	= isset( $config[ 'placeholder' ] ) ? $config[ 'placeholder' ] : null;
 		$icon			= isset( $config[ 'icon' ] ) ? $config[ 'icon' ] : null;
 		$value			= isset( $config[ 'value' ] ) ? $config[ 'value' ] : null;
+		$inputClass		= isset( $config[ 'inputClass' ] ) ? $config[ 'inputClass' ] : null;
 
-		$app			= isset( $config[ 'app' ] ) ? $config[ 'app' ] : 'mapper';
-		$controller		= isset( $config[ 'controller' ] ) ? $config[ 'controller' ] : 'auto';
+		$app			= isset( $config[ 'app' ] ) ? $config[ 'app' ] : 'core';
+		$controller		= isset( $config[ 'controller' ] ) ? $config[ 'controller' ] : 'autoMapper';
 		$action			= isset( $config[ 'action' ] ) ? $config[ 'action' ] : 'autoSearch';
 		$type			= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
 		$url			= isset( $config[ 'url' ] ) ? $config[ 'url' ] : null;
@@ -957,7 +1111,7 @@ class FormDesigner extends \yii\base\Component {
 		}
 
 		$label		= $model->getAttributeLabel( $field );
-		$hidden		= $form->field( $model, $field )->hiddenInput( [ 'class' => 'target' ] )->label( false );
+		$hidden		= $form->field( $model, $field )->hiddenInput( [ 'class' => "target $inputClass" ] )->label( false );
 		$autoFill	= '';
 
 		if( $disabled ) {
@@ -965,7 +1119,7 @@ class FormDesigner extends \yii\base\Component {
 			$autoFill	= "<label>$label</label>
 							<div class=\"frm-icon-element icon-right\">
 								<span class=\"icon $icon\"></span>
-								<input type=\"text\" name=\"name\" value=\"$value\" placeholder=\"$placeholder\" autocomplete=\"off\" readonly />
+								<input class=\"{$inputClass}\" type=\"text\" name=\"name\" value=\"{$value}\" placeholder=\"$placeholder\" autocomplete=\"off\" readonly />
 							</div>";
 		}
 		else {
@@ -1001,6 +1155,8 @@ class FormDesigner extends \yii\base\Component {
 
 		$flag		= isset( $config[ 'flag' ] ) ? $config[ 'flag' ] : false;
 		$label		= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
+		$class		= isset( $config[ 'class' ] ) ? $config[ 'class' ] : 'choice clearfix';
+		$layout		= isset( $config[ 'layout' ] ) ? $config[ 'layout' ] : 'choice-layout choice-layout-inline';
 		$disabled	= isset( $config[ 'disabled' ] ) && $config[ 'disabled' ] ? $config[ 'disabled' ] : false;
 		$disabled	= $disabled ? 'disabled' : null;
 
@@ -1009,23 +1165,23 @@ class FormDesigner extends \yii\base\Component {
 			$itemlist = CoreGlobal::$yesNoMap;
 		}
 
-		$template = "<div class=\"cmt-choice clearfix\">{label}<div class=\"radio-group\">{input}</div><div class=\"help-block\">\n{hint}\n{error}</div></div>";
+		$template = "<div class=\"{$class} {$layout}\">{label}<div class=\"radio-group\">{input}</div><div class=\"help-block\">\n{hint}\n{error}</div></div>";
 
-		$field = $form->field( $model, $field, [ 'template' => $template ]	)
+		$field = $form->field( $model, $field, [ 'template' => $template ] )
 			->radioList(
 				$itemlist,
 				[
 					'item' => function( $index, $label, $name, $checked, $value	) use( $disabled ) {
 
 						$slabel = strtolower( $label );
-						$html	= "<label class=\"{$slabel}\"><input ";
+						$html	= "<label class=\"choice-option {$slabel}\"><input ";
 
 						if( $checked ) {
 
 							$html .= 'checked';
 						}
 
-						$html .= " type=\"radio\" name=\"{$name}\" value=\"{$value}\" $disabled><span class=\"label pad-label\">$label</span></label>";
+						$html .= " type=\"radio\" name=\"{$name}\" value=\"{$value}\" $disabled><span class=\"label\">$label</span></label>";
 
 						return $html;
 					}
@@ -1040,37 +1196,37 @@ class FormDesigner extends \yii\base\Component {
 		return $field;
 	}
 
-	public function getCheckboxList( $form, $model, $field, $itemlist, $inline = true ) {
+	public function getCheckboxList( $form, $model, $field, $itemlist, $config = [] ) {
 
-		$setInline	= null;
+		$class		= isset( $config[ 'class' ] ) ? $config[ 'class' ] : 'choice clearfix';
+		$layout		= isset( $config[ 'layout' ] ) ? $config[ 'layout' ] : 'choice-layout choice-layout-inline';
+		$disabled	= isset( $config[ 'disabled' ] ) && $config[ 'disabled' ] ? $config[ 'disabled' ] : false;
+		$disabled	= $disabled ? 'disabled' : null;
 
-		if( $inline ) {
+		$template = "<div class=\"{$class} {$layout}\">{label}<div class=\"checkbox-group\">{input}</div><div class=\"help-block\">\n{hint}\n{error}</div></div>";
 
-			$setInline	= 'clear-none';
-		}
+		$field = $form->field( $model, "$field", [ 'template' => $template ] )
+			->checkboxList(
+				$itemlist,
+				[
+					'item' => function( $index, $label, $name, $checked, $value ) use( $disabled ) {
 
-		$template	= "<div class='cmt-choice $setInline clearfix'>{label}<div class='checkbox-group'>{input}</div><div class='help-block'>\n{hint}\n{error}</div></div>";
+						$slabel = strtolower( $label );
+						$html	= "<label class=\"choice-option {$slabel}\"><input ";
 
-		return $form->field( $model, "$field", [ 'template' => $template ] )
-					->checkboxList(
-						$itemlist,
-						[
-							'item' => function( $index, $label, $name, $checked, $value ) {
+						if( $checked ) {
 
-								$html = "<label id='$label'><input ";
-								$html = "<label class='$label'><input ";
+							$html .= 'checked';
+						}
 
-								if( $checked ) {
+						$html .= " type=\"checkbox\" name=\"{$name}\" value=\"{$value}\" $disabled><span class='label'>$label</span></label>";
 
-									$html .= 'checked';
-								}
+						return $html;
+					},
+				]
+			);
 
-								$html .= " type='checkbox' name='$name' value='$value'><span class='label pad-label'>$label</span></label>";
-
-								return $html;
-							},
-						]
-					);
+		return $field;
 	}
 
 	public function generateMultipleInputHtml( $model, $fieldName, $config = [] ) {
@@ -1083,7 +1239,7 @@ class FormDesigner extends \yii\base\Component {
 
 		$fields			= $model->$fieldName;
 
-		$fieldHtml		= "<div class='multi-input'><div class='frm-field clear-none clearfix inputs'>";
+		$fieldHtml		= "<div class='multi-input'><div class='form-group clear-none clearfix inputs'>";
 
 		if( count( $fields ) == 0 && $defaultField ) {
 
@@ -1096,7 +1252,7 @@ class FormDesigner extends \yii\base\Component {
 
 			foreach( $fields as $field ) {
 
-				$fieldHtml	.= "<div class='frm-field relative clearfix'>
+				$fieldHtml	.= "<div class='form-group relative clearfix'>
 										<i class='cmti cmti-close-c icon-delete delete-field'></i>
 										<label>$label</label>
 										<input type='text' placeholder='$placeholder' name='" . $modelName . "[$fieldName][]' value='$field'>
@@ -1108,7 +1264,7 @@ class FormDesigner extends \yii\base\Component {
 		$errors = join( ",", $errors );
 
 		$fieldHtml	.= "</div><div class='help-block'>$errors</div>
-							<div class='frm-field clear-none clearfix'>
+							<div class='form-group clear-none clearfix'>
 								<div class='element-60 right'>
 									<a class='link btn-add-input' label='$label' placeholder='$placeholder' model='$modelName' field='$fieldName'>$addBtnTitle</a>
 								</div>
@@ -1129,7 +1285,7 @@ class FormDesigner extends \yii\base\Component {
 	 */
 	public function getRatingStars( $config = [] ) {
 
-		$class		= isset( $config[ 'class' ] ) && !empty( $config[ 'class' ] ) ? $config[ 'class' ] : 'cmt-rating';
+		$class		= isset( $config[ 'class' ] ) && !empty( $config[ 'class' ] ) ? $config[ 'class' ] : 'cmt-rating rating';
 		$stars		= isset( $config[ 'stars' ] ) ? $config[ 'stars' ] : 5;
 		$selected	= isset( $config[ 'selected' ] ) ? $config[ 'selected' ] : 0;
 		$disabled	= isset( $config[ 'disabled' ] ) ? $config[ 'disabled' ] : false;
@@ -1145,7 +1301,7 @@ class FormDesigner extends \yii\base\Component {
 			$class = "$class read-only";
 		}
 
-		$ratingHtml	= "<div class=\"$class\"><div class=\"wrap-stars\">";
+		$ratingHtml	= "<div class=\"$class\"><div class=\"stars-wrap\">";
 
 		for( $i = 1; $i <= $stars; $i++ ) {
 
@@ -1174,19 +1330,23 @@ class FormDesigner extends \yii\base\Component {
 	 */
 	public function getRatingField( $config = [] ) {
 
-		$class		= isset( $config[ 'class' ] ) && !empty( $config[ 'class' ] ) ? $config[ 'class' ] : 'cmt-rating';
+		$class		= isset( $config[ 'class' ] ) && !empty( $config[ 'class' ] ) ? $config[ 'class' ] : 'cmt-rating rating';
 		$stars		= isset( $config[ 'stars' ] ) ? $config[ 'stars' ] : 5;
 		$label		= isset( $config[ 'label' ] ) ? $config[ 'label' ] : null;
 		$readOnly	= isset( $config[ 'readOnly' ] ) ? $config[ 'readOnly' ] : false;
 		$selected	= isset( $config[ 'selected' ] ) ? $config[ 'selected' ] : 0;
 		$disabled	= isset( $config[ 'disabled' ] ) ? $config[ 'disabled' ] : false;
+		$model		= isset( $config[ 'model' ] ) ? $config[ 'model' ] : null;
 
 		// By default message provided for 5 stars
 		$starMessage = isset( $config[ 'message' ] ) ? $config[ 'message' ] : [ "Poor", "Good", "Very Good", "Perfect", "Excellent" ];
 
-		$modelName	= $config[ 'modelName' ];
+		$modelName	= isset( $model ) ? StringHelper::baseName( get_class( $model ) ) : $config[ 'modelName' ];
 		$fieldName	= isset( $config[ 'fieldName' ] ) ? $config[ 'fieldName' ] : 'rating';
-		$fieldName	= $modelName . "[$fieldName]";
+		$formField	= $modelName . "[$fieldName]";
+
+		// Get value from model
+		$selected = isset( $model ) && !empty( $model->$fieldName ) ? $model->$fieldName : $selected;
 
 		if( $readOnly ) {
 
@@ -1208,7 +1368,7 @@ class FormDesigner extends \yii\base\Component {
 			$ratingHtml	= "<div class=\"$class\">";
 		}
 
-		$ratingHtml .= '<span class="wrap-stars">';
+		$ratingHtml .= '<span class="stars-wrap">';
 
 		for( $i = 1; $i <= $stars; $i++ ) {
 
@@ -1226,7 +1386,7 @@ class FormDesigner extends \yii\base\Component {
 
 		$ratingHtml .= '</span>';
 
-		$ratingHtml .= '<span class="wrap-messages">';
+		$ratingHtml .= '<span class="message-wrap">';
 
 		for( $i = 1; $i <= $stars; $i++ ) {
 
@@ -1246,23 +1406,22 @@ class FormDesigner extends \yii\base\Component {
 
 		$ratingHtml .= '</span>';
 
-		$ratingHtml	.= '<input class="star-selected" type="hidden" name="' . $fieldName . '" value="' . $selected . '">';
+		$ratingHtml	.= '<input class="star-selected" type="hidden" name="' . $formField . '" value="' . $selected . '">';
 
 		$ratingHtml	.= "</div>";
 
 		return $ratingHtml;
 	}
 
-	public function getNumberElement( $min, $max, $name = null, $defaultValue = 1 ) {
+	public function getNumberRange( $min, $max, $name = null, $defaultValue = 1 ) {
 
-		$elementHtml	=	"<div class='clearfix max-cols-50 cmt-number-element'>
-								<div class='col12x3'><i class='btn btn-min cmti cmti-minus'></i></div>
-								<div class='col12x6'><input type='text' value='$defaultValue' name='$name'></div>
-								<div class='col12x3'><i class='btn btn-max cmti cmti-plus'></i></div>
-								<span class='hidden cmt-min'>$min</span>
-								<span class='hidden cmt-max'>$max</span>
-							</div>";
-	   return $elementHtml;
+		$elementHtml = "<div class=\"clearfix max-cols-50 range-number\" data-min=\"{$min}\" data-max=\"{$max}\">
+							<div class=\"col12x3\"><i class=\"btn btn-min cmti cmti-minus\"></i></div>
+							<div class=\"col12x6\"><input type=\"text\" value=\"{$defaultValue}\" name=\"{$name}\"></div>
+							<div class=\"col12x3\"><i class=\"btn btn-max cmti cmti-plus\"></i></div>
+						</div>";
+
+		return $elementHtml;
 	}
 
 }

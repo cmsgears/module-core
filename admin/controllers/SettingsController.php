@@ -96,4 +96,5 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 
 		return $this->render( 'index' );
 	}
+
 }

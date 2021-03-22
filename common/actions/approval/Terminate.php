@@ -15,8 +15,6 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Action;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -24,7 +22,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class Terminate extends Action {
+class Terminate extends \cmsgears\core\common\base\Action {
 
 	// Variables ---------------------------------------------------
 
@@ -71,7 +69,7 @@ class Terminate extends Action {
 
 	public function run( $id ) {
 
-		$model	= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		if( isset( $model ) ) {
 

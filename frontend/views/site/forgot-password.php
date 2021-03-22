@@ -1,12 +1,13 @@
 <?php
-use yii\widgets\ActiveForm;
+// CMG Imports
+use cmsgears\core\common\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= $coreProperties->getSiteTitle() . " | Forgot Password";
 ?>
 <h1>Forgot Password</h1>
 <?php
-	if( Yii::$app->session->hasFlash( 'message') ) {
+	if( Yii::$app->session->hasFlash( 'message' ) ) {
 ?>
 	<p><?= Yii::$app->session->getFlash( 'message' ) ?></p>
 <?php
@@ -20,7 +21,7 @@ $this->title	= $coreProperties->getSiteTitle() . " | Forgot Password";
 				Please provide the email address used while signing up.
 			</li>
 			<li>
-				<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email*' ] ) ?>
+				<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email *' ] ) ?>
 			</li>
 			<li>
 				<input type="submit"  value="Submit" />
@@ -29,4 +30,3 @@ $this->title	= $coreProperties->getSiteTitle() . " | Forgot Password";
 <?php
 		ActiveForm::end();
 	}
-?>

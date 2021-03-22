@@ -17,14 +17,12 @@ use yii\db\Query;
 use cmsgears\core\common\services\interfaces\resources\IOptionService;
 use cmsgears\core\common\services\interfaces\mappers\IModelOptionService;
 
-use cmsgears\core\common\services\base\ModelMapperService;
-
 /**
  * ModelOptionService provide service methods of option mapper.
  *
  * @since 1.0.0
  */
-class ModelOptionService extends ModelMapperService implements IModelOptionService {
+class ModelOptionService extends \cmsgears\core\common\services\base\ModelMapperService implements IModelOptionService {
 
 	// Variables ---------------------------------------------------
 
@@ -46,15 +44,13 @@ class ModelOptionService extends ModelMapperService implements IModelOptionServi
 
 	// Private ----------------
 
-	private $optionService;
-
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
 
 	public function __construct( IOptionService $optionService, $config = [] ) {
 
-		$this->optionService = $optionService;
+		$this->parentService = $optionService;
 
 		parent::__construct( $config );
 	}
@@ -75,52 +71,14 @@ class ModelOptionService extends ModelMapperService implements IModelOptionServi
 
 	// Read ---------------
 
-	public function getModelCounts( $parentType, $categorySlug, $active = false ) {
-
-		$categoryTable	= Yii::$app->get( 'categoryService' )->getModelTable();
-		$optionTable	= $this->optionService->getModelTable();
-		$mOptionTable	= Yii::$app->get( 'modelOptionService' )->getModelTable();
-
-		$query = new Query();
-
-		$query->select( [ "$optionTable.name", "count($optionTable.id) as total" ] )
-				->from( $optionTable )
-				->leftJoin( $mOptionTable, "$mOptionTable.modelId=$optionTable.id" )
-				->leftJoin( $categoryTable, "$categoryTable.id=$optionTable.categoryId" )
-				->where( "$mOptionTable.parentType='$parentType' AND $categoryTable.slug='$categorySlug'" )
-				->groupBy( "$optionTable.id" );
-
-		if( $active ) {
-
-			$query->andWhere( "$mOptionTable.active=$active" );
-		}
-
-		$counts	= $query->all();
-
-		$returnArr	= [];
-		$counter	= 0;
-
-		foreach( $counts as $count ) {
-
-			$returnArr[ $count[ 'name' ] ] = $count[ 'total' ];
-
-			$counter = $counter + $count[ 'total' ];
-		}
-
-		$returnArr[ 'all' ] = $counter;
-
-		return $returnArr;
-	}
-
-
 	// Read - Models ---
 
 	// Read - Lists ----
 
-	public function getValueList( $parentId, $parentType, $categorySlug, $active = true ) {
+	public function getValueListByCategorySlug( $parentId, $parentType, $categorySlug, $active = true ) {
 
 		$categoryTable	= Yii::$app->factory->get( 'categoryService' )->getModelTable();
-		$optionTable	= Yii::$app->factory->get( 'optionService' )->getModelTable();
+		$optionTable	= Yii::$app->factory->get( 'parentService' )->getModelTable();
 		$mOptionTable	= Yii::$app->factory->get( 'modelOptionService' )->getModelTable();
 
 		$query = new Query();
@@ -145,6 +103,32 @@ class ModelOptionService extends ModelMapperService implements IModelOptionServi
 
 	// Read - Maps -----
 
+	public function getIdValueMapByCategorySlug( $parentId, $parentType, $categorySlug, $active = true ) {
+
+		$categoryTable	= Yii::$app->factory->get( 'categoryService' )->getModelTable();
+		$optionTable	= Yii::$app->factory->get( 'parentService' )->getModelTable();
+		$mOptionTable	= Yii::$app->factory->get( 'modelOptionService' )->getModelTable();
+
+		$query = new Query();
+
+		$query->select( [ "$optionTable.id", "$optionTable.value" ] )
+				->from( $optionTable )
+				->leftJoin( $mOptionTable, "$mOptionTable.modelId=$optionTable.id" )
+				->leftJoin( $categoryTable, "$categoryTable.id=$optionTable.categoryId" )
+				->where( "$mOptionTable.parentId=:pid AND $mOptionTable.parentType=:ptype AND $mOptionTable.active=:active AND $categoryTable.slug=:cslug", [ ':pid' => $parentId, ':ptype' => $parentType, ':active' => $active, ':cslug' => $categorySlug ] );
+
+		$values = $query->all();
+
+		$data = [];
+
+		foreach( $values as $value ) {
+
+			$data[ $value[ 'id' ] ] = $value[ 'value' ];
+		}
+
+		return $data;
+	}
+
 	// Read - Others ---
 
 	// Create -------------
@@ -160,36 +144,6 @@ class ModelOptionService extends ModelMapperService implements IModelOptionServi
 		return parent::update( $model, [
 			'attributes' => $attributes
 		]);
-	}
-
-	public function toggle( $parentId, $parentType, $modelId, $mappingType ) {
-
-		$modelClass	= static::$modelClass;
-
-		$toSave	= $modelClass::findFirstByParentModelId( $parentId, $parentType, $modelId );
-
-		// Existing mapping
-		if( isset( $toSave ) ) {
-
-			if( $toSave->active ) {
-
-				$toSave->active	= false;
-			}
-			else {
-
-				$toSave->active	= true;
-			}
-
-			$toSave->update();
-		}
-		// New Mapping
-		else {
-
-			$this->createByParams([
-				'modelId' => $modelId, 'parentId' => $parentId, 'parentType' => $parentType,
-				'type' => $mappingType, 'active' => true
-			]);
-		}
 	}
 
 	public function bindOptions( $binder, $parentType ) {
@@ -223,7 +177,7 @@ class ModelOptionService extends ModelMapperService implements IModelOptionServi
 
 				$this->createByParams([
 					'modelId' => $id, 'parentId' => $parentId, 'parentType' => $parentType,
-					'active' => true
+					'type' => $parentType, 'active' => true
 				]);
 			}
 		}

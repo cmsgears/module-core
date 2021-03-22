@@ -35,30 +35,26 @@ class SocialLink extends DataModel {
 
 	// Public -----------------
 
-	public static $cmtLinksMap	= [
-		'cmti-social-facebook' => 'Facebook',
-		'cmti-social-twitter' => 'Twitter',
-		'cmti-social-linkedin' => 'LinkedIn',
-		'cmti-social-picasa' => 'Picasa',
-		'cmti-social-pinterest' => 'Pintrest',
-		'cmti-social-instagram' => 'Instagram',
-		'cmti-social-google-plus' => 'Google +',
-		'cmti-social-skype' => 'Skype',
-		'cmti-social-youtube' => 'YouTube',
-		'cmti-social-vimeo' => 'Vimeo'
+	public static $cmtLinksList = [
+		[ 'icon' => 'cmti-brand cmti-brand-facebook', 'title' => 'Facebook' ],
+		[ 'icon' => 'cmti-brand cmti-brand-twitter', 'title' => 'Twitter' ],
+		[ 'icon' => 'cmti-brand cmti-brand-linkedin', 'title' => 'LinkedIn' ],
+		[ 'icon' => 'cmti-brand cmti-brand-pinterest', 'title' => 'Pintrest' ],
+		[ 'icon' => 'cmti-brand cmti-brand-instagram', 'title' => 'Instagram' ],
+		[ 'icon' => 'cmti-brand cmti-brand-skype', 'title' => 'Skype' ],
+		[ 'icon' => 'cmti-brand cmti-brand-youtube', 'title' => 'YouTube' ],
+		[ 'icon' => 'cmti-brand cmti-brand-vimeo', 'title' => 'Vimeo' ]
 	];
 
-	public static $faLinksMap	= [
-		'fa-facebook' => 'Facebook',
-		'fa-twitter' => 'Twitter',
-		'fa-linkedin' => 'LinkedIn',
-		'fa-picasa' => 'Picasa',
-		'fa-pinterest' => 'Pintrest',
-		'fa-instagram' => 'Instagram',
-		'fa-google-plus' => 'Google +',
-		'fa-skype' => 'Skype',
-		'fa-youtube' => 'YouTube',
-		'fa-vimeo' => 'Vimeo'
+	public static $faLinksList = [
+		[ 'icon' => 'fa-facebook', 'title' => 'Facebook' ],
+		[ 'icon' => 'fa-twitter', 'title' => 'Twitter' ],
+		[ 'icon' => 'fa-linkedin', 'title' => 'LinkedIn' ],
+		[ 'icon' => 'fa-pinterest', 'title' => 'Pintrest' ],
+		[ 'icon' => 'fa-instagram', 'title' => 'Instagram' ],
+		[ 'icon' => 'fa-skype', 'title' => 'Skype' ],
+		[ 'icon' => 'fa-youtube', 'title' => 'YouTube' ],
+		[ 'icon' => 'fa-vimeo', 'title' => 'Vimeo' ]
 	];
 
 	// Protected --------------

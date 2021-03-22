@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\base;
 
 // Yii Imports
@@ -27,6 +35,10 @@ class Mailer extends \yii\base\Component {
 
 	// Public -----------------
 
+	public $htmlLayout;
+	public $textLayout;
+	public $viewPath;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -45,10 +57,6 @@ class Mailer extends \yii\base\Component {
 		parent::init();
 
 		$this->mailer = Yii::$app->getMailer();
-
-		$this->mailer->htmlLayout	= $this->htmlLayout;
-		$this->mailer->textLayout	= $this->textLayout;
-		$this->mailer->viewPath		= $this->viewPath;
 	}
 
 	public function initSmtp() {
@@ -79,6 +87,10 @@ class Mailer extends \yii\base\Component {
 
 	public function getMailer() {
 
+		$this->mailer->htmlLayout	= $this->htmlLayout;
+		$this->mailer->textLayout	= $this->textLayout;
+		$this->mailer->viewPath		= $this->viewPath;
+
 		return $this->mailer;
 	}
 
@@ -106,4 +118,5 @@ class Mailer extends \yii\base\Component {
 
 		return $this->mailProperties;
 	}
+
 }

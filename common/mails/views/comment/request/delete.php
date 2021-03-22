@@ -6,14 +6,14 @@ $siteProperties = Yii::$app->controller->getSiteProperties();
 
 $defaultIncludes = Yii::getAlias( '@cmsgears' ) . '/module-core/common/mails/views/includes';
 
-$name	= Html::encode( $user->getName() );
-$email	= Html::encode( $user->email );
-
 $siteName	= Html::encode( $coreProperties->getSiteName() );
 $siteUrl	= Html::encode( $coreProperties->getSiteUrl() );
 $logoUrl	= "$siteUrl/images/" . $siteProperties->getMailAvatar();
 $homeUrl	= $siteUrl;
 $siteBkg	= "$siteUrl/images/" . $siteProperties->getMailBanner();
+
+$name	= Html::encode( $user->getName() );
+$email	= Html::encode( $user->email );
 
 $adminUrl = Html::encode( $coreProperties->getAdminUrl() );
 ?>
@@ -25,7 +25,7 @@ $adminUrl = Html::encode( $coreProperties->getAdminUrl() );
 	</tr>
 	<tr><td height="20"></td></tr>
 	<tr>
-		<td><font face="Roboto, Arial, sans-serif">Delete Comment Request received. <a href="<?= "$adminUrl/$updatePath?id=$comment->id" ?>">Click</a> here to review.</font></td>
+		<td><font face="Roboto, Arial, sans-serif">Delete Comment Request received. <a href="<?= "$adminUrl/$updatePath?id=$comment->id" ?>">Click Here</a> to review.</font></td>
 	</tr>
 	<tr><td height="40"></td></tr>
 </table>

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\base;
 
 // Yii Imports
@@ -8,7 +16,7 @@ use Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 /**
- * ModelAction is the base action for model centric actions. It find the model in action using
+ * ModelAction is the base action for model centric actions. It finds the model in action using
  * id or slug parameter to perform mapper or resource specific actions.
  *
  * The controllers using children of this action class must define model service having model class
@@ -39,20 +47,20 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 	 * The id parameter identifies model in action using model service provided by controller.
 	 * It works in all scenarios since we support primary id for all tables.
 	 */
-	public $idParam		= 'id';
+	public $idParam = 'id';
 
 	/**	 The slug parameter identifies model in action using model service provided by controller.
 	 * It works in cases where slug is supported by model in action and given preference over id.
 	 */
-	public $slugParam	= 'slug';
+	public $slugParam = 'slug';
 
 	/**	 The type parameter identifies model in action using model service provided by controller.
 	 * It works in cases where type column is used by model in action.
 	 */
-	public $typeParam	= 'type';
+	public $typeParam = 'type';
 
 	// Flag to identify whether parent model supports type column.
-	public $typed		= false;
+	public $typed = false;
 
 	// The type to be used to discover parent model.
 	public $type;
@@ -77,7 +85,7 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 	public $parentType;
 
 	/**
-	 * Type of Mapper or Resource used to categorise mappings using mapping type column.
+	 * Type of Mapper or Resource used to categorize mappings using mapping type column.
 	 * It's different from $parentType and $type.
 	 */
 	public $modelType;
@@ -88,10 +96,10 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 	 */
 	public $model;
 
-	// Protected --------------
-
 	// Model service to identify model in action. The controller must define model service.
-	protected $modelService;
+	public $modelService;
+
+	// Protected --------------
 
 	// Private ----------------
 
@@ -111,7 +119,7 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 		parent::init();
 
 		// Model service provided by controller
-		$this->modelService	= $this->controller->modelService;
+		$this->modelService	= empty( $this->modelService ) ? $this->controller->modelService : $this->modelService;
 
 		// Configure parentType
 		if( $this->parent ) {
@@ -124,13 +132,14 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 		// Configure type
 		if( $this->typed ) {
 
-			$type		= Yii::$app->request->get( $this->typeParam, null );
+			$type = Yii::$app->request->get( $this->typeParam, null );
+
 			$this->type	= isset( $type ) ? $type : $this->type;
 		}
 
 		// Mapper or Resource Type
 		$modelType			= Yii::$app->request->get( 'model-type', null );
-		$modelType			= isset( $modelType ) ? $modelType : Yii::$app->request->post( 'model-type', null );
+		$modelType			= isset( $modelType ) ? $modelType : Yii::$app->request->post( 'modelType', null );
 		$modelType			= isset( $modelType ) ? $modelType : $this->modelType;
 		$this->modelType	= isset( $modelType ) ? $modelType : CoreGlobal::TYPE_DEFAULT;
 	}

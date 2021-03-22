@@ -15,7 +15,7 @@ use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\common\models\forms\BaseForm;
+
 use cmsgears\core\common\utilities\DateUtil;
 
 /**
@@ -45,7 +45,7 @@ class Login extends BaseForm {
 
 	// Public -----------------
 
-	public $email;
+	public $identifier;
 	public $password;
 	public $rememberMe;
 	public $admin;
@@ -67,11 +67,13 @@ class Login extends BaseForm {
 
 	public function __construct( $admin = false, $config = [] )	 {
 
-		$this->admin		= $admin;
-		$this->user			= null;
-		$this->userService	= Yii::$app->factory->get( 'userService' );
+		$this->admin = $admin;
 
-		$this->interval		= 3600 * 24 * 30;
+		$this->user = null;
+
+		$this->userService = Yii::$app->factory->get( 'userService' );
+
+		$this->interval = 3600 * 24 * 30;
 
 		parent::__construct( $config );
 	}
@@ -93,19 +95,17 @@ class Login extends BaseForm {
 
 		// Model Rules
 		$rules =  [
-			[ [ 'email', 'password' ], 'required' ],
+			[ [ 'identifier', 'password' ], 'required' ],
 			[ 'rememberMe', 'boolean' ],
 			[ [ 'redirectUrl' ], 'safe' ],
-			// Disabled email validation to allow both email and username for login.
-			//[ 'email', 'email' ],
-			[ 'email', 'validateUser' ],
+			[ 'identifier', 'validateUser' ],
 			[ 'password', 'validatePassword' ]
 		];
 
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'email', 'password' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'identifier', 'password' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -119,7 +119,7 @@ class Login extends BaseForm {
 	public function attributeLabels() {
 
 		return [
-			'email' => 'Email',
+			'identifier' => 'Email / Username',
 			'password' => 'Password'
 		];
 	}
@@ -184,20 +184,27 @@ class Login extends BaseForm {
 	// Login ---------------------------------
 
 	/**
-	 * Find and return the user using given email or username.
+	 * Find and return the user using given email or username or mobile.
 	 *
 	 * @return \cmsgears\core\common\models\entities\User
 	 */
 	public function getUser() {
 
-		// Find user having email or username
+		// Find user having email
 		if( empty( $this->user ) ) {
 
-			$this->user = $this->userService->getByEmail( $this->email );
+			$this->user = $this->userService->getByEmail( $this->identifier );
 
+			// Find user having username
 			if( empty( $this->user ) ) {
 
-				$this->user = $this->userService->getByUsername( $this->email );
+				$this->user = $this->userService->getByUsername( $this->identifier );
+			}
+
+			// Find user having mobile
+			if( empty( $this->user ) ) {
+
+				$this->user = $this->userService->getByMobile( $this->identifier );
 			}
 		}
 
@@ -221,7 +228,7 @@ class Login extends BaseForm {
 
 				if( !$user->isPermitted( CoreGlobal::PERM_ADMIN ) ) {
 
-					$this->addError( "email", Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+					$this->addError( "identifier", Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 
 					return false;
 				}
@@ -231,9 +238,10 @@ class Login extends BaseForm {
 
 			$user->save();
 
-			return Yii::$app->user->login( $user, $this->rememberMe ? $this->interval : 0 );
+			return Yii::$app->user->login( $user, $this->rememberMe ? $this->interval : 120 );
 		}
 
 		return false;
 	}
+
 }

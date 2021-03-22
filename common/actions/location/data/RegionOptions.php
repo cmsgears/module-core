@@ -70,12 +70,12 @@ class RegionOptions extends \cmsgears\core\common\base\Action {
 
 	public function run() {
 
-		$provinceId	= Yii::$app->request->post( 'province-id' );
-		$regionId	= Yii::$app->request->post( 'region-id' );
+		$provinceId	= Yii::$app->request->post( 'provinceId' );
+		$regionId	= Yii::$app->request->post( 'regionId' );
 
 		if( isset( $provinceId ) && $provinceId > 0 ) {
 
-			$regions = $this->modelService->getMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
+			$regions = $this->modelService->getIdNameMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
 
 			$data = !empty( $regionId ) ? CodeGenUtil::generateSelectOptionsFromArray( $regions, intval( $regionId ) ) : CodeGenUtil::generateSelectOptionsFromArray( $regions );
 

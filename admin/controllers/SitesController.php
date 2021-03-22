@@ -19,14 +19,12 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\File;
 
-use cmsgears\core\admin\controllers\base\CrudController;
-
 /**
  * SitesController provides actions specific to site model.
  *
  * @since 1.0.0
  */
-class SitesController extends CrudController {
+class SitesController extends \cmsgears\core\admin\controllers\base\CrudController {
 
 	// Variables ---------------------------------------------------
 
@@ -105,15 +103,23 @@ class SitesController extends CrudController {
 
 	public function actionCreate( $config = [] ) {
 
-		$model	= $this->modelService->getModelObject();
+		$model = $this->modelService->getModelObject();
+
 		$avatar	= File::loadFile( $model->avatar, 'Avatar' );
 		$banner	= File::loadFile( $model->banner, 'Banner' );
 
+		$model->primary = true;
+
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->model = $this->modelService->create( $model, [ 'admin' => true, 'avatar' => $avatar, 'banner' => $banner ] );
+			$this->model = $this->modelService->create( $model, [
+				'admin' => true, 'avatar' => $avatar, 'banner' => $banner
+			]);
 
-			return $this->redirect( 'all' );
+			if( $this->model ) {
+
+				return $this->redirect( 'all' );
+			}
 		}
 
 		$themesMap = $this->themeService->getIdNameMap( [ 'default' => true ] );

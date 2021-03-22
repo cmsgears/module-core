@@ -89,9 +89,9 @@ abstract class ModelMapper extends Mapper {
 			[ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
 			[ 'id', 'safe' ],
 			// Unique - Disabled to allow multiple mappings based on active and type columns
-			//[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
-			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'on' => 'single', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
-			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'on' => 'multiType', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType', 'type' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			//[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ] ],
+			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'on' => 'single', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ] ],
+			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'on' => 'multiType', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType', 'type' ] ],
 			// Text Limit
 			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			// Other
@@ -117,6 +117,29 @@ abstract class ModelMapper extends Mapper {
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
 		];
+	}
+
+	// yii\db\BaseActiveRecord
+
+	/**
+	 * @inheritdoc
+	 */
+	public function beforeSave( $insert ) {
+
+		if( parent::beforeSave( $insert ) ) {
+
+			if( empty( $this->order ) || $this->order <= 0 ) {
+
+				$this->order = 0;
+			}
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
+
+			return true;
+		}
+
+		return false;
 	}
 
 	// CMG interfaces ------------------------
@@ -509,8 +532,9 @@ abstract class ModelMapper extends Mapper {
 		$tableName = static::tableName();
 
 		// Disable all mappings
-		$query		= "UPDATE $tableName SET `active`=0 WHERE `parentType`='$parentType' AND `parentId`=$parentId";
-		$command	= Yii::$app->db->createCommand( $query );
+		$query = "UPDATE $tableName SET `active`=0 WHERE `parentType`=:ptype AND `parentId`=:pid";
+
+		$command = Yii::$app->db->createCommand( $query, [ ':ptype' => $parentType, ':pid' => $parentId ] );
 
 		$command->execute();
 	}

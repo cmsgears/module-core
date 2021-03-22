@@ -34,7 +34,9 @@ trait SlugTrait {
 
 	public function getBySlug( $slug, $config = [] ) {
 
-		return self::findBySlug( $slug, $config );
+		$modelClass = static::$modelClass;
+
+		return $modelClass::findBySlug( $slug, $config );
 	}
 
 	// Read - Lists ----
@@ -68,13 +70,6 @@ trait SlugTrait {
 	// Read ---------------
 
 	// Read - Models ---
-
-	public static function findBySlug( $slug, $config = [] ) {
-
-		$modelClass	= static::$modelClass;
-
-		return $modelClass::queryBySlug( $slug )->one();
-	}
 
 	// Read - Lists ----
 

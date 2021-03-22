@@ -19,6 +19,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\resources\ICategoryService;
 
+use cmsgears\core\common\services\traits\base\MultisiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
 use cmsgears\core\common\services\traits\hierarchy\HierarchyTrait;
@@ -60,6 +61,7 @@ class CategoryService extends \cmsgears\core\common\services\base\ResourceServic
 
 	use DataTrait;
 	use HierarchyTrait;
+	use MultisiteTrait;
 	use NameTypeTrait;
 	use NestedSetTrait;
 	use SlugTypeTrait;
@@ -81,6 +83,11 @@ class CategoryService extends \cmsgears\core\common\services\base\ResourceServic
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -149,6 +156,12 @@ class CategoryService extends \cmsgears\core\common\services\base\ResourceServic
 	                'default' => SORT_DESC,
 	                'label' => 'Featured'
 	            ],
+	            'popular' => [
+	                'asc' => [ "$modelTable.popular" => SORT_ASC ],
+	                'desc' => [ "$modelTable.popular" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Popular'
+	            ],
 	            'order' => [
 	                'asc' => [ "$modelTable.`order`" => SORT_ASC ],
 	                'desc' => [ "$modelTable.`order`" => SORT_DESC ],
@@ -168,9 +181,7 @@ class CategoryService extends \cmsgears\core\common\services\base\ResourceServic
 					'label' => 'Updated At'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -192,7 +203,7 @@ class CategoryService extends \cmsgears\core\common\services\base\ResourceServic
 		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
@@ -214,6 +225,12 @@ class CategoryService extends \cmsgears\core\common\services\base\ResourceServic
 
 					break;
 				}
+				case 'popular': {
+
+					$config[ 'conditions' ][ "$modelTable.popular" ] = true;
+
+					break;
+				}
 				case 'top': {
 
 					$config[ 'conditions' ][ "$modelTable.parentId" ] = null;
@@ -225,28 +242,35 @@ class CategoryService extends \cmsgears\core\common\services\base\ResourceServic
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'content' => "$modelTable.content"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description",
-				'content' => "$modelTable.content"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'name' => "$modelTable.name",
 			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
 			'content' => "$modelTable.content",
+			'pinned' => "$modelTable.pinned",
 			'featured' => "$modelTable.featured",
+			'popular' => "$modelTable.popular",
 			'pname' => 'parent.name',
 			'pdesc' => 'parent.description',
 			'rname' => 'root.name',
@@ -312,6 +336,16 @@ class CategoryService extends \cmsgears\core\common\services\base\ResourceServic
 
 	public function create( $model, $config = [] ) {
 
+		if( empty( $model->siteId ) ) {
+
+			$model->siteId = Yii::$app->core->site->id;
+		}
+
+		if( empty( $model->order ) ) {
+
+			$model->order = 0;
+		}
+
 		return $this->createInHierarchy( $model );
 	}
 
@@ -319,10 +353,12 @@ class CategoryService extends \cmsgears\core\common\services\base\ResourceServic
 
 	public function update( $model, $config = [] ) {
 
-		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'name', 'slug', 'type', 'icon', 'title', 'description', 'htmlOptions', 'content' ];
+			'name', 'slug', 'icon', 'texture', 'title',
+			'description', 'htmlOptions', 'content'
+		];
 
 		// Update Hierarchy
 		$this->updateInHierarchy( $model );
@@ -375,6 +411,14 @@ class CategoryService extends \cmsgears\core\common\services\base\ResourceServic
 					case 'featured': {
 
 						$model->featured = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'popular': {
+
+						$model->popular = true;
 
 						$model->update();
 

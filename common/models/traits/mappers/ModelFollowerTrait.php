@@ -16,7 +16,7 @@ use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\mappers\ModelFollower;
 
 /**
- * ModelFollowerTrait can be used to add follow, like, wish features to relevant models.
+ * ModelFollowerTrait can be used to add like, dislike, follow, wish features to relevant models.
  *
  * @since 1.0.0
  */
@@ -58,7 +58,8 @@ trait ModelFollowerTrait {
 		$modelFollowerTable = ModelFollower::tableName();
 
 		return $this->hasMany( ModelFollower::class, [ 'parentId' => 'id' ] )
-			->where( "$modelFollowerTable.parentType='$this->modelType'" );
+			->where( "$modelFollowerTable.parentType='$this->modelType'" )
+			->orderBy( [ "$modelFollowerTable.order" => SORT_DESC, "$modelFollowerTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -69,7 +70,8 @@ trait ModelFollowerTrait {
 		$modelFollowerTable = ModelFollower::tableName();
 
 		return $this->hasMany( ModelFollower::class, [ 'parentId' => 'id' ] )
-			->where( "$modelFollowerTable.parentType='$this->modelType' AND $modelFollowerTable.active=1" );
+			->where( "$modelFollowerTable.parentType='$this->modelType' AND $modelFollowerTable.active=1" )
+			->orderBy( [ "$modelFollowerTable.order" => SORT_DESC, "$modelFollowerTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -79,8 +81,16 @@ trait ModelFollowerTrait {
 
 		$modelFollowerTable = ModelFollower::tableName();
 
-		return $this->hasOne( ModelFollower::class, [ 'parentId' => 'id' ] )
-			->where( "$modelFollowerTable.parentType=:ptype AND $modelFollowerTable.type=:type AND $modelFollowerTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
+		if( $active ) {
+
+			return $this->hasMany( ModelFollower::class, [ 'parentId' => 'id' ] )
+				->where( "$modelFollowerTable.parentType=:ptype AND $modelFollowerTable.type=:type AND $modelFollowerTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+				->orderBy( [ "$modelFollowerTable.order" => SORT_DESC, "$modelFollowerTable.id" => SORT_DESC ] );
+		}
+
+		return $this->hasMany( ModelFollower::class, [ 'parentId' => 'id' ] )
+			->where( "$modelFollowerTable.parentType=:ptype AND $modelFollowerTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] )
+			->orderBy( [ "$modelFollowerTable.order" => SORT_DESC, "$modelFollowerTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -88,15 +98,14 @@ trait ModelFollowerTrait {
 	 */
 	public function getFollowers() {
 
+		$userTable			= User::tableName();
 		$modelFollowerTable = ModelFollower::tableName();
 
-		return $this->hasMany( User::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelFollowerTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelFollowerTable ) {
-
-					$query->onCondition( [ "$modelFollowerTable.parentType" => $this->modelType ] );
-				}
-			);
+		return ModelFollower::find()
+			->leftJoin( $userTable, "$modelFollowerTable.modelId=$userTable.id" )
+			->where( "$modelFollowerTable.parentId=$this->id AND $modelFollowerTable.parentType='$this->modelType'" )
+			->orderBy( [ "$modelFollowerTable.order" => SORT_DESC, "$modelFollowerTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**
@@ -104,15 +113,14 @@ trait ModelFollowerTrait {
 	 */
 	public function getActiveFollowers() {
 
+		$userTable			= User::tableName();
 		$modelFollowerTable = ModelFollower::tableName();
 
-		return $this->hasMany( User::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelFollowerTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelFollowerTable ) {
-
-					$query->onCondition( [ "$modelFollowerTable.parentType" => $this->modelType, "$modelFollowerTable.active" => true ] );
-				}
-			);
+		return ModelFollower::find()
+			->leftJoin( $userTable, "$modelFollowerTable.modelId=$userTable.id" )
+			->where( "$modelFollowerTable.parentId=$this->id AND $modelFollowerTable.parentType='$this->modelType' AND $modelFollowerTable.active=1" )
+			->orderBy( [ "$modelFollowerTable.order" => SORT_DESC, "$modelFollowerTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**
@@ -120,17 +128,23 @@ trait ModelFollowerTrait {
 	 */
 	public function getFollowersByType( $type, $active = true ) {
 
+		$userTable			= User::tableName();
 		$modelFollowerTable = ModelFollower::tableName();
 
-		$users = $this->hasMany( User::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelFollowerTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$type, &$active, &$modelFollowerTable ) {
+		if( $active ) {
 
-					$query->onCondition( [ "$modelFollowerTable.parentType" => $this->modelType, "$modelFollowerTable.type" => $type, "$modelFollowerTable.active" => $active ] );
-				}
-			)->all();
+			return ModelFollower::find()
+				->leftJoin( $userTable, "$modelFollowerTable.modelId=$userTable.id" )
+				->where( "$modelFollowerTable.parentId=$this->id AND $modelFollowerTable.parentType='$this->modelType' AND $modelFollowerTable.type='$type' AND $modelFollowerTable.active=$active" )
+				->orderBy( [ "$modelFollowerTable.order" => SORT_DESC, "$modelFollowerTable.id" => SORT_DESC ] )
+				->all();
+		}
 
-		return $users;
+		return ModelFollower::find()
+			->leftJoin( $userTable, "$modelFollowerTable.modelId=$userTable.id" )
+			->where( "$modelFollowerTable.parentId=$this->id AND $modelFollowerTable.parentType='$this->modelType' AND $modelFollowerTable.type='$type'" )
+			->orderBy( [ "$modelFollowerTable.order" => SORT_DESC, "$modelFollowerTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**
@@ -147,8 +161,9 @@ trait ModelFollowerTrait {
 			IFollower::TYPE_WISHLIST => [ 0 => 0, 1 => 0 ]
 		];
 
-		$followerTable	= ModelFollower::tableName();
-		$query			= new Query();
+		$followerTable = ModelFollower::tableName();
+
+		$query = new Query();
 
     	$query->select( [ 'type', 'active', 'count(id) as total' ] )
 				->from( $followerTable )
@@ -226,13 +241,18 @@ trait ModelFollowerTrait {
 	 */
 	protected function generateUserFollows() {
 
-		$user		= Yii::$app->user->identity;
-		$returnArr	= [ IFollower::TYPE_LIKE => false, IFollower::TYPE_DISLIKE => false, IFollower::TYPE_FOLLOW => false, IFollower::TYPE_WISHLIST => false ];
+		$user = Yii::$app->core->getUser();
+
+		$returnArr = [
+			IFollower::TYPE_LIKE => false, IFollower::TYPE_DISLIKE => false,
+			IFollower::TYPE_FOLLOW => false, IFollower::TYPE_WISHLIST => false
+		];
 
 		if( isset( $user ) ) {
 
-			$followerTable	= ModelFollower::tableName();
-			$query			= new Query();
+			$followerTable = ModelFollower::tableName();
+
+			$query = new Query();
 
 	    	$query->select( [ 'type', 'active' ] )
 					->from( $followerTable )
@@ -256,7 +276,7 @@ trait ModelFollowerTrait {
 
 		if( !isset( $this->userFollows ) ) {
 
-			$this->userFollows	= $this->generateUserFollows();
+			$this->userFollows = $this->generateUserFollows();
 		}
 
 		return $this->userFollows[ IFollower::TYPE_LIKE ];
@@ -269,7 +289,7 @@ trait ModelFollowerTrait {
 
 		if( !isset( $this->userFollows ) ) {
 
-			$this->userFollows	= $this->generateUserFollows();
+			$this->userFollows = $this->generateUserFollows();
 		}
 
 		return $this->userFollows[ IFollower::TYPE_DISLIKE ];
@@ -282,7 +302,7 @@ trait ModelFollowerTrait {
 
 		if( !isset( $this->userFollows ) ) {
 
-			$this->userFollows	= $this->generateUserFollows();
+			$this->userFollows = $this->generateUserFollows();
 		}
 
 		return $this->userFollows[ IFollower::TYPE_FOLLOW ];
@@ -295,7 +315,7 @@ trait ModelFollowerTrait {
 
 		if( !isset( $this->userFollows ) ) {
 
-			$this->userFollows	= $this->generateUserFollows();
+			$this->userFollows = $this->generateUserFollows();
 		}
 
 		return $this->userFollows[ IFollower::TYPE_WISHLIST ];

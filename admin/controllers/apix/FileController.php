@@ -16,14 +16,12 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
  * FileController provide actions specific to file model.
  *
  * @since 1.0.0
  */
-class FileController extends Controller {
+class FileController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -37,22 +35,25 @@ class FileController extends Controller {
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( $id, $module, $config = [] ) {
-
-		parent::__construct( $id, $module, $config );
-
-		$this->enableCsrfValidation = false;
-	}
-
 	public function init() {
 
 		parent::init();
 
 		// Permissions
-		$this->crudPermission = CoreGlobal::PERM_ADMIN;
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'fileService' );
+	}
+
+	public function beforeAction( $action ) {
+
+		if( $action->id == 'file-handler' ) {
+
+			$this->enableCsrfValidation = false;
+		}
+
+		return parent::beforeAction( $action );
 	}
 
 	// Instance methods --------------------------------------------
@@ -94,16 +95,16 @@ class FileController extends Controller {
 		return [
 			'file-handler' => [ 'class' => 'cmsgears\core\common\actions\file\FileHandler' ],
 			'bulk' => [
-				'class' => 'cmsgears\core\common\actions\grid\Bulk',
-				'config' => [ 'admin' => true ]
+				'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true,
+				'config' => [ 'backend' => true ]
 			],
 			'generic' => [
 				'class' => 'cmsgears\core\common\actions\grid\Generic',
-				'config' => [ 'admin' => true ]
+				'config' => [ 'backend' => true ]
 			],
 			'delete' => [
 				'class' => 'cmsgears\core\common\actions\grid\Delete',
-				'config' => [ 'admin' => true ]
+				'config' => [ 'backend' => true ]
 			]
 		];
 	}

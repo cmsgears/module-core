@@ -1,5 +1,6 @@
 <?php
-use yii\widgets\ActiveForm;
+// CMG Imports
+use cmsgears\core\common\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= $coreProperties->getSiteTitle() . ' | Activate Account';
@@ -17,13 +18,13 @@ $this->title	= $coreProperties->getSiteTitle() . ' | Activate Account';
 ?>
 		<ul>
 			<li>
-				<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email*', 'readOnly' => true ] ) ?>
+				<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email *', 'readOnly' => true ] ) ?>
 			</li>
 			<li>
-				<?= $form->field( $model, 'password' )->passwordInput( [ 'placeholder' => 'Password*' ] ) ?>
+				<?= $form->field( $model, 'password' )->passwordInput( [ 'placeholder' => 'Password *' ] ) ?>
 			</li>
 			<li>
-				<?= $form->field( $model, 'password_repeat' )->passwordInput( [ 'placeholder' => 'Repeat Password*' ] ) ?>
+				<?= $form->field( $model, 'password_repeat' )->passwordInput( [ 'placeholder' => 'Repeat Password *' ] ) ?>
 			</li>
 			<li>
 				<input type="submit" value="Activate" />
@@ -32,4 +33,3 @@ $this->title	= $coreProperties->getSiteTitle() . ' | Activate Account';
 <?php
 		ActiveForm::end();
 	}
-?>

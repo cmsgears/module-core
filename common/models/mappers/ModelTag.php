@@ -11,7 +11,6 @@ namespace cmsgears\core\common\models\mappers;
 
 // CMG Imports
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\resources\Tag;
 
 /**
@@ -27,7 +26,7 @@ use cmsgears\core\common\models\resources\Tag;
  *
  * @since 1.0.0
  */
-class ModelTag extends ModelMapper {
+class ModelTag extends \cmsgears\core\common\models\base\ModelMapper {
 
 	// Variables ---------------------------------------------------
 

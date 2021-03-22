@@ -1,6 +1,6 @@
 {
 	"name": "cmsgears/module-core",
-	"description": "The core module for CMSGears based projects. It's required for all the projects using CMSGears.",
+	"description": "The core module is required by all the projects using CMSGears.",
 	"homepage": "http://www.cmsgears.org",
 	"type": "package",
 	"keywords": [ "yii2", "cmsgears", "module", "core" ],
@@ -15,7 +15,7 @@
 	},
     "require": {
 		"php": ">=7.0.0",
-		"yiisoft/yii2": "2.0.16",
+		"yiisoft/yii2": "2.0.40",
 		"yiisoft/yii2-swiftmailer": "2.1.*"
     }
 }

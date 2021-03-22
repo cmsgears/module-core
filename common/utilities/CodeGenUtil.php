@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\utilities;
 
 // Yii Imports
@@ -8,6 +16,10 @@ use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\config\CoreProperties;
+
+use cmsgears\core\common\utilities\DateUtil;
 
 /**
  * The class CodeGenUtil provides utility methods to generate code snippets for commonly used code.
@@ -20,7 +32,9 @@ class CodeGenUtil {
 	 * Return pagination info to be displayed on data grid footer or header.
 	 * @return string - pagination info
 	 */
-	public static function getPaginationDetail( $dataProvider ) {
+	public static function getPaginationDetail( $dataProvider, $config = [] ) {
+
+		$label = $config[ 'label' ] ?? 'entries';
 
 		$total			= $dataProvider->getTotalCount();
 		$pagination		= $dataProvider->getPagination();
@@ -33,7 +47,7 @@ class CodeGenUtil {
 
 		if( $currentSize < $currentDisplay ) {
 
-			$end	= $start + $currentSize;
+			$end = $start + $currentSize;
 		}
 
 		if( $end > 0 ) {
@@ -43,22 +57,22 @@ class CodeGenUtil {
 
 		if( $currentSize == $page_size ) {
 
-			$end	+= 1;
+			$end += 1;
 		}
 
-		return "Showing $start to $end out of $total entries";
+		return "Showing $start to $end out of $total $label";
 	}
 
 	public static function getPaginationOptions( $limits = [], $pageLimit = null ) {
 
-		$pageLimits		= count( $limits ) > 0 ? $limits : [ '5' => 5, '10' => 10, '15' => 15, '20' => 20 ];
+		$pageLimits = count( $limits ) > 0 ? $limits : [ '5' => 5, '10' => 10, '15' => 15, '20' => 20 ];
 
-		$pageLimit		= Yii::$app->request->get( 'per-page' );
-		$pageLimit		= isset( $pageLimit ) && in_array( $pageLimit, $pageLimits ) ? $pageLimit : $pageLimit;
+		$pageLimit	= Yii::$app->request->get( 'per-page' );
+		$pageLimit	= isset( $pageLimit ) && in_array( $pageLimit, $pageLimits ) ? $pageLimit : $pageLimit;
 
-		$pageLimitIdx	= array_search( $pageLimit, $pageLimits );
+		$pageLimitIdx = array_search( $pageLimit, $pageLimits );
 
-		$options		= self::generateSelectOptionsFromArray( $pageLimits, $pageLimitIdx );
+		$options = self::generateSelectOptionsFromArray( $pageLimits, $pageLimitIdx );
 
 		return $options;
 	}
@@ -68,9 +82,9 @@ class CodeGenUtil {
 	 */
 	public static function generateLinksFromMap( $baseUrl, $map, $csv = true, $absolute = true ) {
 
-		$html	= [];
+		$html = [];
 
-		foreach ( $map as $key => $value ) {
+		foreach( $map as $key => $value ) {
 
 			if( $absolute ) {
 
@@ -100,10 +114,11 @@ class CodeGenUtil {
 		$html	= [];
 		$length	= count( $list );
 
-		for ( $i = 0; $i < $length; $i++ ) {
+		for( $i = 0; $i < $length; $i++ ) {
 
-			$element	= $list[ $i ];
-			$html[]		= Html::a( $element, Url::to( $baseUrl . $element, true ) );
+			$element = $list[ $i ];
+
+			$html[] = Html::a( $element, Url::to( $baseUrl . $element, true ) );
 		}
 
 		if( $csv ) {
@@ -137,7 +152,7 @@ class CodeGenUtil {
 	 */
 	public static function generateAssociativeArray( $data, $key1, $key2 ) {
 
-		$options	= array();
+		$options = [];
 
 		if( isset( $data ) ) {
 
@@ -148,6 +163,20 @@ class CodeGenUtil {
 		}
 
 		return $options;
+	}
+
+	public static function generateMapFromCsv( $csv ) {
+
+		$items = preg_split( '/,/', $csv );
+
+		$map = [];
+
+		foreach( $items as $item ) {
+
+			$map[ $item ] = $item;
+		}
+
+		return $map;
 	}
 
 	// Select for Option Table - By Id and Name
@@ -165,13 +194,13 @@ class CodeGenUtil {
 	// Generic Select for any table
 	public static function generateSelectOptions( $data, $selected = null, $key1, $key2 ) {
 
-		$options	= "";
+		$options = "";
 
 		if( isset( $data ) ) {
 
-			if( isset($selected) ) {
+			if( isset( $selected ) ) {
 
-				foreach ( $data as $key => $value ) {
+				foreach( $data as $key => $value ) {
 
 					$val	= $value[ $key1 ];
 					$option = $value[ $key2 ];
@@ -181,13 +210,14 @@ class CodeGenUtil {
 						$options .= "<option value='$val' selected>$option</option>";
 					}
 					else {
+
 						$options .= "<option value='$val'>$option</option>";
 					}
 				}
 			}
 			else {
 
-				foreach ( $data as $key => $value ) {
+				foreach( $data as $key => $value ) {
 
 					$val	= $value[ $key1 ];
 					$option = $value[ $key2 ];
@@ -201,30 +231,37 @@ class CodeGenUtil {
 	}
 
 	// Generic Select for any table
-	public static function generateSelectOptionsFromArray( $data, $selected = null ) {
+	public static function generateSelectOptionsFromArray( $data, $selected = null, $config = [] ) {
 
-		$options	= "";
+		$keyPrefix = isset( $config[ 'keyPrefix' ] ) ? $config[ 'keyPrefix' ] : null;
+
+		$options = "";
 
 		if( isset( $data ) ) {
 
-			if( isset($selected) ) {
+			if( isset( $selected ) ) {
 
-				foreach ( $data as $key => $value ) {
+				foreach( $data as $key => $value ) {
 
-					if( $selected === $key ) {
+					$oKey = isset( $keyPrefix ) ? $keyPrefix . $key : $key;
 
-						$options .= "<option value='$key' selected>$value</option>";
+					if( $selected === $oKey ) {
+
+						$options .= "<option value='$oKey' selected>$value</option>";
 					}
 					else {
-						$options .= "<option value='$key'>$value</option>";
+
+						$options .= "<option value='$oKey'>$value</option>";
 					}
 				}
 			}
 			else {
 
-				foreach ( $data as $key => $value ) {
+				foreach( $data as $key => $value ) {
 
-					$options .= "<option value='$key'>$value</option>";
+					$oKey = isset( $keyPrefix ) ? $keyPrefix . $key : $key;
+
+					$options .= "<option value='$oKey'>$value</option>";
 				}
 			}
 		}
@@ -243,7 +280,7 @@ class CodeGenUtil {
 
 		if( isset( $data ) ) {
 
-			foreach ( $data as $key => $value ) {
+			foreach( $data as $key => $value ) {
 
 				$val	= $value[ $key1 ];
 				$item	= $value[ $key2 ];
@@ -278,6 +315,7 @@ class CodeGenUtil {
 				$options .= "<option value='$i' selected>$i</option>";
 			}
 			else {
+
 				$options .= "<option value='$i'>$i</option>";
 			}
 		}
@@ -288,20 +326,35 @@ class CodeGenUtil {
 	// Return Image Tag
 	public static function getImageThumbTag( $image, $options = [] ) {
 
+		$type = isset( $options[ 'type' ] ) ? $options[ 'type' ] : 'thumb';
+
 		// Use Image from DB
 		if( isset( $image ) ) {
 
-			$thumbUrl = $image->getThumbUrl();
+			$imageUrl = null;
+
+			if( $type == 'thumb' ) {
+
+				$imageUrl = $image->getThumbUrl();
+			}
+			else if( $type == 'medium' ) {
+
+				$imageUrl = $image->getMediumUrl();
+			}
+			else if( $type == 'file' ) {
+
+				$imageUrl = $image->getFileUrl();
+			}
 
 			if( isset( $options[ 'class' ] ) ) {
 
 				$class = $options[ 'class' ];
 
-				return "<img class='$class' src='$thumbUrl'>";
+				return "<img class=\"{$class}\" src=\"{$imageUrl}\">";
 			}
 			else {
 
-				return "<img src='$thumbUrl'>";
+				return "<img src=\"{$imageUrl}\">";
 			}
 		}
 		else {
@@ -316,11 +369,11 @@ class CodeGenUtil {
 
 					$class	= $options[ 'class' ];
 
-					return "<img class='$class' src='$images/$img'>";
+					return "<img class=\"{$class}\" src=\"{$images}/{$img}\">";
 				}
 				else {
 
-					return "<img src='$images/$img'>";
+					return "<img src=\"{$images}/{$img}\">";
 				}
 			}
 			// Use icon
@@ -328,25 +381,25 @@ class CodeGenUtil {
 
 				$icon = $options[ 'icon' ];
 
-				return "<span class='$icon'></span>";
+				return "<span class=\"icon $icon\" data-icon=\"{$icon}\"></span>";
 			}
 		}
 	}
 
-	public static function getThumbUrl( $file, $options = [] ) {
+	public static function getFileUrl( $file, $options = [] ) {
 
 		if( $file == null ) {
 
 			if( isset( $options[ 'image' ] ) ) {
 
-				$image	= $options[ 'image' ];
+				$image = $options[ 'image' ];
 
-				return Url::toRoute( [ "/images/$image" ], true );
+				return YII_ENV_PROD ? CoreProperties::getInstance()->getResourceUrl() . "/images/$image" : Url::toRoute( "/images/$image" );
 			}
 		}
 		else {
 
-			return $file->getThumbUrl();
+			return $file->getFileUrl();
 		}
 
 		return null;
@@ -358,9 +411,9 @@ class CodeGenUtil {
 
 			if( isset( $options[ 'image' ] ) ) {
 
-				$image	= $options[ 'image' ];
+				$image = $options[ 'image' ];
 
-				return Url::toRoute( [ "/images/$image" ], true );
+				return YII_ENV_PROD ? CoreProperties::getInstance()->getResourceUrl() . "/images/$image" : Url::toRoute( "/images/$image" );
 			}
 		}
 		else {
@@ -371,20 +424,77 @@ class CodeGenUtil {
 		return null;
 	}
 
-	public static function getFileUrl( $file, $options = [] ) {
+	public static function getSmallUrl( $file, $options = [] ) {
 
 		if( $file == null ) {
 
 			if( isset( $options[ 'image' ] ) ) {
 
-				$image	= $options[ 'image' ];
+				$image = $options[ 'image' ];
 
-				return Url::toRoute( [ "/images/$image" ], true );
+				return YII_ENV_PROD ? CoreProperties::getInstance()->getResourceUrl() . "/images/$image" : Url::toRoute( "/images/$image" );
 			}
 		}
 		else {
 
-			return $file->getFileUrl();
+			return $file->getSmallUrl();
+		}
+
+		return null;
+	}
+
+	public static function getThumbUrl( $file, $options = [] ) {
+
+		if( $file == null ) {
+
+			if( isset( $options[ 'image' ] ) ) {
+
+				$image = $options[ 'image' ];
+
+				return YII_ENV_PROD ? CoreProperties::getInstance()->getResourceUrl() . "/images/$image" : Url::toRoute( "/images/$image" );
+			}
+		}
+		else {
+
+			return $file->getThumbUrl();
+		}
+
+		return null;
+	}
+
+	public static function getPlaceholderUrl( $file, $options = [] ) {
+
+		if( $file == null ) {
+
+			if( isset( $options[ 'image' ] ) ) {
+
+				$image = $options[ 'image' ];
+
+				return YII_ENV_PROD ? CoreProperties::getInstance()->getResourceUrl() . "/images/$image" : Url::toRoute( "/images/$image" );
+			}
+		}
+		else {
+
+			return $file->getPlaceholderUrl();
+		}
+
+		return null;
+	}
+
+	public static function getSmallPlaceholderUrl( $file, $options = [] ) {
+
+		if( $file == null ) {
+
+			if( isset( $options[ 'image' ] ) ) {
+
+				$image = $options[ 'image' ];
+
+				return YII_ENV_PROD ? CoreProperties::getInstance()->getResourceUrl() . "/images/$image" : Url::toRoute( "/images/$image" );
+			}
+		}
+		else {
+
+			return $file->getSmallPlaceholderUrl();
 		}
 
 		return null;
@@ -397,6 +507,23 @@ class CodeGenUtil {
 
 		$metaContent = '';
 
+		// Last Updated
+		if( isset( $params[ 'model' ] ) ) {
+
+			$model		= $params[ 'model' ];
+			$content	= isset( $model->modelContent ) ? $model->modelContent : null;
+
+			$date = $model->modifiedAt;
+
+			if( isset( $content ) && isset( $content->modifiedAt ) ) {
+
+				$date = DateUtil::greaterThan( $date, $content->modifiedAt ) ? $content->modifiedAt : $date;
+			}
+
+			$metaContent .= "<meta name=\"last-updated\" content=\"$date UTC\">";
+		}
+
+		// Description
 		if( isset( $params[ 'desc' ] ) ) {
 
 			$description = $params[ 'desc' ];
@@ -412,6 +539,7 @@ class CodeGenUtil {
 			$metaContent .= "<meta name=\"description\" content=\"$description\" />";
 		}
 
+		// Keywords
 		if( isset( $params[ 'keywords' ] ) ) {
 
 			$keywords	= $params[ 'keywords' ];
@@ -427,6 +555,7 @@ class CodeGenUtil {
 			$metaContent .= "<meta name=\"keywords\" content=\"$keywords\" />";
 		}
 
+		// Robot
 		if( isset( $params[ 'robot' ] ) ) {
 
 			$robot = $params[ 'robot' ];
@@ -434,18 +563,30 @@ class CodeGenUtil {
 			$metaContent .= "<meta name=\"robots\" content=\"$robot\" />";
 		}
 
+		// User defined Schema
+		if( isset( $params[ 'schema' ] ) ) {
+
+			$schema = $params[ 'schema' ];
+
+			$metaContent .= $schema;
+		}
+
 		return $metaContent;
 	}
 
-	public static function generateSeoH1( $params ) {
+	public static function generateSeoH1( $params, $config = [] ) {
+
+		$stripTags = isset( $config[ 'stripTags' ] ) ? $config[ 'stripTags' ] : true;
+
+		$settings = isset( $params[ 'settings' ] ) ? $params[ 'settings' ] : [];
 
 		if( isset( $params[ 'summary' ] ) ) {
 
-			$summary = $params[ 'summary' ];
+			$summary = $stripTags ? strip_tags( $params[ 'summary' ] ) : $params[ 'summary' ];
 
-			$seoH1 = "<h1 class=\"hidden\">$summary</h1>";
+			$seoH1 = "<h1>$summary</h1>";
 
-			return $seoH1;
+			return isset( $settings->h1Summary ) && !$settings->h1Summary ? null : $seoH1;
 		}
 
 		return null;
@@ -486,7 +627,7 @@ class CodeGenUtil {
 
 		include( $filePath );
 
-		$content	= ob_get_clean();
+		$content = ob_get_clean();
 
 		return $content;
 	}
@@ -495,14 +636,14 @@ class CodeGenUtil {
 
 		if( !isset( $end ) ) {
 
-			$end	= date( "Y" );
+			$end = date( "Y" );
 		}
 
-		$options	= null;
+		$options = null;
 
 		for( $i = $end; $i >= $start; $i-- ) {
 
-			$options	.= "<option value='$i'>$i</option>";
+			$options .= "<option value='$i'>$i</option>";
 		}
 
 		return $options;
@@ -512,22 +653,12 @@ class CodeGenUtil {
 
 		if( strlen( $content ) > $limit ) {
 
-			$content	= "$content ...";
+			$content = "$content ...";
 
 			return substr( $content, 0, $limit );
 		}
 
 		return $content;
-	}
-
-	public static function isAbsolutePath( $path, $alias = true ) {
-
-		if( $alias ) {
-
-			return $path[0] === '@';
-		}
-
-		return $path[1] === ':' || $path[0] === '/';
 	}
 
 	public static function compressStyles( $styles ) {
@@ -544,7 +675,8 @@ class CodeGenUtil {
 	public static function generateRandomString( $length = 8, $uc = true, $num = true, $special = false ) {
 
 		$source = 'abcdefghijklmnopqrstuvwxyz';
-		$str	= '';
+
+		$str = '';
 
 		if( $uc ) {
 
@@ -774,7 +906,116 @@ class CodeGenUtil {
 
 		$result .= $wrap ? '</ul>' : '';
 
+		$result = strip_tags( $result, '<ul><li><span><a><i>' );
+
 		return $result;
+	}
+
+	public static function pluralize( $singular, $plural = null ) {
+
+		if( !empty( $plural ) ) {
+
+			return $plural;
+		}
+
+		$char = strtolower( $singular[ strlen( $singular ) - 1 ] );
+
+		switch( $char ) {
+
+			case 'y': {
+
+				return substr( $singular, 0, -1 ) . 'ies';
+			}
+			case 's': {
+
+				return $singular . 'es';
+			}
+			default: {
+
+				return $singular.'s';
+			}
+		}
+	}
+
+	// Number Format
+
+	public static function getMinNum( $num ) {
+
+		if( strlen( $num ) >= 8 ) {
+
+			$num = $num / 10000000;
+		}
+		else if( strlen( $num ) >= 6 ) {
+
+			$num = $num / 100000;
+		}
+		else if( strlen( $num ) >= 5 ) {
+
+			$num = $num / 1000;
+		}
+		else if( $num == 0 ) {
+
+			$num = null;
+		}
+
+		return $num;
+	}
+
+	public static function getMinNumUnit( $num ) {
+
+		$priceUnit = null;
+
+		if( strlen( $num ) >= 8 ) {
+
+			$priceUnit = 'Cr';
+		}
+		else if( strlen( $num ) >= 6 ) {
+
+			$priceUnit = 'L';
+		}
+		else if( strlen( $num ) >= 5 ) {
+
+			$priceUnit = 'K';
+		}
+
+		return $priceUnit;
+	}
+
+	public static function getMinNumText( $num, $round = 2 ) {
+
+		if( strlen( $num ) >= 8 ) {
+
+			$num = round( $num / 10000000, $round ) . ' Cr';
+		}
+		else if( strlen( $num ) >= 6 ) {
+
+			$num = round( $num / 100000, $round ) . ' L';
+		}
+		else if( strlen( $num ) >= 5 ) {
+
+			$num = round( $num / 1000, $round ) . ' K';
+		}
+		else if( $num == 0 ) {
+
+			$num = null;
+		}
+
+		return $num;
+	}
+
+	public static function createAcronym( $string ) {
+
+		$output	= null;
+		$token	= strtok( $string, ' ' );
+
+		while( $token !== false ) {
+
+			$output .= $token[ 0 ];
+
+			$token = strtok( ' ' );
+		}
+
+		return $output;
 	}
 
 }

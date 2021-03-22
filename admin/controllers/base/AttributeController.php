@@ -17,8 +17,6 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
  * AttributeController provides actions specific to model attributes having own meta table.
  *
@@ -134,7 +132,10 @@ abstract class AttributeController extends Controller {
 
 				$this->model = $this->modelService->create( $model );
 
-				return $this->redirect( "all?pid=$parent->id" );
+				if( $this->model ) {
+
+					return $this->redirect( "all?pid=$parent->id" );
+				}
 			}
 
 			return $this->render( 'create', [

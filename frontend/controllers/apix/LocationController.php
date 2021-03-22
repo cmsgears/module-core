@@ -19,7 +19,7 @@ use yii\filters\VerbFilter;
  *
  * @since 1.0.0
  */
-class LocationController extends \cmsgears\core\frontend\controllers\base\Controller {
+class LocationController extends \cmsgears\core\frontend\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 

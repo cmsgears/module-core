@@ -24,17 +24,17 @@ interface INameType {
 
 	// Read - Models ---
 
-	public function getByName( $name );
+	public function getByName( $name, $config = [] );
 
-	public function getFirstByName( $name );
+	public function getFirstByName( $name, $config = [] );
 
-	public function getByType( $type );
+	public function getByType( $type, $config = [] );
 
-	public function getFirstByType( $type );
+	public function getFirstByType( $type, $config = [] );
 
-	public function getByNameType( $name, $type );
+	public function getByNameType( $name, $type, $config = [] );
 
-	public function getFirstByNameType( $name, $type );
+	public function getFirstByNameType( $name, $type, $config = [] );
 
 	public function searchByName( $name, $config = [] );
 

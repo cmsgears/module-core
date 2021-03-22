@@ -14,7 +14,6 @@ use Yii;
 
 // CMG Imports
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\resources\Location;
 
 /**
@@ -31,7 +30,7 @@ use cmsgears\core\common\models\resources\Location;
  *
  * @since 1.0.0
  */
-class ModelLocation extends ModelMapper {
+class ModelLocation extends \cmsgears\core\common\models\base\ModelMapper {
 
 	// Variables ---------------------------------------------------
 

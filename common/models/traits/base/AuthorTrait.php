@@ -75,21 +75,14 @@ trait AuthorTrait {
 	 */
 	public function isCreator( $user = null, $strict = false ) {
 
-		if( !isset( $user ) && !$strict ) {
+		if( empty( $user ) && !$strict ) {
 
-			$user	= Yii::$app->user->getIdentity();
+			$user = Yii::$app->core->getUser();
 		}
 
-		if( isset( $user ) ) {
+		if( isset( $user ) && isset( $this->createdBy ) ) {
 
-			if( isset( $this->createdBy ) ) {
-
-				return $this->createdBy == $user->id;
-			}
-			else {
-
-				return $this->createdBy == $user->id;
-			}
+			return $this->createdBy == $user->id;
 		}
 
 		return false;
@@ -106,27 +99,37 @@ trait AuthorTrait {
 	// Read - Query -----------
 
 	/**
-	 * @inheritdoc
+	 * Generate and return the query by having appropriate join of [[$createdBy]]
+	 * with [[\cmsgears\core\common\models\entities\User]].
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with roles.
 	 */
 	public static function queryWithCreator( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'creator' ];
+		$config[ 'relations' ] = [ 'creator' ];
 
 		return parent::queryWithAll( $config );
 	}
 
 	/**
-	 * @inheritdoc
+	 * Generate and return the query by having appropriate join of [[$modifiedBy]]
+	 * with [[\cmsgears\core\common\models\entities\User]].
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with roles.
 	 */
 	public static function queryWithModifier( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'modifier' ];
+		$config[ 'relations' ] = [ 'modifier' ];
 
 		return parent::queryWithAll( $config );
 	}
 
 	/**
-	 * @inheritdoc
+	 * Generate and return the query by matching the given user id with [[$createdBy]].
+	 *
+	 * @param integer $userId
 	 */
 	public static function queryByCreatorId( $userId ) {
 

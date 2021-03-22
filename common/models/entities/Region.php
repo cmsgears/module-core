@@ -19,7 +19,6 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\interfaces\base\IName;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Entity;
 
 use cmsgears\core\common\models\traits\base\NameTrait;
 
@@ -36,7 +35,7 @@ use cmsgears\core\common\models\traits\base\NameTrait;
  *
  * @since 1.0.0
  */
-class Region extends Entity implements IName {
+class Region extends \cmsgears\core\common\models\base\Entity implements IName {
 
 	// Variables ---------------------------------------------------
 
@@ -85,7 +84,9 @@ class Region extends Entity implements IName {
 			[ [ 'countryId', 'provinceId', 'name' ], 'required' ],
 			[ [ 'id' ], 'safe' ],
 			// Unique
-			[ [ 'name' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ 'code', 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'code' ] ],
+			[ 'iso', 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'iso' ] ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'name' ] ],
 			// Text Limit
 			[ [ 'code', 'iso' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
@@ -148,6 +149,16 @@ class Region extends Entity implements IName {
 		return $this->hasOne( Province::class, [ 'id' => 'provinceId' ] );
 	}
 
+	/**
+	 * Return list of cities belonging to this region.
+	 *
+	 * @return City[]
+	 */
+	public function getCities() {
+
+		return $this->hasMany( City::class, [ 'regionId' => 'id' ] );
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------
@@ -175,7 +186,7 @@ class Region extends Entity implements IName {
 
 		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country', 'province' ];
 
-		$config[ 'relations' ]	= $relations;
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -243,15 +254,37 @@ class Region extends Entity implements IName {
 	// Read - Find ------------
 
 	/**
+	 * Find and return the regions associated with given country id.
+	 *
+	 * @param integer $countryId
+	 * @return Region[]
+	 */
+	public static function findByCountryId( $countryId ) {
+
+		return self::find()->where( 'countryId=:id', [ ':id' => $countryId ] )->all();
+	}
+
+	/**
 	 * Find and return the region associated with given country id and iso.
 	 *
 	 * @param integer $countryId
 	 * @param string $iso
-	 * @return Province
+	 * @return Region
 	 */
 	public static function findByCountryIdIso( $countryId, $iso ) {
 
 		return self::find()->where( 'countryId=:id AND iso=:iso', [ ':id' => $countryId, ':iso' => $iso ] )->one();
+	}
+
+	/**
+	 * Find and return the regions associated with given country id.
+	 *
+	 * @param integer $countryId
+	 * @return Region[]
+	 */
+	public static function findByCountryIdProvinceId( $countryId, $provinceId ) {
+
+		return self::find()->where( 'countryId=:id AND provinceId=:pid', [ ':id' => $countryId, ':pid' => $provinceId ] )->all();
 	}
 
 	/**

@@ -7,16 +7,13 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-// CMG Imports
-use cmsgears\core\common\base\Migration;
-
 /**
  * The core stats migration insert the default row count for all the tables available in
  * core module. A scheduled console job can be executed to update these stats.
  *
  * @since 1.0.0
  */
-class m160621_016618_core_stats extends Migration {
+class m160621_016618_core_stats extends \cmsgears\core\common\base\Migration {
 
 	// Public Variables
 
@@ -29,10 +26,10 @@ class m160621_016618_core_stats extends Migration {
 	public function init() {
 
 		// Table prefix
-		$this->prefix		= Yii::$app->migration->cmgPrefix;
+		$this->prefix = Yii::$app->migration->cmgPrefix;
 
 		// Get the values via config
-		$this->options		= Yii::$app->migration->getTableOptions();
+		$this->options = Yii::$app->migration->getTableOptions();
 
 		// Default collation
 		if( $this->db->driverName === 'mysql' ) {
@@ -61,9 +58,9 @@ class m160621_016618_core_stats extends Migration {
 
 	private function insertTables() {
 
-		$columns 	= [ 'tableName', 'type', 'count' ];
+		$columns = [ 'tableName', 'type', 'count' ];
 
-		$tableData	= [
+		$tableData = [
 			[ $this->prefix . 'core_locale', 'rows', 0 ],
 			[ $this->prefix . 'core_theme', 'rows', 0 ],
 			[ $this->prefix . 'core_template', 'rows', 0 ],
@@ -76,6 +73,7 @@ class m160621_016618_core_stats extends Migration {
 			[ $this->prefix . 'core_permission', 'rows', 0 ],
 			[ $this->prefix . 'core_role_permission', 'rows', 0 ],
 			[ $this->prefix . 'core_user', 'rows', 0 ],
+			[ $this->prefix . 'core_user_meta', 'rows', 0 ],
 			[ $this->prefix . 'core_site', 'rows', 0 ],
 			[ $this->prefix . 'core_site_meta', 'rows', 0 ],
 			[ $this->prefix . 'core_site_member', 'rows', 0 ],
@@ -87,6 +85,7 @@ class m160621_016618_core_stats extends Migration {
 			[ $this->prefix . 'core_tag', 'rows', 0 ],
 			[ $this->prefix . 'core_category', 'rows', 0 ],
 			[ $this->prefix . 'core_option', 'rows', 0 ],
+			[ $this->prefix . 'core_locale_message', 'rows', 0 ],
 			[ $this->prefix . 'core_model_message', 'rows', 0 ],
 			[ $this->prefix . 'core_model_hierarchy', 'rows', 0 ],
 			[ $this->prefix . 'core_model_comment', 'rows', 0 ],

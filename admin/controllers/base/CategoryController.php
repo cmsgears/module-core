@@ -15,8 +15,6 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\CrudController;
-
 /**
  * CategoryController is base controller for actions specific to category model.
  *
@@ -88,14 +86,17 @@ abstract class CategoryController extends CrudController {
 
 		$model = $this->modelService->getModelObject();
 
-		$model->type	= $this->type;
 		$model->siteId	= Yii::$app->core->siteId;
+		$model->type	= $this->type;
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
 			$this->model = $this->modelService->create( $model, [ 'admin' => true ] );
 
-			return $this->redirect( 'all' );
+			if( $this->model ) {
+
+				return $this->redirect( 'all' );
+			}
 		}
 
 		return $this->render( 'create', [

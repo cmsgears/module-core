@@ -40,7 +40,8 @@ class Update extends \cmsgears\core\common\actions\base\ModelAction {
 
 	public $fileName = 'File';
 
-	public $direct = false;
+	public $admin	= false;
+	public $user	= false;
 
 	// Protected --------------
 
@@ -84,10 +85,11 @@ class Update extends \cmsgears\core\common\actions\base\ModelAction {
 	 */
 	public function run( $cid, $fid ) {
 
-		$model		= $this->model;
-		$gallery	= $this->galleryService->getById( $cid );
+		$model = $this->model;
 
-		if( isset( $gallery ) && ( $this->direct || $gallery->belongsTo( $model ) ) ) {
+		$gallery = $this->galleryService->getById( $cid );
+
+		if( isset( $gallery ) && ( $this->admin || ( isset( $model ) && $gallery->belongsTo( $model ) ) ) ) {
 
 			$modelFile = $this->modelFileService->getFirstByParentModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $fid );
 

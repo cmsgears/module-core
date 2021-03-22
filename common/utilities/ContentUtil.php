@@ -18,8 +18,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\config\CoreProperties;
 
 /**
- * ContentUtil generates the meta data for models. The generated data
- * can be used for SEO purpose.
+ * ContentUtil generates the meta data for models. The generated data can be used
+ * for SEO purpose.
  *
  * @since 1.0.0
  */
@@ -39,29 +39,40 @@ class ContentUtil {
 		if( isset( $model ) ) {
 
 			$coreProperties = CoreProperties::getInstance();
-			$seoData		= $model->getDataMeta( CoreGlobal::DATA_SEO );
+
+			$seoData = $model->getDataPluginMeta( CoreGlobal::DATA_SEO );
+
+			$summary	= isset( $seoData ) && !empty( $seoData->summary ) ? filter_var( $seoData->summary, FILTER_SANITIZE_STRING ) : null;
+			$desc		= isset( $seoData ) && !empty( $seoData->description ) ? filter_var( $seoData->description, FILTER_SANITIZE_STRING ) : $model->description;
+			$keywords	= isset( $seoData ) && !empty( $seoData->keywords ) ? filter_var( $seoData->keywords, FILTER_SANITIZE_STRING ) : null;
+			$robot		= isset( $seoData ) && !empty( $seoData->robot ) ? filter_var( $seoData->robot, FILTER_SANITIZE_STRING ) : null;
 
 			// Model
 			$view->params[ 'model' ]	= $model;
 			$view->params[ 'seo' ]		= $seoData;
 
-			// SEO H1 - Page Summary
-			$view->params[ 'summary' ]	= isset( $seoData ) && !empty( $seoData->summary ) ? $seoData->summary : ( isset( $model->summary ) && !empty( $model->summary ) ? $model->summary : $model->description );
+			// SEO H1 - Summary
+			$view->params[ 'summary' ] = !empty( $summary ) ? $summary : ( isset( $model->summary ) && !empty( $model->summary ) ? $model->summary : $model->description );
 
 			// SEO Meta Tags - Description, Keywords, Robot Text
-			$view->params[ 'desc' ]		= isset( $seoData ) && !empty( $seoData->description ) ? $seoData->description : $model->description;
-			$view->params[ 'keywords' ]	= isset( $seoData ) && !empty( $seoData->keywords ) ? $seoData->keywords : null;
-			$view->params[ 'robot' ]	= isset( $seoData ) && !empty( $seoData->robot ) ? $seoData->robot : null;
+			$view->params[ 'desc' ]		= $desc;
+			$view->params[ 'keywords' ]	= $keywords;
+			$view->params[ 'robot' ]	= $robot;
 
 			// SEO - Page Title
-			$siteTitle		= $coreProperties->getSiteTitle();
-			$seoName		= isset( $seoData ) && !empty( $seoData->name ) ? $seoData->name : $model->name;
+			$siteTitle	= $coreProperties->getSiteTitle();
+			$seoName	= isset( $seoData ) && !empty( $seoData->name ) ? $seoData->name : $model->name;
 
 			$view->title = "$seoName | $siteTitle";
 		}
 	}
 
 	public static function findModel( $config ) {
+
+		if( empty( $config[ 'service' ] ) ) {
+
+			return;
+		}
 
 		$service	= Yii::$app->factory->get( $config[ 'service' ] );
 		$typed		= isset( $config[ 'typed' ] ) ? $config[ 'typed' ] : true;

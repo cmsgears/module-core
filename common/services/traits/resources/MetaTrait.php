@@ -36,17 +36,17 @@ trait MetaTrait {
 
 	// Read - Maps -----
 
-	public function getIdMetaMap( $model ) {
+	public function getMetaIdMetaMap( $model ) {
 
 		return $this->metaService->getIdMetaMapByModelId( $model->id );
 	}
 
-	public function getMetaMapByMetaType( $model, $type ) {
+	public function getMetaNameMetaMapByType( $model, $type ) {
 
 		return $this->metaService->getNameMetaMapByType( $model->id, $type );
 	}
 
-	public function getMetaNameValueMapByMetaType( $model, $type ) {
+	public function getMetaNameValueMapByType( $model, $type ) {
 
 		return $this->metaService->getNameValueMapByType( $model->id, $type );
 	}

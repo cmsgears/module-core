@@ -25,6 +25,13 @@ trait PriorityTrait {
 
 	// Globals ----------------
 
+	public static $priorityList = [
+		IPriority::PRIORITY_DEFAULT,
+		IPriority::PRIORITY_LOW,
+		IPriority::PRIORITY_MEDIUM,
+		IPriority::PRIORITY_HIGH
+	];
+
 	public static $priorityMap = [
 		IPriority::PRIORITY_DEFAULT => 'Undefined',
 		IPriority::PRIORITY_LOW => 'Low',
@@ -39,18 +46,18 @@ trait PriorityTrait {
 		'High' => IPriority::PRIORITY_HIGH
 	];
 
-	public static $filterPriorityMap = [
-		'undefined' => 'Undefined',
-		'low' => 'Low',
-		'medium' => 'Medium',
-		'high' => 'High'
-	];
-
 	public static $urlRevPriorityMap = [
 		'undefined' => IPriority::PRIORITY_DEFAULT,
 		'low' => IPriority::PRIORITY_LOW,
 		'medium' => IPriority::PRIORITY_MEDIUM,
 		'high' => IPriority::PRIORITY_HIGH
+	];
+
+	public static $filterPriorityMap = [
+		'undefined' => 'Undefined',
+		'low' => 'Low',
+		'medium' => 'Medium',
+		'high' => 'High'
 	];
 
 	// Public -----------------

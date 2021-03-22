@@ -84,6 +84,24 @@ trait VisualTrait {
 	/**
 	 * @inheritdoc
 	 */
+	public function getMobileBanner() {
+
+		$fileTable	= File::tableName();
+
+		return $this->hasOne( File::class, [ 'id' => 'mbannerId' ] )->from( "$fileTable as mbanner" );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getMobileBannerUrl() {
+
+		return isset( $this->mobileBanner ) ? $this->mobileBanner->getFileUrl() : null;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function getVideo() {
 
 		$fileTable	= File::tableName();
@@ -97,6 +115,25 @@ trait VisualTrait {
 	public function getVideoUrl() {
 
 		return isset( $this->video ) ? $this->video->getFileUrl() : null;
+	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getMobileVideo() {
+
+		$fileTable	= File::tableName();
+
+		return $this->hasOne( File::class, [ 'id' => 'mvideoId' ] )->from( "$fileTable as mvideo" );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getMobileVideoUrl() {
+
+		return isset( $this->mobileVideo ) ? $this->mobileVideo->getFileUrl() : null;
 	}
 
 	/**

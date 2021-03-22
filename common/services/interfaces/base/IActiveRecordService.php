@@ -71,7 +71,9 @@ interface IActiveRecordService {
 
 	public function getIdNameMap( $config = [] );
 
-	public function getObjectMap( $config = [] );
+	public function getModelMap( $config = [] );
+
+	public function getModelMapByIds( $ids, $config = [] );
 
 	// Read - Others ---
 
@@ -141,6 +143,8 @@ interface IActiveRecordService {
 
 	public function delete( $model, $config = [] );
 
+	public function softDelete( $model, $softDeleteStatus );
+
 	public function deleteMultiple( $models, $config = [] );
 
 	public function deleteById( $id, $config = [] );
@@ -148,6 +152,12 @@ interface IActiveRecordService {
 	// Bulk ---------------
 
 	public function applyBulkByTargetId( $column, $action, $target, $config = [] );
+
+	public function applyBulkByTargetIdUser( $column, $action, $target, $config = [] );
+
+	public function applyBulkByTargetIdUserId( $column, $action, $target, $userId, $config = [] );
+
+	public function applyBulkByTargetIdParent( $column, $action, $target, $parentId, $parentType, $config = [] );
 
 	// Notifications ------
 

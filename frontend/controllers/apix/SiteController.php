@@ -20,8 +20,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\forms\Login;
 use cmsgears\core\common\models\forms\ForgotPassword;
 use cmsgears\core\common\models\forms\Register;
-
-use cmsgears\core\frontend\controllers\base\Controller;
+use cmsgears\core\common\models\resources\UserMeta;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
@@ -30,13 +29,15 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class SiteController extends Controller {
+class SiteController extends \cmsgears\core\frontend\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
 
 	// Globals ----------------
 
 	// Public -----------------
+
+	public $modelComment;
 
 	// Protected --------------
 
@@ -56,9 +57,10 @@ class SiteController extends Controller {
 		$this->crudPermission = CoreGlobal::PERM_USER;
 
 		// Services
-		$this->modelService			= Yii::$app->factory->get( 'siteService' );
-		$this->userService			= Yii::$app->factory->get( 'userService' );
-		$this->siteMemberService	= Yii::$app->factory->get( 'siteMemberService' );
+		$this->modelService = Yii::$app->factory->get( 'siteService' );
+		$this->userService	= Yii::$app->factory->get( 'userService' );
+
+		$this->siteMemberService = Yii::$app->factory->get( 'siteMemberService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -96,6 +98,35 @@ class SiteController extends Controller {
 		];
 	}
 
+	public function afterAction( $action, $result ) {
+
+		$result = parent::afterAction( $action, $result );
+
+		switch( $this->action->id ) {
+
+			case 'submit-feedback': {
+
+				if( isset( $this->modelComment ) ) {
+
+					Yii::$app->coreMailer->sendFeedbackMail( $this->modelComment );
+				}
+
+				break;
+			}
+			case 'submit-testimonial': {
+
+				if( isset( $this->modelComment ) ) {
+
+					Yii::$app->coreMailer->sendTestimonialMail( $this->modelComment );
+				}
+
+				break;
+			}
+		}
+
+		return $result;
+	}
+
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
@@ -120,8 +151,21 @@ class SiteController extends Controller {
 				// Add User to current Site
 				$this->siteMemberService->create( $user );
 
+				// Default Settings
+				$metaService = Yii::$app->factory->get( 'userMetaService' );
+
+				// Default Settings
+				$this->metaService->initByNameType( $user->id, CoreGlobal::META_RECEIVE_EMAIL, CoreGlobal::SETTINGS_NOTIFICATION, UserMeta::VALUE_TYPE_FLAG );
+				$this->metaService->initByNameType( $user->id, CoreGlobal::META_RECEIVE_EMAIL, CoreGlobal::SETTINGS_REMINDER, UserMeta::VALUE_TYPE_FLAG );
+
 				// Send Register Mail
 				Yii::$app->coreMailer->sendRegisterMail( $user );
+
+				// Trigger New User Notification
+				$this->userService->notifyAdmin( $user, [
+					'template' => CoreGlobal::TPL_NOTIFY_USER_NEW,
+					'adminLink' => "core/user/update?id={$user->id}"
+				]);
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
@@ -150,7 +194,7 @@ class SiteController extends Controller {
 		if( $model->load( Yii::$app->request->post(), 'Login' )	 && $model->login() ) {
 
 			$siteId		= Yii::$app->core->getSiteId();
-			$user		= Yii::$app->user->getIdentity();
+			$user		= Yii::$app->core->getUser();
 			$role		= $user->role;
 			$storedLink	= Url::previous( CoreGlobal::REDIRECT_LOGIN );
 
@@ -232,7 +276,7 @@ class SiteController extends Controller {
 
 	public function actionCheckUser( $redirect = null ) {
 
-		$user = Yii::$app->user->getIdentity();
+		$user = Yii::$app->core->getUser();
 
 		if( isset( $user ) ) {
 

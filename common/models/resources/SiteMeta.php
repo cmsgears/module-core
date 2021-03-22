@@ -19,10 +19,12 @@ use cmsgears\core\common\models\entities\Site;
  *
  * @property integer $id
  * @property integer $modelId
+ * @property string $icon
  * @property string $name
  * @property string $label
  * @property string $type
  * @property boolean $active
+ * @property integer $order
  * @property string $valueType
  * @property string $value
  * @property string $data

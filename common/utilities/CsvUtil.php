@@ -1,8 +1,16 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\utilities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreProperties;
@@ -32,23 +40,24 @@ class CsvUtil {
 			return false;
 		}
 
-		$coreProperties		= CoreProperties::getInstance();
+		$coreProperties = CoreProperties::getInstance();
 
-		$sourceDir			= isset( $config[ 'sourceDir' ] ) ? $config[ 'sourceDir' ] : $coreProperties->getUploadsDir();
-		$attributes			= $config[ 'attributes' ];
-		$rowsToSkip			= isset( $config[ 'rowsToSkip' ] ) ? $config[ 'rowsToSkip' ] : 0;
-		$rowsLimit			= isset( $config[ 'rowsLimit' ] ) ? $config[ 'rowsLimit' ] : 0;
+		$sourceDir	= isset( $config[ 'sourceDir' ] ) ? $config[ 'sourceDir' ] : $coreProperties->getUploadsDir();
+		$attributes	= $config[ 'attributes' ];
+		$rowsToSkip	= isset( $config[ 'rowsToSkip' ] ) ? $config[ 'rowsToSkip' ] : 0;
+		$rowsLimit	= isset( $config[ 'rowsLimit' ] ) ? $config[ 'rowsLimit' ] : 0;
 
-		$length				= isset( $config[ 'length' ] ) ? $config[ 'length' ] : 0;
-		$delimiter			= isset( $config[ 'delimiter' ] ) ? $config[ 'delimiter' ] : ",";
-		$enclosure			= isset( $config[ 'enclosure' ] ) ? $config[ 'enclosure' ] : '"';
-		$escape				= isset( $config[ 'escape' ] ) ? $config[ 'escape' ] : "\\";
+		$length		= isset( $config[ 'length' ] ) ? $config[ 'length' ] : 0;
+		$delimiter	= isset( $config[ 'delimiter' ] ) ? $config[ 'delimiter' ] : ",";
+		$enclosure	= isset( $config[ 'enclosure' ] ) ? $config[ 'enclosure' ] : '"';
+		$escape		= isset( $config[ 'escape' ] ) ? $config[ 'escape' ] : "\\";
 
-		$file				= $sourceDir . $fileName;
+		$file = $sourceDir . $fileName;
 
 		// open the csv file
-		$fp			= fopen( $file, "r" );
-		$counter	= 1;
+		$fp = fopen( $file, "r" );
+
+		$counter = 1;
 
 		if( $rowsLimit <= 0 ) {
 
@@ -86,7 +95,7 @@ class CsvUtil {
 
 			if( !empty( $value ) ) {
 
-				$model->$value	= $row[ $key ];
+				$model->$value = $row[ $key ];
 			}
 		}
 
@@ -99,4 +108,5 @@ class CsvUtil {
 			$model->save();
 		}
 	}
+
 }

@@ -9,7 +9,7 @@
 
 namespace cmsgears\core\common\services\mappers;
 
-//Yii Imports
+// Yii Imports
 use Yii;
 use yii\data\Sort;
 
@@ -46,15 +46,13 @@ class ModelAddressService extends \cmsgears\core\common\services\base\ModelMappe
 
 	// Private ----------------
 
-	private $addressService;
-
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
 
 	public function __construct( IAddressService $addressService, $config = [] ) {
 
-		$this->addressService = $addressService;
+		$this->parentService = $addressService;
 
 		parent::__construct( $config );
 	}
@@ -69,16 +67,21 @@ class ModelAddressService extends \cmsgears\core\common\services\base\ModelMappe
 
 	// CMG parent classes --------------------
 
-	// ModelFormService ----------------------
+	// ModelAddressService -------------------
 
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
-		$addressTable = $this->addressService->getModelTable();
+		$addressTable = $this->parentService->getModelTable();
 
 		// Sorting ----------
 
@@ -145,9 +148,7 @@ class ModelAddressService extends \cmsgears\core\common\services\base\ModelMappe
 					'label' => 'Active'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -169,7 +170,7 @@ class ModelAddressService extends \cmsgears\core\common\services\base\ModelMappe
 		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
@@ -185,26 +186,37 @@ class ModelAddressService extends \cmsgears\core\common\services\base\ModelMappe
 
 					break;
 				}
+				case 'disabled': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = false;
+
+					break;
+				}
 			}
 		}
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'title' => "$addressTable.title",
+			'line1' => "$addressTable.line1"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'title' => "address.title",
-				'line1' => "address.line1"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'title' => "$addressTable.title",
 			'line1' => "$addressTable.line1",
 			'order' => "$modelTable.order",
@@ -249,35 +261,55 @@ class ModelAddressService extends \cmsgears\core\common\services\base\ModelMappe
 		return $this->create( $model, $config );
 	}
 
-	public function createWithParent( $parent, $config = [] ) {
-
-		$modelClass	= static::$modelClass;
-
-		$parentId	= $config[ 'parentId' ];
-		$parentType	= $config[ 'parentType' ];
-		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_DEFAULT;
-		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
-
-		$address = $this->addressService->create( $parent );
-
-		$model = new $modelClass;
-
-		$model->modelId		= $address->id;
-		$model->parentId	= $parentId;
-		$model->parentType	= $parentType;
-
-		$model->type	= $type;
-		$model->order	= $order;
-		$model->active	= true;
-
-		return parent::create( $model );
-	}
-
 	// Update -------------
 
 	// Delete -------------
 
+	public function deleteWithParent( $model, $config = [] ) {
+
+		$parent = $this->parentService->getById( $model->modelId );
+
+		$this->parentService->delete( $parent, $config );
+	}
+
 	// Bulk ---------------
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'activate': {
+
+						$model->active = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'disable': {
+
+						$model->active = false;
+
+						$model->update();
+
+						break;
+					}
+					case 'delete': {
+
+						$this->deleteWithParent( $model, $config );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
 
 	// Notifications ------
 
@@ -289,7 +321,7 @@ class ModelAddressService extends \cmsgears\core\common\services\base\ModelMappe
 
 	// CMG parent classes --------------------
 
-	// ModelFormService ----------------------
+	// ModelAddressService -------------------
 
 	// Data Provider ------
 

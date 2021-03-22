@@ -11,8 +11,6 @@ namespace cmsgears\core\common\utilities;
 
 class DataUtil {
 
-	// Static Methods ----------------------------------------------
-
 	public static function generateNumMap( $min, $max, $interval = 1, $text = false ) {
 
 		$map = [];
@@ -45,4 +43,32 @@ class DataUtil {
 
 		return $array;
 	}
+
+	public static function arrayFilterKeys( $array, $keys = [] ) {
+
+		if( empty( $array ) || ( !is_array( $array ) ) ) {
+
+			return $array;
+		}
+
+		if( is_string( $keys ) ) {
+
+			$keys = explode( ',', $keys );
+		}
+
+		if( !is_array( $keys ) ) {
+
+			return $array;
+		}
+
+		$keyChecks = [];
+
+		foreach( $keys as $key ) {
+
+			$keyChecks[ $key ] = true;
+		}
+
+		return array_diff_key( $array, $keyChecks );
+	}
+
 }

@@ -6,9 +6,10 @@ use cmsgears\widgets\popup\Popup;
 use cmsgears\widgets\grid\DataGrid;
 
 $coreProperties = $this->context->getCoreProperties();
-$type			= ucfirst( $this->context->commentType );
-$this->title	= "$title | " . $coreProperties->getSiteTitle();
+$title			= $this->context->title;
+$this->title	= "{$title}s | " . $coreProperties->getSiteTitle();
 $parentUrl 		= $this->context->parentUrl;
+$parentCol 		= $this->context->parentCol;
 $apixBase		= $this->context->apixBase;
 
 $add	= isset( $parent ) ? true : false;
@@ -20,16 +21,26 @@ $themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => $add, 'addUrl' => $create, 'data' => [ 'apixBase' => $apixBase ],
-	'title' => $title, 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'user' => 'User', 'name' => 'Name', 'email' => 'Email', 'content' => 'Content' ],
+	'title' => "{$title}s", 'options' => [ 'class' => 'grid-data grid-data-admin' ],
+	'searchColumns' => [
+		'user' => 'User', 'name' => 'Name', 'email' => 'Email', 'content' => 'Content'
+	],
 	'sortColumns' => [
 		'user' => 'User', 'name' => 'Name', 'email' => 'Email',
-		'status' => 'Status', 'rating' => 'Rating', 'pinned' => 'Pinned', 'featured' => 'Featured',
+		'status' => 'Status', 'rating' => 'Rating',
+		'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular',
+		'anonymous' => 'Anonymous',
 		'cdate' => 'Created At', 'udate' => 'Updated At', 'adate' => 'Approved At'
 	],
 	'filters' => [
-		'status' => [ 'new' => 'New', 'spam' => 'Spam', 'blocked' => 'Blocked', 'approved' => 'Approved', 'trash' => 'Trash' ],
-		'model' => [ 'pinned' => 'Pinned', 'featured' => 'Featured' ]
+		'status' => [
+			'new' => 'New', 'spam' => 'Spam', 'blocked' => 'Blocked',
+			'approved' => 'Approved', 'trash' => 'Trash'
+		],
+		'model' => [
+			'pinned' => 'Pinned', 'featured' => 'Featured',
+			'popular' => 'Popular', 'anonymous' => 'Anonymous'
+		]
 	],
 	'reportColumns' => [
 		'user' => [ 'title' => 'User', 'type' => 'text' ],
@@ -39,16 +50,29 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'status' => [ 'title' => 'Status', 'type' => 'select', 'options' => $statusMap ],
 		'rating' => [ 'title' => 'Rating', 'type' => 'range' ],
 		'pinned' => [ 'title' => 'Pinned', 'type' => 'flag' ],
-		'featured' => [ 'title' => 'Featured', 'type' => 'flag' ]
+		'featured' => [ 'title' => 'Featured', 'type' => 'flag' ],
+		'popular' => [ 'title' => 'Popular', 'type' => 'flag' ],
+		'anonymous' => [ 'title' => 'Anonymous', 'type' => 'flag' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		'status' => [ 'approved' => 'Approve', 'trash' => 'Trash', 'spam' => 'Spam', 'blocked' => 'Block' ],
-		'model' => [ 'pinned' => 'Pinned', 'featured' => 'Featured', 'delete' => 'Delete' ]
+		'status' => [
+			'approve' => 'Approve', 'spam' => 'Spam', 'trash' => 'Trash', 'block' => 'Block'
+		],
+		'model' => [
+			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular',
+			'delete' => 'Delete'
+		]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null , 'x2', 'x2', 'x2', null, null, null, null, 'x3', null ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null , null, 'x2', 'x2', 'x2', 'x2', null, null, null, null, null ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
+		'parent' => [ 'title' => $parentCol, 'generate' => function( $model ) use( $parentUrl ) {
+			if( !empty( $parentUrl ) ) {
+				return "<a href='". Url::toRoute( [ $parentUrl . $model->parentId ], true ). "'>View</a>";
+			}
+		}],
+		'title' => 'Title',
 		'user' => [ 'title' => 'User', 'generate' => function( $model ) {
 			return isset( $model->creator ) ? $model->creator->name : null;
 		}],
@@ -57,12 +81,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'status' => [ 'title' => 'Status', 'generate' => function( $model ) { return $model->getStatusStr(); } ],
 		'pinned' => [ 'title' => 'Pinned', 'generate' => function( $model ) { return $model->getPinnedStr(); } ],
 		'featured' => [ 'title' => 'Featured', 'generate' => function( $model ) { return $model->getFeaturedStr(); } ],
-		'parent' => [ 'title' => 'Parent', 'generate' => function( $model ) use( $parentUrl ) {
-			if( !empty( $parentUrl ) ) {
-				return "<a href='". Url::toRoute( [ $parentUrl . $model->parentId ], true ). "'>View</a>";
-			}
-		}],
-		'message' => [ 'title' => 'Message', 'generate' => function( $model ) { return $model->content; } ],
+		'popular' => [ 'title' => 'Popular', 'generate' => function( $model ) { return $model->getPopularStr(); } ],
 		'actions' => 'Actions'
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
@@ -75,11 +94,11 @@ $themeTemplates		= '@themes/admin/views/templates';
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
-	'data' => [ 'model' => $type, 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
-]) ?>
+	'data' => [ 'model' => $title, 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
+])?>
 
 <?= Popup::widget([
-	'title' => "Delete $type", 'size' => 'medium',
+	'title' => "Delete $title", 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
-	'data' => [ 'model' => $type, 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
-]) ?>
+	'data' => [ 'model' => $title, 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
+])?>

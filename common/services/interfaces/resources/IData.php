@@ -24,9 +24,17 @@ interface IData {
 
 	public function getDataMeta( $model, $key, $assoc = false );
 
+	public function getDataKeyMeta( $model, $key, $assoc = false );
+
+	public function getDataAttributeMeta( $model, $key, $assoc = false );
+
 	public function getDataConfigMeta( $model, $key, $assoc = false );
 
 	public function getDataSettingMeta( $model, $key, $assoc = false );
+
+	public function getDataPluginMeta( $model, $key, $assoc = false );
+
+	public function getDataCustomMeta( $model, $type, $key, $assoc = false );
 
 	// Read - Lists ----
 
@@ -44,9 +52,17 @@ interface IData {
 
 	public function updateDataMetaObj( $model, $meta );
 
+	public function updateDataKeyObj( $model, $meta );
+
+	public function updateDataAttributeObj( $model, $meta );
+
 	public function updateDataConfigObj( $model, $meta );
 
 	public function updateDataSettingObj( $model, $meta );
+
+	public function updateDataPluginObj( $model, $meta );
+
+	public function updateDataCustomObj( $model, $type, $meta );
 
 	// Delete -------------
 
@@ -54,9 +70,17 @@ interface IData {
 
 	public function removeDataMetaObj( $model, $meta );
 
+	public function removeDataKeyObj( $model, $meta );
+
+	public function removeDataAttributeObj( $model, $meta );
+
 	public function removeDataConfigObj( $model, $meta );
 
 	public function removeDataSettingObj( $model, $meta );
+
+	public function removeDataPluginObj( $model, $meta );
+
+	public function removeDataCustomObj( $model, $key, $meta );
 
 	// Bulk ---------------
 

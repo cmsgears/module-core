@@ -1,11 +1,12 @@
 <?php
 /**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
  * @link https://www.cmsgears.org/
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
- * @license https://www.cmsgears.org/license/
- * @package module
- * @subpackage core
  */
+
 namespace cmsgears\core\common\components;
 
 // Yii Imports
@@ -17,8 +18,6 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\validators\CoreValidator;
 
 use cmsgears\core\common\services\entities\UserService;
-
-use cmsgears\core\common\base\Config;
 
 /**
  * The core component for CMSGears based sites. It must be initialised for app bootstrap
@@ -32,7 +31,7 @@ use cmsgears\core\common\base\Config;
  *
  * @since 1.0.0
  */
-class Core extends Config {
+class Core extends \cmsgears\core\common\base\Config {
 
 	// Variables ---------------------------------------------------
 
@@ -43,47 +42,52 @@ class Core extends Config {
 	/**
 	 * @var int The main site id to load configurations in case sub sites are not configured.
 	 */
-	public $mainSiteId			= 1;
+	public $mainSiteId = 1;
 
 	/**
 	 * @var string The main site slug to load configurations in case sub sites are not configured.
 	 */
-	public $mainSiteSlug		= 'main';
+	public $mainSiteSlug = 'main';
 
 	/**
 	 * @var string string Used to debug multi-site.
 	 */
-	public $defaultSiteSlug		= 'main';
+	public $defaultSiteSlug = 'main';
 
 	/**
 	 * @var int Identifies the currently active site based on the url request.
 	 */
-	public $siteId				= 1;
+	public $siteId = 1;
 
 	/**
 	 * @var string Identifies the currently active site based on the url request.
 	 */
-	public $siteSlug			= 'main';
+	public $siteSlug = 'main';
 
 	/**
 	 * @var \cmsgears\core\common\models\entities\Site The currently active site based on the url request.
 	 */
-	public $site				= null;
+	public $site = null;
 
 	/**
 	 * @var boolean Identifies whether all the site config need to be loaded at once or by type i.e. module or plugin.
 	 */
-	public $siteConfigAll 		= false;
+	public $siteConfigAll = false;
 
 	/**
 	 * @var boolean Check whether the web app is multi-site.
 	 */
-	public $multiSite			= false;
+	public $multiSite = false;
+
+	/**
+	 * @var boolean Check whether the user can join a child site without admin approval.
+	 */
+	public $autoSiteMember = false;
 
 	/**
 	 * @var boolean Check whether the web app is sub domain or sub directory based in case $multiSite is set to true.
 	 */
-	public $subDirectory		= true;
+	public $subDirectory = true;
 
 	public $testHosts = [ 'localhost' ];
 
@@ -95,60 +99,64 @@ class Core extends Config {
 
 	// The three type of apps.
 
-	public $appAdmin			= CoreGlobal::APP_ADMIN;
-	public $appFrontend			= CoreGlobal::APP_FRONTEND;
-	public $appConsole			= CoreGlobal::APP_CONSOLE;
+	public $appAdmin	= CoreGlobal::APP_ADMIN;
+	public $appFrontend	= CoreGlobal::APP_FRONTEND;
+	public $appConsole	= CoreGlobal::APP_CONSOLE;
+	public $appApi		= CoreGlobal::APP_API;
+
+	// Apps to get static resources from CDN
+	public $cdnApps	= [ CoreGlobal::APP_FRONTEND, CoreGlobal::APP_API ];
 
 	/**
 	 * It can be used in case user approval from admin is required.
 	 */
-	public $userApproval		= false;
+	public $userApproval = false;
 
 	/**
 	 * It can be used to test otp validity in milliseconds.
 	 */
-	public $otpValidity			= 600000; // 10 minues by default
+	public $otpValidity = 600000; // 10 minues by default
 
 	/**
 	 * It can be used to test token validity in milliseconds.
 	 */
-	public $tokenValidity		= 600000; // 10 minues by default
+	public $tokenValidity = 600000; // 10 minues by default
 
 	/**
 	 * @var default redirect path to be used for post login. It will be used by login action of
 	 * Site Controller to redirect users after successful login in case user role home url is not set.
 	 */
-	public $loginRedirectPage		= '/';
+	public $loginRedirectPage = '/';
 
 	/**
 	 * @var Redirect path to be used when user is newly registered and not active. $userApproval
 	 * must be true for it.
 	 */
-	public $confirmRedirectPage		= '/';
+	public $confirmRedirectPage = '/';
 
 	/**
 	 * @var Redirect path to be used for post logout.
 	 */
-	public $logoutRedirectPage		= '/login';
+	public $logoutRedirectPage = '/login';
 
 	/**
 	 * @var The indicator whether CMG RBAC has to be used for the project. All the admin sites must
 	 * set this to true. Though it's optional for front end sites. The front end sites can use either
 	 * CMG RBAC or Yii's RBAC system or no RBAC system based on project needs.
 	 */
-	public $rbac				= true;
+	public $rbac = true;
 
 	/**
 	 * @var The default filter class available for CMG RBAC system. A different filter can be used
 	 * based on project needs.
 	 */
-	public $rbacFilterClass		= 'cmsgears\core\common\\filters\RbacFilter';
+	public $rbacFilterClass = 'cmsgears\core\common\\filters\RbacFilter';
 
 	/**
 	 * @var It store the list of filters available for the Rbac Filter and works only when rbac is enabled.
 	 * A Controller can define filters to be performed for each action while checking the permission.
 	 */
-	public $rbacFilters			= [];
+	public $rbacFilters = [];
 
 	/**
 	 * It can be used to check whether APIS are enabled for the application. APIS are provided
@@ -161,7 +169,7 @@ class Core extends Config {
 	 *
 	 * @var boolean
 	 */
-	public $apis				= false;
+	public $apis = false;
 
 	/**
 	 * APIS validity in days will be used to check whether the date when access token is generated is
@@ -169,7 +177,7 @@ class Core extends Config {
 	 *
 	 * @var int
 	 */
-	public $apisValidity		= 7;
+	public $apisValidity = 7;
 
 	/**
 	 * @var The WYSIWYG editor config to edit the html content.
@@ -179,9 +187,11 @@ class Core extends Config {
 	/**
 	 * @var It can be used by model classes to determine the fields for trim filter.
 	 */
-	public $trimFieldValue		= true;
+	public $trimFieldValue = true;
 
 	// Different Text Sizes - These can be overriden using config if required
+	public $microText			= CoreGlobal::TEXT_MICRO;
+	public $miniText			= CoreGlobal::TEXT_MINI;
 	public $tinyText			= CoreGlobal::TEXT_TINY;
 	public $smallText			= CoreGlobal::TEXT_SMALL;
 	public $mediumText			= CoreGlobal::TEXT_MEDIUM;
@@ -195,24 +205,24 @@ class Core extends Config {
 	 * @var Switch for notification feature. If it's set to true, either Notify Module
 	 * must be installed or eventManager component must be configured.
 	 */
-	public $notifications		= false;
+	public $notifications = false;
 
 	/**
 	 * @var Switch for activities feature. If it's set to true, either Notify Module must
 	 * be installed or eventManager component must be configured.
 	 */
-	public $activities			= false;
+	public $activities = false;
 
 	/**
 	 * @var Update selective allows services to update selected columns.
 	 */
-	public $updateSelective		= true;
+	public $updateSelective = true;
 
 	/**
 	 *
 	 * @var boolean Check whether soft delete is enabled.
 	 */
-	public $softDelete			= true;
+	public $softDelete = true;
 
 	// Locations
 	public $provinceLabel	= 'Province';
@@ -348,6 +358,11 @@ class Core extends Config {
 		return $this->multiSite;
 	}
 
+	public function isAutoSiteMember() {
+
+		return $this->autoSiteMember;
+	}
+
 	public function isGuest() {
 
 		return Yii::$app->user->isGuest();
@@ -372,6 +387,11 @@ class Core extends Config {
 		return $this->subDirectory;
 	}
 
+	public function getSiteRootUrl() {
+
+		return $this->isMultiSite() && $this->isSubDirectory() && $this->site->slug != 'main' ? '/' . $this->site->slug : '';
+	}
+
 	public function getTestHosts() {
 
 		return $this->testHosts;
@@ -390,6 +410,16 @@ class Core extends Config {
 	public function getAppConsole() {
 
 		return $this->appConsole;
+	}
+
+	public function getAppApi() {
+
+		return $this->appApi;
+	}
+
+	public function getCdnApps() {
+
+		return $this->cdnApps;
 	}
 
 	public function isUserApproval() {
@@ -490,6 +520,21 @@ class Core extends Config {
 		return $this->trimFieldValue;
 	}
 
+	public function getMicroText() {
+
+		return $this->microText;
+	}
+
+	public function getMiniText() {
+
+		return $this->miniText;
+	}
+
+	public function getTinyText() {
+
+		return $this->tinyText;
+	}
+
 	public function getSmallText() {
 
 		return $this->smallText;
@@ -552,67 +597,6 @@ class Core extends Config {
 	}
 
 	// Cookies & Session
-
-	public function setAppUser( $user ) {
-
-		$cookieName = '_app-user';
-
-		$guestUser[ 'user' ] = [ 'id' => $user->id, 'firstname' => $user->firstName, 'lastname' => $user->lastName, 'email' => $user->email ];
-
-		if( isset( $_COOKIE[ $cookieName ] ) ) {
-
-			$data = unserialize( $_COOKIE[ $cookieName ] );
-
-			if( $data[ 'user' ][ 'id' ] != $user->id ) {
-
-				return setcookie( $cookieName, serialize( $guestUser ), time() + ( 10 * 365 * 24 * 60 * 60 ), "/", null );
-			}
-		}
-		else {
-
-			return setcookie( $cookieName, serialize( $guestUser ), time() + ( 10 * 365 * 24 * 60 * 60 ), "/", null );
-		}
-	}
-
-	// Call setAppUser at least once for new user before calling this method.
-	public function getAppUser() {
-
-		$cookieName = '_app-user';
-		$appUser	= null;
-		$user		= Yii::$app->user->identity;
-
-		if( $user != null ) {
-
-			$appUser = $user;
-		}
-		else if( isset( $_COOKIE[ $cookieName ] ) ) {
-
-			$data = unserialize( $_COOKIE[ $cookieName ] );
-
-			if( isset( $data[ 'user' ] ) ) {
-
-				//$appUser = (object) $data[ 'user' ]['user'];
-
-				$appUser = UserService::findById( $data[ 'user' ][ 'id' ] );
-			}
-		}
-
-		return $appUser;
-	}
-
-	public function resetAppUser() {
-
-		$cookieName = '_app-user';
-
-		if( isset( $_COOKIE[ $cookieName ] ) ) {
-
-			$data = unserialize( $_COOKIE[ $cookieName ] );
-
-			$data[ 'user' ] = null;
-
-			return setcookie( $cookieName, serialize( $data ), time() + ( 10 * 365 * 24 * 60 * 60 ), "/", null );
-		}
-	}
 
 	/*
 	 * @return $session - Open a session if does not exist in application.

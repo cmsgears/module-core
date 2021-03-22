@@ -10,9 +10,13 @@
 namespace cmsgears\core\common\services\interfaces\resources;
 
 // CMG Imports
+use cmsgears\core\common\services\interfaces\base\IApproval;
+use cmsgears\core\common\services\interfaces\base\IMultiSite;
 use cmsgears\core\common\services\interfaces\base\INameType;
 use cmsgears\core\common\services\interfaces\base\IResourceService;
 use cmsgears\core\common\services\interfaces\base\ISlugType;
+use cmsgears\core\common\services\interfaces\base\IVisibility;
+use cmsgears\core\common\services\interfaces\cache\IGridCacheable;
 use cmsgears\core\common\services\interfaces\resources\IData;
 
 /**
@@ -20,7 +24,8 @@ use cmsgears\core\common\services\interfaces\resources\IData;
  *
  * @since 1.0.0
  */
-interface IFormService extends IResourceService, IData, INameType, ISlugType {
+interface IFormService extends IResourceService, IApproval, IData, IGridCacheable,
+	IMultiSite, INameType, ISlugType, IVisibility {
 
 	// Data Provider ------
 

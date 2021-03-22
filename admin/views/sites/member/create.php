@@ -34,7 +34,7 @@ $returnUrl		= $this->context->returnUrl;
 						</div>
 						<div class="filler-height filler-height-large"></div>
 						<div class="site-member <?= empty( $model->name ) ? 'hidden-easy' : null ?>">
-							<div class="row">
+							<div class="row max-cols-100">
 								<div class="col col2">
 									<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] )->label( 'User' ) ?>
 								</div>
@@ -44,12 +44,15 @@ $returnUrl		= $this->context->returnUrl;
 									<?= $form->field( $model, 'roleId' )->dropDownList( $roleMap, [ 'class' => 'cmt-select' ] ) ?>
 								</div>
 							</div>
-							<div class="row">
-								<div class="col col2">
-									<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'pinned', null, 'cmti cmti-checkbox' ) ?>
+							<div class="row max-cols-100">
+								<div class="col col3">
+									<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'pinned' ) ?>
 								</div>
-								<div class="col col2">
-									<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured', null, 'cmti cmti-checkbox' ) ?>
+								<div class="col col3">
+									<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured' ) ?>
+								</div>
+								<div class="col col3">
+									<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'popular' ) ?>
 								</div>
 							</div>
 							<div class="filler-height"></div>

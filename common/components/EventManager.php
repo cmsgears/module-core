@@ -1,15 +1,13 @@
 <?php
 /**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
  * @link https://www.cmsgears.org/
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
- * @license https://www.cmsgears.org/license/
- * @package module
- * @subpackage core
  */
-namespace cmsgears\core\common\components;
 
-// CMG Imports
-use cmsgears\core\common\base\Component;
+namespace cmsgears\core\common\components;
 
 /**
  * The Event Manager component provides messages and counts for notifications, reminders
@@ -24,7 +22,7 @@ use cmsgears\core\common\base\Component;
  *
  * @since 1.0.0
  */
-class EventManager extends Component {
+class EventManager extends \cmsgears\core\common\base\Component {
 
 	// TODO: Add mechanism to cache stats results for specified duration
 
@@ -60,13 +58,13 @@ class EventManager extends Component {
 	 *
 	 * @return array having recent notifications, reminders, activities and counts.
 	 */
-	public function getAdminStats() {
+	public function getAdminStats( $type = null ) {
 
 		return [
 			// Messages
-			'notifications' => [], 'reminders' => [], 'activities' => [],
+			'notifications' => [], 'reminders' => [], 'activities' => [], 'announcements' => [],
 			// Counters - New
-			'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0
+			'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0, 'announcementCount' => 0
 		];
 	}
 
@@ -76,13 +74,13 @@ class EventManager extends Component {
 	 *
 	 * @return array having recent notifications, reminders, activities and counts.
 	 */
-	public function getUserStats() {
+	public function getUserStats( $type = null ) {
 
 		return [
 			// Messages
-			'notifications' => [], 'reminders' => [], 'activities' => [],
+			'notifications' => [], 'reminders' => [], 'activities' => [], 'announcements' => [],
 			// Counters - New
-			'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0
+			'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0, 'announcementCount' => 0
 		];
 	}
 
@@ -92,14 +90,19 @@ class EventManager extends Component {
 	 *
 	 * @return array having recent notifications, reminders, activities and counts.
 	 */
-	public function getModelStats( $parentId, $parentType ) {
+	public function getModelStats( $parentId, $parentType, $type = null ) {
 
 		return [
 			// Messages
-			'notifications' => [], 'reminders' => [], 'activities' => [],
+			'notifications' => [], 'reminders' => [], 'activities' => [], 'announcements' => [],
 			// Counters - New
-			'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0
+			'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0, 'announcementCount' => 0
 		];
+	}
+
+	public function getMostRecentAnnouncement() {
+
+		return null;
 	}
 
 	// Notification Trigger ---

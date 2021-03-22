@@ -11,7 +11,6 @@ namespace cmsgears\core\admin\components;
 
 // Yii Imports
 use Yii;
-use yii\base\Component;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -19,7 +18,7 @@ use yii\helpers\ArrayHelper;
  * the modules and plugins specified in application configuration. This sidebar is
  * specific only for Admin Application.
  */
-class Sidebar extends Component {
+class Sidebar extends \yii\base\Component {
 
 	// Variables ---------------------------------------------------
 
@@ -52,8 +51,9 @@ class Sidebar extends Component {
 
 		// TODO: Use caching
 
-		$sidebarHtml	= "";
-		$modules		= $this->modules;
+		$sidebarHtml = "";
+
+		$modules = $this->modules;
 
 		// Collect sidebar html from all the modules
 		foreach( $modules as $module ) {

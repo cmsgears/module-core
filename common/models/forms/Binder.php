@@ -12,9 +12,6 @@ namespace cmsgears\core\common\models\forms;
 // Yii Imports
 use yii\helpers\ArrayHelper;
 
-// CMG Imports
-use cmsgears\core\common\models\forms\BaseForm;
-
 /**
  * It's useful to bind multiple models to a model using checkbox group.
  *
@@ -95,7 +92,7 @@ class Binder extends BaseForm {
 	/**
 	 * Merge the given data either in csv format or as array.
 	 *
-	 * @param array|string $merge
+	 * @param array|string $data
 	 * @param boolean $csv
 	 */
 	public function mergeWithBinded( $data, $csv = false ) {
@@ -117,8 +114,9 @@ class Binder extends BaseForm {
 	 */
 	public function getValueMap() {
 
-		$count	= count( $this->binded );
-		$map	= [];
+		$count = count( $this->binded );
+
+		$map = [];
 
 		for( $i = 0; $i < $count; $i++ ) {
 
@@ -144,4 +142,5 @@ class Binder extends BaseForm {
 			}
 		}
 	}
+
 }

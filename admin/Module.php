@@ -15,14 +15,12 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Module as BaseModule;
-
 /**
  * The Admin Module of Core Module.
  *
  * @since 1.0.0
  */
-class Module extends BaseModule {
+class Module extends \cmsgears\core\common\base\Module {
 
 	// Variables ---------------------------------------------------
 
@@ -32,7 +30,14 @@ class Module extends BaseModule {
 
 	public $controllerNamespace = 'cmsgears\core\admin\controllers';
 
-	public $config = [ CoreGlobal::CONFIG_CORE, CoreGlobal::CONFIG_CACHE, CoreGlobal::CONFIG_MAIL, CoreGlobal::CONFIG_COMMENT, CoreGlobal::CONFIG_ADMIN, CoreGlobal::CONFIG_FRONTEND ];
+	public $config = [
+		CoreGlobal::CONFIG_CORE,
+		CoreGlobal::CONFIG_CACHE,
+		CoreGlobal::CONFIG_MAIL,
+		CoreGlobal::CONFIG_COMMENT,
+		CoreGlobal::CONFIG_ADMIN,
+		CoreGlobal::CONFIG_FRONTEND
+	];
 
 	// Protected --------------
 
@@ -63,9 +68,7 @@ class Module extends BaseModule {
 
 	public function getSidebarHtml() {
 
-		$path	= Yii::getAlias( '@cmsgears' ) . '/module-core/admin/views/sidebar.php';
-
-		return $path;
+		return Yii::getAlias( '@cmsgears' ) . '/module-core/admin/views/sidebar.php';
 	}
 
 }

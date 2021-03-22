@@ -54,6 +54,22 @@ interface IFeatured {
 	 */
 	public function getFeaturedByType( $type, $config = [] );
 
+	/**
+	 * Return the popular models based on multi-site configuration.
+	 *
+	 * @param array $config
+	 * @return array
+	 */
+	public function getPopular( $config = [] );
+
+	/**
+	 * Return the popular models based on multi-site configuration. The model must have type attribute.
+	 *
+	 * @param array $config
+	 * @return array
+	 */
+	public function getPopularByType( $type, $config = [] );
+
 	// Read - Lists ----
 
 	// Read - Maps -----

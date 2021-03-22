@@ -18,8 +18,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\interfaces\base\IMeta;
 
-use cmsgears\core\common\actions\base\ModelAction;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -27,7 +25,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class Create extends ModelAction {
+class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -43,6 +41,8 @@ class Create extends ModelAction {
 
 	// Public -----------------
 
+	public $purifyContent = true;
+
 	// Protected --------------
 
 	protected $metaService;
@@ -57,7 +57,7 @@ class Create extends ModelAction {
 
 		parent::init();
 
-		$this->metaService	= $this->controller->metaService;
+		$this->metaService = $this->controller->metaService;
 	}
 
 	// Instance methods --------------------------------------------
@@ -81,7 +81,7 @@ class Create extends ModelAction {
 
 		if( isset( $parent ) ) {
 
-			$metaClass	= $this->metaService->getModelClass();
+			$metaClass = $this->metaService->getModelClass();
 
 			$meta = new $metaClass;
 
@@ -95,21 +95,18 @@ class Create extends ModelAction {
 				$meta->parentType	= $this->modelService->getParentType();
 			}
 
-			if( empty( $meta->type ) ) {
+			$meta->active	= $meta->active ?? true;
+			$meta->type		= $meta->type ?? CoreGlobal::TYPE_DEFAULT;
 
-				$meta->type = CoreGlobal::TYPE_DEFAULT;
-			}
-
-			if( empty( $meta->valueType ) ) {
-
-				$meta->valueType = IMeta::VALUE_TYPE_TEXT;
-			}
+			$meta->valueType = $meta->valueType ?? IMeta::VALUE_TYPE_TEXT;
 
 			if( $meta->load( Yii::$app->request->post(), $meta->getClassName() ) && $meta->validate() ) {
 
 				$this->metaService->create( $meta );
 
-				$data = [ 'id' => $meta->id, 'name' => $meta->name, 'value' => HtmlPurifier::process( $meta->value ) ];
+				$value = $this->purifyContent ? HtmlPurifier::process( $meta->value ) : $meta->value;
+
+				$data = [ 'id' => $meta->id, 'name' => $meta->name, 'value' => $value ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

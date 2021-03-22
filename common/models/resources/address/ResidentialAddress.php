@@ -9,15 +9,12 @@
 
 namespace cmsgears\core\common\models\resources\address;
 
-// CMG Imports
-use cmsgears\core\common\models\resources\Address;
-
 /**
  * The residential address model.
  *
  * @since 1.0.0
  */
-class ResidentialAddress extends Address {
+class ResidentialAddress extends \cmsgears\core\common\models\resources\Address {
 
 	// Variables ---------------------------------------------------
 
@@ -33,7 +30,7 @@ class ResidentialAddress extends Address {
 
 	// Public -----------------
 
-	public $type	= self::TYPE_RESIDENTIAL;
+	public $type = self::TYPE_RESIDENTIAL;
 
 	// Protected --------------
 

@@ -62,6 +62,11 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
@@ -112,9 +117,7 @@ abstract class MetaService extends ResourceService implements IMetaService {
 					'label' => 'Value Type'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -152,7 +155,7 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 					break;
 				}
-				case 'inactive': {
+				case 'disabled': {
 
 					$config[ 'conditions' ][ "$modelTable.active" ] = false;
 
@@ -163,24 +166,30 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'label' => "$modelTable.label",
+			'value' => "$modelTable.value"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'label' => "$modelTable.label",
-				'value' => "$modelTable.value"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'name' => "$modelTable.name",
 			'label' => "$modelTable.label",
+			'active' => "$modelTable.active",
 			'type' => "$modelTable.type",
 			'vtype' => "$modelTable.valueType",
 			'value' => "$modelTable.value"
@@ -222,16 +231,17 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 	public function initByNameType( $modelId, $name, $type, $valueType = Meta::VALUE_TYPE_TEXT, $label = null, $icon = null ) {
 
-		$meta = $this->getByNameType( $modelId, $name, $type );
+		$modelClass = static::$modelClass;
+
+		$meta = $modelClass::findByNameType( $modelId, $name, $type );
 
 		if( !isset( $meta ) ) {
-
-			$modelClass = static::$modelClass;
 
 			// Initialise
 			$meta = new $modelClass();
 
-			$meta->modelId	= $modelId;
+			$meta->modelId = $modelId;
+
 			$meta->name		= $name;
 			$meta->label	= !empty( $label ) ? $label : $name;
 			$meta->icon		= !empty( $icon ) ? $icon : null;
@@ -244,7 +254,9 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 				case Meta::VALUE_TYPE_FLAG: {
 
-					$meta->value = 0;
+					$meta->value = 1; // The flag should be turned on by default
+
+					break;
 				}
 				default: {
 
@@ -265,14 +277,14 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 	// Read - Maps -----
 
-	public function getNameValueMapByModelId( $modelId ) {
+	public function getNameValueMapByModelId( $modelId, $config = [] ) {
 
 		$config[ 'conditions' ][ 'modelId' ] = $modelId;
 
 		return $this->getNameValueMap( $config );
 	}
 
-	public function getNameValueMapByType( $modelId, $type ) {
+	public function getNameValueMapByType( $modelId, $type, $config = [] ) {
 
 		$config[ 'conditions' ][ 'modelId' ]	= $modelId;
 		$config[ 'conditions' ][ 'type' ]		= $type;
@@ -280,29 +292,29 @@ abstract class MetaService extends ResourceService implements IMetaService {
 		return $this->getNameValueMap( $config );
 	}
 
-	public function getIdMetaMapByModelId( $modelId ) {
+	public function getIdMetaMapByModelId( $modelId, $config = [] ) {
 
 		$config[ 'conditions' ][ 'modelId' ] = $modelId;
 
-		return $this->getObjectMap( $config );
+		return $this->getModelMap( $config );
 	}
 
-	public function getIdMetaMapByType( $modelId, $type ) {
+	public function getIdMetaMapByType( $modelId, $type, $config = [] ) {
 
 		$config[ 'conditions' ][ 'modelId' ]	= $modelId;
 		$config[ 'conditions' ][ 'type' ]		= $type;
 
-		return $this->getObjectMap( $config );
+		return $this->getModelMap( $config );
 	}
 
-	public function getNameMetaMapByType( $modelId, $type ) {
+	public function getNameMetaMapByType( $modelId, $type, $config = [] ) {
 
 		$config[ 'key' ] = 'name';
 
 		$config[ 'conditions' ][ 'modelId' ]	= $modelId;
 		$config[ 'conditions' ][ 'type' ]		= $type;
 
-		return $this->getObjectMap( $config );
+		return $this->getModelMap( $config );
 	}
 
 	// Read - Others ---
@@ -331,6 +343,42 @@ abstract class MetaService extends ResourceService implements IMetaService {
 		return parent::create( $model );
 	}
 
+	// Update -------------
+
+	public function update( $model, $config = [] ) {
+
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'icon', 'name', 'label', 'active', 'order', 'valueType', 'value'
+		];
+
+		if( $admin ) {
+
+			$attributes	= ArrayHelper::merge( $attributes, [ 'type' ] );
+		}
+
+		if( !isset( $config[ 'attributes' ] ) ) {
+
+			$config[ 'attributes' ]	= $attributes;
+		}
+
+		return parent::update( $model, $config );
+	}
+
+	public function createOrUpdate( $model, $config = [] ) {
+
+		$existingModel = $this->getByNameType( $model->parentId, $model->name, $model->type );
+
+		// Create if it does not exist
+		if( !isset( $existingModel ) ) {
+
+			return $this->create( $model );
+		}
+
+		return $this->update( $model, $config );
+	}
+
 	/**
 	 * It creates or update the $metas for given $parent.
 	 * It also disable existing metas before updating in case type is provided.
@@ -356,12 +404,17 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 				$model = new $modelClass();
 
+				if( isset( $meta[ 'id' ] ) ) {
+
+					$model = $modelClass::findByNameType( $parent->id, $meta[ 'name' ], $meta[ 'type' ] );
+				}
+
 				$model->name	= $meta[ 'name' ];
 				$model->label	= empty( $meta[ 'label' ] ) ? $meta[ 'name' ] : $meta[ 'label' ];
 				$model->value	= $meta[ 'value' ];
 				$model->type	= $meta[ 'type' ];
 				$model->active	= true;
-				$model->icon	= !empty( $meta[ 'icon' ] ) ? $meta[ 'icon' ] : null;
+				$model->icon	= !empty( $meta[ 'icon' ] ) ? $meta[ 'icon' ] : $model->icon;
 
 				$model->modelId	= $parent->id;
 
@@ -369,10 +422,7 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 				if( isset( $meta[ 'id' ] ) ) {
 
-					$model->id		= $meta[ 'id' ];
-					$model->icon	= !empty( $meta[ 'icon' ] ) ? $meta[ 'icon' ] : $model->icon;
-
-					parent::update( $model, [ 'attributes' => [ 'icon', 'name', 'value', 'active', 'type', 'valueType' ] ] );
+					parent::update( $model, [ 'attributes' => [ 'icon', 'name', 'value', 'label', 'active', 'type', 'valueType' ] ] );
 				}
 				else {
 
@@ -380,29 +430,6 @@ abstract class MetaService extends ResourceService implements IMetaService {
 				}
 			}
 		}
-	}
-
-	// Update -------------
-
-	public function update( $model, $config = [] ) {
-
-		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
-
-		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'icon', 'name', 'label', 'active', 'order', 'valueType', 'value'
-		];
-
-		if( $admin ) {
-
-			$attributes	= ArrayHelper::merge( $attributes, [ 'type' ] );
-		}
-
-		if( !isset( $config[ 'attributes' ] ) ) {
-
-			$config[ 'attributes' ]	= $attributes;
-		}
-
-		return parent::update( $model, $config );
 	}
 
 	/*
@@ -478,7 +505,21 @@ abstract class MetaService extends ResourceService implements IMetaService {
 		}
 	}
 
-	public function toggle( $model ) {
+	public function toggleActive( $model ) {
+
+		if( $model->active ) {
+
+			$model->active = false;
+		}
+		else {
+
+			$model->active = true;
+		}
+
+		$model->update();
+	}
+
+	public function toggleValue( $model ) {
 
 		if( $model->value ) {
 
@@ -523,7 +564,7 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 				switch( $action ) {
 
-					case 'active': {
+					case 'activate': {
 
 						$model->active = true;
 
@@ -531,7 +572,7 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 						break;
 					}
-					case 'inactive': {
+					case 'disable': {
 
 						$model->active = false;
 

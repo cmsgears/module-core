@@ -17,12 +17,11 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\Theme;
-
 use cmsgears\core\common\services\interfaces\entities\IThemeService;
 
-use cmsgears\core\common\services\traits\base\NameTrait;
-use cmsgears\core\common\services\traits\base\SlugTrait;
+use cmsgears\core\common\services\traits\base\NameTypeTrait;
+use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
@@ -42,6 +41,8 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 
 	public static $modelClass = '\cmsgears\core\common\models\entities\Theme';
 
+	public static $typed = true;
+
 	public static $parentType = CoreGlobal::TYPE_THEME;
 
 	// Protected --------------
@@ -57,8 +58,9 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 	// Traits ------------------------------------------------------
 
 	use DataTrait;
-	use NameTrait;
-	use SlugTrait;
+	use GridCacheTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -77,6 +79,11 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -146,9 +153,7 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 					'label' => 'Updated At'
 				]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -170,7 +175,7 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
@@ -191,23 +196,28 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'content' => "$modelTable.content"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description",
-				'content' => "$modelTable.content"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'name' => "$modelTable.name",
 			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
@@ -228,20 +238,6 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 	// Read - Lists ----
 
 	// Read - Maps -----
-
-	public function getIdNameMap( $options = [] ) {
-
-		$map = parent::getIdNameMap( $options );
-
-		if( isset( $options[ 'default' ] ) && $options[ 'default' ] ) {
-
-			unset( $options[ 'default' ] );
-
-			$map = ArrayHelper::merge( [ '0' => 'Choose Theme' ], $map );
-		}
-
-		return $map;
-	}
 
 	// Read - Others ---
 
@@ -264,14 +260,25 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'slug', 'title', 'description', 'default', 'basePath', 'renderer' ];
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
-		// Uncheck default for all other themes
-		if( $model->default ) {
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'slug', 'title', 'description', 'basePath', 'renderer'
+		];
 
-			$modelClass	= static::$modelClass;
+		if( $admin ) {
 
-			$modelClass::updateAll( [ 'default' => false ], '`default`=1' );
+			$attributes	= ArrayHelper::merge( $attributes, [
+				'type', 'default'
+			]);
+
+			// Uncheck default for all other themes
+			if( $model->default ) {
+
+				$modelClass	= static::$modelClass;
+
+				$modelClass::updateAll( [ 'default' => false ], '`default`=1' );
+			}
 		}
 
 		return parent::update( $model, [
@@ -281,12 +288,8 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 
 	/**
 	 * Make the default theme available for all sites in case no theme is selected.
-	 *
-	 * @param type $model
-	 * @param type $config
-	 * @return type
 	 */
-	public function makeDefault( Theme $model, $config = [] ) {
+	public function makeDefault( $model, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 

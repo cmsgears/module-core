@@ -33,7 +33,7 @@ trait MetaTrait {
 	 *
 	 * @var array
 	 */
-	public static $typeMap	= [
+	public static $typeMap = [
 		self::VALUE_TYPE_TEXT => 'Text',
 		self::VALUE_TYPE_FLAG => 'Flag',
 		self::VALUE_TYPE_LIST => 'List',
@@ -68,6 +68,7 @@ trait MetaTrait {
 	public function generateLabel() {
 
 		$label = preg_replace( '/_/', ' ', $this->name );
+		$label = preg_replace( '/-/', ' ', $label );
 		$label = ucwords( $label );
 
 		return $label;
@@ -81,6 +82,7 @@ trait MetaTrait {
 		if( empty( $this->label ) ) {
 
 			$this->label = preg_replace( '/_/', ' ', $this->name );
+			$this->label = preg_replace( '/-/', ' ', $this->label );
 			$this->label = ucwords( $this->label );
 		}
 

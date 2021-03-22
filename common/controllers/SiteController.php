@@ -21,9 +21,7 @@ use cmsgears\core\common\models\forms\ForgotPassword;
 use cmsgears\core\common\models\forms\ResetPassword;
 use cmsgears\core\common\models\forms\OtpResetPassword;
 
-use cmsgears\core\common\controllers\base\Controller;
-
-class SiteController extends Controller {
+class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -34,6 +32,8 @@ class SiteController extends Controller {
 	// Protected --------------
 
 	protected $userService;
+
+	protected $admin;
 
 	// Private ----------------
 
@@ -70,6 +70,8 @@ class SiteController extends Controller {
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
+					'colors' => [ 'get' ],
+					'theme' => [ 'get' ],
 					'activate-account' => [ 'get', 'post' ],
 					'forgot-password' => [ 'get', 'post' ],
 					'reset-password' => [ 'get', 'post' ],
@@ -90,6 +92,26 @@ class SiteController extends Controller {
 	// SiteController ------------------------
 
 	/**
+	 * It shows the colors available with the theme.
+	 *
+	 * @return string
+	 */
+	public function actionColors() {
+
+		return $this->render( CoreGlobal::PAGE_COLORS );
+	}
+
+	/**
+	 * It shows the UI components available with the theme.
+	 *
+	 * @return string
+	 */
+	public function actionTheme() {
+
+		return $this->render( CoreGlobal::PAGE_THEME );
+	}
+
+	/**
 	 * The users added by site admin can be activated by providing valid token and email. If
 	 * activation link is still valid, user will be activated.
 	 */
@@ -105,8 +127,18 @@ class SiteController extends Controller {
 
 		$model->email = $email;
 
+		$user = $this->userService->getByEmail( $model->email );
+
 		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post(), 'ResetPassword' ) && $model->validate() ) {
+		if( isset( $user ) && !$user->isVerifyTokenValid( $token ) ) {
+
+			// Set Failure Message
+			Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
+
+			return $this->render( CoreGlobal::PAGE_ACCOUNT_ACTIVATE, [ CoreGlobal::MODEL_GENERIC => $model, 'activated' => false ] );
+		}
+		// Load and Validate Form Model
+		else if( $model->load( Yii::$app->request->post(), 'ResetPassword' ) && $model->validate() ) {
 
 			$coreProperties = $this->getCoreProperties();
 
@@ -114,6 +146,9 @@ class SiteController extends Controller {
 
 			// If valid user found
 			if( isset( $user ) ) {
+
+				// Load User Permissions
+				$user->loadPermissions();
 
 				// Activate User
 				if( $this->userService->reset( $user, $token, $model, true ) ) {
@@ -211,7 +246,7 @@ class SiteController extends Controller {
 
 					if( $this->userService->resetPassword( $user, $model ) ) {
 
-						// Send Forgot Password Mail
+						// Send Password Change Mail
 						Yii::$app->coreMailer->sendPasswordChangeMail( $user );
 
 						// Set Success Message
@@ -320,21 +355,25 @@ class SiteController extends Controller {
 	/**
 	 * The method checks whether user is logged in and send to home.
 	 */
-	public function actionLogin( $admin = false ) {
+	public function actionLogin() {
 
 		// Send user to home if already logged in
 		$this->checkHome();
 
 		// Create Form Model
-		$model			= new Login();
-		$model->admin	= $admin;
+		$model = new Login();
+
+		$model->admin = $this->admin;
 
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post(), 'Login' ) && $model->login() ) {
 
-
 			// Redirect user to home
 			$this->checkHome();
+		}
+		else {
+
+			$model->password = null;
 		}
 
 		return $this->render( CoreGlobal::PAGE_LOGIN, [ CoreGlobal::MODEL_GENERIC => $model ] );

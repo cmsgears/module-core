@@ -29,7 +29,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class Create extends \cmsgears\core\common\actions\base\ModelAction {
+abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -55,7 +55,7 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	public $media = false;
 
-	public $mediaType = FileManager::FILE_TYPE_DOCUMENT;
+	public $mediaType = FileManager::FILE_TYPE_MIXED;
 
 	public $mediaModel = 'File';
 
@@ -64,6 +64,20 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 	 * are - all, identity, captcha, review, feedback and testimonial.
 	 */
 	public $scenario;
+
+	public $notification = false;
+
+	public $notifyAdmin		= false;
+	public $notifyUser		= false;
+	public $notifyParent	= false;
+
+	public $notifyAdminUrl;
+	public $notifyUserUrl;
+	public $notifyParentUrl;
+
+	public $notifyAdminTemplate;
+	public $notifyUserTemplate;
+	public $notifyParentTemplate;
 
 	// Protected --------------
 
@@ -91,14 +105,13 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 			$modelCommentService = Yii::$app->factory->get( 'modelCommentService' );
 
-			$user = Yii::$app->user->getIdentity();
+			$user = Yii::$app->core->getUser();
 
 			$modelClass = $modelCommentService->getModelClass();
 
 			$modelComment	= new $modelClass;
 			$commentForm	= new Comment();
 
-			$modelComment->siteId		= Yii::$app->core->getSiteId();
 			$modelComment->parentId		= $this->model->id;
 			$modelComment->parentType	= $this->parentType;
 
@@ -119,7 +132,12 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 			if( $commentForm->load( Yii::$app->request->post(), $commentForm->getClassName() ) && $commentForm->validate() ) {
 
-				$modelComment->copyForUpdateFrom( $commentForm, [ 'baseId', 'bannerId', 'videoId', 'avatarUrl', 'websiteUrl', 'rating', 'anonymous', 'content' ] );
+				$modelComment->copyForUpdateFrom( $commentForm, [
+					'baseId', 'bannerId', 'videoId', 'title', 'avatarUrl', 'websiteUrl',
+					'field1', 'field2', 'field3', 'field4', 'field5',
+					'rate1', 'rate2', 'rate3', 'rate4', 'rate5', 'rating',
+					'anonymous', 'content'
+				]);
 
 				if( !$this->setUser || !isset( $user ) ) {
 
@@ -150,8 +168,27 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 							foreach( $files as $file ) {
 
-								$modelCommentService->attachMedia( $modelComment, $file, $this->mediaType, ModelComment::TYPE_COMMENT );
+								$modelCommentService->attachFile( $modelComment, $file, $this->mediaType, ModelComment::TYPE_COMMENT );
 							}
+						}
+					}
+
+					// Trigger Notification
+					if( isset( $this->notification ) ) {
+
+						if( isset( $this->notifyAdmin ) && isset( $this->notifyAdminUrl ) ) {
+
+							$this->triggerAdminNotification( $modelComment );
+						}
+
+						if( isset( $this->notifyUser ) && isset( $this->notifyUserUrl ) ) {
+
+							$this->triggerUserNotification( $modelComment );
+						}
+
+						if( isset( $this->notifyParent ) && isset( $this->notifyParentUrl ) ) {
+
+							$this->triggerParentNotification( $modelComment );
 						}
 					}
 
@@ -180,6 +217,51 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 		}
 
 		return $files;
+	}
+
+	protected function triggerAdminNotification( $model ) {
+
+		$modelService = Yii::$app->factory->get( 'modelCommentService' );
+
+		Yii::$app->eventManager->triggerNotification(
+			$this->notifyAdminTemplate,
+			[ 'model' => $model, 'service' => $modelService ],
+			[
+				'admin' => true, 'direct' => false,
+				'parentId' => $model->id, 'parentType' => $modelService->getParentType(),
+				'adminLink' => "{$this->notifyAdminUrl}?id={$model->id}"
+			]
+		);
+	}
+
+	protected function triggerUserNotification( $model ) {
+
+		$modelService = Yii::$app->factory->get( 'modelCommentService' );
+
+		Yii::$app->eventManager->triggerNotification(
+			$this->notifyAdminTemplate,
+			[ 'model' => $model, 'service' => $modelService ],
+			[
+				'user' => true, 'direct' => false,
+				'parentId' => $model->id, 'parentType' => $modelService->getParentType(),
+				'adminLink' => "{$this->notifyAdminUrl}?id={$model->id}"
+			]
+		);
+	}
+
+	protected function triggerParentNotification( $model ) {
+
+		$modelService = Yii::$app->factory->get( 'modelCommentService' );
+
+		Yii::$app->eventManager->triggerNotification(
+			$this->notifyAdminTemplate,
+			[ 'model' => $model, 'service' => $modelService ],
+			[
+				'admin' => false, 'user' => false, 'direct' => true,
+				'parentId' => $model->id, 'parentType' => $modelService->getParentType(),
+				'adminLink' => "{$this->notifyAdminUrl}?id={$model->id}"
+			]
+		);
 	}
 
 }

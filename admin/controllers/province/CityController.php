@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
- * ProvinceController provides actions specific to province model.
+ * CityController provides actions specific to city model.
  *
  * @since 1.0.0
  */
-class CityController extends Controller {
+class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -50,9 +48,9 @@ class CityController extends Controller {
 		$this->apixBase = 'core/city';
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'cityService' );
+		$this->modelService = Yii::$app->factory->get( 'cityService' );
 
-		$this->provinceService	= Yii::$app->factory->get( 'provinceService' );
+		$this->provinceService = Yii::$app->factory->get( 'provinceService' );
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-core', 'child' => 'country' ];
@@ -126,11 +124,15 @@ class CityController extends Controller {
 
 				$this->model = $this->modelService->create( $model );
 
-				return $this->redirect( "all?pid=$pid" );
+				if( $this->model ) {
+
+					return $this->redirect( "all?pid=$pid" );
+				}
 			}
 
 			return $this->render( 'create', [
-				'model' => $model
+				'model' => $model,
+				'province' => $province
 			]);
 		}
 
@@ -155,7 +157,8 @@ class CityController extends Controller {
 
 			// Render view
 			return $this->render( 'update', [
-				'model' => $model
+				'model' => $model,
+				'province' => $model->province
 			]);
 		}
 
@@ -189,7 +192,8 @@ class CityController extends Controller {
 
 			// Render view
 			return $this->render( 'delete', [
-				'model' => $model
+				'model' => $model,
+				'province' => $model->province
 			]);
 		}
 

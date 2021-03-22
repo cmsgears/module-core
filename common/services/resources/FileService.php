@@ -21,7 +21,9 @@ use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
+use cmsgears\core\common\services\traits\base\SharedTrait;
 use cmsgears\core\common\services\traits\base\VisibilityTrait;
+use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
@@ -56,7 +58,9 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 	// Traits ------------------------------------------------------
 
 	use DataTrait;
+	use GridCacheTrait;
 	use MultiSiteTrait;
+	use SharedTrait;
 	use VisibilityTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -76,6 +80,11 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 	// Data Provider ------
 
 	public function getPage( $config = [] ) {
+
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
@@ -163,9 +172,7 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 	                'label' => 'Updated At'
 	            ]
 			],
-			'defaultOrder' => [
-				'id' => SORT_DESC
-			]
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -185,57 +192,71 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 		// Params
 		$type		= Yii::$app->request->getQueryParam( 'type' );
 		$visibility	= Yii::$app->request->getQueryParam( 'visibility' );
+		$filter		= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
 
 		// Filter - Visibility
-		if( isset( $visibility ) && isset( $modelClass::$urlRevVisibilityMap[ $visibility ] ) ) {
+		if( isset( $visibility ) && empty( $config[ 'conditions' ][ "$modelTable.visibility" ] ) && isset( $modelClass::$urlRevVisibilityMap[ $visibility ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.visibility" ]	= $modelClass::$urlRevVisibilityMap[ $visibility ];
 		}
 
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'shared': {
+
+					$config[ 'conditions' ][ "$modelTable.shared" ] = true;
+
+					break;
+				}
+			}
+		}
+
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'caption' => "$modelTable.caption",
+			'extension' => "$modelTable.extension",
+			'directory' => "$modelTable.directory"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description",
-				'caption' => "$modelTable.caption",
-				'extension' => "$modelTable.extension",
-				'directory' => "$modelTable.directory"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
 			'caption' => "$modelTable.caption",
 			'extension' => "$modelTable.extension",
 			'directory' => "$modelTable.directory",
+			'type' => "$modelTable.type",
 			'visibility' => "$modelTable.visibility"
 		];
 
 		// Result -----------
 
 		return parent::getPage( $config );
-	}
-
-	public function getSharedPage( $config = [] ) {
-
-		$config[ 'conditions' ][ 'shared' ] = true;
-
-		return $this->getPage( $config );
 	}
 
 	// Read ---------------
@@ -256,35 +277,27 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 	 */
 	public function create( $model, $config = [] ) {
 
-		// model class
+		// Model Class
 		$modelClass = static::$modelClass;
 
-		// Default visibility
+		// Default Visibility
 		if( !isset( $model->visibility ) ) {
 
 			$model->visibility = File::VISIBILITY_PUBLIC;
 		}
 
-		$model->siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
-
-		// Default sharing
-		if( !isset( $model->shared ) ) {
-
-			$model->shared = false;
-		}
-
-		// Create File
-		$model->save();
-
-		// Return File
-		return $model;
+		return parent::create( $model );
 	}
 
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'caption', 'altText', 'link', 'type', 'content' ];
+		//$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'code', 'title', 'description', 'caption', 'altText', 'link', 'type', 'content'
+		];
 
 		if( $model->changed ) {
 
@@ -304,7 +317,11 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 
 	public function updateData( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'caption', 'altText', 'link', 'type', 'content', 'name', 'directory', 'extension', 'url', 'medium', 'thumb' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'title', 'description', 'caption', 'altText', 'link', 'type', 'content',
+			'name', 'directory', 'extension', 'url', 'medium', 'small', 'thumb',
+			'placeholder', 'smallPlaceholder', 'srcset', 'sizes'
+		];
 
 		if( $model->changed ) {
 
@@ -335,54 +352,53 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 		// Save only when filename is provided
 		if( strlen( $file->name ) > 0 ) {
 
-			$fileManager	= Yii::$app->fileManager;
-			$model			= null;
-			$attribute		= null;
-			$width			= null;
-			$height			= null;
-			$mwidth			= null;
-			$mheight		= null;
-			$twidth			= null;
-			$theight		= null;
+			$fileManager = Yii::$app->fileManager;
 
-			// The model and it's attribute used to refer to image
-			if( isset( $args[ 'model' ] ) )		$model		= $args[ 'model' ];
-			if( isset( $args[ 'attribute' ] ) ) $attribute	= $args[ 'attribute' ];
+			$args[ 'width' ]	= isset( $args[ 'width' ] ) ? isset( $args[ 'width' ] ) : null;
+			$args[ 'height' ]	= isset( $args[ 'height' ] ) ? isset( $args[ 'height' ] ) : null;
+			$args[ 'mwidth' ]	= isset( $args[ 'mwidth' ] ) ? isset( $args[ 'mwidth' ] ) : null;
+			$args[ 'mheight' ]	= isset( $args[ 'mheight' ] ) ? isset( $args[ 'mheight' ] ) : null;
+			$args[ 'swidth' ]	= isset( $args[ 'swidth' ] ) ? isset( $args[ 'swidth' ] ) : null;
+			$args[ 'sheight' ]	= isset( $args[ 'sheight' ] ) ? isset( $args[ 'sheight' ] ) : null;
+			$args[ 'twidth' ]	= isset( $args[ 'twidth' ] ) ? isset( $args[ 'twidth' ] ) : null;
+			$args[ 'theight' ]	= isset( $args[ 'theight' ] ) ? isset( $args[ 'theight' ] ) : null;
+
+			// The model and it's attribute
+			$model		= isset( $args[ 'model' ] ) ? $args[ 'model' ] : null;
+			$attribute	= isset( $args[ 'attribute' ] ) ? $args[ 'attribute' ] : null;
 
 			// Update Image
 			$fileId = $file->id;
 
 			if( $file->changed ) {
 
-				// Image dimensions to crop actual image uploaded by users
-				if( isset( $args[ 'width' ] ) )		$width		= $args[ 'width' ];
-				if( isset( $args[ 'height' ] ) )	$height		= $args[ 'height' ];
-				if( isset( $args[ 'mwidth' ] ) )	$twidth		= $args[ 'mwidth' ];
-				if( isset( $args[ 'mheight' ] ) )	$theight	= $args[ 'mheight' ];
-				if( isset( $args[ 'twidth' ] ) )	$twidth		= $args[ 'twidth' ];
-				if( isset( $args[ 'theight' ] ) )	$theight	= $args[ 'theight' ];
-
-				// override controller args
+				// Override controller args
 				if( isset( $file->width ) && isset( $file->height ) ) {
 
-					$width		= $file->width;
-					$height		= $file->height;
+					$args[ 'width' ]	= $file->width;
+					$args[ 'height' ]	= $file->height;
 				}
 
 				if( isset( $file->mwidth ) && isset( $file->mheight ) ) {
 
-					$mwidth		= $file->mwidth;
-					$mheight	= $file->mheight;
+					$args[ 'mwidth' ]	= $file->mwidth;
+					$args[ 'mheight' ]	= $file->mheight;
+				}
+
+				if( isset( $file->swidth ) && isset( $file->sheight ) ) {
+
+					$args[ 'swidth' ]	= $file->swidth;
+					$args[ 'sheight' ]	= $file->sheight;
 				}
 
 				if( isset( $file->twidth ) && isset( $file->theight ) ) {
 
-					$twidth		= $file->twidth;
-					$theight	= $file->theight;
+					$args[ 'twidth' ]	= $file->twidth;
+					$args[ 'theight' ]	= $file->theight;
 				}
 
 				// Process Image
-				$fileManager->processImage( $file, $width, $height, $mwidth, $mheight, $twidth, $theight );
+				$fileManager->processImage( $file, $args );
 			}
 
 			// New File
@@ -417,7 +433,7 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 				$this->update( $file );
 			}
 
-			$file->changed	= false;
+			$file->changed = false;
 		}
 
 		return $file;
@@ -433,20 +449,25 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 		// Save only when filename is provided
 		if( strlen( $file->name ) > 0 ) {
 
-			$fileManager	= Yii::$app->fileManager;
-			$model			= null;
-			$attribute		= null;
+			$fileManager = Yii::$app->fileManager;
 
-			// The model and it's attribute used to refer to image
-			if( isset( $args[ 'model' ] ) )		$model		= $args[ 'model' ];
-			if( isset( $args[ 'attribute' ] ) ) $attribute	= $args[ 'attribute' ];
+			// The model and it's attribute
+			$model		= isset( $args[ 'model' ] ) ? $args[ 'model' ] : null;
+			$attribute	= isset( $args[ 'attribute' ] ) ? $args[ 'attribute' ] : null;
 
 			// Update File
-			$fileId		= $file->id;
+			$fileId = $file->id;
 
 			if( $file->changed ) {
 
-				$fileManager->processFile( $file );
+				if( $file->isImage() ) {
+
+					$fileManager->processImage( $file );
+				}
+				else {
+
+					$fileManager->processFile( $file );
+				}
 			}
 
 			// New File
@@ -491,6 +512,7 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 
 		foreach( $files as $key => $value ) {
 
+			// Ignores empty files
 			if( isset( $value ) ) {
 
 				if( $value->type == 'image' ) {
@@ -516,12 +538,15 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 	 */
 	public function delete( $model, $config = [] ) {
 
-		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$backend	= isset( $config[ 'backend' ] ) ? $config[ 'backend' ] : false;
+		$frontend	= isset( $config[ 'frontend' ] ) ? $config[ 'frontend' ] : false;
 
 		if( isset( $model ) ) {
 
-			// Only admin is authorised to delete a shared file using file browser.
-			if( $admin || !$model->shared ) {
+			// Admin can delete all the files
+			// Users can delete frontend and shared files
+			// Non-Shared files can be deleted with the model
+			if( $backend || ( $frontend && isset( $model->userId ) && $model->shared ) || !$model->shared ) {
 
 				// Delete mappings
 				Yii::$app->factory->get( 'modelFileService' )->deleteByModelId( $model->id );
@@ -547,7 +572,7 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 
 				switch( $action ) {
 
-					case 'public': {
+					case File::VISIBILITY_PUBLIC: {
 
 						$model->visibility = File::VISIBILITY_PUBLIC;
 
@@ -555,7 +580,7 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 
 						break;
 					}
-					case 'protected': {
+					case File::VISIBILITY_PROTECTED: {
 
 						$model->visibility = File::VISIBILITY_PROTECTED;
 
@@ -563,7 +588,7 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 
 						break;
 					}
-					case 'private': {
+					case File::VISIBILITY_PRIVATE: {
 
 						$model->visibility = File::VISIBILITY_PRIVATE;
 

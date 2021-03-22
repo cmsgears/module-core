@@ -30,7 +30,6 @@ use cmsgears\core\common\models\interfaces\resources\IGridCache;
 use cmsgears\core\common\models\interfaces\resources\IVisual;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Entity;
 use cmsgears\core\common\models\resources\SiteMeta;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
@@ -63,6 +62,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property boolean $active
  * @property boolean $pinned
  * @property boolean $featured
+ * @property boolean $primary
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $data
@@ -72,7 +72,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridCache, IName, ISlug, IVisual {
+class Site extends \cmsgears\core\common\models\base\Entity implements IAuthor, IContent, IData,
+	IFeatured, IGridCache, IName, ISlug, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -149,9 +150,10 @@ class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridC
 		$rules = [
 			// Required, Safe
 			[ 'name', 'required' ],
-			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'content' ], 'safe' ],
 			// Unique
 			[ 'name', 'unique' ],
+			[ 'slug', 'unique' ],
 			// Text Limit
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
@@ -160,7 +162,7 @@ class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridC
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'active', 'pinned', 'featured', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'active', 'pinned', 'featured', 'primary', 'gridCacheValid' ], 'boolean' ],
 			[ 'themeId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'avatarId', 'bannerId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ 'gridCachedAt', 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -211,6 +213,11 @@ class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridC
 			if( $this->themeId <= 0 ) {
 
 				$this->themeId = null;
+			}
+
+			if( !isset( $this->order ) || strlen( $this->order ) <= 0 ) {
+
+				$this->order = 0;
 			}
 
 			return true;
@@ -270,20 +277,36 @@ class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridC
 		return Yii::$app->formatter->asBoolean( $this->active );
 	}
 
+	/**
+	 * Returns string representation of primary flag.
+	 *
+	 * @return string
+	 */
+	public function getPrimaryStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->primary );
+	}
+
 	public function getSiteUrl() {
 
 		$url = Url::base( true );
 
 		$urlParts = parse_url( $url );
 
-		if( Yii::$app->core->multiSite && $this->slug !== 'main' ) {
+		if( YII_ENV_PROD && Yii::$app->core->multiSite && $this->slug !== Yii::$app->core->mainSiteSlug ) {
 
           	$urlHost = preg_replace( '/www/', $this->slug, $urlParts[ 'host' ] );
 
 			return $urlParts[ 'scheme' ] . '://' . $urlHost;
 		}
 
-		return $urlParts[ 'scheme' ] . '://' . $urlParts[ 'host' ];
+		//return $urlParts[ 'scheme' ] . '://' . $urlParts[ 'host' ];
+
+		// Fix it for sub-directory
+		$url = Url::toRoute( '/' );
+		$url = substr( $url, 0, -1 );
+
+		return $url;
 	}
 
 	// Static Methods ----------------------------------------------
@@ -311,10 +334,9 @@ class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridC
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		//$modelTable				= CoreTables::getTableName( CoreTables::TABLE_SITE );
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'banner', 'theme' ];
-		$config[ 'relations' ]	= $relations;
-		//$config[ 'groups' ]		= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : [ "$modelTable.id" ];
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'banner', 'theme' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -327,7 +349,7 @@ class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridC
 	 */
 	public static function queryWithTheme( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'avatar', 'banner', 'theme' ];
+		$config[ 'relations' ] = [ 'avatar', 'banner', 'theme' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -340,7 +362,7 @@ class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridC
 	 */
 	public static function queryWithMetas( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'avatar', 'banner', 'metas' ];
+		$config[ 'relations' ] = [ 'avatar', 'banner', 'metas' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -353,7 +375,7 @@ class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridC
 	 */
 	public static function queryWithMembers( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'avatar', 'banner', 'members' ];
+		$config[ 'relations' ] = [ 'avatar', 'banner', 'members' ];
 
 		return parent::queryWithAll( $config );
 	}

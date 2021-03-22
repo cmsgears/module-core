@@ -71,6 +71,11 @@ class LocaleService extends \cmsgears\core\common\services\base\EntityService im
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
@@ -96,7 +101,8 @@ class LocaleService extends \cmsgears\core\common\services\base\EntityService im
 					'default' => SORT_DESC,
 					'label' => 'Code'
 				]
-			]
+			],
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -115,19 +121,28 @@ class LocaleService extends \cmsgears\core\common\services\base\EntityService im
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'code' => "$modelTable.code",
+			'name' => "$modelTable.name"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'code' => "$modelTable.code" ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'code' => "$modelTable.code"
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
+			'code' => "$modelTable.code",
+			'name' => "$modelTable.name"
 		];
 
 		// Result -----------
@@ -157,6 +172,8 @@ class LocaleService extends \cmsgears\core\common\services\base\EntityService im
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
+
+		//$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'code', 'name' ];
 

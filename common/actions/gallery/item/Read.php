@@ -18,7 +18,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * The Read action find gallery item for given item id and returh item data.
+ * The Read action find gallery item for given item id and returns item data.
  *
  * @since 1.0.0
  */
@@ -38,7 +38,8 @@ class Read extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $direct = false;
+	public $admin	= false;
+	public $user	= false;
 
 	// Protected --------------
 
@@ -80,10 +81,11 @@ class Read extends \cmsgears\core\common\actions\base\ModelAction {
 	 */
 	public function run( $cid, $fid ) {
 
-		$model		= $this->model;
-		$gallery	= $this->galleryService->getById( $cid );
+		$model = $this->model;
 
-		if( isset( $gallery ) && ( $this->direct || $gallery->belongsTo( $model ) ) ) {
+		$gallery = $this->galleryService->getById( $cid );
+
+		if( isset( $gallery ) && ( $this->admin || ( isset( $model ) && $gallery->belongsTo( $model ) ) ) ) {
 
 			$modelFile = $this->modelFileService->getFirstByParentModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $fid );
 
@@ -95,7 +97,8 @@ class Read extends \cmsgears\core\common\actions\base\ModelAction {
 					'mid' => $modelFile->id, 'fid' => $file->id,
 					'name' => $file->name, 'extension' => $file->extension,
 					'title' => $file->title, 'caption' => $file->caption,
-					'altText' => $file->altText, 'link' => $file->link, 'description' => $file->description,
+					'altText' => $file->altText, 'link' => $file->link,
+					'description' => $file->description,
 					'url' => $file->getFileUrl()
 				];
 

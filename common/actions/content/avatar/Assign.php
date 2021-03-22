@@ -70,10 +70,13 @@ class Assign extends \cmsgears\core\common\actions\base\ModelAction {
 
 			if( $this->modelService->updateAvatar( $this->model, $avatar ) ) {
 
-				$response = [ 'fileUrl' => $avatar->getFileUrl(), 'mediumUrl' => $avatar->getMediumUrl(), 'thumbUrl' => $avatar->getThumbUrl() ];
+				$data = [
+					'fileUrl' => $avatar->getFileUrl(), 'mediumUrl' => $avatar->getMediumUrl(),
+					'thumbUrl' => $avatar->getThumbUrl()
+				];
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 			}
 
 			// Trigger Ajax Failure

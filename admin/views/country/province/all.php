@@ -15,7 +15,9 @@ $themeTemplates		= '@themes/admin/views/templates';
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => "create?cid=$countryId", 'data' => [ ],
 	'title' => 'Provinces', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'name' => 'Name', 'code' => 'Code', 'iso' => 'ISO' ],
+	'searchColumns' => [
+		'name' => 'Name', 'code' => 'Code', 'iso' => 'ISO'
+	],
 	'sortColumns' => [
 		'name' => 'Name', 'code' => 'Code', 'iso' => 'ISO'
 	],
@@ -40,19 +42,19 @@ $themeTemplates		= '@themes/admin/views/templates';
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
 	'templateDir' => "$themeTemplates/widget/grid",
-	//'dataView' => "$moduleTemplates/grid/data/country",
-	//'cardView' => "$moduleTemplates/grid/cards/country",
+	//'dataView' => "$moduleTemplates/grid/data/province",
+	//'cardView' => "$moduleTemplates/grid/cards/province",
 	'actionView' => "$moduleTemplates/grid/actions/province"
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
 	'data' => [ 'model' => 'Province', 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Delete Province', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
 	'data' => [ 'model' => 'Province', 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
-]) ?>
+])?>

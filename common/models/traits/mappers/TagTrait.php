@@ -50,7 +50,8 @@ trait TagTrait {
 		$modelTagTable = ModelTag::tableName();
 
 		return $this->hasMany( ModelTag::class, [ 'parentId' => 'id' ] )
-			->where( "$modelTagTable.parentType='$this->modelType'" );
+			->where( "$modelTagTable.parentType='$this->modelType'" )
+			->orderBy( [ "$modelTagTable.order" => SORT_DESC, "$modelTagTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -61,7 +62,8 @@ trait TagTrait {
 		$modelTagTable = ModelTag::tableName();
 
 		return $this->hasMany( ModelTag::class, [ 'parentId' => 'id' ] )
-			->where( "$modelTagTable.parentType='$this->modelType' AND $modelTagTable.active=1" );
+			->where( "$modelTagTable.parentType='$this->modelType' AND $modelTagTable.active=1" )
+			->orderBy( [ "$modelTagTable.order" => SORT_DESC, "$modelTagTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -71,8 +73,16 @@ trait TagTrait {
 
 		$modelTagTable = ModelTag::tableName();
 
-		return $this->hasOne( ModelTag::class, [ 'parentId' => 'id' ] )
-			->where( "$modelTagTable.parentType=:ptype AND $modelTagTable.type=:type AND $modelTagTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
+		if( $active ) {
+
+			return $this->hasMany( ModelTag::class, [ 'parentId' => 'id' ] )
+				->where( "$modelTagTable.parentType=:ptype AND $modelTagTable.type=:type AND $modelTagTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+				->orderBy( [ "$modelTagTable.order" => SORT_DESC, "$modelTagTable.id" => SORT_DESC ] );
+		}
+
+		return $this->hasMany( ModelTag::class, [ 'parentId' => 'id' ] )
+			->where( "$modelTagTable.parentType=:ptype AND $modelTagTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] )
+			->orderBy( [ "$modelTagTable.order" => SORT_DESC, "$modelTagTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -80,15 +90,14 @@ trait TagTrait {
 	 */
 	public function getTags() {
 
-		$modelTagTable = ModelTag::tableName();
+		$tagTable		= Tag::tableName();
+		$modelTagTable	= ModelTag::tableName();
 
-		return $this->hasMany( Tag::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelTagTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelTagTable ) {
-
-					$query->onCondition( [ "$modelTagTable.parentType" => $this->modelType ] );
-				}
-			);
+		return Tag::find()
+			->leftJoin( $modelTagTable, "$modelTagTable.modelId=$tagTable.id" )
+			->where( "$modelTagTable.parentId=:pid AND $modelTagTable.parentType=:ptype", [ ':pid' => $this->id, ':ptype' => $this->modelType ] )
+			->orderBy( [ "$modelTagTable.order" => SORT_DESC, "$tagTable.name" => SORT_ASC, "$modelTagTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**
@@ -96,15 +105,14 @@ trait TagTrait {
 	 */
 	public function getActiveTags() {
 
-		$modelTagTable = ModelTag::tableName();
+		$tagTable		= Tag::tableName();
+		$modelTagTable	= ModelTag::tableName();
 
-		return $this->hasMany( Tag::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelTagTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelTagTable ) {
-
-					$query->onCondition( [ "$modelTagTable.parentType" => $this->modelType, "$modelTagTable.active" => true ] );
-				}
-			);
+		return Tag::find()
+			->leftJoin( $modelTagTable, "$modelTagTable.modelId=$tagTable.id" )
+			->where( "$modelTagTable.parentId=:pid AND $modelTagTable.parentType=:ptype AND $modelTagTable.active=1", [ ':pid' => $this->id, ':ptype' => $this->modelType ] )
+			->orderBy( [ "$modelTagTable.order" => SORT_DESC, "$tagTable.name" => SORT_ASC, "$modelTagTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**
@@ -112,15 +120,23 @@ trait TagTrait {
 	 */
 	public function getTagsByType( $type, $active = true ) {
 
-		$modelTagTable = ModelTag::tableName();
+		$tagTable		= Tag::tableName();
+		$modelTagTable	= ModelTag::tableName();
 
-		return $this->hasMany( Tag::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelTagTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$type, &$active, &$modelTagTable ) {
+		if( $active ) {
 
-					$query->onCondition( [ "$modelTagTable.parentType" => $this->modelType, "$modelTagTable.type" => $type, "$modelTagTable.active" => $active ] );
-				}
-			)->all();
+			return Tag::find()
+				->leftJoin( $modelTagTable, "$modelTagTable.modelId=$tagTable.id" )
+				->where( "$modelTagTable.parentId=:pid AND $modelTagTable.parentType=:ptype AND $modelTagTable.type=:type AND $modelTagTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+				->orderBy( [ "$modelTagTable.order" => SORT_DESC, "$tagTable.name" => SORT_ASC, "$modelTagTable.id" => SORT_DESC ] )
+				->all();
+		}
+
+		return Tag::find()
+			->leftJoin( $modelTagTable, "$modelTagTable.modelId=$tagTable.id" )
+			->where( "$modelTagTable.parentId=:pid AND $modelTagTable.parentType=:ptype AND $modelTagTable.type=:type", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type ] )
+			->orderBy( [ "$modelTagTable.order" => SORT_DESC, "$tagTable.name" => SORT_ASC, "$modelTagTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**
@@ -128,8 +144,9 @@ trait TagTrait {
 	 */
 	public function getTagIdList( $active = true ) {
 
-		$tags		= $active ? $this->activeTags : $this->tags;
-		$tagsList	= [];
+		$tags = $active ? $this->activeTags : $this->tags;
+
+		$tagsList = [];
 
 		foreach( $tags as $tag ) {
 
@@ -144,8 +161,9 @@ trait TagTrait {
 	 */
 	public function getTagNameList( $active = true ) {
 
-		$tags		= $active ? $this->activeTags : $this->tags;
-		$tagsList	= [];
+		$tags = $active ? $this->activeTags : $this->tags;
+
+		$tagsList = [];
 
 		foreach( $tags as $tag ) {
 
@@ -160,8 +178,9 @@ trait TagTrait {
 	 */
 	public function getTagIdNameList( $active = true ) {
 
-		$tags		= $active ? $this->activeTags : $this->tags;
-		$tagsList	= [];
+		$tags = $active ? $this->activeTags : $this->tags;
+
+		$tagsList = [];
 
 		foreach( $tags as $tag ) {
 
@@ -176,10 +195,11 @@ trait TagTrait {
 	 */
 	public function getTagIdNameMap( $active = true ) {
 
-		$tags		= $active ? $this->activeTags : $this->tags;
-		$tagsMap	= [];
+		$tags = $active ? $this->activeTags : $this->tags;
 
-		foreach ( $tags as $tag ) {
+		$tagsMap = [];
+
+		foreach( $tags as $tag ) {
 
 			$tagsMap[ $tag->id ] = $tag->name;
 		}
@@ -192,10 +212,11 @@ trait TagTrait {
 	 */
 	public function getTagSlugNameMap( $active = true ) {
 
-		$tags		= $active ? $this->activeTags : $this->tags;
-		$tagsMap	= [];
+		$tags = $active ? $this->activeTags : $this->tags;
 
-		foreach ( $tags as $tag ) {
+		$tagsMap = [];
+
+		foreach( $tags as $tag ) {
 
 			$tagsMap[ $tag->slug ] = $tag->name;
 		}
@@ -208,10 +229,11 @@ trait TagTrait {
 	 */
 	public function getTagCsv( $limit = 0, $active = true ) {
 
-		$tags		= $active ? $this->activeTags : $this->tags;
-		$tagsCsv	= [];
+		$tags = $active ? $this->activeTags : $this->tags;
 
-		foreach ( $tags as $tag ) {
+		$tagsCsv = [];
+
+		foreach( $tags as $tag ) {
 
 			$tagsCsv[] = $tag->name;
 		}
@@ -235,18 +257,19 @@ trait TagTrait {
 		$active		= isset( $config[ 'active' ] ) ? $config[ 'active' ] : true;
 		$csv		= isset( $config[ 'csv' ] ) ? $config[ 'csv' ] : false;
 
-		$tags		= $active ? $this->activeTags : $this->tags;
-		$tagLinks	= [];
+		$tags = $active ? $this->activeTags : $this->tags;
 
-		foreach ( $tags as $tag ) {
+		$tagLinks = [];
+
+		foreach( $tags as $tag ) {
 
 			if( $wrapper ) {
 
-				$tagLinks[] = "<$wrapperTag><a href='$baseUrl/$tag->slug'>$tag->name</a></$wrapperTag>";
+				$tagLinks[] = "<$wrapperTag><a href=\"$baseUrl/$tag->slug\">$tag->name</a></$wrapperTag>";
 			}
 			else {
 
-				$tagLinks[] = "<a href='$baseUrl/$tag->slug'>$tag->name</a>";
+				$tagLinks[] = "<a href=\"$baseUrl/$tag->slug\">$tag->name</a>";
 			}
 		}
 

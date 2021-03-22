@@ -40,7 +40,7 @@ class RoleController extends \cmsgears\core\admin\controllers\base\RoleControlle
 		$this->apixBase	= 'core/role';
 
 		// Sidebar
-		$this->sidebar = [ 'parent' => 'sidebar-identity', 'child' => 'role' ];
+		$this->sidebar = [ 'parent' => 'sidebar-rbac', 'child' => 'role' ];
 
 		// Return Url
 		$this->returnUrl = Url::previous( 'roles' );

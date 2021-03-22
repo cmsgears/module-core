@@ -18,7 +18,6 @@ use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\models\interfaces\base\IFeatured;
 
-use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\resources\File;
 
 use cmsgears\core\common\models\traits\base\FeaturedTrait;
@@ -36,10 +35,11 @@ use cmsgears\core\common\models\traits\base\FeaturedTrait;
  * @property boolean $active
  * @property boolean $pinned
  * @property boolean $featured
+ * @property boolean $popular
  *
  * @since 1.0.0
  */
-class ModelFile extends ModelMapper implements IFeatured {
+class ModelFile extends \cmsgears\core\common\models\base\ModelMapper implements IFeatured {
 
 	// Variables ---------------------------------------------------
 
@@ -83,7 +83,7 @@ class ModelFile extends ModelMapper implements IFeatured {
 		$rules = parent::rules();
 
 		$rules[] = [ 'key', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ];
-		$rules[] = [ [ 'pinned', 'featured' ], 'boolean' ];
+		$rules[] = [ [ 'pinned', 'featured', 'popular' ], 'boolean' ];
 
 		return $rules;
 	}
@@ -142,24 +142,20 @@ class ModelFile extends ModelMapper implements IFeatured {
 
 	/**
 	 * Find and return the mappings for given title. It's useful in cases where unique
-	 * title is required for file.
+	 * title is required for file. The column tag can be used as title in such cases.
 	 *
 	 * @param integer $parentId
 	 * @param string $parentType
-	 * @param string $fileTag
+	 * @param string $fileCode
 	 * @return ModelFile
 	 */
-	public static function findByFileTag( $parentId, $parentType, $fileTag, $type = null ) {
+	public static function findByFileCode( $parentId, $parentType, $fileCode, $type = null ) {
 
 		$mapTable	= static::tableName();
 		$fileTable	= CoreTables::getTableName( CoreTables::TABLE_FILE );
+		$type		= $type ?? CoreGlobal::TYPE_DEFAULT;
 
-		if( empty( $type ) ) {
-
-			$type = CoreGlobal::TYPE_DEFAULT;
-		}
-
-		return self::queryByParent( $parentId, $parentType )->andWhere( "$fileTable.tag=:tag AND $mapTable.type=:type", [ ':tag' => $fileTag, ':type' => $type ] )->one();
+		return self::queryByParent( $parentId, $parentType )->andWhere( "$fileTable.code=:code AND $mapTable.type=:type", [ ':code' => $fileCode, ':type' => $type ] )->one();
 	}
 
 	/**
@@ -189,7 +185,7 @@ class ModelFile extends ModelMapper implements IFeatured {
 
 		$fileTable = CoreTables::getTableName( CoreTables::TABLE_FILE );
 
-		return self::queryByParent( $parentId, $parentType )->andFilterWhere( [ 'like', "$fileTable.type", $fileType ] )->all();
+		return self::queryByParent( $parentId, $parentType )->andWhere( "$fileTable.type=:type", [ ':type' => $fileType ] )->all();
 	}
 
 	// Create -----------------

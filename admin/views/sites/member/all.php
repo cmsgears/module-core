@@ -14,20 +14,39 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => "create?sid=$siteId", 'data' => [ ],
 	'title' => 'Sites', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [  ],
-	'sortColumns' => [
+	'searchColumns' => [
+		'name' => 'Name', 'email' => 'Email',
+		'site' => 'Site', 'role' => 'Role'
 	],
-	'filters' => [ 'status' => [ 'file' => 'File Render', 'layout' => 'Group Layout' ] ],
+	'sortColumns' => [
+		'name' => 'Name', 'email' => 'Email',
+		'site' => 'Site', 'role' => 'Role',
+		'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular',
+		'cdate' => 'Created At', 'udate' => 'Updated At'
+	],
+	'filters' => [
+		'model' => [
+			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular'
+		]
+	],
 	'reportColumns' => [
-		'status' => [ 'title' => 'Active', 'type' => 'flag' ]
+		'name' => [ 'title' => 'Name', 'type' => 'text' ],
+		'email' => [ 'title' => 'Email', 'type' => 'text' ],
+		'site' => [ 'title' => 'Site', 'type' => 'text' ],
+		'role' => [ 'title' => 'Role', 'type' => 'range' ],
+		'pinned' => [ 'title' => 'Pinned', 'type' => 'flag' ],
+		'featured' => [ 'title' => 'Featured', 'type' => 'flag' ],
+		'popular' => [ 'title' => 'Popular', 'type' => 'flag' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk',
 	'bulkActions' => [
-		'status' => [ 'active' => 'Activate', 'block' => 'Blocked' ],
-		'model' => [ 'delete' => 'Delete' ]
+		'model' => [
+			'pinned' => 'Pinned', 'featured' => 'Featured',
+			'popular' => 'Popular', 'delete' => 'Delete'
+		]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x3', 'x3', 'x2', 'x2', null, null, 'x2' ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x3', 'x3', 'x2', 'x2', null, null, null, null ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'name' => [ 'title' => 'Name', 'generate' => function( $model ) {
@@ -44,6 +63,7 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 		}],
 		'pinned' => [ 'title' => 'Pinned', 'generate' => function( $model ) { return $model->getPinnedStr(); } ],
 		'featured' => [ 'title' => 'Featured', 'generate' => function( $model ) { return $model->getFeaturedStr(); } ],
+		'popular' => [ 'title' => 'Popular', 'generate' => function( $model ) { return $model->getPopularStr(); } ],
 		'actions' => 'Actions'
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],

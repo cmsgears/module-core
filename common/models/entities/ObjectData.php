@@ -32,6 +32,7 @@ use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
 use cmsgears\core\common\models\interfaces\resources\IHierarchy;
+use cmsgears\core\common\models\interfaces\resources\ISocialLink;
 use cmsgears\core\common\models\interfaces\resources\IMeta;
 use cmsgears\core\common\models\interfaces\resources\ITemplate;
 use cmsgears\core\common\models\interfaces\resources\IVisual;
@@ -50,6 +51,7 @@ use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\FeaturedTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
 use cmsgears\core\common\models\traits\base\NameTypeTrait;
+use cmsgears\core\common\models\traits\base\OwnerTrait;
 use cmsgears\core\common\models\traits\base\SlugTypeTrait;
 use cmsgears\core\common\models\traits\base\VisibilityTrait;
 use cmsgears\core\common\models\traits\resources\CommentTrait;
@@ -75,6 +77,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $siteId
  * @property integer $themeId
  * @property integer $templateId
+ * @property integer $userId
+ * @property integer $parentId
  * @property integer $avatarId
  * @property integer $bannerId
  * @property integer $videoId
@@ -89,16 +93,19 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $title
  * @property string $description
  * @property string $classPath
+ * @property string $viewPath
  * @property string $link
  * @property integer $status
  * @property integer $visibility
  * @property integer $order
  * @property boolean $pinned
  * @property boolean $featured
+ * @property boolean $popular
+ * @property boolean $shared
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $htmlOptions
- * @property string $summary;
+ * @property string $summary
  * @property string $content
  * @property string $data
  * @property string $gridCache
@@ -107,8 +114,9 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComment, IContent, IData, IFeatured, IFile,
-	IGallery, IGridCache, IHierarchy, IMeta, IMultiSite, INameType, IObject, IOwner, ISlugType, ITemplate, IVisibility, IVisual {
+class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComment, IContent,
+	IData, IFeatured, IFile, IGallery, IGridCache, IHierarchy, IMeta, IMultiSite, INameType,
+	IObject, IOwner, ISlugType, ISocialLink, ITemplate, IVisibility, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -151,6 +159,7 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use ObjectTrait;
+	use OwnerTrait;
 	use SlugTypeTrait;
 	use SocialLinkTrait;
 	use TemplateTrait;
@@ -159,11 +168,11 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 
 	// Constructor and Initialisation ------------------------------
 
-	public function init() {
-
-		parent::init();
+	public function __construct( $config = [] ) {
 
 		$this->metaClass = ObjectMeta::class;
+
+		parent::__construct();
 	}
 
 	// Instance methods --------------------------------------------
@@ -209,22 +218,23 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 		$rules = [
 			// Required, Safe
 			[ [ 'name', 'type' ], 'required' ],
-			[ [ 'id', 'htmlOptions', 'summary', 'content', 'data', 'gridCache' ], 'safe' ],
-			// Unique - Allowed multiple names for same type. Slug will differentiate the models.
-			//[ [ 'siteId', 'themeId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
-			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'slug' ] ],
+			[ [ 'id', 'htmlOptions', 'summary', 'content' ], 'safe' ],
+			// Unique
+			// Unique name and slug
+			//[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'name' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NAME ) ],
+			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'slug' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SLUG ) ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'icon', 'texture' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ 'name', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
 			[ 'slug', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
-			[ [ 'title', 'classPath', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'title', 'classPath', 'viewPath', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
-			[ [ 'pinned', 'featured', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'pinned', 'featured', 'popular', 'shared', 'gridCacheValid' ], 'boolean' ],
 			[ [ 'visibility', 'status', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'themeId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'siteId', 'avatarId', 'bannerId', 'videoId', 'galleryId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'themeId', 'templateId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'siteId', 'userId', 'avatarId', 'bannerId', 'videoId', 'galleryId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
@@ -248,6 +258,7 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'themeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_THEME ),
 			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
+			'userId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
 			'avatarId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
 			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
 			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
@@ -260,12 +271,14 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'classPath' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CLASSPATH ),
+			'viewPath' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_PATH ),
 			'link' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINK ),
 			'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
 			'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'pinned' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PINNED ),
 			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
+			'shared' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SHARED ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'summary' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SUMMARY ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
@@ -283,6 +296,11 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 
 		if( parent::beforeSave( $insert ) ) {
 
+			if( $this->siteId <= 0 ) {
+
+				$this->siteId = null;
+			}
+
 			if( $this->themeId <= 0 ) {
 
 				$this->themeId = null;
@@ -293,10 +311,28 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 				$this->templateId = null;
 			}
 
-			if( !isset( $this->order ) || strlen( $this->order ) <= 0 ) {
+			if( $this->userId <= 0 ) {
+
+				$this->userId = null;
+			}
+
+			// Default Status - New
+			if( empty( $this->status ) || $this->status <= 0 ) {
+
+				$this->status = self::STATUS_NEW;
+			}
+
+			// Default Order - zero
+			if( empty( $this->order ) || $this->order <= 0 ) {
 
 				$this->order = 0;
 			}
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
+
+			// Default Visibility - Private
+			$this->visibility = $this->visibility ?? self::VISIBILITY_PRIVATE;
 
 			return true;
 		}
@@ -321,12 +357,17 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 
 			if( !isset( $user ) && !$strict ) {
 
-				$user = Yii::$app->user->getIdentity();
+				$user = Yii::$app->core->getUser();
 			}
 
-			if( isset( $user ) ) {
+			if( isset( $user ) && isset( $this->userId ) ) {
 
-				return $this->createdBy == $user->id;
+				return $user->id == $this->userId;
+			}
+
+			if( isset( $user ) && isset( $this->createdBy ) ) {
+
+				return $user->id == $this->createdBy;
 			}
 		}
 
@@ -350,7 +391,39 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	}
 
 	/**
-	 * Returns the objects mapped to it.
+	 * Returns the corresponding user.
+	 *
+	 * @return User
+	 */
+	public function getUser() {
+
+		return $this->hasOne( User::class, [ 'id' => 'userId' ] );
+	}
+
+	/**
+	 * Returns the immediate parent.
+	 *
+	 * Notes: Override in child classes to get the exact class object if required.
+	 *
+	 * @return ObjectData
+	 */
+	public function getParent() {
+
+		return $this->hasOne( ObjectData::class, [ 'id' => 'parentId' ] );
+	}
+
+	/**
+	 * Returns string representation of [[$shared]].
+	 *
+	 * @return boolean
+	 */
+	public function getSharedStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->shared );
+	}
+
+	/**
+	 * Returns the child objects mapped to it.
 	 *
 	 * @return ObjectData[]
 	 */
@@ -385,9 +458,8 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	public static function queryWithHasOne( $config = [] ) {
 
 		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [
-			'site', 'theme', 'template',
-			'avatar', 'banner', 'video',
-			'creator', 'modifier'
+			'site', 'theme', 'template', 'user',
+			'avatar', 'banner', 'video'
 		];
 
 		$config[ 'relations' ] = $relations;
@@ -408,6 +480,75 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
         return parent::queryWithAll( $config );
     }
 
+	/**
+	 * Return query to find objects by type.
+	 *
+	 * @param string $type
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query by type.
+	 */
+	public static function queryByType( $type, $config = [] ) {
+
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+
+		if( static::isMultiSite() && !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			return static::find()->where( 'type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( [ 'order' => SORT_DESC ] );
+		}
+		else {
+
+			return static::find()->where( 'type=:type', [ ':type' => $type ] )->orderBy( [ 'order' => SORT_DESC ] );
+		}
+	}
+
+	/**
+	 * Return query to find top level objects by type.
+	 *
+	 * @param string $type
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query by type.
+	 */
+	public static function queryL0ByType( $type, $config = [] ) {
+
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+
+		if( static::isMultiSite() && !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			return static::find()->where( 'parentId IS NULL AND type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( [ 'order' => SORT_DESC ] );
+		}
+		else {
+
+			return static::find()->where( 'parentId IS NULL AND type=:type', [ ':type' => $type ] )->orderBy( [ 'order' => SORT_DESC ] );
+		}
+	}
+
+	/**
+	 * Return query to find top level objects by parent id and type.
+	 *
+	 * @param integer $parentId
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query by parent id and type.
+	 */
+	public static function queryByParentId( $parentId, $config = [] ) {
+
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+
+		if( static::isMultiSite() && !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			return static::find()->where( 'parentId=:pid AND siteId=:siteId', [ ':pid' => $parentId, ':siteId' => $siteId ] )->orderBy( [ 'order' => SORT_DESC ] );
+		}
+		else {
+
+			return static::find()->where( 'parentId=:pid', [ ':pid' => $parentId ] )->orderBy( [ 'order' => SORT_DESC ] );
+		}
+	}
+
 	// Read - Find ------------
 
 	/**
@@ -419,31 +560,46 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	 */
 	public static function findByType( $type, $config = [] ) {
 
-		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
-
-		if( static::isMultiSite() && !$ignoreSite ) {
-
-			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
-
-			return static::find()->where( 'type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( [ 'order' => SORT_ASC ] )->all();
-		}
-		else {
-
-			return static::find()->where( 'type=:type', [ ':type' => $type ] )->orderBy( [ 'order' => SORT_ASC ] )->all();
-		}
+		return static::queryByType( $type, $config )->all();
 	}
 
 	/**
-	 * Find and return model using given slug and type.
+	 * Find and returns the top level objects with given type.
+	 *
+	 * @param string $type
+	 * @param array $config
+	 * @return ObjectData[]
+	 */
+	public static function findL0ByType( $type, $config = [] ) {
+
+		return static::queryL0ByType( $type, $config )->all();
+	}
+
+	/**
+	 * Find and returns the top level objects with given type.
+	 *
+	 * @param integer $parentId
+	 * @param array $config
+	 * @return ObjectData[]
+	 */
+	public static function findByParentId( $parentId, $config = [] ) {
+
+		return static::queryByParentId( $parentId, $config )->all();
+	}
+
+	/**
+	 * Find and return the model using given slug, type, and theme id. It assumes that site id is NULL.
 	 *
 	 * @param string $slug
 	 * @param string $type
 	 * @param integer $themeId
-	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 * @return \cmsgears\core\common\models\entities\ObjectData
 	 */
-	public static function findByThemeId( $slug, $type, $themeId ) {
+	public static function findByThemeId( $slug, $type, $themeId, $config = [] ) {
 
-		return self::queryBySlugType( $slug, $type, [ 'ignoreSite' => true ] )->andWhere( 'themeId=:themeId', [ ':themeId' => $themeId ] )->one();
+		$config[ 'ignoreSite' ] = isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : true;
+
+		return self::queryBySlugType( $slug, $type, $config )->andWhere( 'themeId=:themeId', [ ':themeId' => $themeId ] )->one();
 	}
 
 	// Create -----------------

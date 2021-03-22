@@ -17,9 +17,13 @@ use yii\behaviors\TimestampBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\interfaces\base\IFeatured;
 use cmsgears\core\common\models\interfaces\base\IFollower;
+use cmsgears\core\common\models\interfaces\resources\IData;
 
+use cmsgears\core\common\models\traits\base\FeaturedTrait;
 use cmsgears\core\common\models\traits\base\FollowerTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
  * Follower represents interest of one model in another model.
@@ -27,15 +31,19 @@ use cmsgears\core\common\models\traits\base\FollowerTrait;
  * @property integer $id
  * @property integer $modelId
  * @property integer $parentId
- * @property string $type
+ * @property integer $type
+ * @property integer $order
  * @property boolean $active
+ * @property boolean $pinned
+ * @property boolean $featured
+ * @property boolean $popular
  * @property integer $createdAt
  * @property integer $modifiedAt
  * @property string data
  *
  * @since 1.0.0
  */
-abstract class Follower extends Mapper implements IFollower {
+abstract class Follower extends Mapper implements IData, IFeatured, IFollower {
 
 	// Variables ---------------------------------------------------
 
@@ -57,6 +65,8 @@ abstract class Follower extends Mapper implements IFollower {
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
+	use FeaturedTrait;
 	use FollowerTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -94,13 +104,15 @@ abstract class Follower extends Mapper implements IFollower {
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'modelId', 'parentId' ], 'required' ],
-			[ [ 'id', 'value', 'data' ], 'safe' ],
+			[ [ 'modelId', 'parentId', 'type' ], 'required' ],
+			[ [ 'id', 'data' ], 'safe' ],
 			// Unique
-			[ [ 'modelId', 'parentId', 'type' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'type' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ [ 'type' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'type' ], 'comboNotUnique' => 'Follwer with the same type already exist.' ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			// Other
+			[ [ 'active', 'pinned', 'featured', 'popular' ], 'boolean' ],
+			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'modelId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
@@ -117,6 +129,11 @@ abstract class Follower extends Mapper implements IFollower {
 			'modelId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FOLLOWER ),
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'pinned' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PINNED ),
+			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
+			'popular' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_POPULAR ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
@@ -149,11 +166,21 @@ abstract class Follower extends Mapper implements IFollower {
 	abstract public function getParent();
 
 	/**
-	 * Checks whether the follower belong to given parent model.
+	 * Checks whether the follower belong to given user.
 	 *
 	 * @return boolean
 	 */
 	public function belongsTo( $model ) {
+
+		return $this->modelId == $model->id;
+	}
+
+	/**
+	 * Checks whether the follower belong to given parent model.
+	 *
+	 * @return boolean
+	 */
+	public function belongsToParent( $model ) {
 
 		return $this->parentId == $model->id;
 	}
@@ -284,7 +311,7 @@ abstract class Follower extends Mapper implements IFollower {
 	 * Find and return the follower using given follower id, parent id and type.
 	 *
 	 * @param integer $modelId
-	 * @param integer $followerId
+	 * @param integer $parentId
 	 * @param integer $type
 	 * @return Follower
 	 */

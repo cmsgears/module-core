@@ -45,6 +45,20 @@ interface IVisual {
 	public function getBannerUrl();
 
 	/**
+	 * Returns the mobile banner associated with model.
+	 *
+	 * @return File
+	 */
+	public function getMobileBanner();
+
+	/**
+	 * Returns the mobile banner url associated with model.
+	 *
+	 * @return string
+	 */
+	public function getMobileBannerUrl();
+
+	/**
 	 * Returns the video associated with model.
 	 *
 	 * @return File
@@ -57,6 +71,20 @@ interface IVisual {
 	 * @return string
 	 */
 	public function getVideoUrl();
+
+	/**
+	 * Returns the mobile video associated with model.
+	 *
+	 * @return File
+	 */
+	public function getMobileVideo();
+
+	/**
+	 * Returns the mobile video url associated with model.
+	 *
+	 * @return string
+	 */
+	public function getMobileVideoUrl();
 
 	/**
 	 * Returns the document associated with model.

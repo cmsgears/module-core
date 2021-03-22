@@ -14,7 +14,6 @@ use Yii;
 
 // CMG Imports
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\resources\Address;
 
 /**
@@ -31,7 +30,7 @@ use cmsgears\core\common\models\resources\Address;
  *
  * @since 1.0.0
  */
-class ModelAddress extends ModelMapper {
+class ModelAddress extends \cmsgears\core\common\models\base\ModelMapper {
 
 	// Variables ---------------------------------------------------
 
@@ -105,6 +104,11 @@ class ModelAddress extends ModelMapper {
 	public function getModel() {
 
 		return $this->hasOne( Address::class, [ 'id' => 'modelId' ] );
+	}
+
+	public function getTypeStr() {
+
+		return isset( Address::$typeMap[ $this->type ] ) ? Address::$typeMap[ $this->type ] : $this->type;
 	}
 
 	// Static Methods ----------------------------------------------

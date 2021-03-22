@@ -66,15 +66,15 @@ abstract class Properties {
 
 					$mainSite = $siteService->getBySlug( CoreGlobal::SITE_MAIN );
 
-					$mainProperties = $siteService->getIdMetaMap( $mainSite );
-					$siteProperties = $siteService->getIdMetaMap( $site );
+					$mainProperties = $siteService->getMetaIdMetaMap( $mainSite );
+					$siteProperties = $siteService->getMetaIdMetaMap( $site );
 
 					$properties = ArrayHelper::merge( $mainProperties, $siteProperties );
 				}
 				// Load main site properties
 				else {
 
-					$properties	= $siteService->getIdMetaMap( $site );
+					$properties	= $siteService->getMetaIdMetaMap( $site );
 				}
 
 				foreach( $properties as $property ) {
@@ -99,15 +99,15 @@ abstract class Properties {
 
 				$mainSite = $siteService->getBySlug( CoreGlobal::SITE_MAIN );
 
-				$mainProperties = $siteService->getMetaNameValueMapByMetaType( $mainSite, $configType );
-				$siteProperties = $siteService->getMetaNameValueMapByMetaType( $site, $configType );
+				$mainProperties = $siteService->getMetaNameValueMapByType( $mainSite, $configType );
+				$siteProperties = $siteService->getMetaNameValueMapByType( $site, $configType );
 
 				$this->properties = ArrayHelper::merge( $mainProperties, $siteProperties );
 			}
 			// Load main site properties
 			else {
 
-				$this->properties = $siteService->getMetaNameValueMapByMetaType( $site, $configType );
+				$this->properties = $siteService->getMetaNameValueMapByType( $site, $configType );
 			}
 		}
 	}

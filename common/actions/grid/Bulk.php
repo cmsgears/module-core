@@ -15,8 +15,6 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Action;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -24,7 +22,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class Bulk extends Action {
+class Bulk extends \cmsgears\core\common\base\Action {
 
 	// Variables ---------------------------------------------------
 
@@ -40,9 +38,12 @@ class Bulk extends Action {
 
 	// Public -----------------
 
-	public $modelService;
+	public $admin	= false;
+	public $user	= false;
 
 	public $config = [];
+
+	public $modelService;
 
 	// Protected --------------
 
@@ -69,7 +70,7 @@ class Bulk extends Action {
 
 	// CMG parent classes --------------------
 
-	// ToggleEmp -----------------------------
+	// Bulk ----------------------------------
 
 	public function run() {
 
@@ -81,7 +82,16 @@ class Bulk extends Action {
 
 			$target	= preg_split( '/,/', $target );
 
-			$this->modelService->applyBulkByTargetId( $column, $action, $target, $this->config );
+			// Apply bulk action on admin specific models
+			if( $this->admin ) {
+
+				$this->modelService->applyBulkByTargetId( $column, $action, $target, $this->config );
+			}
+			// Apply bulk action on user specific models
+			else if( $this->user ) {
+
+				$this->modelService->applyBulkByTargetIdUser( $column, $action, $target, $this->config );
+			}
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
@@ -90,4 +100,5 @@ class Bulk extends Action {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
+
 }

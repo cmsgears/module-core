@@ -27,7 +27,6 @@ use cmsgears\core\common\models\interfaces\resources\IGridCache;
 use cmsgears\core\common\models\interfaces\resources\IHierarchy;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Entity;
 use cmsgears\core\common\models\mappers\RolePermission;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
@@ -62,7 +61,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Role extends Entity implements IAuthor, IData, IGridCache, IHierarchy, INameType, ISlugType {
+class Role extends \cmsgears\core\common\models\base\Entity implements IAuthor, IData, IGridCache, IHierarchy, INameType, ISlugType {
 
 	// Variables ---------------------------------------------------
 
@@ -139,9 +138,10 @@ class Role extends Entity implements IAuthor, IData, IGridCache, IHierarchy, INa
 		$rules = [
 			// Required, Safe
 			[ [ 'name' ], 'required' ],
-			[ [ 'id', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id' ], 'safe' ],
 			// Unique
-			[ 'name', 'unique', 'targetAttribute' => [ 'type', 'name' ] ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'type', 'name' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NAME ) ],
+			[ 'slug', 'unique' ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
@@ -183,6 +183,24 @@ class Role extends Entity implements IAuthor, IData, IGridCache, IHierarchy, INa
 		];
 	}
 
+	// yii\db\BaseActiveRecord
+
+    /**
+     * @inheritdoc
+     */
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_SYSTEM;
+
+	        return true;
+	    }
+
+		return false;
+	}
+
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
@@ -219,15 +237,15 @@ class Role extends Entity implements IAuthor, IData, IGridCache, IHierarchy, INa
 	 */
 	public function getPermissionsIdList() {
 
-		$permissions		= $this->permissionMappingList;
-		$permissionsList	= [];
+		$permissionMappings	= $this->permissionMappingList;
+		$permissionsIdList	= [];
 
-		foreach ( $permissions as $permission ) {
+		foreach( $permissionMappings as $permissionMapping ) {
 
-			array_push( $permissionsList, $permission->permissionId );
+			array_push( $permissionsIdList, $permissionMapping->permissionId );
 		}
 
-		return $permissionsList;
+		return $permissionsIdList;
 	}
 
 	/**
@@ -329,8 +347,9 @@ class Role extends Entity implements IAuthor, IData, IGridCache, IHierarchy, INa
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -343,7 +362,7 @@ class Role extends Entity implements IAuthor, IData, IGridCache, IHierarchy, INa
 	 */
 	public static function queryWithPermissions( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'permissions' ];
+		$config[ 'relations' ] = [ 'permissions' ];
 
 		return parent::queryWithAll( $config );
 	}

@@ -15,7 +15,6 @@ use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\common\models\forms\BaseForm;
 
 /**
  * Used to submit password reset request using otp.

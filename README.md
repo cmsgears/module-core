@@ -1,13 +1,13 @@
-Project 	- CMSGears (http://www.cmsgears.org)
+**Project** - CMSGears (http://www.cmsgears.org)
 
-Module  	- Core
+**Module**  - Core
 
-License 	- GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
+**License** - GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
 
-Description - The core module for CMSGears based projects. It's required for all the projects using CMSGears.
+**Description** - The core module is required by all the projects using CMSGears.
+---
 
-Highlighted Features
-=========================================
+# Highlighted Features
 1. User management to manage users. Admin can add or update users from the admin control panel.
 2. RBAC to manage roles and permissions. Assign roles to users and restrict users to perform actions based on permissions assigned to their respective role. Groups can be formed to assign multiple roles and permissions.
 3. User registration, login, forgot password, reset password, confirm account, activate account.
@@ -23,4 +23,4 @@ Highlighted Features
 13. Multisite support is also available within core module.
 14. Templates can be used for various models like Notifications, Reminders, Activities.
 
-Notes: The detailed description for each feature can be found at http://www.cmsgears.org.
+**Notes**: The detailed description for each feature can be found at http://www.cmsgears.org.

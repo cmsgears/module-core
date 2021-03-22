@@ -15,8 +15,6 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Action;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -24,7 +22,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class Trash extends Action {
+class Trash extends \cmsgears\core\common\base\Action {
 
 	// Variables ---------------------------------------------------
 
@@ -71,12 +69,17 @@ class Trash extends Action {
 
 	public function run( $id ) {
 
-		$model	= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		if( isset( $model ) ) {
 
+			$model = $this->modelService->trash( $model );
+
 			// Trigger Ajax Success
-			if( $this->modelService->trash( $model ) ) {
+			if( $model ) {
+
+				// Controller Model for post action
+				$this->controller->model = $model;
 
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 			}

@@ -18,8 +18,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\entities\ICityService;
 
-use cmsgears\core\common\services\base\EntityService;
-
 use cmsgears\core\common\services\traits\base\NameTrait;
 
 /**
@@ -27,7 +25,7 @@ use cmsgears\core\common\services\traits\base\NameTrait;
  *
  * @since 1.0.0
  */
-class CityService extends EntityService implements ICityService {
+class CityService extends \cmsgears\core\common\services\base\EntityService implements ICityService {
 
 	// Variables ---------------------------------------------------
 
@@ -76,6 +74,11 @@ class CityService extends EntityService implements ICityService {
 
 	public function getPage( $config = [] ) {
 
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
+
+		$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
@@ -109,6 +112,12 @@ class CityService extends EntityService implements ICityService {
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'name'
+				],
+				'code' => [
+					'asc' => [ "$modelTable.code" => SORT_ASC ],
+					'desc' => [ "$modelTable.code" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Code'
 				],
 				'iso' => [
 					'asc' => [ "$modelTable.iso" => SORT_ASC ],
@@ -152,7 +161,8 @@ class CityService extends EntityService implements ICityService {
 					'default' => SORT_DESC,
 					'label' => 'Longitude'
 				]
-			]
+			],
+			'defaultOrder' => $defaultSort
 		]);
 
 		if( !isset( $config[ 'sort' ] ) ) {
@@ -173,31 +183,36 @@ class CityService extends EntityService implements ICityService {
 		$type = Yii::$app->request->getQueryParam( 'type' );
 
 		// Filter - Type
-		if( isset( $type ) ) {
+		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 		}
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol		= Yii::$app->request->getQueryParam( $searchColParam );
+		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
+
+		$search = [
+			'name' => "$modelTable.name",
+			'code' => "$modelTable.code",
+			'iso' => "$modelTable.iso",
+			'postal' => "$modelTable.postal",
+			'zone' => "$modelTable.zone"
+		];
 
 		if( isset( $searchCol ) ) {
 
-			$search = [
-				'name' => "$modelTable.name",
-				'code' => "$modelTable.code",
-				'iso' => "$modelTable.iso",
-				'postal' => "$modelTable.postal",
-				'zone' => "$modelTable.zone"
-			];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search[ $searchCol ];
+		}
+		else if( isset( $keywordsCol ) ) {
 
-			$config[ 'search-col' ] = $search[ $searchCol ];
+			$config[ 'search-col' ] = $config[ 'search-col' ] ?? $search;
 		}
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [
+		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
 			'name' => "$modelTable.name",
 			'code' => "$modelTable.code",
 			'iso' => "$modelTable.iso",
@@ -242,6 +257,20 @@ class CityService extends EntityService implements ICityService {
 		return $modelClass::isUniqueExistByZone( $name, $countryId, $provinceId, $zone );
 	}
 
+	public function getUniqueByRegionId( $name, $countryId, $provinceId, $regionId ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::findUniqueByRegionId( $name, $countryId, $provinceId, $regionId );
+	}
+
+	public function isUniqueExistByRegionId( $name, $countryId, $provinceId, $regionId ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::isUniqueExistByRegionId( $name, $countryId, $provinceId, $regionId );
+	}
+
 	// Read - Lists ----
 
 	public function searchByName( $name, $config = [] ) {
@@ -249,11 +278,27 @@ class CityService extends EntityService implements ICityService {
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
-		$config[ 'columns' ] = [ "$modelTable.id", "$modelTable.name", "$modelTable.latitude", "$modelTable.longitude", "$modelTable.postal" ];
+		$autoCache = isset( $config[ 'autoCache' ] ) ? $config[ 'autoCache' ] : false;
 
-		$config[ 'order' ] = 'name ASC';
+		$config[ 'columns' ] = isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [
+			"$modelTable.id", "$modelTable.name", "$modelTable.latitude", "$modelTable.longitude", "$modelTable.postal"
+		];
 
-		return $this->baseSearchByName( $name, $config );
+		if( $autoCache ) {
+
+			$config[ 'query' ]	= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
+			$config[ 'array' ]	= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
+			$config[ 'sort' ]	= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : [ 'name' => SORT_ASC ];
+
+			//$config[ 'query' ]->andWhere( "MATCH(autoCache) AGAINST(:auto IN NATURAL LANGUAGE MODE)", [ ':auto' => $name ] );
+          	$config[ 'query' ]->andWhere( "$modelTable.name like :name", [ ':name' => "$name%" ] );
+
+			return static::searchModels( $config );
+		}
+		else {
+
+			return $this->baseSearchByName( $name, $config );
+		}
 	}
 
 	// Read - Maps -----
@@ -263,6 +308,18 @@ class CityService extends EntityService implements ICityService {
 	// Create -------------
 
 	// Update -------------
+
+	public function update( $model, $config = [] ) {
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'title', 'code', 'iso', 'type', 'postal', 'zone', 'regions', 'zipCodes',
+			'timeZone', 'latitude', 'longitude'
+		];
+
+		return parent::update( $model, [
+			'attributes' => $attributes
+		]);
+	}
 
 	// Delete -------------
 

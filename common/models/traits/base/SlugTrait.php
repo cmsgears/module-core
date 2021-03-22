@@ -66,17 +66,47 @@ trait SlugTrait {
 	public static function queryBySlug( $slug, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
+		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'slug=:slug AND siteId=:siteId', [ ':slug' => $slug, ':siteId' => $siteId ] );
+			$query = static::find()->where( 'slug=:slug AND siteId=:siteId', [ ':slug' => $slug, ':siteId' => $siteId ] );
 		}
 		else {
 
-			return static::find()->where( 'slug=:slug', [ ':slug' => $slug ] );
+			$query = static::find()->where( 'slug=:slug', [ ':slug' => $slug ] );
 		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
+
+		return $query;
 	}
 
 	// Read - Find ------------
@@ -100,7 +130,7 @@ trait SlugTrait {
 	 */
 	public static function isExistBySlug( $slug, $config = [] ) {
 
-		$model	= static::findBySlug( $slug, $config );
+		$model = static::findBySlug( $slug, $config );
 
 		return isset( $model );
 	}

@@ -9,19 +9,17 @@
 
 namespace cmsgears\core\console\controllers;
 
-use yii\console\controllers\MigrateController;
-
-class ThemeController extends MigrateController {
+class ThemeController extends \yii\console\controllers\MigrateController {
 
 	// Make this theme as default theme.
-	public $default		= true;
+	public $default = true;
 
 	// Activate this theme for current site.
-	public $activate	= true;
+	public $activate = true;
 
 	public function options( $actionID ) {
 
-		$options	= parent::options( $actionID );
+		$options = parent::options( $actionID );
 
 		$options[]	= 'default';
 		$options[]	= 'activate';

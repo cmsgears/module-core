@@ -10,8 +10,6 @@
 namespace cmsgears\core\common\services\interfaces\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\interfaces\base\IFollower;
-
 use cmsgears\core\common\services\interfaces\base\IModelMapperService;
 
 /**
@@ -27,29 +25,37 @@ interface IModelFollowerService extends IModelMapperService {
 
 	// Read - Models ---
 
-	public static function getByFollower( $parentId, $parentType, $type = IFollower::TYPE_FOLLOW );
+	public function getByFollower( $parentId, $parentType, $config = [] );
+
+	public function getFollowing( $parentType, $config = [] );
 
 	// Read - Lists ----
 
-    public function getFollowersIdList( $parentId, $parentType );
+    public function getFollowersIdList( $parentId, $parentType, $config = [] );
 
-    public function getFollowingIdList( $parentType );
+    public function getFollowingIdList( $parentType, $config = [] );
+
+    public function getLikeIdList( $parentType, $config = [] );
+
+    public function getDisikeIdList( $parentType, $config = [] );
+
+    public function getFollowIdList( $parentType, $config = [] );
+
+    public function getWishlistIdList( $parentType, $config = [] );
 
 	// Read - Maps -----
 
 	// Read - Others ---
 
-	public function getFollowCount( $parentType, $type = IFollower::TYPE_FOLLOW );
+	public function getFollowCount( $parentType, $config = [] );
 
-	public function getFollowersCount( $parentId, $parentType, $type = IFollower::TYPE_FOLLOW );
+	public function getFollowersCount( $parentId, $parentType, $config = [] );
 
-	public function getStatusCounts( $parentId, $parentType, $type = IFollower::TYPE_FOLLOW );
+	public function getStatusCounts( $parentId, $parentType, $config = [] );
 
 	// Create -------------
 
 	// Update -------------
-
-	public function toggleStatus( $model );
 
 	// Delete -------------
 

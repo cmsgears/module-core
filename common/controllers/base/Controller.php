@@ -105,6 +105,13 @@ abstract class Controller extends \yii\web\Controller {
 	 */
 	protected $scenario;
 
+	/**
+	 * Flag to check whether last active timestamp is supported by the controller.
+	 *
+	 * @var boolean
+	 */
+	protected $logLastActive;
+
 	// Private ----------------
 
 	/**
@@ -130,6 +137,13 @@ abstract class Controller extends \yii\web\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
+	public function init() {
+
+		parent::init();
+
+		$this->logLastActive = false;
+	}
+
 	// For development purpose only - Publish assets for each request
 	public function beforeAction( $action ) {
 
@@ -138,10 +152,11 @@ abstract class Controller extends \yii\web\Controller {
 			Yii::$app->assetManager->forceCopy = true;
 		}
 
-		// TODO: Enable it carefully considering performance factors
-
 		// Log user's last activity to trace when user was last active
-		//Yii::$app->factory->get( 'userService' )->logLastActivity();
+		if( $this->logLastActive ) {
+
+			Yii::$app->factory->get( 'userService' )->logLastActivity();
+		}
 
 		return parent::beforeAction( $action );
 	}
@@ -198,6 +213,20 @@ abstract class Controller extends \yii\web\Controller {
 
 		if( isset( $this->breadcrumbs[ 'base' ] ) ) {
 
+			if( isset( $this->breadcrumbs[ 'subchild' ] ) ) {
+
+				$parent = ArrayHelper::merge( $this->breadcrumbs[ 'base' ], $this->breadcrumbs[ 'child' ] );
+				$child  = ArrayHelper::merge( $parent, $this->breadcrumbs[ 'subchild' ] );
+
+				return ArrayHelper::merge( $child, $this->breadcrumbs[ $action ] );
+			}
+			else if( isset( $this->breadcrumbs[ 'child' ] ) ) {
+
+				$parent = ArrayHelper::merge( $this->breadcrumbs[ 'base' ], $this->breadcrumbs[ 'child' ] );
+
+				return ArrayHelper::merge( $parent, $this->breadcrumbs[ $action ] );
+			}
+
 			return ArrayHelper::merge( $this->breadcrumbs[ 'base' ], $this->breadcrumbs[ $action ] );
 		}
 		else {
@@ -214,18 +243,20 @@ abstract class Controller extends \yii\web\Controller {
 		// Send user to home if already logged in
 		if ( !Yii::$app->user->isGuest ) {
 
-			$user		= Yii::$app->user->getIdentity();
+			$siteMemberService = Yii::$app->factory->get( 'siteMemberService' );
+
+			$user		= Yii::$app->core->getUser();
 			$role		= $user->role;
 			$storedLink	= Url::previous( CoreGlobal::REDIRECT_LOGIN );
 
-			$siteId		= Yii::$app->core->getSiteId();
+			$siteId = Yii::$app->core->getSiteId();
 
-			$siteMember = Yii::$app->factory->get( 'siteMemberService' )->getBySiteIdUserId( $siteId, $user->id );
+			$siteMember = $siteMemberService->getBySiteIdUserId( $siteId, $user->id );
 
 			// Auto-Register site member
-			if( !isset( $siteMember ) ) {
+			if( !isset( $siteMember ) && Yii::$app->core->isAutoSiteMember() ) {
 
-				Yii::$app->factory->get( 'siteMemberService' )->create( $user );
+				$siteMemberService->createByParams( [ 'userId' => $user->id ] );
 			}
 
 			// Redirect user to stored link on login

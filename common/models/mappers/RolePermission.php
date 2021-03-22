@@ -16,7 +16,6 @@ use Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Mapper;
 
 /**
  * Mapper to map roles and permissions.
@@ -26,7 +25,7 @@ use cmsgears\core\common\models\base\Mapper;
  *
  * @since 1.0.0
  */
-class RolePermission extends Mapper {
+class RolePermission extends \cmsgears\core\common\models\base\Mapper {
 
 	// Variables ---------------------------------------------------
 
@@ -70,7 +69,7 @@ class RolePermission extends Mapper {
 			// Required, Safe
 			[ [ 'roleId', 'permissionId' ], 'required' ],
 			// Unique
-			[ [ 'roleId', 'permissionId' ], 'unique', 'targetAttribute' => [ 'roleId', 'permissionId' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ [ 'roleId', 'permissionId' ], 'unique', 'targetAttribute' => [ 'roleId', 'permissionId' ] ],
 			// Other
 			[ [ 'roleId', 'permissionId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
@@ -92,16 +91,6 @@ class RolePermission extends Mapper {
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
-
-	/**
-	 * @inheritdoc
-	 */
-	public function isExist() {
-
-		$mapping = self::findByCountryIdCode( $this->roleId, $this->permissionId );
-
-		return isset( $mapping );
-	}
 
 	// Validators ----------------------------
 
@@ -152,8 +141,9 @@ class RolePermission extends Mapper {
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'role', 'permission' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'role', 'permission' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -166,7 +156,7 @@ class RolePermission extends Mapper {
 	 */
 	public static function queryWithRole( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'role' ];
+		$config[ 'relations' ] = [ 'role' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -179,7 +169,7 @@ class RolePermission extends Mapper {
 	 */
 	public static function queryWithPermission( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'permission' ];
+		$config[ 'relations' ] = [ 'permission' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -225,4 +215,5 @@ class RolePermission extends Mapper {
 
 		return self::deleteAll( 'permissionId=:id', [ ':id' => $permissionId ] );
 	}
+
 }

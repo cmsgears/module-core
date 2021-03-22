@@ -40,7 +40,7 @@ class PermissionController extends \cmsgears\core\admin\controllers\base\Permiss
 		$this->apixBase	= 'core/permission';
 
 		// Sidebar
-		$this->sidebar = [ 'parent' => 'sidebar-identity', 'child' => 'perm' ];
+		$this->sidebar = [ 'parent' => 'sidebar-rbac', 'child' => 'perm' ];
 
 		// Return Url
 		$this->returnUrl = Url::previous( 'permissions' );

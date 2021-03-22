@@ -20,7 +20,6 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\interfaces\base\IFeatured;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Mapper;
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Role;
@@ -36,12 +35,13 @@ use cmsgears\core\common\models\traits\base\FeaturedTrait;
  * @property integer $roleId
  * @property boolean $pinned
  * @property boolean $featured
+ * @property boolean $popular
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  *
  * @since 1.0.0
  */
-class SiteMember extends Mapper implements IFeatured {
+class SiteMember extends \cmsgears\core\common\models\base\Mapper implements IFeatured {
 
 	// Variables ---------------------------------------------------
 
@@ -105,9 +105,9 @@ class SiteMember extends Mapper implements IFeatured {
 			[ [ 'siteId', 'roleId' ], 'required' ],
 			[ 'name', 'safe' ],
 			// Unique
-			[ [ 'siteId', 'userId' ], 'unique', 'targetAttribute' => [ 'siteId', 'userId' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ 'userId', 'unique', 'targetAttribute' => [ 'siteId', 'userId' ], 'message' => 'Site Member already exists.' ],
 			// Other
-			[ [ 'pinned', 'featured' ], 'boolean' ],
+			[ [ 'pinned', 'featured', 'popular' ], 'boolean' ],
 			[ [ 'siteId', 'userId', 'roleId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
@@ -123,7 +123,10 @@ class SiteMember extends Mapper implements IFeatured {
 		return [
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'userId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
-			'roleId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ROLE )
+			'roleId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ROLE ),
+			'pinned' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PINNED ),
+			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
+			'popular' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_POPULAR )
 		];
 	}
 
@@ -190,8 +193,9 @@ class SiteMember extends Mapper implements IFeatured {
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'user', 'role' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'user', 'role' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -204,7 +208,7 @@ class SiteMember extends Mapper implements IFeatured {
 	 */
 	public static function queryWithSite( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'site' ];
+		$config[ 'relations' ] = [ 'site' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -217,7 +221,7 @@ class SiteMember extends Mapper implements IFeatured {
 	 */
 	public static function queryWithUser( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'user', 'role' ];
+		$config[ 'relations' ] = [ 'user', 'role' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -274,4 +278,5 @@ class SiteMember extends Mapper implements IFeatured {
 
 		return self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
 	}
+
 }

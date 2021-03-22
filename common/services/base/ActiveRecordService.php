@@ -12,6 +12,7 @@ namespace cmsgears\core\common\services\base;
 // Yii Imports
 use Yii;
 use yii\base\Component;
+use yii\base\Exception;
 use yii\data\Sort;
 use yii\db\Expression;
 use yii\db\Query;
@@ -63,13 +64,13 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	/**
 	 * The model class used to call model static methods.
 	 */
-	public static $modelClass	= null;
+	public static $modelClass = null;
 
 	/**
 	 * The service must specify whether it's corresponding model supports type for classification
 	 * of the model.
 	 */
-	public static $typed		= false;
+	public static $typed = false;
 
 	/**
 	 * Parent type is required to associate multiple mapper or resources to the corresponding model.
@@ -77,7 +78,14 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 * is no relation between $typed and $parentType. The variable $typed is specific for service model
 	 * whereas $parentType is required for mapper and resources.
 	 */
-	public static $parentType	= null;
+	public static $parentType = null;
+
+	/**
+	 * The string representation of parent type.
+	 *
+	 * @var type string
+	 */
+	public static $parentTypeStr = null;
 
 	// Protected --------------
 
@@ -132,6 +140,11 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	public function getParentType() {
 
 		return static::$parentType;
+	}
+
+	public function getParentTypeStr() {
+
+		return !empty( static::$parentTypeStr ) ? static::$parentTypeStr : ucfirst( static::$parentType );
 	}
 
 	// Data Provider ------
@@ -219,17 +232,17 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public function getRandom( $config = [] ) {
 
-		$offset			= $config[ 'offset' ] ?? 0;
-		$limit			= $config[ 'limit' ] ?? 10;
-		$conditions		= $config[ 'conditions' ] ?? null;
+		$offset		= $config[ 'offset' ] ?? 0;
+		$limit		= $config[ 'limit' ] ?? 10;
+		$conditions	= $config[ 'conditions' ] ?? null;
 
 		// model class
-		$modelClass		= static::$modelClass;
+		$modelClass = static::$modelClass;
 
 		// query generation
-		$results		= [];
+		$results = [];
 
-		$query			= $modelClass::find();
+		$query = $modelClass::find();
 
 		if( isset( $conditions ) ) {
 
@@ -309,9 +322,14 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		return static::findIdNameMap( $config );
 	}
 
-	public function getObjectMap( $config = [] ) {
+	public function getModelMap( $config = [] ) {
 
-		return static::findObjectMap( $config );
+		return static::findModelMap( $config );
+	}
+
+	public function getModelMapByIds( $ids, $config = [] ) {
+
+		return static::findModelMapByIds( $ids, $config );
 	}
 
 	// Read - Others ---
@@ -326,7 +344,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		if( $modelClass::isMultiSite() && !$ignoreSite ) {
 
-			$model->siteId	= $config[ 'siteId' ] ?? Yii::$app->core->siteId;
+			$model->siteId = $config[ 'siteId' ] ?? Yii::$app->core->siteId;
 		}
 
 		$model->save();
@@ -338,7 +356,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		// Handle cases where proper validation is not applied
 		else if( YII_DEBUG ) {
 
-			var_dump( $model->getErrors() );
+			throw new Exception( 'Failed to create the model.' );
 		}
 
 		return false;
@@ -346,7 +364,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	public function createByParams( $params = [], $config = [] ) {
 
-		$model	= new static::$modelClass;
+		$model = new static::$modelClass;
 
 		foreach( $params as $key => $value ) {
 
@@ -485,6 +503,73 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		]);
 	}
 
+	protected function copyTemplate( $model, $config = [] ) {
+
+		$configure		= isset( $config[ 'configure' ] ) ? $config[ 'configure' ] : true;
+		$pTemplate		= isset( $config[ 'template' ] ) ? $config[ 'template' ] : null;
+		$oldTemplate	= isset( $config[ 'oldTemplate' ] ) ? $config[ 'oldTemplate' ] : null;
+		$template		= null;
+
+		if( $configure ) {
+
+			// Present Template is different than Old Template
+			if( isset( $pTemplate ) && isset( $oldTemplate ) && $pTemplate->id != $oldTemplate->id ) {
+
+				$template = $pTemplate;
+			}
+			// Template is assigned for the first time
+			else if( isset( $pTemplate ) && empty( $oldTemplate ) ) {
+
+				$template = $pTemplate;
+			}
+
+			if( isset( $template ) ) {
+
+				$configurations = json_decode( $template->data );
+
+				if( isset( $configurations->tdata ) ) {
+
+					$model->setDataMeta( 'data', $configurations->tdata );
+				}
+				else {
+
+					$model->unsetDataMeta( 'data' );
+				}
+
+				if( isset( $configurations->tattributes ) ) {
+
+					$model->setDataMeta( 'attributes', $configurations->tattributes );
+				}
+				else {
+
+					$model->unsetDataMeta( 'attributes' );
+				}
+
+				if( isset( $configurations->tconfig ) ) {
+
+					$model->setDataMeta( 'config', $configurations->tconfig );
+				}
+				else {
+
+					$model->unsetDataMeta( 'config' );
+				}
+
+				if( isset( $configurations->tsettings ) ) {
+
+					$model->setDataMeta( 'settings', $configurations->tsettings );
+				}
+				else {
+
+					$model->unsetDataMeta( 'settings' );
+				}
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	// Delete -------------
 
 	/**
@@ -496,8 +581,11 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public function delete( $model, $config = [] ) {
 
-		$hard	= $config[ 'hard' ] ?? true;
-		$notify = $config[ 'notify' ] ?? true;
+		$config[ 'notify' ] = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+
+		$config[ 'softDeleteStatus' ] = isset( $config[ 'softDeleteStatus' ] ) ? $config[ 'softDeleteStatus' ] : IApproval::STATUS_DELETED;
+
+		$hard = isset( $config[ 'hard' ] ) ? $config[ 'hard' ] : true;
 
 		if( isset( $model ) ) {
 
@@ -514,11 +602,11 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 				if( isset( $interfaces[ 'cmsgears\core\common\services\interfaces\base\IApproval' ] ) ) {
 
 					// Approval Trait
-					return $this->softDeleteNotify( $model, $notify, $config );
+					return $this->softDeleteNotify( $model, $config );
 				}
 				else {
 
-					return $this->softDelete( $model );
+					return $this->softDelete( $model, $config[ 'softDeleteStatus' ] );
 				}
 			}
 		}
@@ -526,12 +614,12 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		return false;
 	}
 
-	public function softDelete( $model ) {
+	public function softDelete( $model, $softDeleteStatus ) {
 
 		// Delete if not deleted yet
-		if( !$model->status == IApproval::STATUS_DELETED ) {
+		if( $model->status != $softDeleteStatus ) {
 
-			$model->status = IApproval::STATUS_DELETED;
+			$model->status = $softDeleteStatus;
 
 			$model->update();
 
@@ -543,7 +631,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	public function deleteMultiple( $models, $config = [] ) {
 
-		if( isset( $models ) ){
+		if( isset( $models ) ) {
 
 			foreach( $models as $model ) {
 
@@ -570,12 +658,80 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public function applyBulkByTargetId( $column, $action, $target, $config = [] ) {
 
-		foreach ( $target as $id ) {
+		foreach( $target as $id ) {
 
 			$model = $this->getById( $id );
 
 			// Bulk Conditions
 			if( isset( $model ) ) {
+
+				$this->applyBulk( $model, $column, $action, $target, $config );
+			}
+		}
+	}
+
+	/**
+	 * Bulk actions by user.
+	 *
+	 * @param string $column
+	 * @param string $action
+	 * @param string $target
+	 */
+	public function applyBulkByTargetIdUser( $column, $action, $target, $config = [] ) {
+
+		$user = Yii::$app->core->getUser();
+
+		foreach( $target as $id ) {
+
+			$model = $this->getById( $id );
+
+			// Bulk Conditions
+			if( isset( $model ) && $model->isOwner( $user ) ) {
+
+				$this->applyBulk( $model, $column, $action, $target, $config );
+			}
+		}
+	}
+
+	/**
+	 * Bulk actions by user id.
+	 *
+	 * @param string $column
+	 * @param string $action
+	 * @param string $target
+	 * @param integer $userId
+	 */
+	public function applyBulkByTargetIdUserId( $column, $action, $target, $userId, $config = [] ) {
+
+		foreach( $target as $id ) {
+
+			$model = $this->getById( $id );
+
+			// Bulk Conditions
+			if( isset( $model ) && $model->userId == $userId ) {
+
+				$this->applyBulk( $model, $column, $action, $target, $config );
+			}
+		}
+	}
+
+	/**
+	 * Bulk actions by parent.
+	 *
+	 * @param string $column
+	 * @param string $action
+	 * @param string $target
+	 * @param integer $parentId
+	 * @param string $parentType
+	 */
+	public function applyBulkByTargetIdParent( $column, $action, $target, $parentId, $parentType, $config = [] ) {
+
+		foreach( $target as $id ) {
+
+			$model = $this->getById( $id );
+
+			// Bulk Conditions
+			if( isset( $model ) && $model->parentId == $parentId && $model->parentType == $parentType ) {
 
 				$this->applyBulk( $model, $column, $action, $target, $config );
 			}
@@ -590,7 +746,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	// Notifications ------
 
     /**
-	 * Trigger Admin Notifications. The template settings will override.
+	 * Trigger Admin Notifications. It can also send direct notification where applicable.
 	 *
 	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
 	 *
@@ -601,13 +757,13 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	public function notifyAdmin( $model, $config = [] ) {
 
 		$config[ 'admin' ]	= true;
-		$config[ 'direct' ]	= false;
+		$config[ 'direct' ]	= isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : false;
 
 		$this->sendNotification( $model, $config );
 	}
 
     /**
-	 * Trigger User Notifications. The template settings will override.
+	 * Trigger User Notifications. It can also send direct notification where applicable.
 	 *
 	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
 	 *
@@ -618,13 +774,13 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
     public function notifyUser( $model, $config = [] ) {
 
 		$config[ 'admin' ]	= false;
-		$config[ 'direct' ]	= false;
+		$config[ 'direct' ]	= isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : false;
 
 		$this->sendNotification( $model, $config );
 	}
 
     /**
-	 * Trigger User Notifications. The template settings will override.
+	 * Trigger only Direct Notifications specific to a model.
 	 *
 	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
 	 *
@@ -653,15 +809,18 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$templateData	= $config[ 'data' ] ?? [];
 		$templateConfig	= [];
 
-		$templateData	= ArrayHelper::merge( [ 'model' => $model, 'service' => $this ], $templateData );
+		$templateData = ArrayHelper::merge( [ 'model' => $model, 'service' => $this ], $templateData );
+
+		$templateConfig[ 'admin' ]	= $config[ 'admin' ] ?? false;
+		$templateConfig[ 'direct' ]	= $config[ 'direct' ] ?? false;
 
 		$templateConfig[ 'createdBy' ]	= $config[ 'createdBy' ] ?? null;
-		$templateConfig[ 'parentId' ]	= $model->id;
-		$templateConfig[ 'parentType' ]	= self::$parentType;
+		$templateConfig[ 'parentId' ]	= $config[ 'parentId' ] ?? $model->id;
+		$templateConfig[ 'parentType' ]	= $config[ 'parentType' ] ?? static::$parentType;
 		$templateConfig[ 'link' ]		= $config[ 'link' ] ?? null;
 		$templateConfig[ 'adminLink' ]	= $config[ 'adminLink' ] ?? null;
 
-		$templateConfig[ 'title' ]	= $config[ 'title' ] ?? $model->name ?? null;
+		$templateConfig[ 'title' ]	= isset( $config[ 'title' ] ) ? $config[ 'title' ] : null;
 		$templateConfig[ 'users' ]	= $config[ 'users' ] ?? [];
 
 		return Yii::$app->eventManager->triggerNotification( $config[ 'template' ], $templateData, $templateConfig );
@@ -711,6 +870,8 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 			// Select only active and frozen models excluding new, blocked and terminated models.
 			if( $status && isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IApproval' ] ) ) {
+
+				//$config[ 'conditions' ][ "$modelTable.status" ] = IVisibility::STATUS_ACTIVE;
 
 				$config[ 'filters' ][] = [ 'in', "$modelTable.status", [ IApproval::STATUS_ACTIVE, IApproval::STATUS_FROJEN ] ];
 			}
@@ -778,10 +939,13 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$conditions		= $config[ 'conditions' ] ?? null;
 		$filters		= $config[ 'filters' ] ?? null;
 		$random			= $config[ 'random' ] ?? false; // Be careful in using random at database level for tables having high row count
-		$softDelete		= $config[ 'softDelete' ] ?? false;
+
+		$softDelete			= $config[ 'softDelete' ] ?? Yii::$app->core->isSoftDelete();
+		$softDeleteStatus	= isset( $config[ 'softDeleteStatus' ] ) ? $config[ 'softDeleteStatus' ] : null;
 
 		// search and sort
 		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchColParam	= $config[ 'search-col-param' ] ?? 'search';
 		$searchCol		= $config[ 'search-col' ] ?? [];
 		$sort			= $config[ 'sort' ] ?? false;
 
@@ -813,11 +977,18 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		$interfaces = class_implements( static::class );
 
-		if( $softDelete || isset( $interfaces[ 'cmsgears\core\common\services\interfaces\base\IApproval' ] ) ) {
+		if( $softDelete ) {
 
-			$softDelete = IApproval::STATUS_DELETED;
+			if( isset( $interfaces[ 'cmsgears\core\common\services\interfaces\base\IApproval' ] ) ) {
 
-			$query->andWhere( "$modelTable.status!=$softDelete" );
+				$softDelete = IApproval::STATUS_DELETED;
+
+				$query->andWhere( "$modelTable.status!=$softDelete" );
+			}
+			else if( isset ( $softDeleteStatus ) ) {
+
+				$query->andWhere( "$modelTable.status!=$softDeleteStatus" );
+			}
 		}
 
 		// Random -------------
@@ -829,9 +1000,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		// Searching ----------
 
-		$searchTerms	= Yii::$app->request->getQueryParam( $searchParam );
+		$searchTerms = Yii::$app->request->getQueryParam( $searchParam );
 
-		if( isset( $searchTerms ) && strlen( $searchTerms ) > 0 && count( $searchCol ) > 0 ) {
+		if( isset( $searchTerms ) && strlen( $searchTerms ) > 0 && !empty( $searchCol ) ) {
 
 			$searchTerms	= HtmlPurifier::process( $searchTerms );
 			$searchQuery	= static::generateSearchQuery( $searchCol, $searchTerms );
@@ -842,9 +1013,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		if( isset( $filters ) ) {
 
-			foreach ( $filters as $filter ) {
+			foreach( $filters as $filter ) {
 
-				$query	= $query->andFilterWhere( $filter );
+				$query = $query->andFilterWhere( $filter );
 			}
 		}
 
@@ -872,7 +1043,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 				// String search
 				if( isset( $find ) ) {
 
-					$reportColumns[ $column ][ 'find' ] = $find;
+					$reportColumns[ $column ][ 'find' ] = trim( $find );
 				}
 
 				// Flag
@@ -900,6 +1071,11 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 				}
 			}
 
+			$fcount = 0;
+			$mcount = 0;
+			$scount = 0;
+			$ecount = 0;
+
 			foreach( $reportColumns as $key => $column ) {
 
 				$find	= isset( $column[ 'find' ] ) ? $column[ 'find' ] : null;
@@ -917,19 +1093,19 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 				// Flag
 				if( isset( $flag ) ) {
 
-					$query->andWhere( "{$key}=:flag", [ ':flag' => $flag ] );
+					$query->andWhere( "{$key}=:flag{$fcount}", [ ":flag{$fcount}" => $flag ] );
 				}
 
-				// Numeric
+				// Match
 				if( isset( $match ) ) {
 
-					$query->andWhere( "$key=:match", [ ':match' => $match ] );
+					$query->andWhere( "$key=:match{$mcount}", [ ":match{$mcount}" => $match ] );
 				}
 
 				// Numeric - Range - Start & End
 				if( isset( $start ) && isset( $end ) ) {
 
-					$query->andWhere( "$key BETWEEN :start AND :end", [ ':start' => $start, ':end' => $end ] );
+					$query->andWhere( "$key BETWEEN :start{$scount} AND :end{$ecount}", [ ":start{$scount}" => $start, ":end{$ecount}" => $end ] );
 				}
 				// Numeric - Range - Start
 				else if( isset( $start ) ) {
@@ -941,6 +1117,11 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 					$query->andWhere( "$key <= '$end'" );
 				}
+
+				$fcount++;
+				$mcount++;
+				$scount++;
+				$ecount++;
 			}
 		}
 
@@ -975,7 +1156,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 			$pagination[ 'route' ] = $route;
 		}
 
-		$dataProvider	= new ActiveDataProvider([
+		$dataProvider = new ActiveDataProvider([
 			'query' => $query,
 			'sort' => $sort,
 			'pagination' => $pagination
@@ -1516,7 +1697,14 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		return static::generateMap( $config );
 	}
 
-	public static function findObjectMap( $config = [] ) {
+	public static function findModelMap( $config = [] ) {
+
+		return static::generateObjectMap( $config );
+	}
+
+	public static function findModelMapByIds( $ids, $config = [] ) {
+
+		$config[ 'filters' ][] = [ 'in', 'id', $ids ];
 
 		return static::generateObjectMap( $config );
 	}
@@ -1635,9 +1823,11 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		// Multiple columns
 		if( is_array( $columns ) ) {
 
+			$firstCol = true;
+
 			foreach( $columns as $ckey => $column ) {
 
-				$query	= null;
+				$query	= '';
 
 				foreach( $searchTerms as $skey => $term ) {
 
@@ -1653,9 +1843,11 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 				if( isset( $query ) ) {
 
-					if( $ckey  == 0 ) {
+					if( $firstCol ) {
 
 						$searchQuery =	"( $query )";
+
+						$firstCol = false;
 					}
 					else {
 

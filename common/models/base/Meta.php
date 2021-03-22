@@ -39,6 +39,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  * @property string $label
  * @property string $type
  * @property boolean $active
+ * @property integer $order
  * @property string $valueType
  * @property string $value
  * @property string $data
@@ -90,10 +91,10 @@ abstract class Meta extends Resource implements IData, IMeta {
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'modelId', 'name', 'type' ], 'required' ],
-			[ [ 'id', 'value', 'data' ], 'safe' ],
+			[ [ 'modelId', 'name' ], 'required' ],
+			[ [ 'id', 'value' ], 'safe' ],
 			// Unique
-			[ [ 'name' ], 'unique', 'targetAttribute' => [ 'modelId', 'type', 'name' ], 'comboNotUnique' => 'Attribute with the same name and type already exist.' ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'modelId', 'type', 'name' ] ],
 			// Text Limit
 			[ [ 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
@@ -101,13 +102,14 @@ abstract class Meta extends Resource implements IData, IMeta {
 			[ 'label', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
 			[ 'active', 'boolean' ],
+			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ 'modelId', 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'type', 'valueType', 'value' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'label', 'valueType', 'type', 'value' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -127,10 +129,34 @@ abstract class Meta extends Resource implements IData, IMeta {
 			'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'valueType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE_TYPE ),
 			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
+	}
+
+	// yii\db\BaseActiveRecord
+
+	/**
+	 * @inheritdoc
+	 */
+	public function beforeSave( $insert ) {
+
+		if( parent::beforeSave( $insert ) ) {
+
+			if( empty( $this->order ) || $this->order <= 0 ) {
+
+				$this->order = 0;
+			}
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
+
+			return true;
+		}
+
+		return false;
 	}
 
 	// CMG interfaces ------------------------
@@ -261,9 +287,11 @@ abstract class Meta extends Resource implements IData, IMeta {
 	 * @param integer $modelId Parent Id.
 	 * @return ModelMeta[] by parent id.
 	 */
-	public static function findByModelId( $modelId ) {
+	public static function findByModelId( $modelId, $config = [] ) {
 
-		return self::queryByModelId( $modelId )->all();
+		$order = isset( $config[ 'order' ] ) ? $config[ 'order' ] : 'id DESC';
+
+		return self::queryByModelId( $modelId )->orderBy( $order )->all();
 	}
 
 	/**
@@ -275,9 +303,7 @@ abstract class Meta extends Resource implements IData, IMeta {
 	 */
 	public static function findByName( $modelId, $name ) {
 
-		$query	= self::queryByName( $modelId, $name );
-
-		return $query->all();
+		return self::queryByName( $modelId, $name )->all();
 	}
 
 	/**
@@ -289,9 +315,7 @@ abstract class Meta extends Resource implements IData, IMeta {
 	 */
 	public static function findFirstByName( $modelId, $name ) {
 
-		$query	= self::queryByName( $modelId, $name );
-
-		return $query->one();
+		return self::queryByName( $modelId, $name )->one();
 	}
 
 	/**
@@ -301,9 +325,11 @@ abstract class Meta extends Resource implements IData, IMeta {
 	 * @param string $type
 	 * @return ModelMeta[] by parent id and meta type.
 	 */
-	public static function findByType( $modelId, $type ) {
+	public static function findByType( $modelId, $type, $config = [] ) {
 
-		return self::queryByType( $modelId, $type )->all();
+		$order = isset( $config[ 'order' ] ) ? $config[ 'order' ] : 'id DESC';
+
+		return self::queryByType( $modelId, $type )->orderBy( $order )->all();
 	}
 
 	/**

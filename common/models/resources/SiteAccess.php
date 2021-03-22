@@ -18,16 +18,18 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\interfaces\base\IMultiSite;
+use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Resource;
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Role;
 
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
+
 /**
  * Logs user stats specific to login sessions and actions executed by user.
  *
@@ -37,6 +39,7 @@ use cmsgears\core\common\models\traits\resources\GridCacheTrait;
  * @property integer $roleId
  * @property string $ip
  * @property integer $ipNum
+ * @property string $agent
  * @property string $controller
  * @property string $action
  * @property string $url
@@ -44,13 +47,14 @@ use cmsgears\core\common\models\traits\resources\GridCacheTrait;
  * @property integer $failCount
  * @property datetime $createdAt
  * @property datetime $modifiedAt
+ * @property string $data
  * @property string $gridCache
  * @property boolean $gridCacheValid
  * @property datetime $gridCachedAt
  *
  * @since 1.0.0
  */
-class SiteAccess extends Resource implements IGridCache, IMultiSite {
+class SiteAccess extends \cmsgears\core\common\models\base\Resource implements IData, IGridCache, IMultiSite {
 
 	// Variables ---------------------------------------------------
 
@@ -72,6 +76,7 @@ class SiteAccess extends Resource implements IGridCache, IMultiSite {
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
 	use GridCacheTrait;
 	use MultiSiteTrait;
 
@@ -113,7 +118,7 @@ class SiteAccess extends Resource implements IGridCache, IMultiSite {
 			[ 'gridCache', 'safe' ],
 			// Text Limit
 			[ 'ip', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'controller', 'action' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'agent', 'controller', 'action' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			[ 'url', 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Other
 			[ [ 'siteId', 'userId', 'roleId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
@@ -134,6 +139,7 @@ class SiteAccess extends Resource implements IGridCache, IMultiSite {
 			'roleId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ROLE ),
 			'ip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP ),
 			'ipNum' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP_NUM ),
+			'agent' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AGENT_BROWSER ),
 			'url' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_URL ),
 			'failed' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FAILED ),
 			'failCount' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FAIL_COUNT ),
@@ -204,8 +210,9 @@ class SiteAccess extends Resource implements IGridCache, IMultiSite {
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'user', 'role' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'user', 'role' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -218,7 +225,7 @@ class SiteAccess extends Resource implements IGridCache, IMultiSite {
 	 */
 	public static function queryWithSite( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'site' ];
+		$config[ 'relations' ] = [ 'site' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -231,7 +238,7 @@ class SiteAccess extends Resource implements IGridCache, IMultiSite {
 	 */
 	public static function queryWithUser( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'user', 'role' ];
+		$config[ 'relations' ] = [ 'user', 'role' ];
 
 		return parent::queryWithAll( $config );
 	}

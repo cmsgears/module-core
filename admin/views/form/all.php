@@ -15,17 +15,23 @@ $themeTemplates		= '@themes/admin/views/templates';
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ 'submits' => $submits ],
 	'title' => 'Forms', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'content' => 'Content' ],
+	'searchColumns' => [
+		'name' => 'Name', 'title' => 'Title', 'desc' => 'Description',
+		'success' => 'Success', 'failure' => 'Failure', 'content' => 'Content'
+	],
 	'sortColumns' => [
 		'name' => 'Name', 'title' => 'Title', 'status' => 'Status',
 		'visibility' => 'Visibility', 'template' => 'template',
 		'captcha' => 'Captcha', 'umail' => 'User Mail', 'amail' => 'Admin Mail',
-		'unsubmit' => 'Unique Submit', 'upsubmit' => 'Update Submit',
+		'uqsubmit' => 'Unique Submit', 'upsubmit' => 'Update Submit',
 		'cdate' => 'Created At', 'udate' => 'Updated At'
 	],
 	'filters' => [
-		'status' => [ 'new' => 'New', 'active' => 'Active', 'blocked' => 'Blocked' ],
-		'model' => [ 'captcha' => 'Captcha', 'umail' => 'User Mail', 'amail' => 'Admin Mail', 'unsubmit' => 'Unique Submit', 'upsubmit' => 'Update Submit' ]
+		'status' => $filterStatusMap,
+		'model' => [
+			'captcha' => 'Captcha', 'umail' => 'User Mail', 'amail' => 'Admin Mail',
+			'uqsubmit' => 'Unique Submit', 'upsubmit' => 'Update Submit'
+		]
 	],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
@@ -39,11 +45,14 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'visibility' => [ 'title' => 'Visibility', 'type' => 'select', 'options' => $visibilityMap ],
 		'umail' => [ 'title' => 'User Mail', 'type' => 'flag' ],
 		'amail' => [ 'title' => 'Admin Mail', 'type' => 'flag' ],
-		'unsubmit' => [ 'title' => 'Unique Submit', 'type' => 'flag' ],
+		'uqsubmit' => [ 'title' => 'Unique Submit', 'type' => 'flag' ],
 		'upsubmit' => [ 'title' => 'Update Submit', 'type' => 'flag' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		'status' => [ 'block' => 'Block', 'active' => 'Activate' ],
+		'status' => [
+			'reject' => 'Reject', 'approve' => 'Approve', 'activate' => 'Activate',
+			'freeze' => 'Freeze', 'block' => 'Block', 'terminate' => 'Terminate'
+		],
 		'model' => [ 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
@@ -61,7 +70,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'visibility' => [ 'title' => 'Visibility', 'generate' => function( $model ) { return $model->getVisibilityStr(); } ],
 		'userMail' => [ 'title' => 'User Mail', 'generate' => function( $model ) { return $model->getUserMailStr(); } ],
 		'adminMail' => [ 'title' => 'Admin Mail', 'generate' => function( $model ) { return $model->getAdminMailStr(); } ],
-		'unsubmit' => [ 'title' => 'Unique Submit', 'generate' => function( $model ) { return $model->getUniqueSubmitStr(); } ],
+		'uqsubmit' => [ 'title' => 'Unique Submit', 'generate' => function( $model ) { return $model->getUniqueSubmitStr(); } ],
 		'upsubmit' => [ 'title' => 'Update Submit', 'generate' => function( $model ) { return $model->getUpdateSubmitStr(); } ],
 		'actions' => 'Actions'
 	],
@@ -70,16 +79,16 @@ $themeTemplates		= '@themes/admin/views/templates';
 	//'dataView' => "$moduleTemplates/grid/data/form",
 	//'cardView' => "$moduleTemplates/grid/cards/form",
 	'actionView' => "$moduleTemplates/grid/actions/form"
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
 	'data' => [ 'model' => 'Form', 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
-]) ?>
+])?>
 
 <?= Popup::widget([
 	'title' => 'Delete Form', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
 	'data' => [ 'model' => 'Form', 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
-]) ?>
+])?>

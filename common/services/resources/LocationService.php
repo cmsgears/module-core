@@ -17,6 +17,8 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\resources\ILocationService;
 
+use cmsgears\core\common\services\traits\resources\DataTrait;
+
 /**
  * LocationService provide service methods of location model.
  *
@@ -47,6 +49,8 @@ class LocationService extends \cmsgears\core\common\services\base\ResourceServic
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use DataTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -81,6 +85,7 @@ class LocationService extends \cmsgears\core\common\services\base\ResourceServic
 		$model->countryName		= isset( $model->country ) ? $model->country->name : $model->countryName;
 		$model->provinceName	= isset( $model->province ) ? $model->province->name : $model->provinceName;
 		$model->regionName		= isset( $model->region ) ? $model->region->name : $model->regionName;
+		$model->cityName		= isset( $model->city ) ? $model->city->name : $model->cityName;
 
 		return parent::create( $model, $config );
 	}
@@ -98,6 +103,7 @@ class LocationService extends \cmsgears\core\common\services\base\ResourceServic
 		$model->countryName		= isset( $model->country ) ? $model->country->name : $model->countryName;
 		$model->provinceName	= isset( $model->province ) ? $model->province->name : $model->provinceName;
 		$model->regionName		= isset( $model->region ) ? $model->region->name : $model->regionName;
+		$model->cityName		= isset( $model->city ) ? $model->city->name : $model->cityName;
 
         $config[ 'attributes' ] = $attributes;
 

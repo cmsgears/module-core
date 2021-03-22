@@ -74,7 +74,11 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\CrudContro
 			'create' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'items' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+			'items' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ],
+			'data' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'attributes' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
+			'config' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
+			'settings' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 
@@ -91,13 +95,33 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\CrudContro
 		$behaviors	= parent::behaviors();
 
 		$behaviors[ 'rbac' ][ 'actions' ][ 'items' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'data' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'attributes' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'config' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'settings' ] = [ 'permission' => $this->crudPermission ];
 
 		$behaviors[ 'verbs' ][ 'actions' ][ 'items' ] = [ 'get' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'data' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'attributes' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'config' ] = [ 'get', 'post' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'settings' ] = [ 'get', 'post' ];
 
 		return $behaviors;
 	}
 
 	// yii\base\Controller ----
+
+	public function actions() {
+
+		$actions = parent::actions();
+
+		$actions[ 'data' ] = [ 'class' => 'cmsgears\core\common\actions\data\data\Form' ];
+		$actions[ 'attributes' ] = [ 'class' => 'cmsgears\core\common\actions\data\attributes\Form' ];
+		$actions[ 'config' ] = [ 'class' => 'cmsgears\core\common\actions\data\config\Form' ];
+		$actions[ 'settings' ] = [ 'class' => 'cmsgears\core\common\actions\data\setting\Form' ];
+
+		return $actions;
+	}
 
 	// CMG interfaces ------------------------
 
@@ -112,7 +136,8 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\CrudContro
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
 			'visibilityMap' => Gallery::$visibilityMap,
-			'statusMap' => Gallery::$statusMap
+			'statusMap' => Gallery::$subStatusMap,
+			'filterStatusMap' => Gallery::$filterSubStatusMap
 		]);
 	}
 
@@ -120,14 +145,17 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 		$model = $this->modelService->getModelObject();
 
-		$model->type	= $this->type;
 		$model->siteId	= Yii::$app->core->siteId;
+		$model->type	= $this->type;
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
 			$this->model = $this->modelService->create( $model, [ 'admin' => true ] );
 
-			return $this->redirect( 'all' );
+			if( $this->model ) {
+
+				return $this->redirect( 'all' );
+			}
 		}
 
 		$templatesMap = $this->templateService->getIdNameMapByType( CoreGlobal::TYPE_GALLERY, [ 'default' => true ] );
@@ -135,7 +163,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\CrudContro
 		return $this->render( 'create', [
 			'model' => $model,
 			'visibilityMap' => Gallery::$visibilityMap,
-			'statusMap' => Gallery::$statusMap,
+			'statusMap' => Gallery::$subStatusMap,
 			'templatesMap' => $templatesMap
 		]);
 	}
@@ -148,9 +176,13 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\CrudContro
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
+			$template = $model->template;
+
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->model = $this->modelService->update( $model, [ 'admin' => true ] );
+				$this->model = $this->modelService->update( $model, [
+					'admin' => true, 'oldTemplate' => $template
+				]);
 
 				return $this->redirect( $this->returnUrl );
 			}
@@ -160,7 +192,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\CrudContro
 			return $this->render( 'update', [
 				'model' => $model,
 				'visibilityMap' => Gallery::$visibilityMap,
-				'statusMap' => Gallery::$statusMap,
+				'statusMap' => Gallery::$subStatusMap,
 				'templatesMap' => $templatesMap
 			]);
 		}
@@ -189,7 +221,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\CrudContro
 			return $this->render( 'delete', [
 				'model' => $model,
 				'visibilityMap' => Gallery::$visibilityMap,
-				'statusMap' => Gallery::$statusMap,
+				'statusMap' => Gallery::$subStatusMap,
 				'templatesMap' => $templatesMap
 			]);
 		}

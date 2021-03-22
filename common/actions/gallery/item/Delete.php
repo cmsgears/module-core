@@ -38,7 +38,8 @@ class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $direct = false;
+	public $admin	= false;
+	public $user	= false;
 
 	// It allows unlimited items by default.
 	public $minItems = 0;
@@ -83,10 +84,11 @@ class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 	 */
 	public function run( $cid, $fid ) {
 
-		$model		= $this->model;
-		$gallery	= $this->galleryService->getById( $cid );
+		$model = $this->model;
 
-		if( isset( $gallery ) && ( $this->direct || $gallery->belongsTo( $model ) ) ) {
+		$gallery = $this->galleryService->getById( $cid );
+
+		if( isset( $gallery ) && ( $this->admin || ( isset( $model ) && $gallery->belongsTo( $model ) ) ) ) {
 
 			if( $this->minItems > 0 ) {
 

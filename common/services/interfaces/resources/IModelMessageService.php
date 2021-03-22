@@ -9,18 +9,33 @@
 
 namespace cmsgears\core\common\services\interfaces\resources;
 
+// CMG Imports
+use cmsgears\core\common\services\interfaces\base\IModelResourceService;
+use cmsgears\core\common\services\interfaces\base\IMultiSite;
+use cmsgears\core\common\services\interfaces\cache\IGridCacheable;
+use cmsgears\core\common\services\interfaces\resources\IData;
+use cmsgears\core\common\services\interfaces\mappers\IFile;
+
 /**
- * IModelMessageService provide service methods for model message.
+ * IModelMessageService provide service methods for model comment.
  *
  * @since 1.0.0
  */
-interface IModelMessageService {
+interface IModelMessageService extends IModelResourceService, IData, IFile, IGridCacheable, IMultiSite {
 
 	// Data Provider ------
+
+	public function getPageByParent( $parentId, $parentType, $config = [] );
+
+	public function getPageByBaseId( $baseId, $config = [] );
 
 	// Read ---------------
 
 	// Read - Models ---
+
+	public function getByBaseId( $baseId, $config = [] );
+
+	public function getByUser( $parentId, $parentType );
 
 	// Read - Lists ----
 
@@ -31,6 +46,16 @@ interface IModelMessageService {
 	// Create -------------
 
 	// Update -------------
+
+	// States -----
+
+	public function markNew( $model );
+
+	public function markConsumed( $model );
+
+	public function markTrash( $model );
+
+	public function unTrash( $model );
 
 	// Delete -------------
 

@@ -1,9 +1,12 @@
 <?php
 // Yii Imports
 use yii\helpers\Html;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 ?>
 
-<?php if( !$model->default ) { ?>
+<?php if( $model->type == CoreGlobal::TYPE_SITE && !$model->default ) { ?>
 <span class="action action-generic cmti cmti-check" title="Make Default" target="<?= $model->id ?>" action="Make Default" generic popup="popup-grid-generic"></span>
 <?php } ?>
 

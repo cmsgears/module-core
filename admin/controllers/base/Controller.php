@@ -76,12 +76,7 @@ abstract class Controller extends \cmsgears\core\common\controllers\base\Control
 	// Compatibility Call
 	public function getSiteProperties() {
 
-		if( !isset( $this->adminProperties ) ) {
-
-			$this->adminProperties = AdminProperties::getInstance();
-		}
-
-		return $this->adminProperties;
+		return $this->getAdminProperties();
 	}
 
 }

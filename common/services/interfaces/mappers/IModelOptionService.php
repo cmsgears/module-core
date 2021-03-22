@@ -23,23 +23,21 @@ interface IModelOptionService extends IModelMapperService {
 
 	// Read ---------------
 
-	public function getModelCounts( $parentType, $categorySlug );
-
 	// Read - Models ---
 
 	// Read - Lists ----
 
-	public function getValueList( $parentId, $parentType, $categorySlug, $active = true );
+	public function getValueListByCategorySlug( $parentId, $parentType, $categorySlug, $active = true );
 
 	// Read - Maps -----
+
+	public function getIdValueMapByCategorySlug( $parentId, $parentType, $categorySlug, $active = true );
 
 	// Read - Others ---
 
 	// Create -------------
 
 	// Update -------------
-
-	public function toggle( $parentId, $parentType, $modelId, $mappingType );
 
 	public function bindOptions( $binder, $parentType );
 

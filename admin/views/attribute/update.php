@@ -17,23 +17,23 @@ Editor::widget();
 <div class="box-crud-wrap">
 	<div class="box-crud-wrap-main">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-attribute', 'options' => [ 'class' => 'form' ] ] ); ?>
-		<div class="box box-crud">
+		<div class="box box-crud layer layer-5">
 			<div class="box-header">
 				<div class="box-header-title">Basic Details</div>
 			</div>
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2 margin margin-bottom-small">
 							<?= $form->field( $model, 'name' ) ?>
-							<p class="note">Attribute name must be lower case. An underscore(_) must be used to separate words.</p>
+							<p class="note">To accept values from Form submits, an underscore(_) can be used to separate words.</p>
 						</div>
 						<div class="col col2 margin margin-bottom-small">
 							<?= $form->field( $model, 'label' ) ?>
 							<p class="note">Attribute label will be used for display purpose.</p>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'valueType' )->dropDownList( $typeMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
@@ -42,25 +42,19 @@ Editor::widget();
 							<p class="note reader">Attributes can be segregated based on type. It must be set to <em class="bold">default</em> in case no segregation is required.</p>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active', null, 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active' ) ?>
 						</div>
 					</div>
-				</div>
-			</div>
-		</div>
-		<div class="filler-height filler-height-medium"></div>
-		<div class="box box-crud">
-			<div class="box-header">
-				<div class="box-header-title">Value</div>
-			</div>
-			<div class="box-content-wysiwyg">
-				<div class="box-content">
-					<?= $form->field( $model, 'value' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+					<div class="row max-cols-100">
+						<div class="col col2">
+							<?= $form->field( $model, 'value' )->textarea( [ 'rows' => 5 ] ) ?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

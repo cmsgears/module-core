@@ -48,16 +48,17 @@ trait ApprovalTrait {
 	// Data Provider ------
 
 	/**
-	 * It expects the model to support either of createdBy or ownerId column. If both exist, ownerId will dominate.
+	 * It expects the model to support either userId or createdBy column. If both exist, userId will dominate.
 	 */
 	public function getPageByOwnerId( $ownerId, $config = [] ) {
 
-		$owner		= $config[ 'owner' ] ?? false;
+		$owner = $config[ 'owner' ] ?? false;
+
 		$modelTable	= $this->getModelTable();
 
 		if( $owner ) {
 
-			$config[ 'conditions' ][ "$modelTable.holderId" ] = $ownerId;
+			$config[ 'conditions' ][ "$modelTable.userId" ] = $ownerId;
 		}
 		else {
 
@@ -81,17 +82,18 @@ trait ApprovalTrait {
 	 */
 	public function getPageByAuthorityId( $id, $config = [] ) {
 
+		$owner = $config[ 'owner' ] ?? false;
+
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
-		$query		= null;
 
-		$owner = $config[ 'owner' ] ?? false;
+		$query = null;
 
 		if( $owner ) {
 
 			$query = $modelClass::queryWithOwnerAuthor();
 
-			$query->andWhere( "$modelTable.holderId =:oid OR ($modelTable.holderId IS NULL AND $modelTable.createdBy =:cid )", [ ':oid' => $id, ':cid' => $id ] );
+			$query->andWhere( "$modelTable.userId =:oid OR ($modelTable.userId IS NULL AND $modelTable.createdBy =:cid )", [ ':oid' => $id, ':cid' => $id ] );
 		}
 		else {
 
@@ -118,25 +120,62 @@ trait ApprovalTrait {
 
 	// Read - Models ---
 
-	// Read - Lists ----
-
 	public function getByStatus( $status, $config = [] ) {
 
 		$limit = $config[ 'limit' ] ?? 10;
 
-		$modelClass	 = static::$modelClass;
-		$modelTable	 = $modelClass::tableName();
+		$modelClass		= static::$modelClass;
+		$modelTable		= $modelClass::tableName();
+		$parentType		= static::$parentType;
 
-		$query = $modelClass::find()->where( [ "$modelTable.status" => $status ] );
+		$query = null;
+
+		// TODO: Cover the case where $parentType is same for different types
+
+		if( isset( $parentType ) ) {
+
+			$query = $modelClass::find()->where( [ "$modelTable.status" => $status, "$modelTable.type" => $parentType ] );
+		}
+		else {
+
+			$query = $modelClass::find()->where( [ "$modelTable.status" => $status ] );
+		}
 
 		$query->limit( $limit );
 
 		return $query->orderBy( [ 'id' => SORT_DESC ] )->all();
 	}
 
+	public function getActive( $config = [] ) {
+
+		return $this->getByStatus( IApproval::STATUS_ACTIVE, $config );
+	}
+
+	// Read - Lists ----
+
 	// Read - Maps -----
 
 	// Read - Others ---
+
+	public function getApprovalNotificationMap() {
+
+		return [
+			IApproval::STATUS_ACCEPTED => CoreGlobal::TPL_NOTIFY_STATUS_ACCEPT,
+			IApproval::STATUS_SUBMITTED => CoreGlobal::TPL_NOTIFY_STATUS_SUBMIT,
+			IApproval::STATUS_REJECTED => CoreGlobal::TPL_NOTIFY_STATUS_REJECT,
+			IApproval::STATUS_RE_SUBMIT => CoreGlobal::TPL_NOTIFY_STATUS_RESUBMIT,
+			IApproval::STATUS_CONFIRMED => CoreGlobal::TPL_NOTIFY_STATUS_CONFIRM,
+			IApproval::STATUS_APPROVED => CoreGlobal::TPL_NOTIFY_STATUS_APPROVE,
+			IApproval::STATUS_CHANGED => CoreGlobal::TPL_NOTIFY_STATUS_CHANGE,
+			IApproval::STATUS_ACTIVE => CoreGlobal::TPL_NOTIFY_STATUS_ACTIVE,
+			IApproval::STATUS_FROJEN => CoreGlobal::TPL_NOTIFY_STATUS_FREEZE,
+			IApproval::STATUS_UPLIFT_FREEZE => CoreGlobal::TPL_NOTIFY_STATUS_UP_FREEZE,
+			IApproval::STATUS_BLOCKED => CoreGlobal::TPL_NOTIFY_STATUS_BLOCK,
+			IApproval::STATUS_UPLIFT_BLOCK => CoreGlobal::TPL_NOTIFY_STATUS_UP_BLOCK,
+			IApproval::STATUS_TERMINATED => CoreGlobal::TPL_NOTIFY_STATUS_TERMINATE,
+			IApproval::STATUS_DELETED => CoreGlobal::TPL_NOTIFY_STATUS_DELETE
+		];
+	}
 
 	public function getCountsByOwnerId( $ownerId, $config = [] ) {
 
@@ -147,11 +186,11 @@ trait ApprovalTrait {
 		$query = new Query();
 
 		$query->select( [ 'status', 'count(id) as total' ] )
-				->from( $modelTable );
+			->from( $modelTable );
 
 		if( $owner ) {
 
-			$query->where( "$modelTable.holderId=$ownerId" )->groupBy( 'status' );
+			$query->where( "$modelTable.userId=$ownerId" )->groupBy( 'status' );
 		}
 		else {
 
@@ -196,11 +235,11 @@ trait ApprovalTrait {
 
 		if( $owner ) {
 
-			$query->where( "$modelTable.holderId=$id" )->groupBy( 'status' );
+			$query->where( "$modelTable.userId=$id" )->groupBy( 'status' );
 		}
 		else {
 
-			$query->where( "($modelTable.holderId IS NULL AND $modelTable.createdBy=$id) OR $modelTable.holderId=$id" );
+			$query->where( "($modelTable.userId IS NULL AND $modelTable.createdBy=$id) OR $modelTable.userId=$id" );
 		}
 
 		$query->groupBy( 'status' );
@@ -231,27 +270,62 @@ trait ApprovalTrait {
 
 		$model->status = $status;
 
-		$model->update();
+		if( $model->update() !== false ) {
 
-		return $model;
+			return $model;
+		}
+
+		return false;
+	}
+
+	/*
+	 * Update the model status to accepted and trigger notification for appropriate admin to take action.
+	 */
+	public function accept( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+
+		if( !$model->isAccepted( true ) && $model->isAcceptable() ) {
+
+			$model = $this->updateStatus( $model, IApproval::STATUS_ACCEPTED );
+
+			if( $model && $notify ) {
+
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_ACCEPTED ];
+
+				$config[ 'data' ][ 'parentType' ] = $this->getParentTypeStr();
+
+				$this->notifyAdmin( $model, $config );
+			}
+
+			return $model;
+		}
+
+		return false;
 	}
 
 	/*
 	 * Update the model status to submitted and trigger notification for appropriate admin to take action.
 	 */
-	public function submit( $model, $notify = true, $config = [] ) {
+	public function submit( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		if( !$model->isSubmitted( true ) && $model->isSubmittable() ) {
 
 			$model = $this->updateStatus( $model, IApproval::STATUS_SUBMITTED );
 
-			if( $notify ) {
+			if( $model && $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Submitted';
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
 
-				$config[ 'template' ] = $config[ 'template' ] ?? CoreGlobal::TPL_NOTIFY_STATUS_SUBMIT;
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_SUBMITTED ];
 
-				$this->notifyAdmin( $model, $config, $title );
+				$config[ 'data' ][ 'parentType' ] = $this->getParentTypeStr();
+
+				$this->notifyAdmin( $model, $config );
 			}
 
 			return $model;
@@ -263,20 +337,24 @@ trait ApprovalTrait {
 	/*
 	 * Reject the model and trigger notification for appropriate user to take action.
 	 */
-	public function reject( $model, $notify = true, $config = [] ) {
+	public function reject( $model, $config = [] ) {
 
-		if( !$model->isRejected( true ) ) {
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+
+		if( !$model->isRejected( true ) && $model->isRejectable() ) {
 
 			$model = $this->updateStatus( $model, IApproval::STATUS_REJECTED );
 
-			if( $notify ) {
+			if( $model && $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Rejected';
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
 
-				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_REJECT;
-				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_REJECTED ];
 
-				$this->notifyUser( $model, $config, $title );
+				$config[ 'data' ][ 'parentType' ]	= $this->getParentTypeStr();
+				$config[ 'data' ][ 'message' ]		= $model->getRejectMessage();
+
+				$this->notifyUser( $model, $config );
 			}
 
 			return $model;
@@ -288,20 +366,23 @@ trait ApprovalTrait {
 	/*
 	 * Update the model status to re-submitted and trigger notification for appropriate admin to take action.
 	 */
-	public function reSubmit( $model, $notify = true, $config = [] ) {
+	public function reSubmit( $model, $config = [] ) {
 
-		if( !$model->isReSubmit( true ) ) {
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+
+		if( !$model->isReSubmit( true ) && $model->isReSubmittable() ) {
 
 			$model = $this->updateStatus( $model, IApproval::STATUS_RE_SUBMIT );
 
-			if( $notify ) {
+			if( $model && $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Re-submitted';
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
 
-				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_RESUBMIT;
-				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_RE_SUBMIT ];
 
-				$this->notifyAdmin( $model, $config, $title );
+				$config[ 'data' ][ 'parentType' ] = $this->getParentTypeStr();
+
+				$this->notifyAdmin( $model, $config );
 			}
 
 			return $model;
@@ -313,19 +394,23 @@ trait ApprovalTrait {
 	/*
 	 * Confirm the model and trigger notification for appropriate user to take action.
 	 */
-	public function confirm( $model, $notify = true, $config = [] ) {
+	public function confirm( $model, $config = [] ) {
 
-		if( !$model->isConfirmed( true ) ) {
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+
+		if( !$model->isConfirmed( true ) && $model->isConfirmable() ) {
 
 			$model = $this->updateStatus( $model, IApproval::STATUS_CONFIRMED );
 
-			if( $notify ) {
+			if( $model && $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Confirmed';
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
 
-				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_CONFIRM;
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_CONFIRMED ];
 
-				$this->notifyUser( $model, $config, $title );
+				$config[ 'data' ][ 'parentType' ] = $this->getParentTypeStr();
+
+				$this->notifyUser( $model, $config );
 			}
 
 			return $model;
@@ -337,19 +422,23 @@ trait ApprovalTrait {
 	/*
 	 * Approve the model and trigger notification for appropriate user to take action.
 	 */
-	public function approve( $model, $notify = true, $config = [] ) {
+	public function approve( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		if( !$model->isActive( true ) && $model->isApprovable() ) {
 
 			$model = $this->updateStatus( $model, IApproval::STATUS_ACTIVE );
 
-			if( $notify ) {
+			if( $model && $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Approved';
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
 
-				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_APPROVE;
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_APPROVED ];
 
-				$this->notifyUser( $model, $config, $title );
+				$config[ 'data' ][ 'parentType' ] = $this->getParentTypeStr();
+
+				$this->notifyUser( $model, $config );
 			}
 
 			return $model;
@@ -361,9 +450,11 @@ trait ApprovalTrait {
 	/*
 	 * Activate the model and trigger notification for appropriate user to take action.
 	 */
-	public function activate( $model, $notify = true, $config = [] ) {
+	public function activate( $model, $config = [] ) {
 
-		if( !$model->isActive( true ) ) {
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+
+		if( !$model->isActive( true ) && $model->isApprovable() ) {
 
 			$oldStatus = $model->getStatusStr();
 
@@ -371,16 +462,17 @@ trait ApprovalTrait {
 
 			$newStatus = $model->getStatusStr();
 
-			if( $notify ) {
+			if( $model && $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Activated';
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
 
-				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_ACTIVE;
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_ACTIVE ];
 
-				$config[ 'data' ][ 'oldStatus' ] = $oldStatus;
-				$config[ 'data' ][ 'newStatus' ] = $newStatus;
+				$config[ 'data' ][ 'parentType' ]	= $this->getParentTypeStr();
+				$config[ 'data' ][ 'oldStatus' ]	= $oldStatus;
+				$config[ 'data' ][ 'newStatus' ]	= $newStatus;
 
-				$this->notifyUser( $model, $config, $title );
+				$this->notifyUser( $model, $config );
 			}
 
 			return $model;
@@ -392,20 +484,24 @@ trait ApprovalTrait {
 	/*
 	 * Freeze the model and trigger notification for appropriate user to take action.
 	 */
-	public function freeze( $model, $notify = true, $config = [] ) {
+	public function freeze( $model, $config = [] ) {
 
-		if( !$model->isFrojen( true ) ) {
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+
+		if( !$model->isFrojen( true ) && $model->isFreezable() ) {
 
 			$model = $this->updateStatus( $model, IApproval::STATUS_FROJEN );
 
-			if( $notify ) {
+			if( $model && $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Frozen';
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
 
-				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_ACTIVE;
-				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_FROJEN ];
 
-				$this->notifyUser( $model, $config, $title );
+				$config[ 'data' ][ 'parentType' ]	= $this->getParentTypeStr();
+				$config[ 'data' ][ 'message' ]		= $model->getRejectMessage();
+
+				$this->notifyUser( $model, $config );
 			}
 
 			return $model;
@@ -417,20 +513,23 @@ trait ApprovalTrait {
 	/*
 	 * Update the model state for activation from frozen state and trigger notification for appropriate admin to take action.
 	 */
-	public function upliftFreeze( $model, $notify = true, $config = [] ) {
+	public function upliftFreeze( $model, $config = [] ) {
 
-		if( !$model->isUpliftFreeze( true ) ) {
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+
+		if( $model->isFrojen( true ) ) {
 
 			$model = $this->updateStatus( $model, IApproval::STATUS_UPLIFT_FREEZE );
 
-			if( $notify ) {
+			if( $model && $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Uplift Freeze';
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
 
-				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_UP_FREEZE;
-				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_UPLIFT_FREEZE ];
 
-				$this->notifyAdmin( $model, $config, $title );
+				$config[ 'data' ][ 'parentType' ] = $this->getParentTypeStr();
+
+				$this->notifyAdmin( $model, $config );
 			}
 
 			return $model;
@@ -442,20 +541,24 @@ trait ApprovalTrait {
 	/*
 	 * Block the model and trigger notification for appropriate user to take action.
 	 */
-	public function block( $model, $notify = true, $config = [] ) {
+	public function block( $model, $config = [] ) {
 
-		if( !$model->isBlocked( true ) ) {
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+
+		if( !$model->isBlocked( true ) && $model->isBlockable() ) {
 
 			$model = $this->updateStatus( $model, IApproval::STATUS_BLOCKED );
 
-			if( $notify ) {
+			if( $model && $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Blocked';
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
 
-				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_BLOCK;
-				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_BLOCKED ];
 
-				$this->notifyUser( $model, $config, $title );
+				$config[ 'data' ][ 'parentType' ]	= $this->getParentTypeStr();
+				$config[ 'data' ][ 'message' ]		= $model->getRejectMessage();
+
+				$this->notifyUser( $model, $config );
 			}
 
 			return $model;
@@ -467,20 +570,23 @@ trait ApprovalTrait {
 	/*
 	 * Update the model state for activation from block state and trigger notification for appropriate admin to take action.
 	 */
-	public function upliftBlock( $model, $notify = true, $config = [] ) {
+	public function upliftBlock( $model, $config = [] ) {
 
-		if( !$model->isUpliftBlock( true ) ) {
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+
+		if( $model->isBlocked( true ) ) {
 
 			$model = $this->updateStatus( $model, IApproval::STATUS_UPLIFT_BLOCK );
 
-			if( $notify ) {
+			if( $model && $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Uplift Block';
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
 
-				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_UP_BLOCK;
-				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_UPLIFT_BLOCK ];
 
-				$this->notifyAdmin( $model, $config, $title );
+				$config[ 'data' ][ 'parentType' ] = $this->getParentTypeStr();
+
+				$this->notifyAdmin( $model, $config );
 			}
 
 			return $model;
@@ -492,21 +598,51 @@ trait ApprovalTrait {
 	/*
 	 * Terminate the model and trigger notification for appropriate user to take action.
 	 */
-	public function terminate( $model, $notify = true, $config = [] ) {
+	public function terminate( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		if( !$model->isTerminated( true ) ) {
 
 			$model = $this->updateStatus( $model, IApproval::STATUS_TERMINATED );
 
-			if( $notify ) {
+			if( $model && $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Terminated';
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
 
-				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_TERMINATE;
-				$config[ 'data' ][ 'message' ] = $model->getTerminateMessage();
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_TERMINATED ];
 
-				$this->notifyUser( $model, $config, $title );
+				$config[ 'data' ][ 'parentType' ]	= $this->getParentTypeStr();
+				$config[ 'data' ][ 'message' ]		= $model->getTerminateMessage();
+
+				$this->notifyUser( $model, $config );
 			}
+
+			return $model;
+		}
+
+		return false;
+	}
+
+	public function checkStatusChange( $model, $oldStatus, $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		if( $model->status !== intval( $oldStatus ) ) {
+
+			$oldStatus	= $modelClass::$statusMap[ $oldStatus ];
+			$newStatus	= $modelClass::$statusMap[ $model->status ];
+
+			$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+			$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_CHANGED ];
+
+			$config[ 'data' ][ 'parentType' ]	= $this->getParentTypeStr();
+			$config[ 'data' ][ 'oldStatus' ]	= $oldStatus;
+			$config[ 'data' ][ 'newStatus' ]	= $newStatus;
+			$config[ 'data' ][ 'message' ]		= isset( $config[ 'data' ][ 'message' ] ) ? $config[ 'data' ][ 'message' ] : null;
+
+			$this->notifyUser( $model, $config );
 
 			return $model;
 		}
@@ -517,19 +653,23 @@ trait ApprovalTrait {
 	/*
 	 * Soft Delete the model and trigger notification for appropriate user to take action.
 	 */
-	public function softDeleteNotify( $model, $notify = true, $config = [] ) {
+	public function softDeleteNotify( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		if( !$model->isDeleted( true ) ) {
 
 			$model = $this->updateStatus( $model, IApproval::STATUS_DELETED );
 
-			if( $notify ) {
+			if( $model && $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Deleted';
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
 
-				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_DELETE;
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_DELETED ];
 
-				$this->notifyUser( $model, $config, $title );
+				$config[ 'data' ][ 'parentType' ] = $this->getParentTypeStr();
+
+				$this->notifyUser( $model, $config );
 			}
 
 			return $model;
@@ -546,7 +686,9 @@ trait ApprovalTrait {
 	 * @param array $config
 	 * @return \cmsgears\core\common\models\interfaces\base\IApproval
 	 */
-	public function toggleFrojen( $model, $notify = true, $config = [] ) {
+	public function toggleFrojen( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		$oldStatus = $model->getStatusStr();
 
@@ -557,14 +699,16 @@ trait ApprovalTrait {
 
 		if( $notify ) {
 
-			$title = $model->isActive( true ) ? $model->getClassName() . ' Activated' : $model->getClassName() . ' Frozen';
+			$approvalNotificationMap = $this->getApprovalNotificationMap();
 
-			$config[ 'template' ] = $model->isActive( true ) ? CoreGlobal::TPL_NOTIFY_STATUS_ACTIVE : CoreGlobal::TPL_NOTIFY_STATUS_FREEZE;
+			$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_CHANGED ];
 
-			$config[ 'data' ][ 'oldStatus' ] = $oldStatus;
-			$config[ 'data' ][ 'newStatus' ] = $newStatus;
+			$config[ 'data' ][ 'parentType' ]	= $this->getParentTypeStr();
+			$config[ 'data' ][ 'oldStatus' ]	= $oldStatus;
+			$config[ 'data' ][ 'newStatus' ]	= $newStatus;
+			$config[ 'data' ][ 'message' ]		= null;
 
-			$this->notifyUser( $model, $config, $title );
+			$this->notifyUser( $model, $config );
 		}
 
 		return $model;
@@ -578,7 +722,9 @@ trait ApprovalTrait {
 	 * @param array $config
 	 * @return \cmsgears\core\common\models\interfaces\base\IApproval
 	 */
-	public function toggleBlock( $model, $notify = true, $config = [] ) {
+	public function toggleBlock( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		$oldStatus = $model->getStatusStr();
 
@@ -589,14 +735,16 @@ trait ApprovalTrait {
 
 		if( $notify ) {
 
-			$title = $model->isActive( true ) ? $model->getClassName() . ' Activated' : $model->getClassName() . ' Blocked';
+			$approvalNotificationMap = $this->getApprovalNotificationMap();
 
-			$config[ 'template' ] = $model->isActive( true ) ? CoreGlobal::TPL_NOTIFY_STATUS_ACTIVE : CoreGlobal::TPL_NOTIFY_STATUS_BLOCK;
+			$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_CHANGED ];
 
-			$config[ 'data' ][ 'oldStatus' ] = $oldStatus;
-			$config[ 'data' ][ 'newStatus' ] = $newStatus;
+			$config[ 'data' ][ 'parentType' ]	= $this->getParentTypeStr();
+			$config[ 'data' ][ 'oldStatus' ]	= $oldStatus;
+			$config[ 'data' ][ 'newStatus' ]	= $newStatus;
+			$config[ 'data' ][ 'message' ]		= null;
 
-			$this->notifyUser( $model, $config, $title );
+			$this->notifyUser( $model, $config );
 		}
 
 		return $model;

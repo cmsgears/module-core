@@ -11,14 +11,16 @@ namespace cmsgears\core\common\base;
 
 // Yii Imports
 use Yii;
-use yii\base\Theme as BaseTheme;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreProperties;
 
 /**
  * Theme represents an application theme.
  *
  * @since 1.0.0
  */
-class Theme extends BaseTheme {
+class Theme extends \yii\base\Theme {
 
 	// Variables ---------------------------------------------------
 
@@ -44,7 +46,9 @@ class Theme extends BaseTheme {
 		parent::init();
 
 		// The path for images directly accessed using the img tag
-		Yii::setAlias( '@images', '@web/images' );
+		$resourceUrl = YII_ENV_PROD && in_array( Yii::$app->id, Yii::$app->core->getCdnApps() ) ? CoreProperties::getInstance()->getResourceUrl() : '@web';
+
+		Yii::setAlias( '@images', "$resourceUrl/images" );
 	}
 
 	// Instance methods --------------------------------------------

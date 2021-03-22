@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\base;
 
 // Yii Imports
@@ -6,6 +14,7 @@ use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
+use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\core\common\config\CacheProperties;
@@ -14,7 +23,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 /**
- * The class PageWidget can be used by widgets which need pagination support via either pagination links or user scroll.
+ * The class PageWidget can be used by widgets which need pagination support via
+ * either pagination links or user scroll.
  */
 abstract class PageWidget extends Widget {
 
@@ -55,6 +65,16 @@ abstract class PageWidget extends Widget {
 	 * Html options to be used for single model wrapper.
 	 */
 	public $singleOptions = [ 'class' => 'col col1' ];
+
+	/**
+	 * Generate the columns.
+	 */
+	public $autoCols = false;
+
+	/**
+	 * Columns required to generate columns.
+	 */
+	public $autoColsCount = 4;
 
 	/*
 	 * Base path used for all and single paths.
@@ -138,6 +158,10 @@ abstract class PageWidget extends Widget {
 	 * Show models only from specified site ignoring all other sites.
 	 */
 	public $siteId = null;
+
+	public $query;
+
+	public $printQuery = false;
 
 	/**
 	 * DataProvider to fetch initial page.
@@ -248,7 +272,7 @@ abstract class PageWidget extends Widget {
 
 		if( Yii::$app->core->multiSite && Yii::$app->core->subDirectory ) {
 
-			$siteName = Yii::$app->core->getSiteName();
+			$siteName = Yii::$app->core->getSite()->displayName;
 
 			if( isset( $this->basePath ) ) {
 
@@ -315,6 +339,30 @@ abstract class PageWidget extends Widget {
 		$options = CodeGenUtil::generateSelectOptionsFromArray( $pageLimits, $pageLimitIdx );
 
 		return $options;
+	}
+
+	public function getSort() {
+
+		$modelTable = $this->modelService->getModelTable();
+
+		$sort = new Sort([
+			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				]
+			],
+			'defaultOrder' => [ 'id' => SORT_DESC ]
+		]);
+
+		return $sort;
+	}
+
+	public function getOrder() {
+
+		return [ 'id' => SORT_DESC ];
 	}
 
 }

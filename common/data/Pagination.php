@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\data;
 
 // Yii Imports
@@ -7,7 +15,7 @@ use yii\web\Request;
 
 class Pagination extends \yii\data\Pagination {
 
-	public $excludeParams	= [];
+	public $excludeParams = [];
 
     public function createUrl( $page, $pageSize = null, $absolute = false ) {
 
@@ -60,4 +68,5 @@ class Pagination extends \yii\data\Pagination {
 			return $urlManager->createUrl( $params );
         }
     }
+
 }

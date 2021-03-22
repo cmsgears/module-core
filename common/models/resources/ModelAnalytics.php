@@ -21,7 +21,6 @@ use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\ModelResource;
 
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
@@ -36,13 +35,13 @@ use cmsgears\core\common\models\traits\resources\GridCacheTrait;
  * @property integer $views
  * @property integer $referrals
  * @property integer $comments
+ * @property integer $reviews
  * @property float $ratings
  * @property integer $likes
  * @property integer $wish
- * @property float $weight
+ * @property integer $followers
  * @property integer $rank
- * @property datetime $createdAt
- * @property datetime $modifiedAt
+ * @property float $weight
  * @property string $data
  * @property string $gridCache
  * @property boolean $gridCacheValid
@@ -50,7 +49,7 @@ use cmsgears\core\common\models\traits\resources\GridCacheTrait;
  *
  * @since 1.0.0
  */
-class ModelAnalytics extends ModelResource implements IData, IGridCache {
+class ModelAnalytics extends \cmsgears\core\common\models\base\ModelResource implements IData, IGridCache {
 
 	// Variables ---------------------------------------------------
 
@@ -111,15 +110,15 @@ class ModelAnalytics extends ModelResource implements IData, IGridCache {
 		$rules = [
 			// Required, Safe
 			[ [ 'parentId', 'parentType' ], 'required' ],
-			[ [ 'id', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id' ], 'safe' ],
 			// Text Limit
 			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			// Other
-			[ [ 'views', 'referrals', 'comments', 'likes', 'wish', 'rank' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'views', 'referrals', 'comments', 'reviews', 'likes', 'wish', 'followers', 'rank' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'ratings', 'weight' ], 'number', 'min' => 0 ],
 			[ 'gridCacheValid', 'boolean' ],
 			[ 'parentId', 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+			[ 'gridCachedAt', 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
 		return $rules;
@@ -137,15 +136,34 @@ class ModelAnalytics extends ModelResource implements IData, IGridCache {
 			'views' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_COUNT ),
 			'referrals' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_REFERRAL_COUNT ),
 			'comments' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COMMENTS ),
+			'reviews' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_REVIEWS ),
 			'ratings' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RATINGS ),
 			'likes' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LIKE_COUNT ),
 			'wish' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WISH_COUNT ),
-			'weight' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEIGHT ),
+			'followers' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FOLLOWERS ),
 			'rank' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RANK ),
-			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
+			'weight' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEIGHT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
 			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
 		];
+	}
+
+	// yii\db\BaseActiveRecord
+
+    /**
+     * @inheritdoc
+     */
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_SITE;
+
+	        return true;
+	    }
+
+		return false;
 	}
 
 	// CMG interfaces ------------------------

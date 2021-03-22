@@ -16,14 +16,12 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\TemplateController as BaseTemplateController;
-
 /**
  * TemplateController provide actions specific to gallery templates.
  *
  * @since 1.0.0
  */
-class TemplateController extends BaseTemplateController {
+class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateController {
 
 	// Variables ---------------------------------------------------
 
@@ -46,13 +44,13 @@ class TemplateController extends BaseTemplateController {
 
 		// Config
 		$this->type		= CoreGlobal::TYPE_GALLERY;
-		$this->apixBase = 'core/template';
+		$this->apixBase = 'core/gallery/template';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-file', 'child' => 'gallery-template' ];
 
 		// Return Url
-		$this->returnUrl = Url::previous( 'templates' );
+		$this->returnUrl = Url::previous( 'gallery-templates' );
 		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/gallery/template/all' ], true );
 
 		// Breadcrumbs
@@ -63,7 +61,11 @@ class TemplateController extends BaseTemplateController {
 			'all' => [ [ 'label' => 'Gallery Templates' ] ],
 			'create' => [ [ 'label' => 'Gallery Templates', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Gallery Templates', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Gallery Templates', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'delete' => [ [ 'label' => 'Gallery Templates', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'data' => [ [ 'label' => 'Gallery Templates', 'url' => $this->returnUrl ], [ 'label' => 'Data' ] ],
+			'attributes' => [ [ 'label' => 'Gallery Templates', 'url' => $this->returnUrl ], [ 'label' => 'Attributes' ] ],
+			'config' => [ [ 'label' => 'Gallery Templates', 'url' => $this->returnUrl ], [ 'label' => 'Config' ] ],
+			'settings' => [ [ 'label' => 'Gallery Templates', 'url' => $this->returnUrl ], [ 'label' => 'Settings' ] ]
 		];
 	}
 
@@ -85,7 +87,7 @@ class TemplateController extends BaseTemplateController {
 
 	public function actionAll( $config = [] ) {
 
-		Url::remember( Yii::$app->request->getUrl(), 'templates' );
+		Url::remember( Yii::$app->request->getUrl(), 'gallery-templates' );
 
 		return parent::actionAll( $config );
 	}

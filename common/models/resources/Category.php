@@ -24,16 +24,17 @@ use cmsgears\core\common\models\interfaces\base\IFeatured;
 use cmsgears\core\common\models\interfaces\base\IMultiSite;
 use cmsgears\core\common\models\interfaces\base\INameType;
 use cmsgears\core\common\models\interfaces\base\ISlugType;
+use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\hierarchy\NestedSetModel;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\FeaturedTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
 use cmsgears\core\common\models\traits\base\NameTypeTrait;
 use cmsgears\core\common\models\traits\base\SlugTypeTrait;
+use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
@@ -51,6 +52,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $slug
  * @property string $type
  * @property string $icon
+ * @property string $texture
  * @property string $title
  * @property string $description
  * @property integer $lValue
@@ -58,6 +60,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $order
  * @property boolean $pinned
  * @property boolean $featured
+ * @property boolean $popular
  * @property string $htmlOptions
  * @property datetime $createdAt
  * @property datetime $modifiedAt
@@ -66,7 +69,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Category extends NestedSetModel implements IAuthor, IData, IFeatured, IMultiSite, INameType, ISlugType {
+class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel implements IAuthor,
+	IContent, IData, IFeatured, IMultiSite, INameType, ISlugType {
 
 	// Variables ---------------------------------------------------
 
@@ -91,6 +95,7 @@ class Category extends NestedSetModel implements IAuthor, IData, IFeatured, IMul
 	// Traits ------------------------------------------------------
 
 	use AuthorTrait;
+	use ContentTrait;
 	use DataTrait;
 	use FeaturedTrait;
 	use MultiSiteTrait;
@@ -142,21 +147,22 @@ class Category extends NestedSetModel implements IAuthor, IData, IFeatured, IMul
 		$rules = [
 			// Required, Safe
 			[ [ 'siteId', 'name' ], 'required' ],
-			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
+			[ [ 'id', 'htmlOptions', 'content' ], 'safe' ],
 			// Unique
-			// Notes: disabled it in order to allow sub categories having same name as parent, but with different slug. It can be enable based on project needs by extending the model and service.
-			//[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
-			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'slug', 'type' ] ],
+			// Notes: disabled it in order to allow sub categories having same name as parent, but with different slug.
+			// It can be enabled based on project needs by extending the model and service.
+			// 'name', 'unique', 'targetAttribute' => [ 'siteId', 'name', 'type' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NAME ) ],
+			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'type', 'slug' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SLUG ) ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'icon', 'texture' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ 'name', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
 			[ 'slug', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			[ 'title', 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'pinned', 'featured' ], 'boolean' ],
+			[ [ 'pinned', 'featured', 'popular' ], 'boolean' ],
 			[ [ 'parentId', 'rootId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'siteId', 'createdBy', 'modifiedBy', 'lValue', 'rValue' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ 'parentId', 'validateParentChain' ],
@@ -166,7 +172,7 @@ class Category extends NestedSetModel implements IAuthor, IData, IFeatured, IMul
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'description', 'icon' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'title', 'description', 'htmlOptions' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -182,17 +188,45 @@ class Category extends NestedSetModel implements IAuthor, IData, IFeatured, IMul
 		return [
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'rootId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ROOT ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
-			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'texture' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEXTURE ),
+			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'pinned' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PINNED ),
 			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
+			'popular' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_POPULAR ),
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
+	}
+
+	// yii\db\BaseActiveRecord
+
+    /**
+     * @inheritdoc
+     */
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			if( empty( $this->order ) || $this->order <= 0 ) {
+
+				$this->order = 0;
+			}
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
+
+	        return true;
+	    }
+
+		return false;
 	}
 
 	// CMG interfaces ------------------------
@@ -245,6 +279,18 @@ class Category extends NestedSetModel implements IAuthor, IData, IFeatured, IMul
 	public function getOptions() {
 
 		return $this->hasMany( Option::class, [ 'categoryId' => 'id' ] );
+	}
+
+	/**
+	 * Returns list of active options mapped to this category.
+	 *
+	 * @return Option[]
+	 */
+	public function getActiveOptions() {
+
+		$optionTable = Option::tableName();
+
+		return $this->hasMany( Option::class, [ 'categoryId' => 'id' ] )->where( "`$optionTable`.`active`=1" );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -300,7 +346,7 @@ class Category extends NestedSetModel implements IAuthor, IData, IFeatured, IMul
 	 */
 	public static function queryWithOptions( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'options' ];
+		$config[ 'relations' ] = [ 'options' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -316,8 +362,15 @@ class Category extends NestedSetModel implements IAuthor, IData, IFeatured, IMul
 	 */
 	public static function findByParentId( $parentId, $config = [] ) {
 
-		$limit 		= $config['limit'] ?? null;
-		return self::find()->where( 'parentId=:id', [ ':id' => $parentId ] )->limit($limit)->all();
+		$order	= isset( $config[ 'order' ] ) ? $config[ 'order' ] : [ 'name' => SORT_ASC ];
+		$limit	= $config[ 'limit' ] ?? null;
+
+		if( isset( $limit ) ) {
+
+			return self::find()->where( 'parentId=:id', [ ':id' => $parentId ] )->orderBy( $order )->limit( $limit )->all();
+		}
+
+		return self::find()->where( 'parentId=:id', [ ':id' => $parentId ] )->orderBy( $order )->all();
 	}
 
 	/**
@@ -330,18 +383,29 @@ class Category extends NestedSetModel implements IAuthor, IData, IFeatured, IMul
 	public static function findFeaturedByType( $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
-		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : [ 'name' => SORT_ASC  ];
-		$limit 		= $config['limit'] ?? null;
+		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : [ 'name' => SORT_ASC ];
+		$limit 		= $config[ 'limit' ] ?? null;
+		$offset 	= $config[ 'offset' ] ?? null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'type=:type AND siteId=:siteId AND featured=1', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( $order )->limit($limit)->all();
+			if( isset( $limit ) ) {
+
+				return static::find()->where( 'type=:type AND siteId=:siteId AND featured=1', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( $order )->limit( $limit )->offset( $offset )->all();
+			}
+
+			return static::find()->where( 'type=:type AND siteId=:siteId AND featured=1', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( $order )->all();
 		}
 		else {
 
-			return static::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( $order )->limit( $limit )->all();
+			if( isset( $limit ) ) {
+
+				return static::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( $order )->limit( $limit )->offset( $offset )->all();
+			}
+
+			return static::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( $order )->all();
 		}
 	}
 
@@ -355,18 +419,28 @@ class Category extends NestedSetModel implements IAuthor, IData, IFeatured, IMul
 	public static function findL0ByType( $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
-		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : [ 'name' => SORT_ASC  ];
+		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : [ 'name' => SORT_ASC ];
 		$limit 		= $config['limit'] ?? null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'type=:type AND siteId=:siteId AND parentId IS null', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( $order )->limit($limit)->all();
+			if( isset( $limit ) ) {
+
+				return static::find()->where( 'type=:type AND siteId=:siteId AND parentId IS null', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( $order )->limit($limit)->all();
+			}
+
+			return static::find()->where( 'type=:type AND siteId=:siteId AND parentId IS null', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( $order )->all();
 		}
 		else {
 
-			return static::find()->where( 'type=:type AND parentId IS null', [ ':type' => $type ] )->orderBy( $order )->limit( $limit )->all();
+			if( isset( $limit ) ) {
+
+				return static::find()->where( 'type=:type AND parentId IS null', [ ':type' => $type ] )->orderBy( $order )->limit( $limit )->all();
+			}
+
+			return static::find()->where( 'type=:type AND parentId IS null', [ ':type' => $type ] )->orderBy( $order )->all();
 		}
 	}
 

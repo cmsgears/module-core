@@ -98,15 +98,20 @@ abstract class RoleController extends CrudController {
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->model = $this->modelService->create( $model );
+			$this->model = $this->modelService->create( $model, [ 'admin' => true ] );
 
-			$binder	= new Binder( [ 'binderId' => $this->model->id ] );
+			if( $this->model ) {
 
-			$binder->load( Yii::$app->request->post(), 'Binder' );
+				$this->model->refresh();
 
-			$this->modelService->bindPermissions( $binder );
+				$binder	= new Binder( [ 'binderId' => $this->model->id ] );
 
-			return $this->redirect( 'all' );
+				$binder->load( Yii::$app->request->post(), 'Binder' );
+
+				$this->modelService->bindPermissions( $binder );
+
+				return $this->redirect( $this->returnUrl );
+			}
 		}
 
 		$permissions	= $this->permissionService->getIdNameListByType( $this->type );
@@ -123,16 +128,16 @@ abstract class RoleController extends CrudController {
 	public function actionUpdate( $id, $config = [] ) {
 
 		// Find Model
-		$model	= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
 
-				$this->modelService->update( $model );
+				$this->model = $this->modelService->update( $model, [ 'admin' => true ] );
 
-				$model->refresh();
+				$this->model->refresh();
 
 				$binder	= new Binder( [ 'binderId' => $model->id ] );
 
@@ -168,7 +173,7 @@ abstract class RoleController extends CrudController {
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
-				$this->modelService->delete( $model );
+				$this->modelService->delete( $model, [ 'admin' => true ] );
 
 				return $this->redirect( $this->returnUrl );
 			}

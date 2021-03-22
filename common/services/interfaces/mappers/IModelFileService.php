@@ -30,11 +30,11 @@ interface IModelFileService extends IModelMapperService {
 	 *
 	 * @param integer $parentId
 	 * @param string $parentType
-	 * @param string $fileTag
+	 * @param string $fileCode
 	 * @param string $type
 	 * @return \cmsgears\core\common\models\mappers\ModelFile
 	 */
-	public function getByFileTag( $parentId, $parentType, $fileTag, $type = null );
+	public function getByFileCode( $parentId, $parentType, $fileCode, $type = null );
 
 	/**
 	 * Search and returns the model files using file title.
@@ -44,7 +44,7 @@ interface IModelFileService extends IModelMapperService {
 	 * @param string $fileTitle
 	 * @return \cmsgears\core\common\models\mappers\ModelFile[]
 	 */
-	public function searchByFileTitle( $parentId, $parentType, $fileTitle );
+	public function getByFileTitle( $parentId, $parentType, $fileTitle );
 
 	/**
 	 * Returns the model files using file type associated with given parent id and type.
@@ -63,8 +63,6 @@ interface IModelFileService extends IModelMapperService {
 	// Read - Others ---
 
 	// Create -------------
-
-	public function createWithParent( $parent, $config = [] );
 
 	// Update -------------
 

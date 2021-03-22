@@ -16,12 +16,10 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Action;
-
 /**
  * The Form action save model data using Data Form to the data column.
  */
-class Form extends Action {
+class Form extends \cmsgears\core\common\base\Action {
 
 	// Variables ---------------------------------------------------
 
@@ -59,32 +57,39 @@ class Form extends Action {
 
 	public function run( $id ) {
 
-		$modelService = $this->controller->modelService;
+		$modelService		= $this->controller->modelService;
+		$templateService	= Yii::$app->factory->get( 'templateService' );
 
 		// Find Model
 		$model		= $modelService->getById( $id );
-		$template	= isset( $model->template ) ? $model->template : Yii::$app->factory->get( 'templateService' )->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $modelService->getParentType() );
+		$template	= isset( $model->template ) ? $model->template : $templateService->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $modelService->getParentType() );
 
 		// Update/Render if exist
 		if( isset( $model ) && isset( $template ) ) {
 
 			$dataClass	= $template->dataPath;
 			$dataKey	= isset( $dataClass::$dataKey ) ? $dataClass::$dataKey : 'data';
-			$data		= new $dataClass( $model->getDataMeta( $dataKey ) );
 
-			$this->controller->setViewPath( $template->dataForm );
+			$validKey = !in_array( $dataKey, [ 'attributes', 'config', 'settings', 'plugins' ] );
 
-			if( $data->load( Yii::$app->request->post(), $data->getClassName() ) && $data->validate() ) {
+			if( $validKey ) {
 
-				$modelService->updateDataMeta( $model, $dataKey, $data->getData() );
+				$data = new $dataClass( $model->getDataMeta( $dataKey ) );
 
-				return $this->controller->redirect( $this->controller->returnUrl );
+				$this->controller->setViewPath( $template->dataForm );
+
+				if( $data->load( Yii::$app->request->post(), $data->getClassName() ) && $data->validate() ) {
+
+					$modelService->updateDataMeta( $model, $dataKey, $data->getData() );
+
+					return $this->controller->redirect( $this->controller->returnUrl );
+				}
+
+				return $this->controller->render( 'data', [
+					'model' => $model,
+					'data' => $data
+				]);
 			}
-
-			return $this->controller->render( 'data', [
-				'model' => $model,
-				'data' => $data
-			]);
 		}
 
 		// Model not found

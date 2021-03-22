@@ -26,13 +26,13 @@ use cmsgears\core\common\models\interfaces\base\INameType;
 use cmsgears\core\common\models\interfaces\base\IOwner;
 use cmsgears\core\common\models\interfaces\base\ISlugType;
 use cmsgears\core\common\models\interfaces\base\IVisibility;
+use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
-use cmsgears\core\common\models\interfaces\resources\IModelMeta;
 use cmsgears\core\common\models\interfaces\resources\ITemplate;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Resource;
+use cmsgears\core\common\models\entities\User;
 
 use cmsgears\core\common\models\traits\base\ApprovalTrait;
 use cmsgears\core\common\models\traits\base\AuthorTrait;
@@ -41,9 +41,9 @@ use cmsgears\core\common\models\traits\base\NameTypeTrait;
 use cmsgears\core\common\models\traits\base\OwnerTrait;
 use cmsgears\core\common\models\traits\base\SlugTypeTrait;
 use cmsgears\core\common\models\traits\base\VisibilityTrait;
+use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
-use cmsgears\core\common\models\traits\resources\ModelMetaTrait;
 use cmsgears\core\common\models\traits\resources\TemplateTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
@@ -53,6 +53,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @property integer $id
  * @property integer $siteId
+ * @property integer $userId
  * @property integer $templateId
  * @property integer $createdBy
  * @property integer $modifiedBy
@@ -68,7 +69,11 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property boolean $captcha
  * @property boolean $visibility
  * @property integer $status
+ * @property string $sender
+ * @property string $replyTo
  * @property string $mailTo
+ * @property string $ccTo
+ * @property string $bccTo
  * @property boolean $userMail Send mail to user if set and email field exist.
  * @property boolean $adminMail Send mail to admin if set.
  * @property boolean $uniqueSubmit
@@ -84,8 +89,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IModelMeta,
-	IMultiSite, INameType, IOwner, ISlugType, ITemplate, IVisibility {
+class Form extends \cmsgears\core\common\models\base\Resource implements IApproval, IAuthor, IContent, IData,
+	IGridCache, IMultiSite, INameType, IOwner, ISlugType, ITemplate, IVisibility {
 
 	// Variables ---------------------------------------------------
 
@@ -111,9 +116,9 @@ class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IM
 
 	use ApprovalTrait;
 	use AuthorTrait;
+	use ContentTrait;
 	use DataTrait;
 	use GridCacheTrait;
-	use ModelMetaTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use OwnerTrait;
@@ -168,14 +173,14 @@ class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IM
 		$rules = [
 			// Required, Safe
 			[ [ 'siteId', 'name', 'captcha', 'visibility', 'status' ], 'required' ],
-			[ [ 'id', 'htmlOptions', 'content', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'mailTo', 'ccTo', 'bccTo', 'htmlOptions', 'content' ], 'safe' ],
 			// Unique
-			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
-			[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'type', 'name' ] ],
+			//[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'type', 'name' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NAME ) ],
+			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'slug' ], 'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SLUG ) ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'icon', 'texture' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ [ 'name', 'mailTo' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'name', 'sender', 'replyTo' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'slug', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			[ [ 'title', 'success', 'failure' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
@@ -183,7 +188,7 @@ class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IM
 			[ [ 'visibility', 'status' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'captcha', 'userMail', 'adminMail', 'uniqueSubmit', 'updateSubmit', 'gridCacheValid' ], 'boolean' ],
 			[ 'templateId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'siteId', 'userId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
@@ -205,9 +210,9 @@ class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IM
 
 		return [
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+			'userId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
 			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'mailTo' => 'Mail To',
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
@@ -218,6 +223,11 @@ class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IM
 			'captcha' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CAPTCHA ),
 			'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
 			'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
+			'sender' => 'Sender',
+			'replyTo' => 'Reply To',
+			'mailTo' => 'Mail To',
+			'ccTo' => 'CC To',
+			'bccTo' => 'BCC To',
 			'userMail' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MAIL_USER ),
 			'adminMail' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MAIL_ADMIN ),
 			'uniqueSubmit' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FORM_UNIQUE ),
@@ -243,6 +253,18 @@ class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IM
 				$this->templateId = null;
 			}
 
+			// Default Status - New
+			if( empty( $this->status ) || $this->status <= 0 ) {
+
+				$this->status = self::STATUS_NEW;
+			}
+
+			// Default Type - Default
+			$this->type = $this->type ?? CoreGlobal::TYPE_DEFAULT;
+
+			// Default Visibility - Private
+			$this->visibility = $this->visibility ?? self::VISIBILITY_PRIVATE;
+
 			return true;
 		}
 
@@ -258,13 +280,38 @@ class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IM
 	// Form ----------------------------------
 
 	/**
+	 * Returns the corresponding user.
+	 *
+	 * @return User
+	 */
+	public function getUser() {
+
+		return $this->hasOne( User::class, [ 'id' => 'userId' ] );
+	}
+
+	/**
 	 * Return all the fields associated with the form.
 	 *
 	 * @return FormField[]
 	 */
 	public function getFields() {
 
-		return $this->hasMany( FormField::class, [ 'formId' => 'id' ] );
+		return $this->hasMany( FormField::class, [ 'formId' => 'id' ] )
+				->orderBy( 'order DESC' );
+	}
+
+	/**
+	 * Return all the active fields associated with the form.
+	 *
+	 * @return FormField[]
+	 */
+	public function getActiveFields() {
+
+		$fieldTable = FormField::tableName();
+
+		return $this->hasMany( FormField::class, [ 'formId' => 'id' ] )
+				->where( $fieldTable . ".active=1" )
+				->orderBy( 'order DESC' );
 	}
 
 	/**
@@ -274,7 +321,7 @@ class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IM
 	 */
 	public function getFieldsMap() {
 
-		$formFields = $this->fields;
+		$formFields = $this->activeFields;
 		$fieldsMap	= [];
 
 		foreach( $formFields as $formField ) {
@@ -293,16 +340,6 @@ class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IM
 	public function getCaptchaStr() {
 
 		return Yii::$app->formatter->asBoolean( $this->captcha );
-	}
-
-	/**
-	 * Returns string representation of visibility.
-	 *
-	 * @return string
-	 */
-	public function getVisibilityStr() {
-
-		return self::$visibilityMap[ $this->visibility ];
 	}
 
 	/**
@@ -370,7 +407,7 @@ class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IM
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'template', 'creator', 'modifier' ];
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'template', 'user' ];
 
 		$config[ 'relations' ] = $relations;
 
@@ -385,7 +422,7 @@ class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IM
 	 */
 	public static function queryWithFields( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'fields' ];
+		$config[ 'relations' ] = [ 'fields' ];
 
 		return parent::queryWithAll( $config );
 	}

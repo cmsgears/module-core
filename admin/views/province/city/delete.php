@@ -8,6 +8,8 @@ use cmsgears\core\common\widgets\ActiveForm;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Delete City | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
+
+$region	= isset( $model->region ) ? $model->region->name : null;
 ?>
 <div class="box-crud-wrap">
 	<div class="box-crud-wrap-main">
@@ -18,15 +20,18 @@ $returnUrl		= $this->context->returnUrl;
 			</div>
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'zone' )->textInput( [ 'readonly' => true ] ) ?>
+							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'regionId', [
+								'placeholder' => 'Region', 'icon' => 'cmti cmti-search',
+								'value' => $region, 'disabled' => true
+							])?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'code' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
@@ -34,7 +39,7 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'iso' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'latitude' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
@@ -42,15 +47,18 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'longitude' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
 						<div class="col col2">
-							<?= $form->field( $model, 'postal' )->textInput( [ 'readonly' => true ] ) ?>
+							<?= $form->field( $model, 'zone' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
 						<div class="col col2">
 							<?= $form->field( $model, 'regions' )->textarea( [ 'readonly' => true ] ) ?>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row max-cols-100">
+						<div class="col col2">
+							<?= $form->field( $model, 'postal' )->textInput( [ 'readonly' => true ] ) ?>
+						</div>
 						<div class="col col2">
 							<?= $form->field( $model, 'zipCodes' )->textarea( [ 'readonly' => true ] ) ?>
 						</div>

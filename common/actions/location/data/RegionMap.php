@@ -69,11 +69,11 @@ class RegionMap extends \cmsgears\core\common\base\Action {
 
 	public function run() {
 
-		$provinceId	= Yii::$app->request->post( 'province-id' );
+		$provinceId	= Yii::$app->request->post( 'provinceId' );
 
 		if( isset( $provinceId ) && $provinceId > 0 ) {
 
-			$regions = $this->modelService->getMapByProvinceId( $provinceId );
+			$regions = $this->modelService->getIdNameMapByProvinceId( $provinceId );
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $regions );

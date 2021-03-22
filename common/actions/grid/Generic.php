@@ -15,8 +15,6 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Action;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -24,7 +22,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class Generic extends Action {
+class Generic extends \cmsgears\core\common\base\Action {
 
 	// Variables ---------------------------------------------------
 
@@ -69,12 +67,13 @@ class Generic extends Action {
 
 	// CMG parent classes --------------------
 
-	// Delete --------------------------------
+	// Generic -------------------------------
 
 	public function run( $id ) {
 
 		$action	= Yii::$app->request->post( 'action' );
-		$model	= $this->modelService->getById( $id );
+
+		$model = $this->modelService->getById( $id );
 
 		if( isset( $action ) && isset( $model ) ) {
 
@@ -86,6 +85,9 @@ class Generic extends Action {
 			// Trigger Ajax Success
 			if( $result ) {
 
+				// Controller Model for post action
+				$this->controller->model = $result;
+
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 			}
 		}
@@ -93,4 +95,5 @@ class Generic extends Action {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
+
 }

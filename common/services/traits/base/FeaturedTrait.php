@@ -60,6 +60,20 @@ trait FeaturedTrait {
 		return $modelClass::queryByFeaturedType( $type, $config )->all();
 	}
 
+	public function getPopular( $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::queryByFeatured( $config )->all();
+	}
+
+	public function getPopularByType( $type, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::queryByFeaturedType( $type, $config )->all();
+	}
+
 	// Read - Lists ----
 
 	// Read - Maps -----

@@ -40,9 +40,17 @@ interface IVisual {
 
 	public function clearBanner( $model );
 
+	public function updateMobileBanner( $model, $banner );
+
+	public function clearMobileBanner( $model );
+
 	public function updateVideo( $model, $video );
 
 	public function clearVideo( $model );
+
+	public function updateMobileVideo( $model, $video );
+
+	public function clearMobileVideo( $model );
 
 	public function updateDocument( $model, $document );
 

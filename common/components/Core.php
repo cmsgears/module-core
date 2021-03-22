@@ -387,6 +387,11 @@ class Core extends \cmsgears\core\common\base\Config {
 		return $this->subDirectory;
 	}
 
+	public function getSiteRootUrl() {
+
+		return $this->isMultiSite() && $this->isSubDirectory() && $this->site->slug != 'main' ? '/' . $this->site->slug : '';
+	}
+
 	public function getTestHosts() {
 
 		return $this->testHosts;

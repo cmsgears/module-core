@@ -89,6 +89,7 @@ trait FeaturedTrait {
 	public static function queryByPinned( $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
 
 		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
 		$query	= null;
@@ -103,6 +104,25 @@ trait FeaturedTrait {
 
 			$query = static::find()->where( 'pinned=:pinned', [ ':pinned' => true ] );
 		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
 
 		if( $limit > 0 ) {
 
@@ -123,6 +143,7 @@ trait FeaturedTrait {
 	public static function queryByPinnedType( $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
 
 		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
 		$query	= null;
@@ -137,6 +158,25 @@ trait FeaturedTrait {
 
 			$query = static::find()->where( 'type=:type AND pinned=:pinned', [ ':type' => $type, ':pinned' => true ] );
 		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
 
 		if( $limit > 0 ) {
 
@@ -155,6 +195,7 @@ trait FeaturedTrait {
 	public static function queryByFeatured( $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
 
 		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
 		$query	= null;
@@ -169,6 +210,25 @@ trait FeaturedTrait {
 
 			$query = static::find()->where( 'featured=:featured', [ ':featured' => true ] );
 		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
 
 		if( $limit > 0 ) {
 
@@ -189,6 +249,7 @@ trait FeaturedTrait {
 	public static function queryByFeaturedType( $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
 
 		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
 		$query	= null;
@@ -203,6 +264,25 @@ trait FeaturedTrait {
 
 			$query = static::find()->where( 'type=:type AND featured=:featured', [ ':type' => $type, ':featured' => true ] );
 		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
 
 		if( $limit > 0 ) {
 
@@ -221,6 +301,7 @@ trait FeaturedTrait {
 	public static function queryByPopular( $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
 
 		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
 		$query	= null;
@@ -235,6 +316,25 @@ trait FeaturedTrait {
 
 			$query = static::find()->where( 'popular=:popular', [ ':popular' => true ] );
 		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
 
 		if( $limit > 0 ) {
 
@@ -255,6 +355,7 @@ trait FeaturedTrait {
 	public static function queryByPopularType( $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
 
 		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
 		$query	= null;
@@ -269,6 +370,25 @@ trait FeaturedTrait {
 
 			$query = static::find()->where( 'type=:type AND popular=:popular', [ ':type' => $type, ':popular' => true ] );
 		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Limit ---------------
 
 		if( $limit > 0 ) {
 

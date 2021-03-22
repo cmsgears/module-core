@@ -61,7 +61,7 @@ trait MultiSiteTrait {
 
         $query = new Query();
 
-        $query->select( [ "$modelTable.siteId", "count($modelTable.id) as total" ] )
+        $query->select( [ "$modelTable.siteId", "$siteTable.name", "$siteTable.title", "count($modelTable.id) as total" ] )
 			->from( $modelTable )
 			->leftJoin( $siteTable, "$siteTable.id=$modelTable.siteId" );
 

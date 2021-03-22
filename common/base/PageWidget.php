@@ -272,7 +272,7 @@ abstract class PageWidget extends Widget {
 
 		if( Yii::$app->core->multiSite && Yii::$app->core->subDirectory ) {
 
-			$siteName = Yii::$app->core->getSiteName();
+			$siteName = Yii::$app->core->getSite()->displayName;
 
 			if( isset( $this->basePath ) ) {
 

@@ -64,14 +64,14 @@ trait FeaturedTrait {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::queryByFeatured( $config )->all();
+		return $modelClass::queryByPopular( $config )->all();
 	}
 
 	public function getPopularByType( $type, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::queryByFeaturedType( $type, $config )->all();
+		return $modelClass::queryByPopularType( $type, $config )->all();
 	}
 
 	// Read - Lists ----

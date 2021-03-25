@@ -56,6 +56,19 @@ class CommentController extends \cmsgears\core\admin\controllers\apix\base\Contr
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					// Avatar
+					'assign-avatar' => [ 'permission' => $this->crudPermission ],
+					'clear-avatar' => [ 'permission' => $this->crudPermission ],
+					// Banner
+					'assign-banner' => [ 'permission' => $this->crudPermission ],
+					'clear-banner' => [ 'permission' => $this->crudPermission ],
+					// Video
+					'assign-video' => [ 'permission' => $this->crudPermission ],
+					'clear-video' => [ 'permission' => $this->crudPermission ],
+					// Files
+					'assign-file' => [ 'permission' => $this->crudPermission ],
+					'clear-file' => [ 'permission' => $this->crudPermission ],
+					// Model
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'generic' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
@@ -64,6 +77,19 @@ class CommentController extends \cmsgears\core\admin\controllers\apix\base\Contr
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
+					// Avatar
+					'assign-avatar' => [ 'post' ],
+					'clear-avatar' => [ 'post' ],
+					// Banner
+					'assign-banner' => [ 'post' ],
+					'clear-banner' => [ 'post' ],
+					// Video
+					'assign-video' => [ 'post' ],
+					'clear-video' => [ 'post' ],
+					// Files
+					'assign-file' => [ 'post' ],
+					'clear-file' => [ 'post' ],
+					// Model
 					'bulk' => [ 'post' ],
 					'generic' => [ 'post' ],
 					'delete' => [ 'post' ]
@@ -77,6 +103,19 @@ class CommentController extends \cmsgears\core\admin\controllers\apix\base\Contr
 	public function actions() {
 
 		return [
+			// Avatar
+			'assign-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Assign' ],
+			'clear-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Clear' ],
+			// Banner
+			'assign-banner' => [ 'class' => 'cmsgears\core\common\actions\content\banner\Assign' ],
+			'clear-banner' => [ 'class' => 'cmsgears\core\common\actions\content\banner\Clear' ],
+			// Video
+			'assign-video' => [ 'class' => 'cmsgears\core\common\actions\content\video\Assign' ],
+			'clear-video' => [ 'class' => 'cmsgears\core\common\actions\content\video\Clear' ],
+			// Files
+			'assign-file' => [ 'class' => 'cmsgears\core\common\actions\file\mapper\Assign' ],
+			'clear-file' => [ 'class' => 'cmsgears\core\common\actions\file\mapper\Clear' ],
+			// Model
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'admin' => true ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]

@@ -452,6 +452,13 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 	public function create( $model, $config = [] ) {
 
+		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+
+		// Save Files
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
+
 		$model->agent	= Yii::$app->request->userAgent;
 		$model->ip		= Yii::$app->request->userIP;
 
@@ -467,8 +474,13 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
+		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'avatarId', 'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content',
+			'avatarId', 'bannerId', 'videoId', 'name', 'email',
+			'avatarUrl', 'websiteUrl', 'rating', 'content',
 			'rate1', 'rate2', 'rate3', 'rate4', 'rate5',
 			'field1', 'field2', 'field3', 'field4', 'field5'
 		];
@@ -479,6 +491,9 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 				'status', 'order', 'pinned', 'featured', 'popular', 'anonymous'
 			]);
 		}
+
+		// Save Files
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
 
 		return parent::update( $model, [
 			'attributes' => $attributes

@@ -84,15 +84,19 @@ Editor::widget();
 			<div class="box-content">
 				<div class="box-content">
 					<div class="row padding padding-small-v">
-						<div class="col col12x4">
+						<div class="col col12x3">
 							<label>Avatar</label>
 							<?= AvatarUploader::widget( [ 'model' => $avatar, 'clearAction' => true ] ) ?>
 						</div>
-						<div class="col col12x4">
+						<div class="col col12x3">
 							<label>Banner</label>
 							<?= ImageUploader::widget( [ 'model' => $banner, 'clearAction' => true ] ) ?>
 						</div>
-						<div class="col col12x4">
+						<div class="col col12x3">
+							<label>Mobile Banner</label>
+							<?= ImageUploader::widget( [ 'model' => $mbanner, 'modelClass' => 'MobileBanner', 'clearAction' => true ] ) ?>
+						</div>
+						<div class="col col12x3">
 							<label>Video</label>
 							<?= VideoUploader::widget( [ 'model' => $video, 'clearAction' => true ] ) ?>
 						</div>

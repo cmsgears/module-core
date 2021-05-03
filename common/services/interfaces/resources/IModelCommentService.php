@@ -64,6 +64,8 @@ interface IModelCommentService extends IModelResourceService, IData, IFile, IMul
 
 	// Read - Others ---
 
+	public function getCommentClass();
+
 	// Create -------------
 
 	// Update -------------

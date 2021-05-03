@@ -15,7 +15,6 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\forms\Comment;
 use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\models\resources\ModelComment;
 
@@ -58,6 +57,8 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 	public $mediaType = FileManager::FILE_TYPE_MIXED;
 
 	public $mediaModel = 'File';
+
+	public $additionalAttributes = [];
 
 	/**
 	 * A comment can be created with or without scenario. The possible scenarios
@@ -107,10 +108,11 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 			$user = Yii::$app->core->getUser();
 
-			$modelClass = $modelCommentService->getModelClass();
+			$modelClass		= $modelCommentService->getModelClass();
+			$commentClass	= $modelCommentService->getCommentClass();
 
 			$modelComment	= new $modelClass;
-			$commentForm	= new Comment();
+			$commentForm	= new $commentClass;
 
 			$modelComment->parentId		= $this->model->id;
 			$modelComment->parentType	= $this->parentType;
@@ -138,6 +140,11 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 					'rate1', 'rate2', 'rate3', 'rate4', 'rate5', 'rating',
 					'anonymous', 'content'
 				]);
+
+				if( count( $this->additionalAttributes ) > 0 ) {
+
+					$modelComment->copyForUpdateFrom( $commentForm, $this->additionalAttributes );
+				}
 
 				if( !$this->setUser || !isset( $user ) ) {
 

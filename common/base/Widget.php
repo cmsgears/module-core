@@ -132,6 +132,13 @@ abstract class Widget extends \yii\base\Widget {
 	 */
 	public $autoloadUrl = 'core/autoload/widget';
 
+	/**
+	 * Additional data passed to the widget.
+	 * 
+	 * @var array
+	 */
+	public $data = [];
+
 	// Protected --------------
 
 	// Private ----------------

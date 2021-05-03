@@ -54,6 +54,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 	// Protected --------------
 
+	protected $commentClass = '\cmsgears\core\common\models\forms\Comment';
+
 	protected $fileService;
 	protected $modelFileService;
 
@@ -447,6 +449,11 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 	// Read - Maps -----
 
 	// Read - Others ---
+
+	public function getCommentClass() {
+
+		return $this->commentClass;
+	}
 
 	// Create -------------
 

@@ -513,14 +513,17 @@ class CodeGenUtil {
 			$model		= $params[ 'model' ];
 			$content	= isset( $model->modelContent ) ? $model->modelContent : null;
 
-			$date = $model->modifiedAt;
+			$date = isset( $model->modifiedAt ) ? $model->modifiedAt : null;
 
 			if( isset( $content ) && isset( $content->modifiedAt ) ) {
 
 				$date = DateUtil::greaterThan( $date, $content->modifiedAt ) ? $content->modifiedAt : $date;
 			}
 
-			$metaContent .= "<meta name=\"last-updated\" content=\"$date UTC\">";
+			if( isset( $date ) {
+			
+				$metaContent .= "<meta name=\"last-updated\" content=\"$date UTC\">";
+			}
 		}
 
 		// Description

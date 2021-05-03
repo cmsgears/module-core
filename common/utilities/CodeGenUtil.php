@@ -520,7 +520,7 @@ class CodeGenUtil {
 				$date = DateUtil::greaterThan( $date, $content->modifiedAt ) ? $content->modifiedAt : $date;
 			}
 
-			if( isset( $date ) {
+			if( isset( $date ) ) {
 			
 				$metaContent .= "<meta name=\"last-updated\" content=\"$date UTC\">";
 			}

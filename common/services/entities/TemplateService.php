@@ -24,6 +24,7 @@ use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
 use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
+use cmsgears\core\common\services\traits\resources\VisualTrait;
 
 /**
  * TemplateService provide service methods of template model.
@@ -65,6 +66,7 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
+	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -361,9 +363,9 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 		$modelClass	= static::$modelClass;
 
-		$preview = isset( $config[ 'preview' ] ) ? $config[ 'preview' ] : null;
+		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 
-		$this->fileService->saveFiles( $model, [ 'previewId' => $preview ] );
+		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner ] );
 
 		return parent::create( $model, $config );
 	}
@@ -374,10 +376,10 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
-		$preview = isset( $config[ 'preview' ] ) ? $config[ 'preview' ] : null;
+		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'previewId', 'name', 'slug', 'icon', 'title', 'description', 'renderer', 'fileRender',
+			'bannerId', 'name', 'slug', 'icon', 'title', 'description', 'renderer', 'fileRender',
 			'layout', 'layoutGroup', 'viewPath', 'view', 'htmlOptions', 'help', 'message', 'content',
 			'classPath', 'dataPath', 'dataForm', 'attributesPath', 'attributesForm',
 			'configPath', 'configForm', 'settingsPath', 'settingsForm'
@@ -390,7 +392,7 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 		}
 
 		// Save Files
-		$this->fileService->saveFiles( $model, [ 'previewId' => $preview ] );
+		$this->fileService->saveFiles( $model, [ 'bannerId' => $banner ] );
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -435,7 +437,7 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 	public function delete( $model, $config = [] ) {
 
 		// Delete files
-		$this->fileService->deleteMultiple( [ $model->preview ] );
+		$this->fileService->deleteMultiple( [ $model->banner ] );
 
 		// Delete model
 		return parent::delete( $model, $config );

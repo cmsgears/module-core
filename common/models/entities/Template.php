@@ -26,6 +26,7 @@ use cmsgears\core\common\models\interfaces\base\ISlugType;
 use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
+use cmsgears\core\common\models\interfaces\resources\IVisual;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Entity;
@@ -38,6 +39,7 @@ use cmsgears\core\common\models\traits\base\SlugTypeTrait;
 use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
+use cmsgears\core\common\models\traits\resources\VisualTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -47,7 +49,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $id
  * @property integer $siteId
  * @property integer $themeId
- * @property integer $previewId
+ * @property integer $bannerId
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
@@ -86,7 +88,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Template extends Entity implements IAuthor, IContent, IData, IGridCache, IMultiSite, INameType, ISlugType {
+class Template extends Entity implements IAuthor, IContent, IData, IGridCache,
+	IMultiSite, INameType, ISlugType, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -117,6 +120,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
+	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -179,7 +183,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 			// Other
 			[ [ 'active', 'frontend', 'fileRender', 'layoutGroup', 'gridCacheValid' ], 'boolean' ],
 			[ 'themeId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'siteId', 'previewId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'siteId', 'bannerId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
@@ -201,7 +205,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 
 		return [
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
-			'previewId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PREVIEW ),
+			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PREVIEW ),
 			'themeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_THEME ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
@@ -268,11 +272,6 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 	public function getTheme() {
 
 		return $this->hasOne( Theme::class, [ 'id' => 'themeId' ] );
-	}
-
-	public function getPreview() {
-
-		return $this->hasOne( File::class, [ 'id' => 'previewId' ] );
 	}
 
 	/**
@@ -350,7 +349,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'theme', 'preview', 'creator', 'modifier' ];
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'theme', 'banner', 'creator', 'modifier' ];
 
 		$config[ 'relations' ] = $relations;
 

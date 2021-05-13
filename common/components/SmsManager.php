@@ -59,7 +59,7 @@ class SmsManager extends \cmsgears\core\common\base\Component {
 		// Adapter method
 	}
 
-	public function sendOtp( $number, $message, $otp, $templateId, $expiry = 10 ) {
+	public function sendOtp( $number, $otp, $templateSlug, $expiry = 10 ) {
 
 		// Adapter method
 	}

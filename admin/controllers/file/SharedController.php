@@ -94,7 +94,7 @@ class SharedController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
-			'visibilityMap' => File::$visibilityMap,
+			'visibilityMap' => File::$filterVisibilityMap,
 			'typeMap' => File::$typeMap
 		]);
 	}

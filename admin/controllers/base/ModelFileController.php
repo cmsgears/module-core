@@ -114,7 +114,7 @@ abstract class ModelFileController extends Controller {
 			return $this->render( 'all', [
 				'dataProvider' => $dataProvider,
 				'parent' => $parent,
-				'visibilityMap' => File::$visibilityMap,
+				'visibilityMap' => File::$filterVisibilityMap,
 				'typeMap' => File::$typeMap
 			]);
 		}

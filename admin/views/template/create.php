@@ -131,7 +131,7 @@ Editor::widget();
 						<div class="row max-cols-50 padding padding-small-v">
 							<div class="col col12x4">
 								<label>Preview</label>
-								<?= ImageUploader::widget( [ 'model' => $preview ] ) ?>
+								<?= ImageUploader::widget( [ 'model' => $banner, 'clearAction' => true ] ) ?>
 							</div>
 						</div>
 					</div>

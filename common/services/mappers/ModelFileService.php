@@ -230,8 +230,8 @@ class ModelFileService extends \cmsgears\core\common\services\base\ModelMapperSe
 		// Params
 		$type		= Yii::$app->request->getQueryParam( 'type' );
 		$ftype		= Yii::$app->request->getQueryParam( 'ftype' );
-		$filter		= Yii::$app->request->getQueryParam( 'model' );
 		$visibility	= Yii::$app->request->getQueryParam( 'visibility' );
+		$filter		= Yii::$app->request->getQueryParam( 'model' );
 
 		// Filter - Type
 		if( isset( $type ) && empty( $config[ 'conditions' ][ "$modelTable.type" ] ) ) {
@@ -243,6 +243,12 @@ class ModelFileService extends \cmsgears\core\common\services\base\ModelMapperSe
 		if( isset( $ftype ) && empty( $config[ 'conditions' ][ "$fileTable.type" ] ) ) {
 
 			$config[ 'conditions' ][ "$fileTable.type" ] = $ftype;
+		}
+
+		// Filter - Visibility
+		if( isset( $visibility ) && isset( $fileClass::$urlRevVisibilityMap[ $visibility ] ) ) {
+
+			$config[ 'conditions' ][ "$fileTable.visibility" ] = $fileClass::$urlRevVisibilityMap[ $visibility ];
 		}
 
 		// Filter - Model
@@ -281,12 +287,6 @@ class ModelFileService extends \cmsgears\core\common\services\base\ModelMapperSe
 					break;
 				}
 			}
-		}
-
-		// Filter - Visibility
-		if( isset( $visibility ) && isset( $fileClass::$urlRevVisibilityMap[ $visibility ] ) ) {
-
-			$config[ 'conditions' ][ "$fileTable.visibility" ] = $fileClass::$urlRevVisibilityMap[ $visibility ];
 		}
 
 		// Searching --------

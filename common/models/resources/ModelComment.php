@@ -321,7 +321,9 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	 */
 	public function getUser() {
 
-		return $this->hasOne( User::class, [ 'id' => 'userId' ] );
+		$userTable = CoreTables::TABLE_USER;
+
+		return $this->hasOne( User::class, [ 'id' => 'userId' ] )->from( "$userTable as user" );
 	}
 
 	/**

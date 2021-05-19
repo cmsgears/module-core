@@ -112,8 +112,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 					'label' => 'Id'
 				],
 	            'user' => [
-					'asc' => [ "creator.name" => SORT_ASC ],
-					'desc' => [ "creator.name" => SORT_DESC ],
+					'asc' => [ "user.name" => SORT_ASC ],
+					'desc' => [ "user.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 	                'label' => 'User'
 	            ],

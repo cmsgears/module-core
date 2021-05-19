@@ -275,7 +275,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 			'email' => "$modelTable.email",
 			'mobile' => "$modelTable.mobile",
 			'phone' => "$modelTable.phone",
-			'content' => "$modelTable.ontent"
+			'content' => "$modelTable.content"
 		];
 
 		if( isset( $searchCol ) ) {
@@ -295,7 +295,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 			'marital' => "$modelTable.maritalId",
 			'name' => "$modelTable.name",
 			'status' => "$modelTable.status",
-			'role' => "$roleTable.name",
+			'role' => "$roleTable.id",
 			'message' => "$modelTable.message",
 			'desc' => "$modelTable.description",
 			'username' => "$modelTable.username",
@@ -303,7 +303,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 			'mobile' => "$modelTable.mobile",
 			'phone' => "$modelTable.phone",
 			'tzone' => "$modelTable.timeZone",
-			'content' => "$modelTable.ontent"
+			'content' => "$modelTable.content"
 		];
 
 		// Result -----------

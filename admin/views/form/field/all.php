@@ -34,7 +34,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'type' => [ 'title' => 'Type', 'type' => 'select', 'options' => $typeMap ],
 		'active' => [ 'title' => 'Active', 'type' => 'flag' ],
 		'compress' => [ 'title' => 'Compress', 'type' => 'flag' ],
-		'validators' => [ 'title' => 'Label', 'type' => 'text' ],
+		'validators' => [ 'title' => 'Validators', 'type' => 'text' ],
 		'order' => [ 'title' => 'Order', 'type' => 'text' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [

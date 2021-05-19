@@ -48,6 +48,11 @@ Editor::widget();
 					</div>
 					<div class="row max-cols-100">
 						<div class="col col2">
+							<?= $form->field( $model, 'title' ) ?>
+						</div>
+					</div>
+					<div class="row max-cols-100">
+						<div class="col col2">
 							<?= $form->field( $model, 'avatarUrl' ) ?>
 						</div>
 						<div class="col col2">

@@ -513,15 +513,15 @@ class CodeGenUtil {
 			$model		= $params[ 'model' ];
 			$content	= isset( $model->modelContent ) ? $model->modelContent : null;
 
-			$date = isset( $model->modifiedAt ) ? $model->modifiedAt : null;
+			$date = ($model->modifiedAt instanceof \yii\db\Expression) ? DateUtil::getDateTime() : ( isset( $model->modifiedAt ) ? $model->modifiedAt : null );
 
-			if( isset( $content ) && isset( $content->modifiedAt ) ) {
+			if( isset( $date ) && isset( $content ) && isset( $content->modifiedAt ) ) {
 
 				$date = DateUtil::greaterThan( $date, $content->modifiedAt ) ? $content->modifiedAt : $date;
 			}
 
 			if( isset( $date ) ) {
-			
+
 				$metaContent .= "<meta name=\"last-updated\" content=\"$date UTC\">";
 			}
 		}

@@ -77,10 +77,25 @@ class Delete extends \cmsgears\core\common\base\Action {
 
 			$this->controller->model = $model;
 
-			// Trigger Ajax Success
-			if( $this->modelService->delete( $model, $this->config ) ) {
+			$parentId	= Yii::$app->request->get( 'parent-id' );
+			$parentType = Yii::$app->request->get( 'parent-type' );
 
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+			// Delete by parent
+			if( isset( $parentId ) && isset( $parentType ) ) {
+
+				// Trigger Ajax Success
+				if( $model->isParentValid( $parentId, $parentType ) && $this->modelService->delete( $model, $this->config ) ) {
+
+					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+				}
+			}
+			else {
+
+				// Trigger Ajax Success
+				if( $this->modelService->delete( $model, $this->config ) ) {
+
+					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+				}
 			}
 		}
 

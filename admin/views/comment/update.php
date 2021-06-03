@@ -68,10 +68,18 @@ Editor::widget();
 						</div>
 					</div>
 					<div class="row max-cols-100">
-						<div class="col col2">
+						<div class="col col3">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'pinned' ) ?>
+						</div>
+						<div class="col col3">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured' ) ?>
 						</div>
-						<div class="col col2">
+						<div class="col col3">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'popular' ) ?>
+						</div>
+					</div>
+					<div class="row max-cols-100">
+						<div class="col col3">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'anonymous' ) ?>
 						</div>
 					</div>

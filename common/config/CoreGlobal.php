@@ -522,6 +522,8 @@ class CoreGlobal {
 	const FIELD_COMPRESS	= 'compressField';
 	const FIELD_GRID_CACHE	= 'gridCacheField';
 
+	const FIELD_GRID_CACHE_VALID = 'gridCacheValidField';
+
 	// Role Fields
 	const FIELD_ADMIN_URL	= 'adminUrlField';
 	const FIELD_HOME_URL	= 'homeUrlField';

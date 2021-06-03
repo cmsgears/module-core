@@ -513,7 +513,7 @@ class CodeGenUtil {
 			$model		= $params[ 'model' ];
 			$content	= isset( $model->modelContent ) ? $model->modelContent : null;
 
-			$date = ($model->modifiedAt instanceof \yii\db\Expression) ? DateUtil::getDateTime() : ( isset( $model->modifiedAt ) ? $model->modifiedAt : null );
+			$date = !empty( $model->modifiedAt ) ? ( ($model->modifiedAt instanceof \yii\db\Expression) ? DateUtil::getDateTime() : $model->modifiedAt ) : null;
 
 			if( isset( $date ) && isset( $content ) && isset( $content->modifiedAt ) ) {
 

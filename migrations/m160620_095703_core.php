@@ -173,7 +173,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'id' => $this->bigPrimaryKey( 20 ),
 			'siteId' => $this->bigInteger( 20 ),
 			'themeId' => $this->bigInteger( 20 ),
-			'previewId' => $this->bigInteger( 20 ),
+			'bannerId' => $this->bigInteger( 20 ),
 			'createdBy' => $this->bigInteger( 20 )->notNull(),
 			'modifiedBy' => $this->bigInteger( 20 ),
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
@@ -214,7 +214,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		// Index for columns creator and modifier
 		$this->createIndex( 'idx_' . $this->prefix . 'template_site', $this->prefix . 'core_template', 'siteId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'template_theme', $this->prefix . 'core_template', 'themeId' );
-		$this->createIndex( 'idx_' . $this->prefix . 'template_preview', $this->prefix . 'core_template', 'previewId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'template_banner', $this->prefix . 'core_template', 'bannerId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'template_creator', $this->prefix . 'core_template', 'createdBy' );
 		$this->createIndex( 'idx_' . $this->prefix . 'template_modifier', $this->prefix . 'core_template', 'modifiedBy' );
 	}
@@ -1377,7 +1377,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		// Template
 		$this->addForeignKey( 'fk_' . $this->prefix . 'template_site', $this->prefix . 'core_template', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'template_theme', $this->prefix . 'core_template', 'themeId', $this->prefix . 'core_theme', 'id', 'SET NULL' );
-		$this->addForeignKey( 'fk_' . $this->prefix . 'template_preview', $this->prefix . 'core_template', 'previewId', $this->prefix . 'core_file', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'template_banner', $this->prefix . 'core_template', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'template_creator', $this->prefix . 'core_template', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'template_modifier', $this->prefix . 'core_template', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
 
@@ -1634,7 +1634,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		// Template
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'template_site', $this->prefix . 'core_template' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'template_theme', $this->prefix . 'core_template' );
-		$this->dropForeignKey( 'fk_' . $this->prefix . 'template_preview', $this->prefix . 'core_template' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'template_banner', $this->prefix . 'core_template' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'template_creator', $this->prefix . 'core_template' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'template_modifier', $this->prefix . 'core_template' );
 

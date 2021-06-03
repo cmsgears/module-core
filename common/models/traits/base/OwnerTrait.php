@@ -86,6 +86,25 @@ trait OwnerTrait {
 		}
 	}
 
+	/**
+	 * Check whether the account belongs to the given user.
+	 *
+	 * @param \cmsgears\core\common\models\entities\User $user
+	 * @return boolean
+	 */
+	public function belongsToUser( $user ) {
+
+		if( isset( $this->userId ) ) {
+
+			return $this->userId == $user->id;
+		}
+
+		if( isset( $this->createdBy ) ) {
+
+			return $this->createdBy == $user->id;
+		}
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii classes ---------------------------

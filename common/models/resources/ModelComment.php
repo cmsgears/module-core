@@ -21,6 +21,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\interfaces\base\IAuthor;
 use cmsgears\core\common\models\interfaces\base\IFeatured;
 use cmsgears\core\common\models\interfaces\base\IMultiSite;
+use cmsgears\core\common\models\interfaces\base\IOwner;
 use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
@@ -33,6 +34,7 @@ use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\FeaturedTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
+use cmsgears\core\common\models\traits\base\OwnerTrait;
 use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
@@ -95,7 +97,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @since 1.0.0
  */
 class ModelComment extends \cmsgears\core\common\models\base\ModelResource implements IAuthor,
-	IContent, IData, IFeatured, IFile, IGridCache, IMultiSite, IVisual {
+	IContent, IData, IFeatured, IFile, IGridCache, IMultiSite, IOwner, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -172,6 +174,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	use FileTrait;
 	use GridCacheTrait;
    	use MultiSiteTrait;
+	use OwnerTrait;
 	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------

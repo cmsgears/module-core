@@ -731,7 +731,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 			$model = $this->getById( $id );
 
 			// Bulk Conditions
-			if( isset( $model ) && $model->parentId == $parentId && $model->parentType == $parentType ) {
+			if( isset( $model ) && $model->isParentValid( $parentId, $parentType ) ) {
 
 				$this->applyBulk( $model, $column, $action, $target, $config );
 			}

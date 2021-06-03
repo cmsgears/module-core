@@ -78,7 +78,7 @@ class ModelOptionService extends \cmsgears\core\common\services\base\ModelMapper
 	public function getValueListByCategorySlug( $parentId, $parentType, $categorySlug, $active = true ) {
 
 		$categoryTable	= Yii::$app->factory->get( 'categoryService' )->getModelTable();
-		$optionTable	= Yii::$app->factory->get( 'parentService' )->getModelTable();
+		$optionTable	= Yii::$app->factory->get( 'optionService' )->getModelTable();
 		$mOptionTable	= Yii::$app->factory->get( 'modelOptionService' )->getModelTable();
 
 		$query = new Query();

@@ -14,7 +14,7 @@ $this->title 	= "Create $title | " . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 
 $stars	= $this->context->stars;
-$user	= isset( $model->createdBy ) ? $model->creator->getName() : null;
+$user	= isset( $model->userId ) ? $model->user->getName() : null;
 
 Editor::widget();
 ?>
@@ -29,13 +29,13 @@ Editor::widget();
 				<div class="box-content">
 					<div class="row max-cols-100">
 						<div class="row row-medium">
-							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'createdBy', [
-								'placeholder' => 'Search Creator', 'icon' => 'cmti cmti-search',
+							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'userId', [
+								'placeholder' => 'Search User', 'icon' => 'cmti cmti-search',
 								'app' => 'core', 'controller' => 'user',
 								'value' => $user, 'url' => 'core/user/auto-search'
 							]) ?>
 						</div>
-						<div class="note">Notes: Use Search Creator only in case submit need to be done on behalf of selected user.</div>
+						<div class="note">Notes: Use Search User only in case submit need to be done on behalf of selected user.</div>
 					</div>
 					<div class="filler-height filler-height-medium"></div>
 					<div class="row max-cols-100">

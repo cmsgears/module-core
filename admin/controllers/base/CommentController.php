@@ -20,6 +20,8 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\File;
 
+use cmsgears\core\common\behaviors\ActivityBehavior;
+
 /**
  * CommentController provides actions specific to comment model.
  *
@@ -106,6 +108,13 @@ abstract class CommentController extends Controller {
 					'update'  => [ 'get', 'post' ],
 					'delete'  => [ 'get', 'post' ]
 				]
+			],
+			'activity' => [
+				'class' => ActivityBehavior::class,
+				'admin' => true,
+				'create' => [ 'create' ],
+				'update' => [ 'update' ],
+				'delete' => [ 'delete' ]
 			]
 		];
 	}
@@ -181,7 +190,7 @@ abstract class CommentController extends Controller {
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
 			$this->model = $this->modelService->create( $model, [
-				'admin' => true,'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+				'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video
 			]);
 
 			if( $this->model ) {

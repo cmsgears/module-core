@@ -117,6 +117,12 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 					'default' => SORT_DESC,
 	                'label' => 'User'
 	            ],
+				'title' => [
+					'asc' => [ "$modelTable.title" => SORT_ASC ],
+					'desc' => [ "$modelTable.title" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Title'
+				],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
@@ -255,7 +261,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
 
 		$search = [
-			'user' => "concat(creator.firstName, ' ', creator.lastName)",
+			'user' => "user.name",
+			'title' => "$modelTable.title",
 			'name' => "$modelTable.name",
 			'email' =>  "$modelTable.email",
 			'content' => "$modelTable.content"
@@ -273,7 +280,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		// Reporting --------
 
 		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
-			'user' => "concat(creator.firstName, ' ', creator.lastName)",
+			'user' => "user.name",
+			'title' => "$modelTable.title",
 			'name' => "$modelTable.name",
 			'email' => "$modelTable.email",
 			'content' => "$modelTable.content",

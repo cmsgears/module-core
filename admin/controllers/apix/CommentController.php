@@ -16,6 +16,8 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\behaviors\ActivityBehavior;
+
 class CommentController extends \cmsgears\core\admin\controllers\apix\base\Controller {
 
 	// Variables ---------------------------------------------------
@@ -94,6 +96,11 @@ class CommentController extends \cmsgears\core\admin\controllers\apix\base\Contr
 					'generic' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
+			],
+			'activity' => [
+				'class' => ActivityBehavior::class,
+				'admin' => true,
+				'delete' => [ 'delete' ]
 			]
 		];
 	}

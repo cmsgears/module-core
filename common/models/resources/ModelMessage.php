@@ -20,6 +20,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\interfaces\base\IAuthor;
 use cmsgears\core\common\models\interfaces\base\IMultiSite;
+use cmsgears\core\common\models\interfaces\base\IOwner;
 use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
@@ -30,6 +31,7 @@ use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
+use cmsgears\core\common\models\traits\base\OwnerTrait;
 use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
@@ -43,6 +45,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @property integer $id
  * @property integer $siteId
+ * @property integer $userId
  * @property integer $baseId
  * @property integer $bannerId
  * @property integer $videoId
@@ -68,7 +71,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @since 1.0.0
  */
 class ModelMessage extends \cmsgears\core\common\models\base\ModelResource implements IAuthor,
-	IContent, IData, IFile, IGridCache, IMultiSite, IVisual {
+	IContent, IData, IFile, IGridCache, IMultiSite, IOwner, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -100,6 +103,7 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 	use FileTrait;
 	use GridCacheTrait;
    	use MultiSiteTrait;
+	use OwnerTrait;
 	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -150,7 +154,7 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 			// Other
 			[ [ 'consumed', 'trash', 'gridCacheValid' ], 'boolean' ],
 			[ 'ipNum', 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'siteId', 'baseId', 'bannerId', 'videoId', 'parentId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'siteId', 'userId', 'baseId', 'bannerId', 'videoId', 'parentId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
@@ -172,6 +176,7 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 
 		return [
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+			'userId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
 			'baseId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
 			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
@@ -286,7 +291,7 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'creator', 'modifier' ];
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'user' ];
 
 		$config[ 'relations' ] = $relations;
 
@@ -320,7 +325,7 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 
 		$config[ 'type' ] = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_MESSAGE;
 
-		return self::queryByType( $parentId, $parentType, $type, $config )->andWhere( [ 'baseId' => null ] );
+		return self::queryByType( $parentId, $parentType, $config )->andWhere( [ 'baseId' => null ] );
 	}
 
 	/**
@@ -336,7 +341,7 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 
 		$config[ 'type' ] = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_MESSAGE;
 
-		return self::queryByType( $parentId, $parentType, $type, $config )->andWhere( [ 'createdBy' => $userId ] );
+		return self::queryByType( $parentId, $parentType, $config )->andWhere( [ 'userId' => $userId ] );
 	}
 
 	/**
@@ -352,7 +357,7 @@ class ModelMessage extends \cmsgears\core\common\models\base\ModelResource imple
 
 		$config[ 'type' ] = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_MESSAGE;
 
-		return self::queryByType( $parentId, $parentType, $type, $config )->andWhere( [ 'baseId' => null, 'createdBy' => $userId ] );
+		return self::queryByType( $parentId, $parentType, $config )->andWhere( [ 'baseId' => null, 'userId' => $userId ] );
 	}
 
 	/**

@@ -776,6 +776,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->createTable( $this->prefix . 'core_gallery', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'siteId' => $this->bigInteger( 20 )->notNull(),
+			'userId' => $this->bigInteger( 20 ),
 			'templateId' => $this->bigInteger( 20 ),
 			'createdBy' => $this->bigInteger( 20 )->notNull(),
 			'modifiedBy' => $this->bigInteger( 20 ),
@@ -803,6 +804,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		// Index for columns site, template, creator and modifier
 		$this->createIndex( 'idx_' . $this->prefix . 'gallery_site', $this->prefix . 'core_gallery', 'siteId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'gallery_user', $this->prefix . 'core_gallery', 'userId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'gallery_template', $this->prefix . 'core_gallery', 'templateId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'gallery_creator', $this->prefix . 'core_gallery', 'createdBy' );
 		$this->createIndex( 'idx_' . $this->prefix . 'gallery_modifier', $this->prefix . 'core_gallery', 'modifiedBy' );
@@ -1020,6 +1022,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->createTable( $this->prefix . 'core_model_message', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'siteId' => $this->bigInteger( 20 )->notNull(),
+			'userId' => $this->bigInteger( 20 ),
 			'baseId' => $this->bigInteger( 20 ),
 			'bannerId' => $this->bigInteger( 20 ),
 			'videoId' => $this->bigInteger( 20 ),
@@ -1126,7 +1129,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'referrals' => $this->integer( 11 )->defaultValue( 0 ),
 			'comments' => $this->integer( 11 )->defaultValue( 0 ),
 			'reviews' => $this->integer( 11 )->defaultValue( 0 ),
-			'ratings' => $this->float(),
+			'rating' => $this->float()->defaultValue( 0 ),
 			'likes' => $this->integer( 11 )->defaultValue( 0 ),
 			'wish' => $this->integer( 11 )->defaultValue( 0 ),
 			'followers' => $this->integer( 11 )->defaultValue( 0 ),
@@ -1479,6 +1482,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		// Gallery
 		$this->addForeignKey( 'fk_' . $this->prefix . 'gallery_site', $this->prefix . 'core_gallery', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'gallery_user', $this->prefix . 'core_gallery', 'userId', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'gallery_template', $this->prefix . 'core_gallery', 'templateId', $this->prefix . 'core_template', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'gallery_creator', $this->prefix . 'core_gallery', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'gallery_modifier', $this->prefix . 'core_gallery', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
@@ -1513,6 +1517,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		// Model Message
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_message_site', $this->prefix . 'core_model_message', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_message_user', $this->prefix . 'core_model_message', 'userId', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_message_base', $this->prefix . 'core_model_message', 'baseId', $this->prefix . 'core_model_message', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_message_banner', $this->prefix . 'core_model_message', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_message_video', $this->prefix . 'core_model_message', 'videoId', $this->prefix . 'core_file', 'id', 'SET NULL' );
@@ -1734,6 +1739,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		// Gallery
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'gallery_site', $this->prefix . 'core_gallery' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'gallery_user', $this->prefix . 'core_gallery' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'gallery_template', $this->prefix . 'core_gallery' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'gallery_creator', $this->prefix . 'core_gallery' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'gallery_modifier', $this->prefix . 'core_gallery' );
@@ -1768,6 +1774,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		// Model Message
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_message_site', $this->prefix . 'core_model_message' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_message_user', $this->prefix . 'core_model_message' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_message_base', $this->prefix . 'core_model_message' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_message_banner', $this->prefix . 'core_model_message' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_message_video', $this->prefix . 'core_model_message' );

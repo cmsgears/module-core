@@ -157,6 +157,7 @@ abstract class CommentController extends Controller {
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
 			'statusMap' => $modelClass::$statusMap,
+			'parentService' => $this->parentService,
 			'parent' => $parent
 		]);
 	}

@@ -36,7 +36,7 @@ use cmsgears\core\common\models\traits\resources\GridCacheTrait;
  * @property integer $referrals
  * @property integer $comments
  * @property integer $reviews
- * @property float $ratings
+ * @property float $rating
  * @property integer $likes
  * @property integer $wish
  * @property integer $followers
@@ -115,7 +115,7 @@ class ModelAnalytics extends \cmsgears\core\common\models\base\ModelResource imp
 			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			// Other
 			[ [ 'views', 'referrals', 'comments', 'reviews', 'likes', 'wish', 'followers', 'rank' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'ratings', 'weight' ], 'number', 'min' => 0 ],
+			[ [ 'rating', 'weight' ], 'number', 'min' => 0 ],
 			[ 'gridCacheValid', 'boolean' ],
 			[ 'parentId', 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ 'gridCachedAt', 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -137,7 +137,7 @@ class ModelAnalytics extends \cmsgears\core\common\models\base\ModelResource imp
 			'referrals' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_REFERRAL_COUNT ),
 			'comments' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COMMENTS ),
 			'reviews' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_REVIEWS ),
-			'ratings' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RATINGS ),
+			'rating' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RATINGS ),
 			'likes' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LIKE_COUNT ),
 			'wish' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WISH_COUNT ),
 			'followers' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FOLLOWERS ),

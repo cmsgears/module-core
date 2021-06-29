@@ -156,17 +156,55 @@ abstract class ModelResource extends Resource {
 	public static function findByParentId( $parentId, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$offset	= isset( $config[ 'offset' ] ) ? $config[ 'offset' ] : 0;
+		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'parentId=:pid AND siteId=:siteId', [ ':pid' => $parentId, ':siteId' => $siteId ] )->all();
+			$query = static::find()->where( 'parentId=:pid AND siteId=:siteId', [ ':pid' => $parentId, ':siteId' => $siteId ] );
 		}
 		else {
 
-			return static::find()->where( 'parentId=:pid', [ ':pid' => $parentId ] )->all();
+			$query = static::find()->where( 'parentId=:pid', [ ':pid' => $parentId ] );
 		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Offset --------------
+
+		if( $offset > 0 ) {
+
+			$query->offset( $offset );
+		}
+
+		// Limit ---------------
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
+
+		return $query;
 	}
 
 	/**
@@ -179,17 +217,55 @@ abstract class ModelResource extends Resource {
 	public static function findByParentType( $parentType, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$conditions = $config[ 'conditions' ] ?? [];
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$offset	= isset( $config[ 'offset' ] ) ? $config[ 'offset' ] : 0;
+		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'parentType=:ptype AND siteId=:siteId', [ ':ptype' => $parentType, ':siteId' => $siteId ] )->all();
+			$query = static::find()->where( 'parentType=:ptype AND siteId=:siteId', [ ':ptype' => $parentType, ':siteId' => $siteId ] );
 		}
 		else {
 
-			return static::find()->where( 'parentType=:ptype', [ ':ptype' => $parentType ] )->all();
+			$query = static::find()->where( 'parentType=:ptype', [ ':ptype' => $parentType ] );
 		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			foreach( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
+		}
+
+		// Offset --------------
+
+		if( $offset > 0 ) {
+
+			$query->offset( $offset );
+		}
+
+		// Limit ---------------
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
+
+		return $query;
 	}
 
 	// Create -----------------

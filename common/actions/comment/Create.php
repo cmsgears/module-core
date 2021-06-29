@@ -125,6 +125,9 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 				$modelComment->name		= $user->getName();
 				$modelComment->email	= $user->email;
+
+				$commentForm->name	= $user->getName();
+				$commentForm->email	= $user->email;
 			}
 
 			if( isset( $this->scenario ) ) {
@@ -149,6 +152,11 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 				if( !$this->setUser || !isset( $user ) ) {
 
 					$modelComment->copyForUpdateFrom( $commentForm, [ 'name', 'email' ] );
+				}
+
+				if( isset( $user ) ) {
+
+					$modelComment->userId = $user->id;
 				}
 
 				$modelComment = $modelCommentService->create( $modelComment );
@@ -251,7 +259,7 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 			[
 				'user' => true, 'direct' => false,
 				'parentId' => $model->id, 'parentType' => $modelService->getParentType(),
-				'adminLink' => "{$this->notifyAdminUrl}?id={$model->id}"
+				'adminLink' => "{$this->notifyUserUrl}?id={$model->id}"
 			]
 		);
 	}
@@ -266,7 +274,7 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 			[
 				'admin' => false, 'user' => false, 'direct' => true,
 				'parentId' => $model->id, 'parentType' => $modelService->getParentType(),
-				'adminLink' => "{$this->notifyAdminUrl}?id={$model->id}"
+				'adminLink' => "{$this->notifyParentUrl}?id={$model->id}"
 			]
 		);
 	}

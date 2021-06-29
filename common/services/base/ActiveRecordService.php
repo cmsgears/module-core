@@ -962,7 +962,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		if( isset( $conditions ) ) {
 
-			foreach ( $conditions as $ckey => $condition ) {
+			foreach( $conditions as $ckey => $condition ) {
 
 				if( is_numeric( $ckey ) ) {
 
@@ -1588,7 +1588,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$valueAlias		= $config[ 'valueAlias' ] ?? 'value';
 
 		// limit
-		$limit			= $config[ 'limit' ] ?? 0;
+		$limit = $config[ 'limit' ] ?? 0;
 
 		// Query
 		$query = $config[ 'query' ] ?? new Query();
@@ -1754,7 +1754,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		// query generation
 		$query		= $config[ 'query' ] ?? $value::find();
-		$limit		= $config[ 'limit' ] ?? self::PAGE_LIMIT;
+		$limit		= $config[ 'limit' ] ?? 0;
 		$conditions	= $config[ 'conditions' ] ?? null;
 		$filters	= $config[ 'filters' ] ?? null;
 
@@ -1790,8 +1790,15 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 			foreach ( $filters as $filter ) {
 
-				$query	= $query->andFilterWhere( $filter );
+				$query = $query->andFilterWhere( $filter );
 			}
+		}
+
+		// Limit ---------------
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
 		}
 
 		// Quering -------------

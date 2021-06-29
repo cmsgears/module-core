@@ -29,7 +29,6 @@ use cmsgears\core\common\models\interfaces\resources\IVisual;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\User;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\FeaturedTrait;
@@ -316,18 +315,6 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	// Validators ----------------------------
 
 	// ModelComment --------------------------
-
-	/**
-	 * Returns the corresponding user.
-	 *
-	 * @return User
-	 */
-	public function getUser() {
-
-		$userTable = CoreTables::TABLE_USER;
-
-		return $this->hasOne( User::class, [ 'id' => 'userId' ] )->from( "$userTable as user" );
-	}
 
 	/**
 	 * Return the immediate parent comment.

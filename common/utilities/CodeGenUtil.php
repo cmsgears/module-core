@@ -921,7 +921,7 @@ class CodeGenUtil {
 			return $plural;
 		}
 
-		$char = strtolower( $singular[ strlen( $singular ) - 1 ] );
+		$char = strtolower( substr( $singular, strlen( $singular ) - 1 ) );
 
 		switch( $char ) {
 
@@ -930,6 +930,16 @@ class CodeGenUtil {
 				return substr( $singular, 0, -1 ) . 'ies';
 			}
 			case 's': {
+
+				return $singular . 'es';
+			}
+		}
+
+		$char = strtolower( substr( $singular, strlen( $singular ) - 2 ) );
+
+		switch( $char ) {
+
+			case 'ch': {
 
 				return $singular . 'es';
 			}

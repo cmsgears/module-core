@@ -111,9 +111,12 @@ class MemberController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 		$dataProvider = $this->modelService->getPageBySiteId( $siteId );
 
+		$roleMap = $this->roleService->getSlugNameMapByType( $this->roleType );
+
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
-			'siteId' => $siteId
+			'siteId' => $siteId,
+			'roleMap' => $roleMap
 		]);
 	}
 

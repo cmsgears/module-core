@@ -27,7 +27,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 	],
 	'filters' => [
 		'type' => $typeMap,
-		'visibility' => $visibilityMap
+		'visibility' => $filterVisibilityMap
 	],
 	'reportColumns' => [
 		'title' => [ 'title' => 'Title', 'type' => 'text' ],

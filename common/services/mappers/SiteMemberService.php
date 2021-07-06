@@ -159,8 +159,8 @@ class SiteMemberService extends \cmsgears\core\common\services\base\MapperServic
 					'label' => 'Created At'
 				],
 				'udate' => [
-					'asc' => [ "$modelTable.updatedAt" => SORT_ASC ],
-					'desc' => [ "$modelTable.updatedAt" => SORT_DESC ],
+					'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Updated At'
 				]
@@ -238,7 +238,7 @@ class SiteMemberService extends \cmsgears\core\common\services\base\MapperServic
 			'name' => "$userTable.name",
 			'email' => "$userTable.email",
 			'site' => "$siteTable.name",
-			'role' => "$roleTable.name",
+			'role' => "$roleTable.slug",
 			'pinned' => "$modelTable.pinned",
 			'featured' => "$modelTable.featured",
 			'popular' => "$modelTable.popular"

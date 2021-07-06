@@ -28,7 +28,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 	],
 	'filters' => [
 		'ftype' => $typeMap,
-		'visibility' => $visibilityMap,
+		'visibility' => $filterVisibilityMap,
 		'model' => [
 			'active' => 'Active', 'disabled' => 'Disabled',
 			'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular'

@@ -101,6 +101,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
+		$userTable = Yii::$app->factory->get( 'userService' )->getModelTable();
+
 		// Sorting ----------
 
 		$sort = new Sort([
@@ -112,8 +114,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 					'label' => 'Id'
 				],
 	            'user' => [
-					'asc' => [ "user.name" => SORT_ASC ],
-					'desc' => [ "user.name" => SORT_DESC ],
+					'asc' => [ "$userTable.name" => SORT_ASC ],
+					'desc' => [ "$userTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 	                'label' => 'User'
 	            ],
@@ -261,7 +263,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
 
 		$search = [
-			'user' => "user.name",
+			'user' => "$userTable.name",
 			'title' => "$modelTable.title",
 			'name' => "$modelTable.name",
 			'email' =>  "$modelTable.email",
@@ -280,7 +282,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		// Reporting --------
 
 		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
-			'user' => "user.name",
+			'user' => "$userTable.name",
 			'title' => "$modelTable.title",
 			'name' => "$modelTable.name",
 			'email' => "$modelTable.email",

@@ -395,42 +395,46 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		return $modelClass::queryByBaseId( $baseId, $config )->all();
 	}
 
-	public function getByUser( $parentId, $parentType ) {
+	public function getByUserIdParent( $userId, $parentId, $parentType, $config = [] ) {
 
 		$modelClass	= self::$modelClass;
 
-		$user = Yii::$app->core->getUser();
-
-		return $modelClass::findByUserId( $parentId, $parentType, $user->id );
+		return $modelClass::findAllByUserId( $parentId, $parentType, $userId, $config );
 	}
 
-	public function isExistByUser( $parentId, $parentType ) {
+	public function isExistByUserIdParent( $userId, $parentId, $parentType, $config = [] ) {
 
 		$modelClass	= self::$modelClass;
 
-		$user = Yii::$app->core->getUser();
-
-		if( isset( $user ) ) {
-
-			return $modelClass::isExistByUserId( $parentId, $parentType, $user->id );
-		}
-
-		return false;
+		return $modelClass::isExistByUserId( $parentId, $parentType, $userId, $config );
 	}
 
-	/**
-	 * It can be used in cases where only one comment is allowed for an email.
-	 */
-	public function isExistByEmail( $email ) {
-
-		return null != self::getByEmail( $email );
-	}
-
-	public function getByEmail( $email ) {
+	public function getByUserIdParentType( $userId, $parentType, $config = [] ) {
 
 		$modelClass	= self::$modelClass;
 
-		return $modelClass::queryByEmail( $email )->one();
+		return $modelClass::findByUserIdParentType( $userId, $parentType, $config );
+	}
+
+	public function getReviewsByUserIdParentType( $userId, $parentType, $config = [] ) {
+
+		$config[ 'type' ] = ModelComment::TYPE_REVIEW;
+
+		return self::getByUserIdParentType( $userId, $parentType, $config );
+	}
+
+	public function getByEmailParent( $email, $parentId, $parentType, $config = [] ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::findAllByEmail( $parentId, $parentType, $email, $config );
+	}
+
+	public function isExistByEmailParent( $email, $parentId, $parentType, $config = [] ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::isExistByEmail( $parentId, $parentType, $email, $config );
 	}
 
 	public function getFeaturedByType( $parentId, $parentType, $type, $config = [] ) {
@@ -463,6 +467,10 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 	public function getCommentClass() {
 
 		return $this->commentClass;
+	}
+
+	public function getReviewCountByUserIdParentType( $userId, $parentType ) {
+
 	}
 
 	// Create -------------

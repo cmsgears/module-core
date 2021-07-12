@@ -21,13 +21,15 @@ use cmsgears\core\common\models\base\CoreTables;
  * The stats stores meta data of tables.
  *
  * @property integer $id
- * @property string $tableName
+ * @property integer $parentId
+ * @property string $parentType
+ * @property string $name
  * @property string $type
  * @property integer $count
  *
  * @since 1.0.0
  */
-class Stats extends \cmsgears\core\common\models\base\Resource {
+class ModelStats extends \cmsgears\core\common\models\base\ModelResource {
 
 	// Variables ---------------------------------------------------
 
@@ -69,13 +71,14 @@ class Stats extends \cmsgears\core\common\models\base\Resource {
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'tableName', 'type', 'count' ], 'required' ],
+			[ [ 'parentId', 'parentType', 'name', 'type', 'count' ], 'required' ],
 			[ 'id', 'safe' ],
 			// Text Limit
-			[ 'type', 'string', 'min' => 0, 'max' => Yii::$app->core->mediumText ],
-			[ 'tableName', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'type', 'parentType' ], 'string', 'min' => 0, 'max' => Yii::$app->core->mediumText ],
+			[ 'name', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			// Others
-			[ 'rows' => 'number', 'integerOnly' => true ]
+			[ 'count', 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ 'parentId', 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 
 		return $rules;
@@ -87,9 +90,9 @@ class Stats extends \cmsgears\core\common\models\base\Resource {
 	public function attributeLabels() {
 
 		return [
-			'tableName' => 'Table',
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'count' => 'Count'
+			'count' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNT )
 		];
 	}
 
@@ -99,7 +102,7 @@ class Stats extends \cmsgears\core\common\models\base\Resource {
 
 	// Validators ----------------------------
 
-	// Stats ---------------------------------
+	// ModelStats ----------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -112,12 +115,12 @@ class Stats extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public static function tableName() {
 
-		return CoreTables::getTableName( CoreTables::TABLE_STATS );
+		return CoreTables::getTableName( CoreTables::TABLE_MODEL_STATS );
 	}
 
 	// CMG parent classes --------------------
 
-	// Stats ---------------------------------
+	// ModelStats ----------------------------
 
 	// Read - Query -----------
 
@@ -130,9 +133,13 @@ class Stats extends \cmsgears\core\common\models\base\Resource {
 	 * @param string $type
 	 * @return integer
 	 */
-	public static function getRowCount( $table, $type = 'row' ) {
+	public static function getTableRowCount( $table, $type = 'row', $config = [] ) {
 
-		$stat = self::find()->where( '`table`=:table AND type=:type', [ ':table' => $table, ':type' => $type ] )->one();
+		$siteId = isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+		$ptype = CoreGlobal::TYPE_SITE;
+
+		$stat = self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:table AND type=:type', [ ':pid' => $siteId, ':ptype' =>  $ptype, ':table' => $table, ':type' => $type ] )->one();
 
 		if( isset( $stat ) ) {
 
@@ -153,8 +160,13 @@ class Stats extends \cmsgears\core\common\models\base\Resource {
 	 *
 	 * @return int the number of rows deleted.
 	 */
-	public static function deleteByTableName( $tableName ) {
+	public static function deleteByTable( $table, $config = [] ) {
 
-		return self::deleteAll( 'tableName=:tableName', [ ':tableName' => $tableName ] );
+		$siteId = isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+		$ptype = CoreGlobal::TYPE_SITE;
+
+		return self::deleteAll( 'parentId=:pid AND parentType=:ptype AND name=:table', [ ':pid' => $siteId, ':ptype' =>  $ptype, ':table' => $table ] );
 	}
+
 }

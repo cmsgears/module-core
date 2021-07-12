@@ -71,10 +71,9 @@ class CoreTables extends DbTables {
 	const TABLE_MODEL_ANALYTICS		= 'cmg_core_model_analytics';
 	const TABLE_MODEL_META			= 'cmg_core_model_meta';
 	const TABLE_MODEL_HISTORY		= 'cmg_core_model_history';
+	const TABLE_MODEL_STATS			= 'cmg_core_model_stats';
 
 	const TABLE_SITE_ACCESS = 'cmg_core_site_access';
-
-	const TABLE_STATS = 'cmg_core_stats';
 
 	const TABLe_OTP = 'cmg_core_otp';
 

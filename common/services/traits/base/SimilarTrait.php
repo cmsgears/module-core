@@ -12,6 +12,10 @@ namespace cmsgears\core\common\services\traits\base;
 // Yii Imports
 use Yii;
 
+// CMG Imports
+use cmsgears\core\common\models\interfaces\base\IApproval;
+use cmsgears\core\common\models\interfaces\base\IVisibility;
+
 /**
  * SimilarTrait provide methods specific to featured models.
  *
@@ -128,6 +132,22 @@ trait SimilarTrait {
 		if( isset( $filter ) ) {
 
 			$query->andWhere( $filter );
+		}
+
+		$interfaces = class_implements( static::class );
+
+		if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IApproval' ] ) ) {
+
+			$statuses	= [ IApproval::STATUS_ACTIVE, IApproval::STATUS_FROJEN ];
+			$statuses	= join( ',', $statuses );
+
+			// Approval Trait
+			$query->andWhere( "status IN ($statuses)" );
+		}
+
+		if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IVisibility' ] ) ) {
+
+			$query->andWhere( [ "visibility" => IVisibility::VISIBILITY_PUBLIC ] );
 		}
 
 		return $query;

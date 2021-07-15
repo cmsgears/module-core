@@ -10,8 +10,9 @@
 namespace cmsgears\core\common\services\traits\base;
 
 // Yii Imports
+use Yii;
 use yii\base\UnknownMethodException;
-use yii\db\Expression;
+use yii\db\Query;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -177,85 +178,162 @@ trait ApprovalTrait {
 		];
 	}
 
-	public function getCountsByOwnerId( $ownerId, $config = [] ) {
+	public function getStatusCountByUserId( $userId, $config = [] ) {
 
-		$owner = $config[ 'owner' ] ?? false;
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 
+		$keys	= isset( $config[ 'keys' ] ) ? $config[ 'keys' ] : false;
+		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+
+		$modelClass	= $this->getModelClass();
 		$modelTable	= $this->getModelTable();
+
+		$returnArr = [ 'total' => 0 ];
+
+		if( $keys ) {
+
+			foreach( $modelClass::$urlRevStatusMap as $key => $value ) {
+
+				$returnArr[ $key ] = 0;
+			}
+		}
+		else {
+
+			foreach( $modelClass::$statusMap as $key => $value ) {
+
+				$returnArr[ $key ] = 0;
+			}
+		}
 
 		$query = new Query();
 
-		$query->select( [ 'status', 'count(id) as total' ] )
-			->from( $modelTable );
+		$query->select( [ 'status', 'count(id) as total' ] )->from( $modelTable );
 
-		if( $owner ) {
+		if( $modelClass::isMultiSite() && !$ignoreSite ) {
 
-			$query->where( "$modelTable.userId=$ownerId" )->groupBy( 'status' );
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			$query->where( 'userId=:uid AND siteId=:siteId', [ ':uid' => $userId, ':siteId' => $siteId ] );
 		}
 		else {
 
-			$query->where( "$modelTable.createdBy=$ownerId" )->groupBy( 'status' );
+			$query->where( 'userId=:uid', [ ':uid' => $userId ] );
 		}
 
-		$counts     = $query->all();
-		$returnArr  = [];
-		$counter    = 0;
+		if( !empty( $type ) ) {
 
-		foreach( $counts as $count ) {
-
-			$returnArr[ $count[ 'status' ] ] = $count[ 'total' ];
-
-			$counter += $count[ 'total' ];
-		}
-
-		$returnArr[ 'all' ] = $counter;
-
-		return $returnArr;
-	}
-
-	public function getCountsByAuthorityId( $id, $config = [] ) {
-
-		$owner	= $config[ 'owner' ] ?? false;
-		$index	= $config[ 'index' ] ?? null;
-
-		$modelTable	= $this->getModelTable();
-
-		$query = new Query();
-
-		$query->select( [ 'status', 'count(id) as total' ] );
-
-		if( isset( $index ) ) {
-
-			$query->from( [ new Expression( "{{%$modelTable}} USE INDEX ($index)" ) ] );
-		}
-		else {
-
-			$query->from( $modelTable );
-		}
-
-		if( $owner ) {
-
-			$query->where( "$modelTable.userId=$id" )->groupBy( 'status' );
-		}
-		else {
-
-			$query->where( "($modelTable.userId IS NULL AND $modelTable.createdBy=$id) OR $modelTable.userId=$id" );
+			$query->andWhere( 'type=:type', [ ':type' => $type ] );
 		}
 
 		$query->groupBy( 'status' );
 
-		$counts     = $query->all();
-		$returnArr  = [];
-		$counter    = 0;
+		$counts = $query->all();
 
 		foreach( $counts as $count ) {
 
-			$returnArr[ $count[ 'status' ] ] = $count[ 'total' ];
+			$returnArr[ 'total' ] += $count[ 'total' ];
 
-			$counter += $count[ 'total' ];
+			if( $keys ) {
+
+				foreach( $modelClass::$urlRevStatusMap as $key => $value ) {
+
+					if( $count[ 'status' ] == $value ) {
+
+						$returnArr[ $key ] = $count[ 'total' ];
+					}
+				}
+			}
+			else {
+
+				foreach( $modelClass::$statusMap as $key => $value ) {
+
+					if( $count[ 'status' ] == $key ) {
+
+						$returnArr[ $key ] = $count[ 'total' ];
+					}
+				}
+			}
 		}
 
-		$returnArr[ 'all' ] = $counter;
+		return $returnArr;
+	}
+
+	public function getStatusCountByAuthorityId( $userId, $config = [] ) {
+
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+
+		$keys	= isset( $config[ 'keys' ] ) ? $config[ 'keys' ] : false;
+		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+
+		$modelClass	= $this->getModelClass();
+		$modelTable	= $this->getModelTable();
+
+		$returnArr = [ 'total' => 0 ];
+
+		if( $keys ) {
+
+			foreach( $modelClass::$urlRevStatusMap as $key => $value ) {
+
+				$returnArr[ $key ] = 0;
+			}
+		}
+		else {
+
+			foreach( $modelClass::$statusMap as $key => $value ) {
+
+				$returnArr[ $key ] = 0;
+			}
+		}
+
+		$query = new Query();
+
+		$query->select( [ 'status', 'count(id) as total' ] )->from( $modelTable );
+
+		if( $modelClass::isMultiSite() && !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			$query->where( '$modelTable.userId IS NULL AND $modelTable.createdBy=:uid AND siteId=:siteId', [ ':uid' => $userId, ':siteId' => $siteId ] );
+		}
+		else {
+
+			$query->where( '$modelTable.userId IS NULL AND $modelTable.createdBy=:uid', [ ':uid' => $userId ] );
+		}
+
+		if( !empty( $type ) ) {
+
+			$query->andWhere( 'type=:type', [ ':type' => $type ] );
+		}
+
+		$query->groupBy( 'status' );
+
+		$counts = $query->all();
+
+		foreach( $counts as $count ) {
+
+			$returnArr[ 'total' ] += $count[ 'total' ];
+
+			if( $keys ) {
+
+				foreach( $modelClass::$urlRevStatusMap as $key => $value ) {
+
+					if( $count[ 'status' ] == $value ) {
+
+						$returnArr[ $key ] = $count[ 'total' ];
+					}
+				}
+			}
+			else {
+
+				foreach( $modelClass::$statusMap as $key => $value ) {
+
+					if( $count[ 'status' ] == $key ) {
+
+						$returnArr[ $key ] = $count[ 'total' ];
+					}
+				}
+			}
+		}
 
 		return $returnArr;
 	}

@@ -42,9 +42,9 @@ interface IApproval {
 
 	public function getApprovalNotificationMap();
 
-	public function getCountsByOwnerId( $ownerId, $config = [] );
+	public function getStatusCountByUserId( $userId, $config = [] );
 
-	public function getCountsByAuthorityId( $id, $config = [] );
+	public function getStatusCountByAuthorityId( $userId, $config = [] );
 
 	// Create -------------
 

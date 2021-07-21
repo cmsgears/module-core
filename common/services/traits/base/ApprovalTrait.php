@@ -162,6 +162,8 @@ trait ApprovalTrait {
 
 		return [
 			IApproval::STATUS_ACCEPTED => CoreGlobal::TPL_NOTIFY_STATUS_ACCEPT,
+			IApproval::STATUS_INVITED => CoreGlobal::TPL_NOTIFY_STATUS_INVITE,
+			IApproval::STATUS_INVITE_ACCEPTED => CoreGlobal::TPL_NOTIFY_STATUS_INVITE_ACCEPT,
 			IApproval::STATUS_SUBMITTED => CoreGlobal::TPL_NOTIFY_STATUS_SUBMIT,
 			IApproval::STATUS_REJECTED => CoreGlobal::TPL_NOTIFY_STATUS_REJECT,
 			IApproval::STATUS_RE_SUBMIT => CoreGlobal::TPL_NOTIFY_STATUS_RESUBMIT,
@@ -372,6 +374,62 @@ trait ApprovalTrait {
 				$approvalNotificationMap = $this->getApprovalNotificationMap();
 
 				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_ACCEPTED ];
+
+				$config[ 'data' ][ 'parentType' ] = $this->getParentTypeStr();
+
+				$this->notifyUser( $model, $config );
+			}
+
+			return $model;
+		}
+
+		return false;
+	}
+
+	/*
+	 * Update the model status to invited and trigger notification for appropriate user to take action.
+	 */
+	public function invite( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+
+		if( !$model->isInvited( true ) && $model->isAcceptable() ) {
+
+			$model = $this->updateStatus( $model, IApproval::STATUS_INVITED );
+
+			if( $model && $notify ) {
+
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_INVITED ];
+
+				$config[ 'data' ][ 'parentType' ] = $this->getParentTypeStr();
+
+				$this->notifyUser( $model, $config );
+			}
+
+			return $model;
+		}
+
+		return false;
+	}
+
+	/*
+	 * Update the model status to invited and trigger notification for appropriate user to take action.
+	 */
+	public function acceptInvite( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+
+		if( !$model->isInviteAccepted( true ) && $model->isAcceptable() ) {
+
+			$model = $this->updateStatus( $model, IApproval::STATUS_INVITE_ACCEPTED );
+
+			if( $model && $notify ) {
+
+				$approvalNotificationMap = $this->getApprovalNotificationMap();
+
+				$config[ 'template' ] = $approvalNotificationMap[ IApproval::STATUS_INVITE_ACCEPTED ];
 
 				$config[ 'data' ][ 'parentType' ] = $this->getParentTypeStr();
 

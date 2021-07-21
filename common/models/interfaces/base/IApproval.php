@@ -30,9 +30,21 @@ interface IApproval {
 	const STATUS_NEW = 0;
 
 	/**
-	 * The model is accepted for further updates before submitting for the review process.
+	 * The model has been accepted by the appropriate authority in case status is new and submitted for acceptance. The
+	 * further steps of the registration process can be continued after acceptance.
 	 */
-	const STATUS_ACCEPTED = 1;
+	const STATUS_ACCEPTED = 2;
+
+	/**
+	 * The model has been invited by the appropriate authority.
+	 */
+	const STATUS_INVITED = 4;
+
+	/**
+	 * The model has been accepted if already invited by the appropriate authority. The model or
+	 * appropriate owner might accept the invitation.
+	 */
+	const STATUS_INVITE_ACCEPTED = 6;
 
 	/**
 	 * Status is set to submitted for models submitted for first time approval. Approver might
@@ -107,6 +119,10 @@ interface IApproval {
 	public function isNew( $strict = true );
 
 	public function isAccepted(	$strict = true );
+
+	public function isInvited( $strict = true );
+
+	public function isInviteAccepted( $strict = true );
 
 	// Registration process to be followed between status new and submitted. It can be multi-step process where required.
 	public function isRegistration();

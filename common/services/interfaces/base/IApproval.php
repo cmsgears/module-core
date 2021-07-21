@@ -54,6 +54,10 @@ interface IApproval {
 
 	public function accept( $model, $config = [] );
 
+	public function invite( $model, $config = [] );
+
+	public function acceptInvite( $model, $config = [] );
+
 	public function submit( $model, $config = [] );
 
 	public function reject( $model, $config = [] );

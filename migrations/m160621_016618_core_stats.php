@@ -52,8 +52,10 @@ class m160621_016618_core_stats extends \cmsgears\core\common\base\Migration {
 	private function upStats() {
 
 		$this->createTable( $this->prefix . 'core_model_stats', [
-			'id' => $this->primaryKey( 11 ),
-			'tableName' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
+			'id' => $this->bigPrimaryKey( 20 ),
+			'parentId' => $this->bigInteger( 20 )->notNull(),
+			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
+			'name' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'count' => $this->bigInteger( 20 )->notNull()->defaultValue( 0 )
 		], $this->options );

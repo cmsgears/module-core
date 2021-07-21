@@ -106,8 +106,12 @@ class CoreGlobal {
 	const TPL_NOTIFY_USER_ROLE	= 'role-changed';
 
 	// Notification - Status Templates
-    const TPL_NOTIFY_STATUS_NEW			= 'status-new';
-	const TPL_NOTIFY_STATUS_ACCEPT		= 'status-accept';
+    const TPL_NOTIFY_STATUS_NEW		= 'status-new';
+	const TPL_NOTIFY_STATUS_ACCEPT	= 'status-accept';
+
+	const TPL_NOTIFY_STATUS_INVITE			= 'status-invite';
+	const TPL_NOTIFY_STATUS_INVITE_ACCEPT	= 'status-invite_accept';
+
 	const TPL_NOTIFY_STATUS_SUBMIT		= 'status-submit';
 	const TPL_NOTIFY_STATUS_REJECT		= 'status-reject';
     const TPL_NOTIFY_STATUS_RESUBMIT	= 'status-resubmit';

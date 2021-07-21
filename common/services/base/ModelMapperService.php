@@ -505,57 +505,62 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 
 		$modelBinder = $config[ 'modelBinder' ] ?? null;
 
+		$loaded = true;
+
 		if( empty( $modelBinder ) ) {
 
 			$modelBinder = new Binder();
 
-			$modelBinder->load( Yii::$app->request->post(), $binderName );
+			$loaded = $modelBinder->load( Yii::$app->request->post(), $binderName );
 		}
 
-		$all	= $modelBinder->all; // Possible Bindings
-		$binded	= $modelBinder->binded; // Existing Bindings
+		if( $loaded ) {
 
-		$process = []; // For Execution
+			$all	= $modelBinder->all; // Possible Bindings
+			$binded	= $modelBinder->binded; // Existing Bindings
 
-		// Check for All
-		if( count( $all ) > 0 ) {
+			$process = []; // For Execution
 
-			$process = $all;
-		}
-		// Check for Active
-		else {
+			// Check for All
+			if( count( $all ) > 0 ) {
 
-			$process = $binded;
-
-			$modelClass::disableByParent( $parentId, $parentType );
-		}
-
-		// Process the List
-		foreach( $process as $id ) {
-
-			$existingMapping = $modelClass::findFirstByParentModelId( $parentId, $parentType, $id );
-
-			// Existing mapping
-			if( isset( $existingMapping ) ) {
-
-				if( in_array( $id, $binded ) ) {
-
-					$existingMapping->active = true;
-				}
-				else {
-
-					$existingMapping->active = false;
-				}
-
-				$existingMapping->update();
+				$process = $all;
 			}
-			// Create Mapping
-			else if( in_array( $id, $binded ) ) {
+			// Check for Active
+			else {
 
-				$this->createByParams([
-					'modelId' => $id, 'parentId' => $parentId, 'parentType' => $parentType,
-					'type' => $parentType, 'order' => 0, 'active' => true
-				]);
+				$process = $binded;
+
+				$modelClass::disableByParent( $parentId, $parentType );
+			}
+
+			// Process the List
+			foreach( $process as $id ) {
+
+				$existingMapping = $modelClass::findFirstByParentModelId( $parentId, $parentType, $id );
+
+				// Existing mapping
+				if( isset( $existingMapping ) ) {
+
+					if( in_array( $id, $binded ) ) {
+
+						$existingMapping->active = true;
+					}
+					else {
+
+						$existingMapping->active = false;
+					}
+
+					$existingMapping->update();
+				}
+				// Create Mapping
+				else if( in_array( $id, $binded ) ) {
+
+					$this->createByParams([
+						'modelId' => $id, 'parentId' => $parentId, 'parentType' => $parentType,
+						'type' => $parentType, 'order' => 0, 'active' => true
+					]);
+				}
 			}
 		}
 

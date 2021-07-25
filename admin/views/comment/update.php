@@ -48,6 +48,9 @@ Editor::widget();
 					</div>
 					<div class="row max-cols-100">
 						<div class="col col2">
+							<?= $form->field( $model, 'mobile' ) ?>
+						</div>
+						<div class="col col2">
 							<?= $form->field( $model, 'title' ) ?>
 						</div>
 					</div>

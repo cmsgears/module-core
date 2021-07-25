@@ -141,6 +141,8 @@ abstract class ModelAddressController extends Controller {
 			$address	= new $addressClass;
 			$model		= $this->modelService->getModelObject();
 
+			$model->active = true;
+
 			if( $address->load( Yii::$app->request->post(), $address->getClassName() ) && $model->load( Yii::$app->request->post(), $model->getClassName() ) &&
 				$address->validate() ) {
 

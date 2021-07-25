@@ -139,7 +139,7 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 				$modelComment->copyForUpdateFrom( $commentForm, [
 					'baseId', 'bannerId', 'videoId', 'title', 'avatarUrl', 'websiteUrl',
-					'field1', 'field2', 'field3', 'field4', 'field5',
+					'field1', 'field2', 'field3', 'field4', 'field5', 'mobile',
 					'rate1', 'rate2', 'rate3', 'rate4', 'rate5', 'rating',
 					'anonymous', 'content'
 				]);

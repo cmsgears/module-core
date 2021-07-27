@@ -47,6 +47,10 @@ interface IApproval {
 	const STATUS_INVITE_ACCEPTED = 6;
 
 	/**
+	 * The model can have additional status from 100 to 9999.
+	 */
+
+	/**
 	 * Status is set to submitted for models submitted for first time approval. Approver might
 	 * reject, confirm or activate.
 	 */

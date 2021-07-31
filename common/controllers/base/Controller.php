@@ -59,11 +59,25 @@ abstract class Controller extends \yii\web\Controller {
 	public $model;
 
 	/**
-	 * The base URL to form the sub relative URLs.
+	 * Backend - The base URL to form the sub relative URLs.
+	 *
+	 * @var type string
+	 */
+	public $adminUrl;
+
+	/**
+	 * Frontend - The base URL to form the sub relative URLs.
 	 *
 	 * @var type string
 	 */
 	public $baseUrl;
+
+	/**
+	 * Frontend - The grid URL to view all the models.
+	 *
+	 * @var type string
+	 */
+	public $gridUrl;
 
 	/**
 	 * The base path to process apix requests.

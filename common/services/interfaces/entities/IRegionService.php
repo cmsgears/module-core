@@ -25,7 +25,13 @@ interface IRegionService extends IEntityService {
 
 	// Read - Models ---
 
+	public function getByCountryId( $countryId );
+
+	public function getByCountryIdCode( $countryId, $code );
+
 	public function getByCountryIdIso( $countryId, $iso );
+
+	public function getByCountryIdProvinceIdName( $countryId, $provinceId, $name );
 
 	// Read - Lists ----
 

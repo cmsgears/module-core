@@ -179,11 +179,32 @@ class RegionService extends \cmsgears\core\common\services\base\EntityService im
 
 	// Read - Models ---
 
+	public function getByCountryId( $countryId ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::findByCountryId( $countryId );
+	}
+
+	public function getByCountryIdCode( $countryId, $code ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::findByCountryIdCode( $countryId, $code );
+	}
+
 	public function getByCountryIdIso( $countryId, $iso ) {
 
 		$modelClass	= self::$modelClass;
 
 		return $modelClass::findByCountryIdIso( $countryId, $iso );
+	}
+
+	public function getByCountryIdProvinceIdName( $countryId, $provinceId, $name ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::findByCountryIdProvinceIdName( $countryId, $provinceId, $name );
 	}
 
 	// Read - Lists ----

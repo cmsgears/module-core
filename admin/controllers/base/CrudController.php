@@ -72,7 +72,7 @@ abstract class CrudController extends Controller {
 					'update' => [ 'get', 'post' ],
 					'delete' => [ 'get', 'post' ],
 					'pdf' => [ 'get' ],
-					'import' => [ 'post' ],
+					'import' => [ 'get', 'post' ],
 					'export' => [ 'get' ]
 				]
 			],

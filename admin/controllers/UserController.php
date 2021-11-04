@@ -45,6 +45,9 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 	protected $memberService;
 	protected $roleService;
 
+	protected $optionService;
+	protected $localeService;
+
 	protected $superRoleId;
 	protected $userRoleId;
 
@@ -71,6 +74,9 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 		$this->metaService		= Yii::$app->factory->get( 'userMetaService' );
 		$this->memberService	= Yii::$app->factory->get( 'siteMemberService' );
 		$this->roleService		= Yii::$app->factory->get( 'roleService' );
+
+		$this->optionService	= Yii::$app->factory->get( 'optionService' );
+		$this->localeService	= Yii::$app->factory->get( 'localeService' );
 
 		// User Role
 		$userRole = $this->roleService->getBySlugType( CoreGlobal::ROLE_USER, CoreGlobal::TYPE_SYSTEM );
@@ -243,6 +249,10 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 			unset( $roleMap[ $this->superRoleId ] );
 		}
 
+		$genderMap	= $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [ 'default' => true ] );
+		$maritalMap = $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_MARITAL, [ 'default' => true ] );
+		$localeMap	= $this->localeService->getIdNameMap( [ 'default' => true ] );
+
 		return $this->render( 'create', [
 			'model' => $model,
 			'member' => $member,
@@ -250,7 +260,10 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 			'banner' => $banner,
 			'video' => $video,
 			'roleMap' => $roleMap,
-			'statusMap' => $modelClass::$userStatusMap
+			'statusMap' => $modelClass::$userStatusMap,
+			'genderMap' => $genderMap,
+			'maritalMap' => $maritalMap,
+			'localeMap' => $localeMap
 		]);
 	}
 
@@ -307,6 +320,10 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 			unset( $roleMap[ $this->superRoleId ] );
 		}
 
+		$genderMap	= $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [ 'default' => true ] );
+		$maritalMap = $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_MARITAL, [ 'default' => true ] );
+		$localeMap	= $this->localeService->getIdNameMap( [ 'default' => true ] );
+
 		// Render
 		return $this->render( 'update', [
 			'model' => $model,
@@ -315,7 +332,10 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 			'banner' => $banner,
 			'video' => $video,
 			'roleMap' => $roleMap,
-			'statusMap' => $modelClass::$userStatusMap
+			'statusMap' => $modelClass::$userStatusMap,
+			'genderMap' => $genderMap,
+			'maritalMap' => $maritalMap,
+			'localeMap' => $localeMap
 		]);
 	}
 

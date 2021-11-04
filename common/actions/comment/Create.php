@@ -15,7 +15,6 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\forms\Comment;
 use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\models\resources\ModelComment;
 
@@ -58,6 +57,8 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 	public $mediaType = FileManager::FILE_TYPE_MIXED;
 
 	public $mediaModel = 'File';
+
+	public $additionalAttributes = [];
 
 	/**
 	 * A comment can be created with or without scenario. The possible scenarios
@@ -107,10 +108,11 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 			$user = Yii::$app->core->getUser();
 
-			$modelClass = $modelCommentService->getModelClass();
+			$modelClass		= $modelCommentService->getModelClass();
+			$commentClass	= $modelCommentService->getCommentClass();
 
 			$modelComment	= new $modelClass;
-			$commentForm	= new Comment();
+			$commentForm	= new $commentClass;
 
 			$modelComment->parentId		= $this->model->id;
 			$modelComment->parentType	= $this->parentType;
@@ -123,6 +125,9 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 				$modelComment->name		= $user->getName();
 				$modelComment->email	= $user->email;
+
+				$commentForm->name	= $user->getName();
+				$commentForm->email	= $user->email;
 			}
 
 			if( isset( $this->scenario ) ) {
@@ -134,14 +139,24 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 				$modelComment->copyForUpdateFrom( $commentForm, [
 					'baseId', 'bannerId', 'videoId', 'title', 'avatarUrl', 'websiteUrl',
-					'field1', 'field2', 'field3', 'field4', 'field5',
+					'field1', 'field2', 'field3', 'field4', 'field5', 'mobile',
 					'rate1', 'rate2', 'rate3', 'rate4', 'rate5', 'rating',
 					'anonymous', 'content'
 				]);
 
+				if( count( $this->additionalAttributes ) > 0 ) {
+
+					$modelComment->copyForUpdateFrom( $commentForm, $this->additionalAttributes );
+				}
+
 				if( !$this->setUser || !isset( $user ) ) {
 
 					$modelComment->copyForUpdateFrom( $commentForm, [ 'name', 'email' ] );
+				}
+
+				if( isset( $user ) ) {
+
+					$modelComment->userId = $user->id;
 				}
 
 				$modelComment = $modelCommentService->create( $modelComment );
@@ -244,7 +259,7 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 			[
 				'user' => true, 'direct' => false,
 				'parentId' => $model->id, 'parentType' => $modelService->getParentType(),
-				'adminLink' => "{$this->notifyAdminUrl}?id={$model->id}"
+				'adminLink' => "{$this->notifyUserUrl}?id={$model->id}"
 			]
 		);
 	}
@@ -259,7 +274,7 @@ abstract class Create extends \cmsgears\core\common\actions\base\ModelAction {
 			[
 				'admin' => false, 'user' => false, 'direct' => true,
 				'parentId' => $model->id, 'parentType' => $modelService->getParentType(),
-				'adminLink' => "{$this->notifyAdminUrl}?id={$model->id}"
+				'adminLink' => "{$this->notifyParentUrl}?id={$model->id}"
 			]
 		);
 	}

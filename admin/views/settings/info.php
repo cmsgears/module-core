@@ -8,7 +8,7 @@ use cmsgears\widgets\aform\AjaxFormWidget;
 	<?php if( isset( $fieldsMap ) && count( $fieldsMap ) > 0 ) { ?>
 
 	<?= AjaxFormWidget::widget([
-		'options' => [ 'class' => 'form', 'cmt-keep' => 1 ],
+		'wrap' => false, 'formOptions' => [ 'class' => 'form', 'cmt-keep' => 1 ],
 		'slug' => "config-$type", 'type' => CoreGlobal::TYPE_SYSTEM,
 		'labels' => true, 'form' => $form, 'formName' => "setting$type",
 		'ajaxUrl' => "core/settings/update?type=$type",

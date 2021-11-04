@@ -513,14 +513,17 @@ class CodeGenUtil {
 			$model		= $params[ 'model' ];
 			$content	= isset( $model->modelContent ) ? $model->modelContent : null;
 
-			$date = $model->modifiedAt;
+			$date = !empty( $model->modifiedAt ) ? ( ($model->modifiedAt instanceof \yii\db\Expression) ? DateUtil::getDateTime() : $model->modifiedAt ) : null;
 
-			if( isset( $content ) && isset( $content->modifiedAt ) ) {
+			if( isset( $date ) && isset( $content ) && isset( $content->modifiedAt ) ) {
 
 				$date = DateUtil::greaterThan( $date, $content->modifiedAt ) ? $content->modifiedAt : $date;
 			}
 
-			$metaContent .= "<meta name=\"last-updated\" content=\"$date UTC\">";
+			if( isset( $date ) ) {
+
+				$metaContent .= "<meta name=\"last-updated\" content=\"$date UTC\">";
+			}
 		}
 
 		// Description
@@ -918,7 +921,7 @@ class CodeGenUtil {
 			return $plural;
 		}
 
-		$char = strtolower( $singular[ strlen( $singular ) - 1 ] );
+		$char = strtolower( substr( $singular, strlen( $singular ) - 1 ) );
 
 		switch( $char ) {
 
@@ -927,6 +930,16 @@ class CodeGenUtil {
 				return substr( $singular, 0, -1 ) . 'ies';
 			}
 			case 's': {
+
+				return $singular . 'es';
+			}
+		}
+
+		$char = strtolower( substr( $singular, strlen( $singular ) - 2 ) );
+
+		switch( $char ) {
+
+			case 'ch': {
 
 				return $singular . 'es';
 			}

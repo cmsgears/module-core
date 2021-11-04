@@ -34,6 +34,8 @@ trait ApprovalTrait {
 	public static $statusMap = [
 		IApproval::STATUS_NEW => 'New',
 		IApproval::STATUS_ACCEPTED => 'Accepted',
+		IApproval::STATUS_INVITED => 'Invited',
+		IApproval::STATUS_INVITE_ACCEPTED => 'Invite Accepted',
 		IApproval::STATUS_SUBMITTED => 'Submitted',
 		IApproval::STATUS_REJECTED => 'Rejected',
 		IApproval::STATUS_RE_SUBMIT => 'Re Submitted',
@@ -89,6 +91,8 @@ trait ApprovalTrait {
 	public static $revStatusMap = [
 		'New' => IApproval::STATUS_NEW,
 		'Accepted' => IApproval::STATUS_ACCEPTED,
+		'Invited' => IApproval::STATUS_INVITED,
+		'Invite Accepted' => IApproval::STATUS_INVITE_ACCEPTED,
 		'Submitted' => IApproval::STATUS_SUBMITTED,
 		'Rejected' => IApproval::STATUS_REJECTED,
 		'Re Submitted' => IApproval::STATUS_RE_SUBMIT,
@@ -106,6 +110,8 @@ trait ApprovalTrait {
 	public static $urlRevStatusMap = [
 		'new' => IApproval::STATUS_NEW,
 		'accepted' => IApproval::STATUS_ACCEPTED,
+		'invited' => IApproval::STATUS_INVITED,
+		'invite-accepted' => IApproval::STATUS_INVITE_ACCEPTED,
 		'submitted' => IApproval::STATUS_SUBMITTED,
 		'rejected' => IApproval::STATUS_REJECTED,
 		're-submitted' => IApproval::STATUS_RE_SUBMIT,
@@ -142,6 +148,8 @@ trait ApprovalTrait {
 	public static $filterStatusMap = [
 		'new' => 'New',
 		'accepted' => 'Accepted',
+		'invited' => 'Invited',
+		'invite-accepted' => 'Invite Accepted',
 		'submitted' => 'Submitted',
 		'rejected' =>'Rejected',
 		're-submitted' => 'Re Submitted',
@@ -236,6 +244,26 @@ trait ApprovalTrait {
 		}
 
 		return $this->status >= IApproval::STATUS_ACCEPTED;
+	}
+
+	public function isInvited( $strict = true ) {
+
+		if( $strict ) {
+
+			return $this->status == IApproval::STATUS_INVITED;
+		}
+
+		return $this->status >= IApproval::STATUS_INVITED;
+	}
+
+	public function isInviteAccepted( $strict = true ) {
+
+		if( $strict ) {
+
+			return $this->status == IApproval::STATUS_INVITE_ACCEPTED;
+		}
+
+		return $this->status >= IApproval::STATUS_INVITE_ACCEPTED;
 	}
 
 	/**

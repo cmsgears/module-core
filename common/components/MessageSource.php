@@ -266,6 +266,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_DATA_WIDGET => 'Widget Data',
 		CoreGlobal::FIELD_COMPRESS => 'Store Compressed',
 		CoreGlobal::FIELD_GRID_CACHE => 'Grid Cache',
+		CoreGlobal::FIELD_GRID_CACHE_VALID => 'Grid Cache Valid',
 
 		// Role Fields
 		CoreGlobal::FIELD_ADMIN_URL => 'Admin Url',

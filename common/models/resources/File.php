@@ -27,7 +27,6 @@ use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\User;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
@@ -277,16 +276,6 @@ class File extends \cmsgears\core\common\models\base\Resource implements IAuthor
 	// Validators ----------------------------
 
 	// File ----------------------------------
-
-	/**
-	 * Returns the corresponding user.
-	 *
-	 * @return User
-	 */
-	public function getUser() {
-
-		return $this->hasOne( User::class, [ 'id' => 'userId' ] );
-	}
 
 	/**
 	 * Returns string representation of [[$type]].

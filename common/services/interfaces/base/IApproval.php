@@ -42,9 +42,9 @@ interface IApproval {
 
 	public function getApprovalNotificationMap();
 
-	public function getCountsByOwnerId( $ownerId, $config = [] );
+	public function getStatusCountByUserId( $userId, $config = [] );
 
-	public function getCountsByAuthorityId( $id, $config = [] );
+	public function getStatusCountByAuthorityId( $userId, $config = [] );
 
 	// Create -------------
 
@@ -53,6 +53,10 @@ interface IApproval {
 	public function updateStatus( $model, $status );
 
 	public function accept( $model, $config = [] );
+
+	public function invite( $model, $config = [] );
+
+	public function acceptInvite( $model, $config = [] );
 
 	public function submit( $model, $config = [] );
 

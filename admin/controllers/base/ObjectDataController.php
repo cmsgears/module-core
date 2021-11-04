@@ -140,14 +140,16 @@ abstract class ObjectDataController extends CrudController {
 		$model->type	= $this->type;
 		$model->shared	= $this->shared;
 
-		$avatar	= File::loadFile( null, 'Avatar' );
-		$banner	= File::loadFile( null, 'Banner' );
-		$video	= File::loadFile( null, 'Video' );
+		$avatar		= File::loadFile( null, 'Avatar' );
+		$banner		= File::loadFile( null, 'Banner' );
+		$mbanner	= File::loadFile( null, 'MobileBanner' );
+		$video		= File::loadFile( null, 'Video' );
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
 			$this->model = $this->modelService->add( $model, [
-				'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+				'admin' => true, 'avatar' => $avatar, 'banner' => $banner,
+				'mbanner' => $mbanner, 'video' => $video
 			]);
 
 			if( $this->model ) {
@@ -164,6 +166,7 @@ abstract class ObjectDataController extends CrudController {
 			'model' => $model,
 			'avatar' => $avatar,
 			'banner' => $banner,
+			'mbanner' => $mbanner,
 			'video' => $video,
 			'visibilityMap' => $modelClass::$visibilityMap,
 			'statusMap' => $statusMap,
@@ -183,15 +186,17 @@ abstract class ObjectDataController extends CrudController {
 
 			$template = $model->template;
 
-			$avatar	= File::loadFile( $model->avatar, 'Avatar' );
-			$banner	= File::loadFile( $model->banner, 'Banner' );
-			$video	= File::loadFile( $model->video, 'Video' );
+			$avatar		= File::loadFile( $model->avatar, 'Avatar' );
+			$banner		= File::loadFile( $model->banner, 'Banner' );
+			$mbanner	= File::loadFile( $model->mobileBanner, 'MobileBanner' );
+			$video		= File::loadFile( $model->video, 'Video' );
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
 				$this->model = $this->modelService->update( $model, [
 					'admin' => true, 'oldTemplate' => $template,
-					'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+					'avatar' => $avatar, 'banner' => $banner,
+					'mbanner' => $mbanner, 'video' => $video
 				]);
 
 				return $this->redirect( $this->returnUrl );
@@ -205,6 +210,7 @@ abstract class ObjectDataController extends CrudController {
 				'model' => $model,
 				'avatar' => $avatar,
 				'banner' => $banner,
+				'mbanner' => $mbanner,
 				'video' => $video,
 				'visibilityMap' => $modelClass::$visibilityMap,
 				'statusMap' => $statusMap,
@@ -250,6 +256,7 @@ abstract class ObjectDataController extends CrudController {
 				'model' => $model,
 				'avatar' => $model->avatar,
 				'banner' => $model->banner,
+				'mbanner' => $model->mobileBanner,
 				'video' => $model->video,
 				'visibilityMap' => $modelClass::$visibilityMap,
 				'statusMap' => $statusMap,

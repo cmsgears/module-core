@@ -54,6 +54,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 	// Protected --------------
 
+	protected $commentClass = '\cmsgears\core\common\models\forms\Comment';
+
 	protected $fileService;
 	protected $modelFileService;
 
@@ -99,6 +101,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
+		$userTable = Yii::$app->factory->get( 'userService' )->getModelTable();
+
 		// Sorting ----------
 
 		$sort = new Sort([
@@ -110,11 +114,17 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 					'label' => 'Id'
 				],
 	            'user' => [
-					'asc' => [ "creator.name" => SORT_ASC ],
-					'desc' => [ "creator.name" => SORT_DESC ],
+					'asc' => [ "$userTable.name" => SORT_ASC ],
+					'desc' => [ "$userTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 	                'label' => 'User'
 	            ],
+				'title' => [
+					'asc' => [ "$modelTable.title" => SORT_ASC ],
+					'desc' => [ "$modelTable.title" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Title'
+				],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
@@ -253,7 +263,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
 
 		$search = [
-			'user' => "concat(creator.firstName, ' ', creator.lastName)",
+			'user' => "$userTable.name",
+			'title' => "$modelTable.title",
 			'name' => "$modelTable.name",
 			'email' =>  "$modelTable.email",
 			'content' => "$modelTable.content"
@@ -271,7 +282,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		// Reporting --------
 
 		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
-			'user' => "concat(creator.firstName, ' ', creator.lastName)",
+			'user' => "$userTable.name",
+			'title' => "$modelTable.title",
 			'name' => "$modelTable.name",
 			'email' => "$modelTable.email",
 			'content' => "$modelTable.content",
@@ -383,42 +395,46 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		return $modelClass::queryByBaseId( $baseId, $config )->all();
 	}
 
-	public function getByUser( $parentId, $parentType ) {
+	public function getByUserIdParent( $userId, $parentId, $parentType, $config = [] ) {
 
 		$modelClass	= self::$modelClass;
 
-		$user = Yii::$app->core->getUser();
-
-		return $modelClass::findByUserId( $parentId, $parentType, $user->id );
+		return $modelClass::findAllByUserId( $parentId, $parentType, $userId, $config );
 	}
 
-	public function isExistByUser( $parentId, $parentType ) {
+	public function isExistByUserIdParent( $userId, $parentId, $parentType, $config = [] ) {
 
 		$modelClass	= self::$modelClass;
 
-		$user = Yii::$app->core->getUser();
-
-		if( isset( $user ) ) {
-
-			return $modelClass::isExistByUserId( $parentId, $parentType, $user->id );
-		}
-
-		return false;
+		return $modelClass::isExistByUserId( $parentId, $parentType, $userId, $config );
 	}
 
-	/**
-	 * It can be used in cases where only one comment is allowed for an email.
-	 */
-	public function isExistByEmail( $email ) {
-
-		return null != self::getByEmail( $email );
-	}
-
-	public function getByEmail( $email ) {
+	public function getByUserIdParentType( $userId, $parentType, $config = [] ) {
 
 		$modelClass	= self::$modelClass;
 
-		return $modelClass::queryByEmail( $email )->one();
+		return $modelClass::findByUserIdParentType( $userId, $parentType, $config );
+	}
+
+	public function getReviewsByUserIdParentType( $userId, $parentType, $config = [] ) {
+
+		$config[ 'type' ] = ModelComment::TYPE_REVIEW;
+
+		return self::getByUserIdParentType( $userId, $parentType, $config );
+	}
+
+	public function getByEmailParent( $email, $parentId, $parentType, $config = [] ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::findAllByEmail( $parentId, $parentType, $email, $config );
+	}
+
+	public function isExistByEmailParent( $email, $parentId, $parentType, $config = [] ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::isExistByEmail( $parentId, $parentType, $email, $config );
 	}
 
 	public function getFeaturedByType( $parentId, $parentType, $type, $config = [] ) {
@@ -448,9 +464,25 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 	// Read - Others ---
 
+	public function getCommentClass() {
+
+		return $this->commentClass;
+	}
+
+	public function getReviewCountByUserIdParentType( $userId, $parentType ) {
+
+	}
+
 	// Create -------------
 
 	public function create( $model, $config = [] ) {
+
+		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+
+		// Save Files
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
 
 		$model->agent	= Yii::$app->request->userAgent;
 		$model->ip		= Yii::$app->request->userIP;
@@ -467,8 +499,13 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
+		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'avatarId', 'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content',
+			'avatarId', 'bannerId', 'videoId', 'name', 'email',
+			'avatarUrl', 'websiteUrl', 'rating', 'content',
 			'rate1', 'rate2', 'rate3', 'rate4', 'rate5',
 			'field1', 'field2', 'field3', 'field4', 'field5'
 		];
@@ -479,6 +516,9 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 				'status', 'order', 'pinned', 'featured', 'popular', 'anonymous'
 			]);
 		}
+
+		// Save Files
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
 
 		return parent::update( $model, [
 			'attributes' => $attributes

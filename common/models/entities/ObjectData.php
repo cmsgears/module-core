@@ -42,7 +42,6 @@ use cmsgears\core\common\models\interfaces\mappers\IGallery;
 use cmsgears\core\common\models\interfaces\mappers\IObject;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Entity;
 use cmsgears\core\common\models\resources\ObjectMeta;
 use cmsgears\core\common\models\mappers\ModelObject;
 
@@ -81,6 +80,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $parentId
  * @property integer $avatarId
  * @property integer $bannerId
+ * @property integer $mbannerId
  * @property integer $videoId
  * @property integer $galleryId
  * @property integer $createdBy
@@ -114,9 +114,9 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComment, IContent,
-	IData, IFeatured, IFile, IGallery, IGridCache, IHierarchy, IMeta, IMultiSite, INameType,
-	IObject, IOwner, ISlugType, ISocialLink, ITemplate, IVisibility, IVisual {
+class ObjectData extends \cmsgears\core\common\models\base\Entity implements IApproval, IAuthor,
+	ICategory, IComment, IContent, IData, IFeatured, IFile, IGallery, IGridCache, IHierarchy, IMeta,
+	IMultiSite, INameType, IObject, IOwner, ISlugType, ISocialLink, ITemplate, IVisibility, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -234,7 +234,7 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 			[ [ 'pinned', 'featured', 'popular', 'shared', 'gridCacheValid' ], 'boolean' ],
 			[ [ 'visibility', 'status', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'themeId', 'templateId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'siteId', 'userId', 'avatarId', 'bannerId', 'videoId', 'galleryId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'siteId', 'userId', 'avatarId', 'bannerId', 'mbannerId', 'videoId', 'galleryId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
@@ -261,6 +261,7 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 			'userId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
 			'avatarId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
 			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
+			'mbannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER_M ),
 			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
 			'galleryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GALLERY ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
@@ -388,16 +389,6 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	public function getTheme() {
 
 		return $this->hasOne( Theme::class, [ 'id' => 'themeId' ] );
-	}
-
-	/**
-	 * Returns the corresponding user.
-	 *
-	 * @return User
-	 */
-	public function getUser() {
-
-		return $this->hasOne( User::class, [ 'id' => 'userId' ] );
 	}
 
 	/**

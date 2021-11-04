@@ -17,8 +17,6 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\File;
-
 /**
  * ModelFileController provides actions specific to model files.
  *
@@ -109,13 +107,16 @@ abstract class ModelFileController extends Controller {
 
 		if( isset( $parent ) ) {
 
+			$fileClass = $this->fileService->getModelClass();
+
 			$dataProvider = $this->modelService->getPageByParent( $parent->id, $parentType );
 
 			return $this->render( 'all', [
 				'dataProvider' => $dataProvider,
 				'parent' => $parent,
-				'visibilityMap' => File::$visibilityMap,
-				'typeMap' => File::$typeMap
+				'visibilityMap' => $fileClass::$visibilityMap,
+				'filterVisibilityMap' => $fileClass::$filterVisibilityMap,
+				'typeMap' => $fileClass::$typeMap
 			]);
 		}
 
@@ -158,7 +159,7 @@ abstract class ModelFileController extends Controller {
 				'model' => $model,
 				'file' => $file,
 				'parent' => $parent,
-				'visibilityMap' => File::$visibilityMap
+				'visibilityMap' => $fileClass::$visibilityMap
 			]);
 		}
 
@@ -167,6 +168,8 @@ abstract class ModelFileController extends Controller {
 	}
 
 	public function actionUpdate( $id, $pid ) {
+
+		$fileClass = $this->fileService->getModelClass();
 
 		$model		= $this->modelService->getById( $id );
 		$parent		= $this->parentService->getById( $pid );
@@ -193,7 +196,7 @@ abstract class ModelFileController extends Controller {
 				'model' => $model,
 				'file' => $file,
 				'parent' => $parent,
-				'visibilityMap' => File::$visibilityMap
+				'visibilityMap' => $fileClass::$visibilityMap
 			]);
 		}
 
@@ -202,6 +205,8 @@ abstract class ModelFileController extends Controller {
 	}
 
 	public function actionDelete( $id, $pid ) {
+
+		$fileClass = $this->fileService->getModelClass();
 
 		$model		= $this->modelService->getById( $id );
 		$parent		= $this->parentService->getById( $pid );
@@ -227,7 +232,7 @@ abstract class ModelFileController extends Controller {
 				'model' => $model,
 				'file' => $file,
 				'parent' => $parent,
-				'visibilityMap' => File::$visibilityMap
+				'visibilityMap' => $fileClass::$visibilityMap
 			]);
 		}
 

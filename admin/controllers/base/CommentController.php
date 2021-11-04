@@ -18,6 +18,10 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\resources\File;
+
+use cmsgears\core\common\behaviors\ActivityBehavior;
+
 /**
  * CommentController provides actions specific to comment model.
  *
@@ -104,6 +108,13 @@ abstract class CommentController extends Controller {
 					'update'  => [ 'get', 'post' ],
 					'delete'  => [ 'get', 'post' ]
 				]
+			],
+			'activity' => [
+				'class' => ActivityBehavior::class,
+				'admin' => true,
+				'create' => [ 'create' ],
+				'update' => [ 'update' ],
+				'delete' => [ 'delete' ]
 			]
 		];
 	}
@@ -146,6 +157,7 @@ abstract class CommentController extends Controller {
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
 			'statusMap' => $modelClass::$statusMap,
+			'parentService' => $this->parentService,
 			'parent' => $parent
 		]);
 	}
@@ -172,9 +184,15 @@ abstract class CommentController extends Controller {
 			call_user_func_array( [ $model, 'setScenario' ], [ $this->scenario ] );
 		}
 
+		$avatar	= File::loadFile( null, 'Avatar' );
+		$banner	= File::loadFile( null, 'Banner' );
+		$video	= File::loadFile( null, 'Video' );
+
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->model = $this->modelService->create( $model, [ 'admin' => true ] );
+			$this->model = $this->modelService->create( $model, [
+				'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+			]);
 
 			if( $this->model ) {
 
@@ -184,6 +202,9 @@ abstract class CommentController extends Controller {
 
 		return $this->render( 'create', [
 			'model' => $model,
+			'avatar' => $avatar,
+			'banner' => $banner,
+			'video' => $video,
 			'title' => $this->title,
 			'statusMap' => $modelClass::$statusMap
 		]);
@@ -204,9 +225,15 @@ abstract class CommentController extends Controller {
 				call_user_func_array( [ $model, 'setScenario' ], [ $this->scenario ] );
 			}
 
+			$avatar	= File::loadFile( $model->avatar, 'Avatar' );
+			$banner	= File::loadFile( $model->banner, 'Banner' );
+			$video	= File::loadFile( $model->video, 'Video' );
+
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->model = $this->modelService->update( $model, [ 'admin' => true ] );
+				$this->model = $this->modelService->update( $model, [
+					'admin' => true,'avatar' => $avatar, 'banner' => $banner, 'video' => $video
+				]);
 
 				return $this->redirect( $this->returnUrl );
 			}
@@ -214,6 +241,9 @@ abstract class CommentController extends Controller {
 			// Render view
 			return $this->render( 'update', [
 				'model' => $model,
+				'avatar' => $avatar,
+				'banner' => $banner,
+				'video' => $video,
 				'title' => $this->title,
 				'statusMap' => $modelClass::$statusMap
 			]);

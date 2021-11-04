@@ -265,6 +265,18 @@ class Region extends \cmsgears\core\common\models\base\Entity implements IName {
 	}
 
 	/**
+	 * Find and return the province associated with given country id and code.
+	 *
+	 * @param integer $countryId
+	 * @param string $code
+	 * @return Province
+	 */
+	public static function findByCountryIdCode( $countryId, $code ) {
+
+		return self::find()->where( 'countryId=:id AND code=:code', [ ':id' => $countryId, ':code' => $code ] )->one();
+	}
+
+	/**
 	 * Find and return the region associated with given country id and iso.
 	 *
 	 * @param integer $countryId
@@ -285,6 +297,17 @@ class Region extends \cmsgears\core\common\models\base\Entity implements IName {
 	public static function findByCountryIdProvinceId( $countryId, $provinceId ) {
 
 		return self::find()->where( 'countryId=:id AND provinceId=:pid', [ ':id' => $countryId, ':pid' => $provinceId ] )->all();
+	}
+
+	/**
+	 * Find and return the regions associated with given country id.
+	 *
+	 * @param integer $countryId
+	 * @return Region[]
+	 */
+	public static function findByCountryIdProvinceIdName( $countryId, $provinceId, $name ) {
+
+		return self::find()->where( 'countryId=:id AND provinceId=:pid AND name=:name', [ ':id' => $countryId, ':pid' => $provinceId, ':name' => $name ] )->one();
 	}
 
 	/**

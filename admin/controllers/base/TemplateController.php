@@ -94,11 +94,11 @@ abstract class TemplateController extends CrudController {
 		$model->siteId	= Yii::$app->core->siteId;
 		$model->type	= $this->type;
 
-		$preview = File::loadFile( null, 'Banner' );
+		$banner = File::loadFile( null, 'Banner' );
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->model = $this->modelService->add( $model, [ 'admin' => true, 'preview' => $preview ] );
+			$this->model = $this->modelService->add( $model, [ 'admin' => true, 'banner' => $banner ] );
 
 			if( $this->model ) {
 
@@ -108,7 +108,7 @@ abstract class TemplateController extends CrudController {
 
 		return $this->render( 'create', [
 			'model' => $model,
-			'preview' => $preview
+			'banner' => $banner
 		]);
 	}
 
@@ -120,12 +120,12 @@ abstract class TemplateController extends CrudController {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$preview = File::loadFile( $model->preview, 'Banner' );
+			$banner = File::loadFile( $model->banner, 'Banner' );
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
 				$this->model = $this->modelService->update( $model, [
-					'admin' => true, 'preview' => $preview
+					'admin' => true, 'banner' => $banner
 				]);
 
 				return $this->redirect( $this->returnUrl );
@@ -133,7 +133,7 @@ abstract class TemplateController extends CrudController {
 
 			return $this->render( 'update', [
 				'model' => $model,
-				'preview' => $preview
+				'banner' => $banner
 			]);
 		}
 

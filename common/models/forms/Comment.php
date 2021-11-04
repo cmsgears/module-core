@@ -20,6 +20,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * The comment form collects the comment data.
  *
  * @property integer $baseId
+ * @property integer $avatarId
  * @property integer $bannerId
  * @property integer $videoId
  * @property integer $parentId
@@ -70,6 +71,7 @@ class Comment extends BaseForm {
 	// Public -----------------
 
 	public $baseId;
+	public $avatarId;
 	public $bannerId;
 	public $videoId;
 	public $title;
@@ -140,7 +142,7 @@ class Comment extends BaseForm {
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
 			[ 'anonymous', 'boolean' ],
 			[ [ 'rate1', 'rate2', 'rate3', 'rate4', 'rate5', 'rating' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'baseId', 'bannerId', 'videoId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+			[ [ 'baseId', 'avatarId', 'bannerId', 'videoId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 
 		// Enable captcha for non-logged in users

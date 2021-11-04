@@ -169,7 +169,10 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'line1', 'line2', 'line3', 'cityName', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'landmark', 'latitude', 'longitude' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [
+					'line1', 'line2', 'line3', 'cityName', 'zip', 'subZip', 'firstName', 'lastName',
+					'phone', 'email', 'fax', 'website', 'landmark', 'latitude', 'longitude'
+				], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}

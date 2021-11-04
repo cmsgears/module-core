@@ -26,6 +26,26 @@ interface IOwner {
 	 */
 	public function isOwner( $user = null, $strict = false );
 
+	/**
+	 * Returns the corresponding user.
+	 *
+	 * @return \cmsgears\core\common\models\entities\User
+	 */
+	public function getUser();
+
+	/**
+	 * Returns the corresponding owner user.
+	 *
+	 * @return \cmsgears\core\common\models\entities\User
+	 */
 	public function getOwner();
+
+	/**
+	 * Check whether the model belongs to the given user.
+	 *
+	 * @param \cmsgears\core\common\models\entities\User $user
+	 * @return boolean
+	 */
+	public function belongsToUser( $user );
 
 }

@@ -78,6 +78,17 @@ abstract class FollowerService extends MapperService implements IFollowerService
 		return isset( $user ) ? $modelClass::findByFollower( $user->id, $parentId, $type ) : null;
 	}
 
+	public function getByWishlist( $parentId, $config = [] ) {
+
+		$type = $config[ 'type' ] ?? IFollower::TYPE_WISHLIST;
+
+		$modelClass = static::$modelClass;
+
+		$user = Yii::$app->core->getUser();
+
+		return isset( $user ) ? $modelClass::findByFollower( $user->id, $parentId, $type ) : null;
+	}
+
 	public function getFollowing( $config = [] ) {
 
 		$type	= $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
@@ -298,6 +309,27 @@ abstract class FollowerService extends MapperService implements IFollowerService
 	}
 
 	// Bulk ---------------
+
+	public function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
 
 	// Notifications ------
 

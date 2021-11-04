@@ -97,14 +97,6 @@ abstract class CommentController extends \cmsgears\core\frontend\controllers\api
 
 	// yii\base\Controller ----
 
-	public function actions() {
-
-		return [
-			// Model
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk', 'user' => true ]
-		];
-	}
-
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
@@ -179,5 +171,64 @@ abstract class CommentController extends \cmsgears\core\frontend\controllers\api
 		// Trigger Ajax Failure
     	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
     }
+
+	public function actionBulk( $pid ) {
+
+		$column	= Yii::$app->request->post( 'column' );
+		$action	= Yii::$app->request->post( 'action' );
+		$target	= Yii::$app->request->post( 'target' );
+
+		if( isset( $action ) && isset( $column ) && isset( $target ) ) {
+
+			$target	= preg_split( '/,/', $target );
+
+			$user = Yii::$app->core->getUser();
+
+			foreach( $target as $id ) {
+
+				$model	= $this->modelService->getById( $id );
+				$parent	= $this->parentService->getById( $pid );
+
+				// Bulk Conditions
+				if( isset( $model ) && $parent->isOwner( $user ) && $model->isParentValid( $parent->id, $this->parentType ) ) {
+
+					if( $column == 'status' ) {
+
+						$parentType = $this->parentService->getParentType();
+
+						$adminLink = "{$this->baseUrl}/update?id={$model->id}";
+
+						switch( $action ) {
+
+							case 'spam': {
+
+								$this->modelService->spamRequest( $model, $parent, [ 'parentType' => $parentType, 'adminLink' => $adminLink ] );
+
+								break;
+							}
+							case 'approve': {
+
+								$this->modelService->approveRequest( $model, $parent, [ 'parentType' => $parentType, 'adminLink' => $adminLink ] );
+
+								break;
+							}
+							case 'delete': {
+
+								$this->modelService->deleteRequest( $model, $parent, [ 'parentType' => $parentType, 'adminLink' => $adminLink ] );
+
+								break;
+							}
+						}
+					}
+				}
+			}
+
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+		}
+
+		// Trigger Ajax Failure
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+	}
 
 }

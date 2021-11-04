@@ -140,31 +140,36 @@ class ModelTagService extends \cmsgears\core\common\services\base\ModelMapperSer
 
 		$modelBinder = $config[ 'modelBinder' ] ?? null;
 
+		$loaded = true;
+
 		if( empty( $modelBinder ) ) {
 
 			$modelBinder = new Binder();
 
-			$modelBinder->load( Yii::$app->request->post(), $binderName );
+			$loaded = $modelBinder->load( Yii::$app->request->post(), $binderName );
 		}
 
-		$all	= $modelBinder->all;
-		$binded	= $modelBinder->binded;
+		if( $loaded ) {
 
-		$process = [];
+			$all	= $modelBinder->all;
+			$binded	= $modelBinder->binded;
 
-		// Check for All
-		if( count( $all ) > 0 ) {
+			$process = [];
 
-			$process = $all;
-		}
-		// Check for Active
-		else {
+			// Check for All
+			if( count( $all ) > 0 ) {
 
-			$process = $binded;
+				$process = $all;
+			}
+			// Check for Active
+			else {
 
-			$this->disableByParent( $parentId, $parentType );
+				$process = $binded;
 
-			$this->createFromArray( $parentId, $parentType, $process );
+				$this->disableByParent( $parentId, $parentType );
+
+				$this->createFromArray( $parentId, $parentType, $process );
+			}
 		}
 
 		return true;

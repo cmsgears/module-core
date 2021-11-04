@@ -12,6 +12,9 @@ namespace cmsgears\core\common\models\traits\base;
 // Yii Imports
 use Yii;
 
+// CMG Imports
+use cmsgears\core\common\models\entities\User;
+
 /**
  * It will be useful for models whose owner is identified by createdBy column. Rest of the
  * models must implement the method having appropriate logic to identify the owner and must
@@ -73,6 +76,14 @@ trait OwnerTrait {
 	/**
 	 * @inheritdoc
 	 */
+	public function getUser() {
+
+		return $this->hasOne( User::class, [ 'id' => 'userId' ] );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function getOwner() {
 
 		if( isset( $this->userId ) ) {
@@ -83,6 +94,25 @@ trait OwnerTrait {
 		if( isset( $this->createdBy ) ) {
 
 			return $this->creator;
+		}
+	}
+
+	/**
+	 * Check whether the account belongs to the given user.
+	 *
+	 * @param \cmsgears\core\common\models\entities\User $user
+	 * @return boolean
+	 */
+	public function belongsToUser( $user ) {
+
+		if( isset( $this->userId ) ) {
+
+			return $this->userId == $user->id;
+		}
+
+		if( isset( $this->createdBy ) ) {
+
+			return $this->createdBy == $user->id;
 		}
 	}
 

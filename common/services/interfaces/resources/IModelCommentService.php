@@ -44,13 +44,17 @@ interface IModelCommentService extends IModelResourceService, IData, IFile, IMul
 
 	public function getByBaseId( $baseId, $config = [] );
 
-	public function getByUser( $parentId, $parentType );
+	public function getByUserIdParent( $userId, $parentId, $parentType, $config = [] );
 
-	public function isExistByUser( $parentId, $parentType );
+	public function isExistByUserIdParent( $userId, $parentId, $parentType, $config = [] );
 
-	public function isExistByEmail( $email );
+	public function getByUserIdParentType( $userId, $parentType, $config = [] );
 
-	public function getByEmail( $email );
+	public function getReviewsByUserIdParentType( $userId, $parentType, $config = [] );
+
+	public function getByEmailParent( $email, $parentId, $parentType, $config = [] );
+
+	public function isExistByEmailParent( $email, $parentId, $parentType, $config = [] );
 
 	public function getFeaturedByType( $parentId, $parentType, $type, $config = [] );
 
@@ -63,6 +67,8 @@ interface IModelCommentService extends IModelResourceService, IData, IFile, IMul
 	// Read - Maps -----
 
 	// Read - Others ---
+
+	public function getCommentClass();
 
 	// Create -------------
 

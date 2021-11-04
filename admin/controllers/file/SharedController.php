@@ -16,8 +16,6 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\File;
-
 /**
  * SharedController provide actions specific to files.
  *
@@ -90,16 +88,21 @@ class SharedController extends \cmsgears\core\admin\controllers\base\CrudControl
 		// Remember return url for crud
 		Url::remember( Yii::$app->request->getUrl(), 'sfiles' );
 
+		$modelClass = $this->modelService->getModelClass();
+
 		$dataProvider = $this->modelService->getSharedPage();
 
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
-			'visibilityMap' => File::$visibilityMap,
-			'typeMap' => File::$typeMap
+			'visibilityMap' => $modelClass::$visibilityMap,
+			'filterVisibilityMap' => $modelClass::$filterVisibilityMap,
+			'typeMap' => $modelClass::$typeMap
 		]);
 	}
 
 	public function actionCreate( $config = [] ) {
+
+		$modelClass = $this->modelService->getModelClass();
 
 		$model = $this->modelService->getModelObject();
 
@@ -117,11 +120,13 @@ class SharedController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 		return $this->render( 'create', [
 			'model' => $model,
-			'visibilityMap' => File::$visibilityMap
+			'visibilityMap' => $modelClass::$visibilityMap
 		]);
 	}
 
 	public function actionUpdate( $id, $config = [] ) {
+
+		$modelClass = $this->modelService->getModelClass();
 
 		$model = $this->modelService->getById( $id );
 
@@ -134,7 +139,7 @@ class SharedController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 		return $this->render( 'update', [
 			'model' => $model,
-			'visibilityMap' => File::$visibilityMap
+			'visibilityMap' => $modelClass::$visibilityMap
 		]);
 	}
 

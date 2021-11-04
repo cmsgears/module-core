@@ -59,11 +59,25 @@ abstract class Controller extends \yii\web\Controller {
 	public $model;
 
 	/**
-	 * The base URL to form the sub relative URLs.
+	 * Backend - The base URL to form the sub relative URLs.
+	 *
+	 * @var type string
+	 */
+	public $adminUrl;
+
+	/**
+	 * Frontend - The base URL to form the sub relative URLs.
 	 *
 	 * @var type string
 	 */
 	public $baseUrl;
+
+	/**
+	 * Frontend - The grid URL to view all the models.
+	 *
+	 * @var type string
+	 */
+	public $gridUrl;
 
 	/**
 	 * The base path to process apix requests.
@@ -229,10 +243,12 @@ abstract class Controller extends \yii\web\Controller {
 
 			return ArrayHelper::merge( $this->breadcrumbs[ 'base' ], $this->breadcrumbs[ $action ] );
 		}
-		else {
+		else if( isset( $this->breadcrumbs[ $action ] ) ) {
 
 			return $this->breadcrumbs[ $action ];
 		}
+
+		return null;
 	}
 
 	/**

@@ -11,6 +11,7 @@ use cmsgears\icons\widgets\IconChooser;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Template | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
+$apixBase		= $this->context->apixBase;
 $fileRender		= $this->context->fileRender;
 $renderers		= Yii::$app->templateManager->renderers;
 
@@ -134,7 +135,10 @@ Editor::widget();
 						<div class="row max-cols-50 padding padding-small-v">
 							<div class="col col12x4">
 								<label>Preview</label>
-								<?= ImageUploader::widget( [ 'model' => $preview ] ) ?>
+								<?= ImageUploader::widget([
+									'model' => $banner, 'clearAction' => true,
+									'clearActionUrl' => "$apixBase/clear-banner?id=$model->id"
+								])?>
 							</div>
 						</div>
 					</div>

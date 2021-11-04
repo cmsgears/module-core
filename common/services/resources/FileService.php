@@ -588,6 +588,14 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 
 						break;
 					}
+					case File::VISIBILITY_SECURED: {
+
+						$model->visibility = File::VISIBILITY_SECURED;
+
+						$model->update();
+
+						break;
+					}
 					case File::VISIBILITY_PRIVATE: {
 
 						$model->visibility = File::VISIBILITY_PRIVATE;

@@ -82,6 +82,9 @@ class Bulk extends \cmsgears\core\common\base\Action {
 
 			$target	= preg_split( '/,/', $target );
 
+			$parentId	= Yii::$app->request->get( 'parent-id' );
+			$parentType = Yii::$app->request->get( 'parent-type' );
+
 			// Apply bulk action on admin specific models
 			if( $this->admin ) {
 
@@ -91,6 +94,11 @@ class Bulk extends \cmsgears\core\common\base\Action {
 			else if( $this->user ) {
 
 				$this->modelService->applyBulkByTargetIdUser( $column, $action, $target, $this->config );
+			}
+			// Apply bulk by parent
+			else if( isset( $parentId ) && isset( $parentType ) ) {
+
+				$this->modelService->applyBulkByTargetIdParent( $column, $action, $target, $parentId, $parentType, $this->config );
 			}
 
 			// Trigger Ajax Success

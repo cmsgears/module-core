@@ -33,7 +33,7 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
 		'email' => [ 'title' => 'Email', 'type' => 'text' ],
 		'site' => [ 'title' => 'Site', 'type' => 'text' ],
-		'role' => [ 'title' => 'Role', 'type' => 'range' ],
+		'role' => [ 'title' => 'Role', 'type' => 'select', 'options' => $roleMap ],
 		'pinned' => [ 'title' => 'Pinned', 'type' => 'flag' ],
 		'featured' => [ 'title' => 'Featured', 'type' => 'flag' ],
 		'popular' => [ 'title' => 'Popular', 'type' => 'flag' ]

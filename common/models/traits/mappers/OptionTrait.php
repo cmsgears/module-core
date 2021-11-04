@@ -77,12 +77,14 @@ trait OptionTrait {
 
 			return $this->hasMany( ModelOption::class, [ 'parentId' => 'id' ] )
 				->where( "$modelOptionTable.parentType=:ptype AND $modelOptionTable.type=:type AND $modelOptionTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
-				->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$modelOptionTable.id" => SORT_DESC ] );
+				->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$modelOptionTable.id" => SORT_DESC ] )
+				->all();
 		}
 
 		return $this->hasMany( ModelOption::class, [ 'parentId' => 'id' ] )
 			->where( "$modelOptionTable.parentType=:ptype AND $modelOptionTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] )
-			->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$modelOptionTable.id" => SORT_DESC ] );
+			->orderBy( [ "$modelOptionTable.order" => SORT_DESC, "$modelOptionTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**

@@ -98,6 +98,8 @@ class ModelMessageService extends \cmsgears\core\common\services\base\ModelResou
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
+		$userTable = Yii::$app->factory->get( 'userService' )->getModelTable();
+
 		// Sorting ----------
 
 		$sort = new Sort([
@@ -109,8 +111,8 @@ class ModelMessageService extends \cmsgears\core\common\services\base\ModelResou
 					'label' => 'Id'
 				],
 	            'user' => [
-					'asc' => [ "creator.name" => SORT_ASC ],
-					'desc' => [ "creator.name" => SORT_DESC ],
+					'asc' => [ "$userTable.name" => SORT_ASC ],
+					'desc' => [ "$userTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 	                'label' => 'User'
 	            ],
@@ -212,7 +214,7 @@ class ModelMessageService extends \cmsgears\core\common\services\base\ModelResou
 		$keywordsCol	= Yii::$app->request->getQueryParam( $searchParam );
 
 		$search = [
-			'user' => "concat(creator.firstName, ' ', creator.lastName)",
+			'user' => "$userTable.name",
 			'title' => "$modelTable.title",
 			'content' => "$modelTable.content"
 		];
@@ -229,7 +231,7 @@ class ModelMessageService extends \cmsgears\core\common\services\base\ModelResou
 		// Reporting --------
 
 		$config[ 'report-col' ]	= $config[ 'report-col' ] ?? [
-			'user' => "concat(creator.firstName, ' ', creator.lastName)",
+			'user' => "$userTable.name",
 			'title' => "$modelTable.title",
 			'content' => "$modelTable.content",
 			'consumed' => "$modelTable.consumed",

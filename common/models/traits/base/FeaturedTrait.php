@@ -12,6 +12,10 @@ namespace cmsgears\core\common\models\traits\base;
 // Yii Imports
 use Yii;
 
+// CMG Imports
+use cmsgears\core\common\models\interfaces\base\IApproval;
+use cmsgears\core\common\models\interfaces\base\IVisibility;
+
 /**
  * FeaturedTrait can be used to mark a model as featured or pinned.
  *
@@ -105,6 +109,22 @@ trait FeaturedTrait {
 			$query = static::find()->where( 'pinned=:pinned', [ ':pinned' => true ] );
 		}
 
+		$interfaces = class_implements( static::class );
+
+		if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IApproval' ] ) ) {
+
+			$statuses	= [ IApproval::STATUS_ACTIVE, IApproval::STATUS_FROJEN ];
+			$statuses	= join( ',', $statuses );
+
+			// Approval Trait
+			$query->andWhere( "status IN ($statuses)" );
+		}
+
+		if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IVisibility' ] ) ) {
+
+			$query->andWhere( [ "visibility" => IVisibility::VISIBILITY_PUBLIC ] );
+		}
+
 		// Conditions ----------
 
 		if( isset( $conditions ) ) {
@@ -159,6 +179,22 @@ trait FeaturedTrait {
 			$query = static::find()->where( 'type=:type AND pinned=:pinned', [ ':type' => $type, ':pinned' => true ] );
 		}
 
+		$interfaces = class_implements( static::class );
+
+		if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IApproval' ] ) ) {
+
+			$statuses	= [ IApproval::STATUS_ACTIVE, IApproval::STATUS_FROJEN ];
+			$statuses	= join( ',', $statuses );
+
+			// Approval Trait
+			$query->andWhere( "status IN ($statuses)" );
+		}
+
+		if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IVisibility' ] ) ) {
+
+			$query->andWhere( [ "visibility" => IVisibility::VISIBILITY_PUBLIC ] );
+		}
+
 		// Conditions ----------
 
 		if( isset( $conditions ) ) {
@@ -209,6 +245,22 @@ trait FeaturedTrait {
 		else {
 
 			$query = static::find()->where( 'featured=:featured', [ ':featured' => true ] );
+		}
+
+		$interfaces = class_implements( static::class );
+
+		if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IApproval' ] ) ) {
+
+			$statuses	= [ IApproval::STATUS_ACTIVE, IApproval::STATUS_FROJEN ];
+			$statuses	= join( ',', $statuses );
+
+			// Approval Trait
+			$query->andWhere( "status IN ($statuses)" );
+		}
+
+		if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IVisibility' ] ) ) {
+
+			$query->andWhere( [ "visibility" => IVisibility::VISIBILITY_PUBLIC ] );
 		}
 
 		// Conditions ----------
@@ -265,6 +317,22 @@ trait FeaturedTrait {
 			$query = static::find()->where( 'type=:type AND featured=:featured', [ ':type' => $type, ':featured' => true ] );
 		}
 
+		$interfaces = class_implements( static::class );
+
+		if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IApproval' ] ) ) {
+
+			$statuses	= [ IApproval::STATUS_ACTIVE, IApproval::STATUS_FROJEN ];
+			$statuses	= join( ',', $statuses );
+
+			// Approval Trait
+			$query->andWhere( "status IN ($statuses)" );
+		}
+
+		if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IVisibility' ] ) ) {
+
+			$query->andWhere( [ "visibility" => IVisibility::VISIBILITY_PUBLIC ] );
+		}
+
 		// Conditions ----------
 
 		if( isset( $conditions ) ) {
@@ -315,6 +383,22 @@ trait FeaturedTrait {
 		else {
 
 			$query = static::find()->where( 'popular=:popular', [ ':popular' => true ] );
+		}
+
+		$interfaces = class_implements( static::class );
+
+		if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IApproval' ] ) ) {
+
+			$statuses	= [ IApproval::STATUS_ACTIVE, IApproval::STATUS_FROJEN ];
+			$statuses	= join( ',', $statuses );
+
+			// Approval Trait
+			$query->andWhere( "status IN ($statuses)" );
+		}
+
+		if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IVisibility' ] ) ) {
+
+			$query->andWhere( [ "visibility" => IVisibility::VISIBILITY_PUBLIC ] );
 		}
 
 		// Conditions ----------
@@ -369,6 +453,22 @@ trait FeaturedTrait {
 		else {
 
 			$query = static::find()->where( 'type=:type AND popular=:popular', [ ':type' => $type, ':popular' => true ] );
+		}
+
+		$interfaces = class_implements( static::class );
+
+		if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IApproval' ] ) ) {
+
+			$statuses	= [ IApproval::STATUS_ACTIVE, IApproval::STATUS_FROJEN ];
+			$statuses	= join( ',', $statuses );
+
+			// Approval Trait
+			$query->andWhere( "status IN ($statuses)" );
+		}
+
+		if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IVisibility' ] ) ) {
+
+			$query->andWhere( [ "visibility" => IVisibility::VISIBILITY_PUBLIC ] );
 		}
 
 		// Conditions ----------

@@ -29,6 +29,8 @@ interface IFollowerService extends IMapperService {
 
 	public function getByFollower( $parentId, $config = [] ) ;
 
+	public function getByWishlist( $parentId, $config = [] );
+
 	public function getFollowing( $config = [] );
 
 	// Read - Lists ----

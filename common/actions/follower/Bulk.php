@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\grid;
+namespace cmsgears\core\common\actions\follower;
 
 // Yii Imports
 use Yii;
@@ -18,11 +18,11 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Delete action delete given model available in grid.
+ * Bulk action applies bulk request for given parent model.
  *
  * @since 1.0.0
  */
-class Delete extends \cmsgears\core\common\base\Action {
+class Bulk extends \cmsgears\core\common\base\Action {
 
 	// Variables ---------------------------------------------------
 
@@ -40,7 +40,7 @@ class Delete extends \cmsgears\core\common\base\Action {
 
 	public $modelService;
 
-	public $config = [];
+	public $user = false;
 
 	// Protected --------------
 
@@ -54,7 +54,8 @@ class Delete extends \cmsgears\core\common\base\Action {
 
 		parent::init();
 
-		$this->modelService = isset( $this->modelService ) ? $this->modelService : $this->controller->modelService;
+		// Model service provided by controller
+		$this->modelService	= empty( $this->modelService ) ? $this->controller->modelService : $this->modelService;
 	}
 
 	// Instance methods --------------------------------------------
@@ -67,36 +68,37 @@ class Delete extends \cmsgears\core\common\base\Action {
 
 	// CMG parent classes --------------------
 
-	// Delete --------------------------------
+	// Bulk ----------------------------------
 
-	public function run( $id ) {
+	public function run() {
 
-		$model = $this->modelService->getById( $id );
+		$column	= Yii::$app->request->post( 'column' );
+		$action	= Yii::$app->request->post( 'action' );
+		$target	= Yii::$app->request->post( 'target' );
 
-		if( isset( $model ) ) {
+		$user = Yii::$app->core->getUser();
 
-			$this->controller->model = $model;
+		if( isset( $action ) && isset( $column ) && isset( $target ) ) {
 
-			$parentId	= Yii::$app->request->get( 'parent-id' );
-			$parentType = Yii::$app->request->get( 'parent-type' );
+			$target	= preg_split( '/,/', $target );
 
-			// Delete by parent
-			if( isset( $parentId ) && isset( $parentType ) ) {
+			foreach( $target as $id ) {
 
-				// Trigger Ajax Success
-				if( $model->isParentValid( $parentId, $parentType ) && $this->modelService->delete( $model, $this->config ) ) {
+				$model = $this->modelService->getById( $id );
 
-					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+				// Bulk Conditions
+				if( isset( $model ) ) {
+
+					// User Bulk
+					if( $this->user && $model->modelId == $user->id ) {
+
+						$this->modelService->applyBulk( $model, $column, $action, $target );
+					}
 				}
 			}
-			else {
 
-				// Trigger Ajax Success
-				if( $this->modelService->delete( $model, $this->config ) ) {
-
-					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
-				}
-			}
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 		}
 
 		// Trigger Ajax Failure

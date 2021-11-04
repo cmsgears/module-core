@@ -73,7 +73,8 @@ trait NameTrait {
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 		$conditions = $config[ 'conditions' ] ?? [];
 
-		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$offset	= isset( $config[ 'offset' ] ) ? $config[ 'offset' ] : 0;
 		$query	= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
@@ -102,6 +103,13 @@ trait NameTrait {
 			}
 
 			$query->andWhere( $conditions );
+		}
+
+		// Offset --------------
+
+		if( $offset > 0 ) {
+
+			$query->offset( $offset );
 		}
 
 		// Limit ---------------

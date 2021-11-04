@@ -23,10 +23,11 @@ $themeTemplates		= '@themes/admin/views/templates';
 	'dataProvider' => $dataProvider, 'add' => $add, 'addUrl' => $create, 'data' => [ 'apixBase' => $apixBase ],
 	'title' => "{$title}s", 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [
-		'user' => 'User', 'name' => 'Name', 'email' => 'Email', 'content' => 'Content'
+		'user' => 'User', 'title' => 'Title', 'name' => 'Name',
+		'email' => 'Email', 'content' => 'Content'
 	],
 	'sortColumns' => [
-		'user' => 'User', 'name' => 'Name', 'email' => 'Email',
+		'user' => 'User', 'title' => 'Title', 'name' => 'Name', 'email' => 'Email',
 		'status' => 'Status', 'rating' => 'Rating',
 		'pinned' => 'Pinned', 'featured' => 'Featured', 'popular' => 'Popular',
 		'anonymous' => 'Anonymous',
@@ -45,6 +46,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 	'reportColumns' => [
 		'user' => [ 'title' => 'User', 'type' => 'text' ],
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
+		'title' => [ 'title' => 'Title', 'type' => 'text' ],
 		'email' => [ 'title' => 'Email', 'type' => 'text' ],
 		'content' => [ 'title' => 'Content', 'type' => 'text' ],
 		'status' => [ 'title' => 'Status', 'type' => 'select', 'options' => $statusMap ],
@@ -74,7 +76,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		}],
 		'title' => 'Title',
 		'user' => [ 'title' => 'User', 'generate' => function( $model ) {
-			return isset( $model->creator ) ? $model->creator->name : null;
+			return isset( $model->user ) ? $model->user->name : null;
 		}],
 		'name' => 'Name',
 		'email' => 'Email',

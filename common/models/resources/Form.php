@@ -32,7 +32,6 @@ use cmsgears\core\common\models\interfaces\resources\IGridCache;
 use cmsgears\core\common\models\interfaces\resources\ITemplate;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\User;
 
 use cmsgears\core\common\models\traits\base\ApprovalTrait;
 use cmsgears\core\common\models\traits\base\AuthorTrait;
@@ -278,16 +277,6 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IApprov
 	// Validators ----------------------------
 
 	// Form ----------------------------------
-
-	/**
-	 * Returns the corresponding user.
-	 *
-	 * @return User
-	 */
-	public function getUser() {
-
-		return $this->hasOne( User::class, [ 'id' => 'userId' ] );
-	}
 
 	/**
 	 * Return all the fields associated with the form.

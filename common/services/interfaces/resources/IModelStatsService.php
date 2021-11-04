@@ -13,11 +13,11 @@ namespace cmsgears\core\common\services\interfaces\resources;
 use cmsgears\core\common\services\interfaces\base\IResourceService;
 
 /**
- * IStatsService provide service methods for stats model.
+ * IModelStatsService provide service methods for stats model.
  *
  * @since 1.0.0
  */
-interface IStatsService extends IResourceService {
+interface IModelStatsService extends IResourceService {
 
 	// Data Provider ------
 

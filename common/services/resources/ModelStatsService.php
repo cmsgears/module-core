@@ -10,14 +10,14 @@
 namespace cmsgears\core\common\services\resources;
 
 // CMG Imports
-use cmsgears\core\common\services\interfaces\resources\IStatsService;
+use cmsgears\core\common\services\interfaces\resources\IModelStatsService;
 
 /**
- * StatsService provide service methods of stats model.
+ * ModelStatsService provide service methods of stats model.
  *
  * @since 1.0.0
  */
-class StatsService extends \cmsgears\core\common\services\base\ResourceService implements IStatsService {
+class ModelStatsService extends \cmsgears\core\common\services\base\ResourceService implements IModelStatsService {
 
 	// Variables ---------------------------------------------------
 
@@ -27,7 +27,7 @@ class StatsService extends \cmsgears\core\common\services\base\ResourceService i
 
 	// Public -----------------
 
-	public static $modelClass = '\cmsgears\core\common\models\resources\Stats';
+	public static $modelClass = '\cmsgears\core\common\models\resources\ModelStats';
 
 	// Protected --------------
 
@@ -53,7 +53,7 @@ class StatsService extends \cmsgears\core\common\services\base\ResourceService i
 
 	// CMG parent classes --------------------
 
-	// StatsService --------------------------
+	// ModelStatsService ---------------------
 
 	// Data Provider ------
 
@@ -85,7 +85,7 @@ class StatsService extends \cmsgears\core\common\services\base\ResourceService i
 
 	// CMG parent classes --------------------
 
-	// StatsService --------------------------
+	// ModelStatsService ---------------------
 
 	// Data Provider ------
 

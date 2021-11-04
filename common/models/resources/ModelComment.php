@@ -21,6 +21,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\interfaces\base\IAuthor;
 use cmsgears\core\common\models\interfaces\base\IFeatured;
 use cmsgears\core\common\models\interfaces\base\IMultiSite;
+use cmsgears\core\common\models\interfaces\base\IOwner;
 use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
@@ -28,11 +29,11 @@ use cmsgears\core\common\models\interfaces\resources\IVisual;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\User;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\FeaturedTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
+use cmsgears\core\common\models\traits\base\OwnerTrait;
 use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
@@ -95,7 +96,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @since 1.0.0
  */
 class ModelComment extends \cmsgears\core\common\models\base\ModelResource implements IAuthor,
-	IContent, IData, IFeatured, IFile, IGridCache, IMultiSite, IVisual {
+	IContent, IData, IFeatured, IFile, IGridCache, IMultiSite, IOwner, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -172,6 +173,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	use FileTrait;
 	use GridCacheTrait;
    	use MultiSiteTrait;
+	use OwnerTrait;
 	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -313,16 +315,6 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	// Validators ----------------------------
 
 	// ModelComment --------------------------
-
-	/**
-	 * Returns the corresponding user.
-	 *
-	 * @return User
-	 */
-	public function getUser() {
-
-		return $this->hasOne( User::class, [ 'id' => 'userId' ] );
-	}
 
 	/**
 	 * Return the immediate parent comment.
@@ -474,18 +466,6 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	}
 
 	/**
-	 * Return query to find the comments by email.
-	 *
-	 * @param string $email
-	 * @param array $config
-	 * @return \yii\db\ActiveQuery to query by email.
-	 */
-	public static function queryByEmail( $email, $config = [] ) {
-
-		return self::find()->where( [ 'email' => $email ] );
-	}
-
-	/**
 	 * Return query to find top level approved comments.
 	 *
 	 * @param integer $parentId
@@ -542,9 +522,59 @@ class ModelComment extends \cmsgears\core\common\models\base\ModelResource imple
 	 */
 	public static function isExistByUserId( $parentId, $parentType, $userId, $config = [] ) {
 
-		$config[ 'type' ] = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
-
 		$comment = static::findFirstByUserId( $parentId, $parentType, $userId, $config );
+
+		return isset( $comment );
+	}
+
+	public static function findByUserIdParentType( $userId, $parentType, $config = [] ) {
+
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
+
+		return static::find()->where( 'parentType=:ptype AND userId=:uid AND type=:type', [ ':ptype' => $parentType, ':uid' => $userId, ':type' => $type ] )->all();
+	}
+
+	/**
+	 * Find and return the comment for given email address.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param string $email
+	 * @return ModelComment
+	 */
+	public static function findFirstByEmail( $parentId, $parentType, $email, $config = [] ) {
+
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
+
+		return static::find()->where( 'parentId=:pid AND parentType=:ptype AND email=:email AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':email' => $email, ':type' => $type ] )->one();
+	}
+
+	/**
+	 * Find and return the comments for given user id.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param string $email
+	 * @return ModelComment
+	 */
+	public static function findAllByEmail( $parentId, $parentType, $email, $config = [] ) {
+
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
+
+		return static::find()->where( 'parentId=:pid AND parentType=:ptype AND email=:email AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':email' => $email, ':type' => $type ] )->all();
+	}
+
+	/**
+	 * Check whether comment already exist for given user id.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param string $email
+	 * @return boolean
+	 */
+	public static function isExistByEmail( $parentId, $parentType, $email, $config = [] ) {
+
+		$comment = static::findFirstByEmail( $parentId, $parentType, $email, $config );
 
 		return isset( $comment );
 	}

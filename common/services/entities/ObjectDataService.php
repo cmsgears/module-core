@@ -491,11 +491,15 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	public function create( $model, $config = [] ) {
 
-		$avatar	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
-		$banner	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
-		$video 	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+		$avatar		= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
+		$video		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 
-		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
+		$this->fileService->saveFiles( $model, [
+			'avatarId' => $avatar, 'bannerId' => $banner,
+			'mbannerId' => $mbanner, 'videoId' => $video
+		]);
 
 		return parent::create( $model, $config );
 	}
@@ -573,11 +577,12 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 		$avatar 	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$mbanner	= isset( $config[ 'mbanner' ] ) ? $config[ 'mbanner' ] : null;
 		$video 		= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 		$gallery	= isset( $config[ 'gallery' ] ) ? $config[ 'gallery' ] : null;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'templateId', 'parentId', 'avatarId', 'bannerId', 'videoId', 'galleryId',
+			'templateId', 'parentId', 'avatarId', 'bannerId', 'mbannerId', 'videoId', 'galleryId',
 			'name', 'slug', 'title', 'icon', 'texture', 'description', 'visibility',
 			'htmlOptions', 'summary', 'content'
 		];
@@ -598,7 +603,10 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		}
 
 		// Save Files
-		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
+		$this->fileService->saveFiles( $model, [
+			'avatarId' => $avatar, 'bannerId' => $banner,
+			'mbannerId' => $mbanner, 'videoId' => $video
+		]);
 
 		// Create/Update gallery
 		if( isset( $gallery ) ) {
@@ -652,7 +660,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 				try {
 
 					// Delete files
-					$this->fileService->deleteMultiple( [ $model->avatar, $model->banner, $model->video ] );
+					$this->fileService->deleteMultiple( [ $model->avatar, $model->banner, $model->mobileBanner, $model->video ] );
 					$this->fileService->deleteMultiple( $model->files );
 
 					// Delete File Mappings of Shared Files

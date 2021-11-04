@@ -63,8 +63,7 @@ class CountryController extends \cmsgears\core\admin\controllers\base\CrudContro
 			'all' => [ [ 'label' => 'Countries' ] ],
 			'create' => [ [ 'label' => 'Countries', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Countries', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Countries', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'items' => [ [ 'label' => 'Countries', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+			'delete' => [ [ 'label' => 'Countries', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 

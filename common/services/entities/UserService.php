@@ -275,7 +275,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 			'email' => "$modelTable.email",
 			'mobile' => "$modelTable.mobile",
 			'phone' => "$modelTable.phone",
-			'content' => "$modelTable.ontent"
+			'content' => "$modelTable.content"
 		];
 
 		if( isset( $searchCol ) ) {
@@ -295,7 +295,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 			'marital' => "$modelTable.maritalId",
 			'name' => "$modelTable.name",
 			'status' => "$modelTable.status",
-			'role' => "$roleTable.name",
+			'role' => "$roleTable.id",
 			'message' => "$modelTable.message",
 			'desc' => "$modelTable.description",
 			'username' => "$modelTable.username",
@@ -303,7 +303,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 			'mobile' => "$modelTable.mobile",
 			'phone' => "$modelTable.phone",
 			'tzone' => "$modelTable.timeZone",
-			'content' => "$modelTable.ontent"
+			'content' => "$modelTable.content"
 		];
 
 		// Result -----------
@@ -463,7 +463,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		$modelTable	= $this->getModelTable();
 
 		$config[ 'query' ]		= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.email", "$modelTable.mobile" ];
+		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.username", "$modelTable.email", "$modelTable.mobile" ];
 		$config[ 'array' ]		= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
 
 		$config[ 'query' ]->andWhere( "$modelTable.name LIKE :name", [ ':name' => "$name%" ] );
@@ -477,7 +477,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		$modelTable	= $this->getModelTable();
 
 		$config[ 'query' ]		= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.email", "$modelTable.mobile" ];
+		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.username", "$modelTable.email", "$modelTable.mobile" ];
 		$config[ 'array' ]		= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
 
 		$config[ 'query' ]->andWhere( "$modelTable.name LIKE :name AND type=:type", [ ':name' => "$name%", ':type' => $type ] );

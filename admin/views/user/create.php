@@ -73,8 +73,21 @@ Editor::widget();
 					</div>
 					<div class="row max-cols-100">
 						<div class="col col2">
+							<?= $form->field( $model, 'genderId' )->dropDownList( $genderMap, [ 'class' => 'cmt-select' ] ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'maritalId' )->dropDownList( $maritalMap, [ 'class' => 'cmt-select' ] ) ?>
+						</div>
+					</div>
+					<div class="row max-cols-100">
+						<div class="col col2">
+							<?= $form->field( $model, 'localeId' )->dropDownList( $localeMap, [ 'class' => 'cmt-select' ] ) ?>
+						</div>
+						<div class="col col2">
 							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
+					</div>
+					<div class="row max-cols-100">
 						<div class="col col2">
 							<?= $form->field( $model, 'description' )->textarea() ?>
 						</div>

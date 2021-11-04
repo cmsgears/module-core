@@ -16,8 +16,6 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\File;
-
 /**
  * DirectController provide actions specific to files.
  *
@@ -88,16 +86,21 @@ class DirectController extends \cmsgears\core\admin\controllers\base\CrudControl
 		// Remember return url for crud
 		Url::remember( Yii::$app->request->getUrl(), 'dfiles' );
 
+		$modelClass = $this->modelService->getModelClass();
+
 		$dataProvider = $this->modelService->getDirectPage();
 
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
-			'visibilityMap' => File::$visibilityMap,
-			'typeMap' => File::$typeMap
+			'visibilityMap' => $modelClass::$visibilityMap,
+			'filterVisibilityMap' => $modelClass::$filterVisibilityMap,
+			'typeMap' => $modelClass::$typeMap
 		]);
 	}
 
 	public function actionUpdate( $id, $config = [] ) {
+
+		$modelClass = $this->modelService->getModelClass();
 
 		$model = $this->modelService->getById( $id );
 
@@ -110,7 +113,7 @@ class DirectController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 		return $this->render( 'update', [
 			'model' => $model,
-			'visibilityMap' => File::$visibilityMap
+			'visibilityMap' => $modelClass::$visibilityMap
 		]);
 	}
 

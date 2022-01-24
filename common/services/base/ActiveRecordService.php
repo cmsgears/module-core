@@ -1903,7 +1903,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 			$update = $existingModel->update( $validate );
 
-			if( $existingModel->update( $validate ) !== false || count( $existingModel->getErrors() ) > 0 ) {
+			if( $update !== false || count( $existingModel->getErrors() ) > 0 ) {
 
 				return $existingModel;
 			}

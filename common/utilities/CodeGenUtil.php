@@ -531,7 +531,7 @@ class CodeGenUtil {
 
 			$description = $params[ 'desc' ];
 
-			$description = filter_var( $description, FILTER_SANITIZE_STRING );
+			$description = htmlspecialchars( $description );
 
 			// SEO Limit - 160
 			if( strlen( $description ) > $descLimit ) {
@@ -664,7 +664,7 @@ class CodeGenUtil {
 		return $content;
 	}
 
-	public static function compressStyles( $styles ) {
+	public static function compressStyles( string $styles ) {
 
 		$compressed = preg_replace( '!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $styles );
 		$compressed = str_replace( ': ', ':', $styles );

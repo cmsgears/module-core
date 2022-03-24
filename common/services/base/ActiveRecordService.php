@@ -1248,7 +1248,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		// Sort
 		$sortParam	= Yii::$app->request->get( 'sort' );
-		$sortParam	= preg_replace( '/-/', '', $sortParam );
+		$sortParam	= !empty( $sortParam ) ? preg_replace( '/-/', '', $sortParam ) : '';
 
 		// Keywords
 		$searchParam	= isset( $config[ 'search-param' ] ) ? $config[ 'search-param' ] : 'keywords';

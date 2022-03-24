@@ -169,7 +169,7 @@ abstract class ObjectWidget extends Widget {
 				$options = !empty( $htmlOptions ) ? ArrayHelper::merge( $this->options, $htmlOptions ) : $this->options;
 
 				// Apply model options - Overrides widget and template options
-				$htmlOptions = json_decode( $model->htmlOptions, true );
+				$htmlOptions = !empty( $model->htmlOptions ) ? json_decode( $model->htmlOptions, true ) : $htmlOptions;
 
 				$options = !empty( $htmlOptions ) ? ArrayHelper::merge( $options, $htmlOptions ) : $options;
 
